@@ -1,5 +1,6 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Home from "@/pages/Home";
+import FourierSeries from "@/pages/FourierSeries";
 
 /**
  * Registered routes
@@ -9,7 +10,14 @@ const routes = [
     {
         path: "/",
         name: "Home",
+        label: 'Domov',
         component: Home
+    },
+    {
+        path: "/fourier-series",
+        name: "FourierSeries",
+        label: 'Fouriereva vrsta',
+        component: FourierSeries
     },
 ];
 
@@ -18,4 +26,5 @@ const router = createRouter({
     routes,
 });
 
-export default router;
+export {routes};
+export {router};
