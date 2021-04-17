@@ -69,6 +69,28 @@ const app = {
 }
 
 /**
+ * Spectrum settings
+ */
+const spectrum = {
+    namespaced: true,
+    state() {
+        return {
+            selected: 'sin'
+        }
+    },
+    mutations: {
+        /**
+         * Sets the selected spectrum in state.selected
+         * @param state
+         * @param key {string} - possible values: sin, cos, sawtooth, square
+         */
+        changeSelected(state, key) {
+            state.selected = key;
+        }
+    },
+}
+
+/**
  * Fourier series settings
  */
 const fourierSeries = {
@@ -131,7 +153,8 @@ const fourierSeries = {
 const store = createStore({
     modules: {
         app,
-        fourierSeries
+        fourierSeries,
+        spectrum
     }
 });
 

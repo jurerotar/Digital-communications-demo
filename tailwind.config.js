@@ -17,6 +17,9 @@ module.exports = {
             fontFamily: {
                 sans: ['Montserrat', ...defaultTheme.fontFamily.sans],
             },
+            width: {
+                'fit-content': 'fit-content',
+            },
             maxWidth: {
                 'sidebar-mobile': '16rem',
                 'sidebar': '18rem',

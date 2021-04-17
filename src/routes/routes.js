@@ -1,6 +1,7 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Home from "@/pages/Home";
 import FourierSeries from "@/pages/FourierSeries";
+import Spectrum from "@/pages/Spectrum";
 
 /**
  * Registered routes
@@ -18,6 +19,12 @@ const routes = [
         name: "FourierSeries",
         label: 'Fouriereva vrsta',
         component: FourierSeries
+    },
+    {
+        path: "/spectrum",
+        name: "Spectrum",
+        label: 'Spekter',
+        component: Spectrum
     },
 ];
 
