@@ -1,8 +1,8 @@
 <template>
     <section>
         <h1 class="text-3xl font-medium mb-4">Spekter</h1>
-        <div class = "flex flex-col md:flex-row">
-            <button class = "text-white w-fit-content font-bold py-2 px-4 mb-2 md:mr-2 rounded outline-none duration-300 transition-colors h-12"
+        <div class = "flex flex-col sm:flex-row">
+            <button class = "text-white w-fit-content font-bold py-2 px-4 mb-2 sm:mr-2 rounded outline-none duration-300 transition-colors h-12"
                     :class = "[selected === transformation.key ? 'bg-blue-300' : 'bg-gray-300']"
                     @click = "changeSelected(transformation.key)"
                     v-for = "transformation in transformations" :key = "transformation.id">

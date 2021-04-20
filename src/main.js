@@ -10,9 +10,10 @@ import canvas from "./plugins/canvas";
  * Font awesome icons and library
  */
 import {library} from '@fortawesome/fontawesome-svg-core'
+import {faChevronRight} from "@fortawesome/free-solid-svg-icons";
 import {faGithub} from "@fortawesome/free-brands-svg-icons";
 
-library.add(faGithub);
+library.add(faGithub, faChevronRight);
 
 /*
 Run these commands when postcss supports vue 3
