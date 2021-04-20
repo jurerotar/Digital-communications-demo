@@ -35,23 +35,23 @@ const app = {
     mutations: {
         /**
          *
-         * @param state
-         * @param width {number}
+         * @param {object} state
+         * @param {number} width
          */
         setWidth: (state, width) => {
             state.width = width;
         },
         /**
          *
-         * @param state
-         * @param height {number}
+         * @param {object} state
+         * @param {number} height
          */
         setHeight: (state, height) => {
             state.height = height;
         },
         /**
-         * @param state
-         * @param position {number}
+         * @param {object} state
+         * @param {boolean} position
          */
         toggleMobileSidebar: (state, position) => {
             state.mobileSidebarExtended = position;
@@ -60,6 +60,7 @@ const app = {
     getters: {
         /**
          * Returns boolean indicating whether window width is wider than selected breakpoint
+         * @param {object} state
          * @returns {boolean}
          */
         isWideScreen(state) {
@@ -81,8 +82,8 @@ const spectrum = {
     mutations: {
         /**
          * Sets the selected spectrum in state.selected
-         * @param state
-         * @param key {string} - possible values: sin, cos, sawtooth, square
+         * @param {object} state
+         * @param {string} key - possible values: sin, cos, sawtooth, square
          */
         changeSelected(state, key) {
             state.selected = key;
@@ -104,6 +105,8 @@ const fourierSeries = {
                 {
                     id: 1,
                     components: 1,
+                    frequency: 0.3,
+                    amplitude: 0.7
                 }
             ]
         }
@@ -111,36 +114,39 @@ const fourierSeries = {
     mutations: {
         /**
          * Pushes a new object to state.canvases array to generate a canvas with a random id
-         * @param state
+         * @param {object} state
          */
         createCanvas(state) {
             state.canvases.push({
                 id: functions.randomNumber(),
                 components: 1,
+                frequency: 0.05,
+                amplitude: 80
             });
         },
         /**
          * Removes canvas object from state.canvases by id
-         * @param state
-         * @param id {number}
+         * @param {object} state
+         * @param {number} id
          */
         removeCanvas(state, id) {
             state.canvases = state.canvases.filter(el => el.id !== id);
         },
         /**
-         * Updates amount of signal components in a signal by canvas id
-         * @param state {Object}
-         * @param id {number}
-         * @param amount {number}
+         * Updates canvas property object by id for given property
+         * @param {object} state
+         * @param {number} id
+         * @param {string} propertyName
+         * @param {number} value
          */
-        updateAmountOfComponents(state, id, amount) {
-            state.canvases.find(el => el.id === id).components = amount;
-        }
+        updateProperty(state, id, propertyName, value) {
+            state.canvases.find(el => el.id === id)[propertyName] = value;
+        },
     },
     getters: {
         /**
          Fouriereva vrsta z
-         * @param state {Object}
+         * @param {object} state
          * @returns {function(number): {components: number, id: number}}
          */
         canvasById: (state) => (id) => {
