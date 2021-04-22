@@ -3,6 +3,17 @@ const canvas = {
         width: 700,
         height: 300,
     },
+    colors: [
+        '#01FF70',
+        '#0074D9',
+        '#FF4136',
+        '#FF851B',
+        '#B10DC9',
+        '#7FDBFF',
+        '#2ECC40',
+        '#001f3f',
+        '#F012BE',
+    ],
     /**
      * Creates canvas with fixed dimensions
      * @param {object} p5
