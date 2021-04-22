@@ -1,8 +1,8 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Home from "@/pages/Home";
-import FourierSeries from "@/pages/FourierSeries";
+//import FourierSeries from "@/pages/FourierSeries";
 import Spectrum from "@/pages/Spectrum";
-
+import Harmonics from "@/pages/Harmonics";
 /**
  * Registered routes
  * @type {[{path: string, component: {components: {}, name: string}, name: string}]}
@@ -14,17 +14,23 @@ const routes = [
         label: 'Domov',
         component: Home
     },
-    {
-        path: "/fourier-series",
-        name: "FourierSeries",
-        label: 'Fouriereva vrsta',
-        component: FourierSeries
-    },
+    // {
+    //     path: "/fourier-series",
+    //     name: "FourierSeries",
+    //     label: 'Fouriereva vrsta',
+    //     component: FourierSeries
+    // },
     {
         path: "/spectrum",
         name: "Spectrum",
         label: 'Spekter',
         component: Spectrum
+    },
+    {
+        path: "/harmonics",
+        name: "Harmonics",
+        label: 'Harmoniki',
+        component: Harmonics
     },
 ];
 

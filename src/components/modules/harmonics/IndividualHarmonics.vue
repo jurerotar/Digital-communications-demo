@@ -1,0 +1,99 @@
+<template>
+    <h2 class="font-semibold text-xl">Prikaz posameznik komponent</h2>
+    <canvas-container>
+        <div :id="canvasId"></div>
+    </canvas-container>
+</template>
+
+<script>
+import CanvasContainer from "@/components/global/CanvasContainer";
+import P5 from 'p5';
+
+export default {
+    name: "IndividualHarmonics",
+    components: {CanvasContainer},
+    data() {
+        return {
+            canvasId: 'canvas-harmonics-individual',
+            context: null,
+            time: 0,
+            waveValues: {},
+            offset: {
+                x: 180,
+                y: 150
+            },
+        }
+    },
+    mounted() {
+        // Create empty arrays in waveValues object to store sine values for each component
+
+        [...Array(5).keys()].forEach((el, index) => this.waveValues[index + 1] = []);
+
+        // Initiate new P5 instance and create canvas
+        new P5((p5) => {
+            this.$c.setup(p5);
+            p5.draw = () => {
+
+                // Add context to allow custom canvas transformations
+                this.context = document.querySelector(`#${this.canvasId} canvas`).getContext('2d');
+
+                // Recolor canvas on each draw to remove previous lines
+                p5.background(255);
+
+                // Draw axis and move center to defined offset coordinates
+                this.$c.drawAxis(p5, this.offset.x, this.offset.y);
+                p5.translate(this.offset.x, this.offset.y);
+
+                p5.noFill();
+                p5.strokeWeight(3);
+
+                /**
+                 * For each signal component we'll calculate radius and frequency, determine color
+                 * and position, then draw elipse around that point. Position is always set at (0, 0)
+                 */
+                for (let i = 1; i <= this.components; i++) {
+                    const frequency = i * 2 * Math.PI * this.time;
+                    const color = this.$c.colors[i - 1];
+                    const radius = 135 / Math.sqrt(i);
+                    const x = radius * Math.cos(frequency);
+                    const y = radius * Math.sin(frequency);
+
+                    p5.stroke(color);
+                    p5.ellipse(0, 0, radius * 2);
+
+                    // Draw a line from center to (x, y)
+                    p5.line(0, 0, x, y);
+
+                    // Add y to the start of waveValues[i] array
+                    this.waveValues[i].unshift(y);
+
+                    // Draw sine wave
+                    p5.beginShape();
+                    this.waveValues[i].forEach((y, x) => {
+                        p5.vertex(x + 200, y);
+                    });
+                    p5.endShape();
+                    this.context.setLineDash([5, 15]);
+                    // Draw a line from x, y to start of sine wave which is at position (200, first element of array)
+                    p5.line(x, y, 200, this.waveValues[i][0]);
+
+                    this.context.setLineDash([]);
+                    if (this.waveValues[i].length > 300) {
+                        this.waveValues[i].pop();
+                    }
+                }
+                this.time += 0.005;
+            }
+        }, `${this.canvasId}`);
+    },
+    computed: {
+        /**
+         * Returns number of components to display
+         * @returns {number}
+         */
+        components() {
+            return this.$store.state.harmonics.components;
+        },
+    }
+}
+</script>

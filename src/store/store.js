@@ -89,10 +89,30 @@ const spectrum = {
             state.selected = key;
         }
     },
+};
+
+const harmonics = {
+    namespaced: true,
+    state() {
+        return {
+            components: 1,
+        }
+    },
+    mutations: {
+        /**
+         * Sets the components value
+         * @param {object} state
+         * @param {number} value
+         */
+        updateAmountOfComponents(state, value) {
+            state.components = value;
+        },
+    }
 }
 
 /**
  * Fourier series settings
+ * @deprecated
  */
 const fourierSeries = {
     namespaced: true,
@@ -160,7 +180,8 @@ const store = createStore({
     modules: {
         app,
         fourierSeries,
-        spectrum
+        spectrum,
+        harmonics
     }
 });
 
