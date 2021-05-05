@@ -1,5 +1,4 @@
 import {createStore} from 'vuex';
-import functions from "@/plugins/functions";
 
 /**
  * Application settings
@@ -110,78 +109,68 @@ const harmonics = {
     }
 }
 
-/**
- * Fourier series settings
- * @deprecated
- */
-const fourierSeries = {
+const modulations = {
     namespaced: true,
     state() {
         return {
-            /**
-             * Each object in this array corresponds to a canvas on the page
-             */
-            canvases: [
-                {
-                    id: 1,
-                    components: 1,
-                    frequency: 0.3,
-                    amplitude: 0.7
-                }
-            ]
+            selected: 'bpsk',
+            time: 0,
+            carrierWaveValues: [],
+            squareWaveValues: [0],
+            sineModulationWaveValues: [0],
         }
     },
     mutations: {
         /**
-         * Pushes a new object to state.canvases array to generate a canvas with a random id
+         * Updates state time
          * @param {object} state
+         * @param {number} time
          */
-        createCanvas(state) {
-            state.canvases.push({
-                id: functions.randomNumber(),
-                components: 1,
-                frequency: 0.05,
-                amplitude: 80
-            });
+        setTime(state, time) {
+            state.time = time;
         },
         /**
-         * Removes canvas object from state.canvases by id
+         * Pushed a new value to a named array
          * @param {object} state
-         * @param {number} id
+         * @param {any[]} props
          */
-        removeCanvas(state, id) {
-            state.canvases = state.canvases.filter(el => el.id !== id);
+        addValueToArray(state, props) {
+            const [name, value] = props;
+            state[name].unshift(value);
         },
         /**
-         * Updates canvas property object by id for given property
+         * Removes last value from a named array
          * @param {object} state
-         * @param {number} id
-         * @param {string} propertyName
-         * @param {number} value
+         * @param {string} name
          */
-        updateProperty(state, id, propertyName, value) {
-            state.canvases.find(el => el.id === id)[propertyName] = value;
+        removeValueFromArray(state, name) {
+            state[name].pop();
         },
-    },
-    getters: {
         /**
-         Fouriereva vrsta z
+         * Resets a named array
          * @param {object} state
-         * @returns {function(number): {components: number, id: number}}
+         * @param {string} name
          */
-        canvasById: (state) => (id) => {
-            return state.canvases.find(el => el.id === id);
+        resetArray(state, name) {
+            state[name] = [];
+        },
+        /**
+         * Sets the selected spectrum in state.selected
+         * @param {object} state
+         * @param {string} key - possible values: am, bask, bpsk,
+         */
+        changeSelected(state, key) {
+            state.selected = key;
         }
-    },
-    actions: {}
+    }
 }
 
 const store = createStore({
     modules: {
         app,
-        fourierSeries,
         spectrum,
-        harmonics
+        harmonics,
+        modulations
     }
 });
 

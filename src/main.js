@@ -3,7 +3,7 @@ import App from './App.vue';
 import {router} from './routes/routes.js';
 import './css/index.css';
 import store from "./store/store";
-import functions from "./plugins/functions";
+//import functions from "./plugins/functions";
 import canvas from "./plugins/canvas";
 
 /**
@@ -26,7 +26,7 @@ const app = createApp(App).use(router).use(store);
 /**
  * Mount functions plugin to be available globally
  */
-app.config.globalProperties.$f = functions;
+//app.config.globalProperties.$f = functions;
 
 /**
  * Mount canvas functions to be available globally

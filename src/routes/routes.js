@@ -3,6 +3,7 @@ import Home from "@/pages/Home";
 //import FourierSeries from "@/pages/FourierSeries";
 import Spectrum from "@/pages/Spectrum";
 import Harmonics from "@/pages/Harmonics";
+import Modulations from "@/pages/Modulations";
 /**
  * Registered routes
  * @type {[{path: string, component: {components: {}, name: string}, name: string}]}
@@ -25,6 +26,12 @@ const routes = [
         name: "Spectrum",
         label: 'Spekter',
         component: Spectrum
+    },
+    {
+        path: "/modulations",
+        name: "Modulations",
+        label: 'Modulacije',
+        component: Modulations
     },
     {
         path: "/harmonics",
