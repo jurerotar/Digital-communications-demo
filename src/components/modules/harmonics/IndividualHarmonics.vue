@@ -82,7 +82,7 @@ export default {
                         this.waveValues[i].pop();
                     }
                 }
-                this.time += 0.005;
+                this.time += 0.01;
             }
         }, `${this.canvasId}`);
     },

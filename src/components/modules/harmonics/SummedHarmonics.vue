@@ -29,7 +29,7 @@ export default {
         new P5((p5) => {
             this.$c.setup(p5);
             p5.draw = () => {
-
+                console.log(p5.frameRate());
                 // Add context to allow custom canvas transformations
                 this.context = document.querySelector(`#${this.canvasId} canvas`).getContext('2d');
 
@@ -88,7 +88,7 @@ export default {
                 if (this.waveValues.length > 300) {
                     this.waveValues.pop();
                 }
-                this.time += 0.005;
+                this.time += 0.01;
             }
         }, `${this.canvasId}`);
     },
