@@ -1,4 +1,5 @@
 const canvas = {
+    frameRate: 60,
     dimensions: {
         width: 700,
         height: 300,
@@ -20,7 +21,11 @@ const canvas = {
      */
     setup(p5) {
         const {width: width, height: height} = this.dimensions;
-        p5.setup = () => p5.createCanvas(width, height);
+        const frameRate = this.frameRate;
+        p5.setup = () => {
+            p5.createCanvas(width, height);
+            p5.frameRate(frameRate);
+        }
     },
     /**
      * Draws both axis on canvas with defined offset, must be used before any translates
