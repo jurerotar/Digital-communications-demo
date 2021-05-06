@@ -113,11 +113,45 @@ const modulations = {
     namespaced: true,
     state() {
         return {
-            selected: 'bpsk',
+            selected: 'am',
             time: 0,
-            carrierWaveValues: [],
+            carrierWaveValues: [0],
             squareWaveValues: [0],
             sineModulationWaveValues: [0],
+            modulations: [
+                {
+                    label: 'AM',
+                    key: 'am',
+                    hasCarrier: true,
+                    hasSquareWave: false,
+                    hasSineModulationWave: true,
+                    binaryAmplitudeLimit: null,
+                },
+                {
+                    label: 'FM',
+                    key: 'fm',
+                    hasCarrier: true,
+                    hasSquareWave: false,
+                    hasSineModulationWave: true,
+                    binaryAmplitudeLimit: null,
+                },
+                {
+                    label: 'BASK',
+                    key: 'bask',
+                    hasCarrier: true,
+                    hasSquareWave: true,
+                    hasSineModulationWave: false,
+                    binaryAmplitudeLimit: [1, 0],
+                },
+                {
+                    label: 'BPSK',
+                    key: 'bpsk',
+                    hasCarrier: true,
+                    hasSquareWave: true,
+                    hasSineModulationWave: false,
+                    binaryAmplitudeLimit: [1, -1],
+                },
+            ]
         }
     },
     mutations: {

@@ -27,7 +27,7 @@ export default {
             this.$c.setup(p5);
             p5.draw = () => {
                 p5.background(255);
-                const value = Math.sin(15 * Math.PI * this.time);
+                const value = Math.sin(Math.PI * this.time);
 
 
                 // Draw axis and move center to defined offset coordinates

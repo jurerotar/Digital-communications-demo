@@ -11,9 +11,9 @@
             {{modulation.label}}
         </button>
     </div>
-    <carrier-wave></carrier-wave>
-    <sine-modulation-wave v-if = "isContinuousModulation" :key = "1"></sine-modulation-wave>
-    <square-wave v-if = "isBinaryModulation" :key = "2"></square-wave>
+    <sine-modulation-wave v-if = "hasSineModulationWave" :key = "1"></sine-modulation-wave>
+    <square-wave v-if = "hasSquareWave" :key = "2"></square-wave>
+    <carrier-wave v-if = "hasCarrier"></carrier-wave>
     <modulated-signal></modulated-signal>
 </template>
 
@@ -26,26 +26,6 @@ import ModulatedSignal from "@/components/modules/modulations/ModulatedSignal";
 export default {
     name: "Modulations",
     components: {ModulatedSignal, CarrierWave, SineModulationWave, SquareWave, Collapsible},
-    data() {
-        return {
-            binaryModulations: ['bask', 'bpsk'],
-            continuousModulations: ['am'],
-            modulations: [
-                {
-                    label: 'AM',
-                    key: 'am'
-                },
-                {
-                    label: 'BPSK',
-                    key: 'bpsk'
-                },
-                {
-                    label: 'BASK',
-                    key: 'bask'
-                },
-            ]
-        }
-    },
     computed: {
         /**
          * Returns currently selected key
@@ -55,16 +35,33 @@ export default {
             return this.$store.state.modulations.selected;
         },
         /**
-         * @returns {boolean}
+         * Returns modulations array from store
+         * @returns {object[]}
          */
-        isContinuousModulation() {
-            return this.continuousModulations.includes(this.selected);
+        modulations() {
+            return this.$store.state.modulations.modulations;
+        },
+        /**
+         * Finds currently selected modulation from modulations property by selected key
+         * @returns {object}
+         */
+        selectedModulationData() {
+            return this.modulations.find(el => el.key === this.selected);
         },
         /**
          * @returns {boolean}
          */
-        isBinaryModulation() {
-            return this.binaryModulations.includes(this.selected);
+        hasSineModulationWave() {
+            return this.selectedModulationData.hasSineModulationWave;
+        },
+        /**
+         * @returns {boolean}
+         */
+        hasSquareWave() {
+            return this.selectedModulationData.hasSquareWave;
+        },
+        hasCarrier() {
+            return this.selectedModulationData.hasCarrier;
         }
     },
     methods: {
@@ -73,8 +70,14 @@ export default {
          * @param {string} key - modulation key
          */
         changeSelected(key) {
+            this.resetArrays();
             this.$store.commit('modulations/changeSelected', key);
-        }
+        },
+        resetArrays() {
+            this.$store.commit('modulations/resetArray', 'carrierWaveValues');
+            this.$store.commit('modulations/resetArray', 'squareWaveValues');
+            this.$store.commit('modulations/resetArray', 'sineModulationWaveValues');
+        },
     }
 }
 </script>

@@ -25,7 +25,7 @@ export default {
             this.$c.setup(p5);
             p5.draw = () => {
                 p5.background(255);
-                const value = Math.sin(2 * Math.PI * this.time);
+                const value = Math.sin(10 * Math.PI * this.time);
 
 
                 // Draw axis and move center to defined offset coordinates
@@ -53,7 +53,12 @@ export default {
                 // Carrier is responsible for setting the time for other components
                 this.$store.commit('modulations/setTime', this.time + 0.005);
             }
+            p5.removeCanvas = () => p5.remove();
         }, 'carrier-wave');
+    },
+    unmounted() {
+        // Remove canvas, otherwise P5 object stays in memory and pushes new values to the array
+        this.p5.removeCanvas();
     },
     computed: {
         /**

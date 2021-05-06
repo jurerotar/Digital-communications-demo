@@ -76,7 +76,7 @@ export default {
                 this.counter = 0;
             }
             this.counter ++;
-            return (this.returnsOnes) ? 1 : this.span;
+            return (this.returnsOnes) ? this.amplitude[0] : this.amplitude[1];
         }
     },
     computed: {
@@ -88,12 +88,24 @@ export default {
             return this.$store.state.modulations.selected;
         },
         /**
-         * Returns either 0 or -1 for square wave bottom values
-         * @returns {number}
+         * Returns modulations array from store
+         * @returns {object[]}
          */
-        span() {
-            const bipolarSignals = ['bpsk'];
-            return (bipolarSignals.includes(this.selected)) ? -1 : 0;
+        modulations() {
+            return this.$store.state.modulations.modulations;
+        },
+        /**
+         * Finds currently selected modulation from modulations property by selected key
+         * @returns {object}
+         */
+        selectedModulationData() {
+            return this.modulations.find(el => el.key === this.selected);
+        },
+        /**
+         * @returns {number[]}
+         */
+        amplitude() {
+            return this.selectedModulationData.binaryAmplitudeLimit;
         },
         /**
          * Returns values from carrierWave array in store

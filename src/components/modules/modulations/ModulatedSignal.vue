@@ -18,6 +18,17 @@ export default {
                 y: 150
             },
             values: [],
+            modulationMethods: {
+                am: (carrier = this.carrierValues, sine = this.sineModulationWaveValues) => carrier.map((el, index) => el * sine[index]),
+                fm: (sine = this.sineModulationWaveValues) => {
+                    return sine.map((el) => {
+                        const multiplier = (el < 0) ? 2 : 0.4;
+                        return Math.sin(10 * Math.PI * multiplier);
+                    })
+                },
+                bpsk: (carrier = this.carrierValues, binary = this.squareWaveValues) => carrier.map((el, index) => el * binary[index]),
+                bask: (carrier = this.carrierValues, binary = this.squareWaveValues) => carrier.map((el, index) => el * binary[index]),
+            }
         }
     },
     mounted() {
@@ -35,7 +46,7 @@ export default {
                 p5.translate(this.offset.x, this.offset.y);
 
                 // Calculate values by multiplying elements of both arrays
-                this.values = this.carrierValues.map((el, index) => el * this.modulationValues[index]);
+                this.values = this.modulationMethods[this.selected]();
 
 
                 p5.noFill();
@@ -58,6 +69,20 @@ export default {
             return this.$store.state.modulations.selected;
         },
         /**
+         * Returns modulations array from store
+         * @returns {object[]}
+         */
+        modulations() {
+            return this.$store.state.modulations.modulations;
+        },
+        /**
+         * Finds currently selected modulation from modulations property by selected key
+         * @returns {object}
+         */
+        selectedModulationData() {
+            return this.modulations.find(el => el.key === this.selected);
+        },
+        /**
          * Returns values from carrierWave array in store
          * @returns {number[]}
          */
@@ -65,12 +90,25 @@ export default {
             return this.$store.state.modulations.carrierWaveValues;
         },
         /**
-         * Returns values from selected array in store
+         * Returns values from squareWaveValues array in store
          * @returns {number[]}
          */
-        modulationValues() {
-            const modulations = (['am'].includes(this.selected)) ? 'sineModulationWaveValues' : 'squareWaveValues';
-            return this.$store.state.modulations[modulations];
+        squareWaveValues() {
+            return this.$store.state.modulations.squareWaveValues;
+        },
+        /**
+         * Returns values from sineModulationWaveValues array in store
+         * @returns {number[]}
+         */
+        sineModulationWaveValues() {
+            return this.$store.state.modulations.sineModulationWaveValues;
+        },
+        /**
+         * Returns store time used to calculate sine values
+         * @returns {number}
+         */
+        time() {
+            return this.$store.state.modulations.time;
         }
     },
 }
