@@ -36,10 +36,10 @@ export default {
 
                 p5.noFill();
                 p5.stroke(this.$c.colors[1]);
-                p5.strokeWeight(3);
+                p5.strokeWeight(2);
 
                 p5.beginShape();
-                this.data.map((el, index) => p5.vertex(index, el * 80));
+                this.data.map((el, index) => p5.vertex(index, -Math.abs((el * 80))));
                 p5.endShape();
             }
         }, `canvas-spectrum`);
