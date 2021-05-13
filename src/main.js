@@ -33,3 +33,4 @@ const app = createApp(App).use(router).use(store);
  */
 app.config.globalProperties.$c = canvas;
 app.mount('#app');
+
