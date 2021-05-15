@@ -7,6 +7,14 @@ import store from "./store/store";
 import canvas from "./plugins/canvas";
 
 /**
+ * Returns a random element from an array
+ * @returns {any}
+ */
+Array.prototype.random = function() {
+    return this[Math.floor(Math.random() * this.length)];
+}
+
+/**
  * Font awesome icons and library
  */
 import {library} from '@fortawesome/fontawesome-svg-core'
