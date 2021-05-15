@@ -109,102 +109,12 @@ const harmonics = {
     }
 }
 
-const modulations = {
-    namespaced: true,
-    state() {
-        return {
-            selected: 'am',
-            time: 0,
-            carrierWaveValues: [0],
-            squareWaveValues: [0],
-            sineModulationWaveValues: [0],
-            modulations: [
-                {
-                    label: 'AM',
-                    key: 'am',
-                    hasCarrier: true,
-                    hasSquareWave: false,
-                    hasSineModulationWave: true,
-                    binaryAmplitudeLimit: null,
-                },
-                {
-                    label: 'FM',
-                    key: 'fm',
-                    hasCarrier: true,
-                    hasSquareWave: false,
-                    hasSineModulationWave: true,
-                    binaryAmplitudeLimit: null,
-                },
-                {
-                    label: 'BASK',
-                    key: 'bask',
-                    hasCarrier: true,
-                    hasSquareWave: true,
-                    hasSineModulationWave: false,
-                    binaryAmplitudeLimit: [1, 0],
-                },
-                {
-                    label: 'BPSK',
-                    key: 'bpsk',
-                    hasCarrier: true,
-                    hasSquareWave: true,
-                    hasSineModulationWave: false,
-                    binaryAmplitudeLimit: [1, -1],
-                },
-            ]
-        }
-    },
-    mutations: {
-        /**
-         * Updates state time
-         * @param {object} state
-         * @param {number} time
-         */
-        setTime(state, time) {
-            state.time = time;
-        },
-        /**
-         * Pushed a new value to a named array
-         * @param {object} state
-         * @param {any[]} props
-         */
-        addValueToArray(state, props) {
-            const [name, value] = props;
-            state[name].unshift(value);
-        },
-        /**
-         * Removes last value from a named array
-         * @param {object} state
-         * @param {string} name
-         */
-        removeValueFromArray(state, name) {
-            state[name].pop();
-        },
-        /**
-         * Resets a named array
-         * @param {object} state
-         * @param {string} name
-         */
-        resetArray(state, name) {
-            state[name] = [];
-        },
-        /**
-         * Sets the selected spectrum in state.selected
-         * @param {object} state
-         * @param {string} key - possible values: am, bask, bpsk,
-         */
-        changeSelected(state, key) {
-            state.selected = key;
-        }
-    }
-}
 
 const store = createStore({
     modules: {
         app,
         spectrum,
         harmonics,
-        modulations
     }
 });
 
