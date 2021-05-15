@@ -15,15 +15,13 @@ export default {
     data() {
         return {
             offset: {
-                x: 0,
+                x: 1,
                 y: 150
             },
         }
     },
     mounted() {
-        /**
-         * Initiate new P5 instance and create canvas
-         */
+        // Initiate new P5 instance and create canvas
         new P5((p5) => {
             this.$c.setup(p5);
             p5.draw = () => {
@@ -39,10 +37,14 @@ export default {
                 p5.strokeWeight(2);
 
                 p5.beginShape();
-                this.data.map((el, index) => p5.vertex(index, (el * 80)));
+                this.data.map((el, index) => p5.vertex(index, el * 80));
                 p5.endShape();
             }
+            p5.removeCanvas = () => p5.remove();
         }, `canvas-spectrum`);
+    },
+    unmounted() {
+        this.p5.removeCanvas();
     },
     props:{
        data:{
