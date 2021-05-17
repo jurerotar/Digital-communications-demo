@@ -1,10 +1,8 @@
 <template>
     <h1 class="text-3xl font-medium mb-4">Harmoniki</h1>
-<!--    <div class="flex flex-col mb-4">-->
-<!--        <p class="flex">Z drsniki lahko vplivaš število komponent signala, frekvenco in amplitudo posameznega signala.</p>-->
-<!--        <p class="inline-flex text-red-500 font-bold">Opozorilo: pri visokem številu komponent ali pri visoki frekvenci lahko pride do težav pri izrisu.</p>-->
-<!--    </div>-->
-    <collapsible>Burek</collapsible>
+    <collapsible>
+        <theory-harmonics></theory-harmonics>
+    </collapsible>
     <button class = "text-white w-fit-content font-bold py-2 px-4 mb-2 sm:mr-2 rounded outline-none duration-300 transition-colors h-12"
             :class = "[selectedFunctionId === fn.id ? 'bg-blue-300' : 'bg-gray-300']"
             @click = "updateSelectedFunction(fn.id)"
@@ -25,12 +23,13 @@
 </template>
 
 <script>
-import Collapsible from "@/components/global/Collapsible";
 import IndividualHarmonics from "@/components/modules/harmonics/IndividualHarmonics";
 import SummedHarmonics from "@/components/modules/harmonics/SummedHarmonics";
+import TheoryHarmonics from "@/components/theory/TheoryHarmonics";
+import Collapsible from "@/components/global/Collapsible";
 export default {
     name: "Harmonics",
-    components: {SummedHarmonics, IndividualHarmonics, Collapsible},
+    components: {Collapsible, TheoryHarmonics, SummedHarmonics, IndividualHarmonics},
     data() {
         return {
             components: 1,
@@ -59,7 +58,3 @@ export default {
     },
 }
 </script>
-
-<style scoped>
-
-</style>
