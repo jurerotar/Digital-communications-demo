@@ -33,7 +33,7 @@ export default {
                 p5.translate(this.offset.x, this.offset.y);
 
                 p5.noFill();
-                p5.stroke(this.$c.colors[0]);
+                p5.stroke(this.$c.colors[this.color_id]);
                 p5.strokeWeight(3);
 
                 // Draw the shape
@@ -74,6 +74,11 @@ export default {
             type: Boolean,
             required: false,
             default: false
+        },
+        color_id: {
+            type: Number,
+            required: false,
+            default: 0
         }
     }
 }
