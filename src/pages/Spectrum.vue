@@ -23,20 +23,27 @@
             {{ amplitude.label }}
         </button>
     </div>
-    <original-signal :data="input"></original-signal>
-    <signal-spectrum :data="output"></signal-spectrum>
+    <single-signal-canvas
+        :canvas_id="'spectrum-original-signal'"
+        :data="input"
+        :title="'Prvotni signal'">
+    </single-signal-canvas>
+    <single-signal-canvas
+        :canvas_id="'spectrum-original-signal'"
+        :data="output"
+        :title="'Spekter signala'"
+        :color_id = "1">
+    </single-signal-canvas>
 </template>
 
 <script>
-
+import TheorySpectrum from "@/components/theory/TheorySpectrum";
 import Collapsible from "@/components/global/Collapsible";
-import OriginalSignal from "@/components/modules/spectrum/OriginalSignal";
-import SignalSpectrum from "@/components/modules/spectrum/SignalSpectrum";
-import TheorySpectrum from "@/components/modules/spectrum/theory/TheorySpectrum";
+import SingleSignalCanvas from "@/components/canvas/SingleSignalCanvas";
 
 export default {
     name: "Spectrum",
-    components: {TheorySpectrum, OriginalSignal, SignalSpectrum, Collapsible},
+    components: {SingleSignalCanvas, Collapsible, TheorySpectrum},
     data() {
         return {
             fftSize: 512,
@@ -163,6 +170,7 @@ export default {
          */
         output() {
             const out = this.fft.createComplexArray();
+            console.log(this.input);
             this.fft.realTransform(out, this.input);
             return out.filter((el, index) => index % 2 === 1);
         }
