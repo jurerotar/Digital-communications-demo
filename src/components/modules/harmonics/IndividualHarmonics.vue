@@ -27,7 +27,7 @@ export default {
     mounted() {
         // Create empty arrays in waveValues object to store sine values for each component
 
-        [...Array(5).keys()].forEach((el, index) => this.waveValues[index + 1] = []);
+        [...Array(5).keys()].forEach((el, index) => this.waveValues[index] = []);
 
         // Initiate new P5 instance and create canvas
         new P5((p5) => {
@@ -51,10 +51,11 @@ export default {
                  * For each signal component we'll calculate radius and frequency, determine color
                  * and position, then draw elipse around that point. Position is always set at (0, 0)
                  */
-                for (let i = 1; i <= this.components; i++) {
-                    const frequency = i * 2 * Math.PI * this.time;
-                    const color = this.$c.colors[i - 1];
-                    const radius = 135 / Math.sqrt(i);
+                for (let i = 0; i < this.components; i++) {
+                    const n = i * 2 + 1;
+                    const frequency = n * Math.PI * this.time;
+                    const color = this.$c.colors[i];
+                    const radius = 135 / Math.sqrt(n);
                     const x = radius * Math.cos(frequency);
                     const y = radius * Math.sin(frequency);
 

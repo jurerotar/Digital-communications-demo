@@ -29,7 +29,7 @@ export default {
         new P5((p5) => {
             this.$c.setup(p5);
             p5.draw = () => {
-                console.log(p5.frameRate());
+
                 // Add context to allow custom canvas transformations
                 this.context = document.querySelector(`#${this.canvasId} canvas`).getContext('2d');
 
@@ -52,10 +52,12 @@ export default {
                  * For each signal component we'll calculate radius and frequency, determine color
                  * and position, then draw elipse around that point. Position is determined by (x, y) of previous component
                  */
-                for (let i = 1; i <= this.components; i++) {
-                    const frequency = i * 2 * Math.PI * this.time;
-                    const color = this.$c.colors[i - 1];
-                    const radius = 60 / Math.sqrt(i);
+                for (let i = 0; i < this.components; i++) {
+                    // We'll use n to make sure radius is not 0
+                    const n = i * 2 + 1;
+                    const frequency = n * this.time * Math.PI;
+                    const color = this.$c.colors[i];
+                    const radius = 60 / Math.sqrt(n);
 
                     p5.stroke(color);
                     p5.ellipse(previousX, previousY, radius * 2);
