@@ -34,12 +34,12 @@ export default {
                     y: 140,
                 },
                 {
-                    text: 'y = sin(x)',
+                    text: 'y = sin(t)',
                     x: 70,
                     y: 15,
                 },
                 {
-                    text: 'x',
+                    text: 't',
                     x: 680,
                     y: 140,
                 },

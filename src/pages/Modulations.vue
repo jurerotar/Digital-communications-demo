@@ -12,40 +12,53 @@
             {{ modulation.label }}
         </button>
     </div>
-    <single-signal-canvas v-if="hasSineModulation"
+    <positive-only-signal v-if="hasSineModulation"
                           :data="sineModulationSignalValues"
                           :canvas_id="'sine-modulation-signal'"
-                          :title="'Sinusni modulacijski signal'">
-    </single-signal-canvas>
-    <single-signal-canvas v-if="hasCarrier"
+                          :title="'Sinusni modulacijski signal'"
+                          :vertical_pool="[' 1', -1]"
+    >
+    </positive-only-signal>
+    <positive-only-signal v-if="hasCarrier"
                           :data="carrierSignalValues"
                           :canvas_id="'carrier-signal'"
-                          :title="'Nosilec'">
-    </single-signal-canvas>
-    <single-signal-canvas v-if="hasBinary"
+                          :title="'Nosilec'"
+                          :vertical_pool="[' 1', -1]"
+    >
+    </positive-only-signal>
+    <positive-only-signal v-if="hasBinary"
                           :data="binarySignal.values"
                           :canvas_id="'binary-signal'"
                           :is_binary="true"
-                          :title="'Binarni signal'">
-    </single-signal-canvas>
-    <single-signal-canvas v-if="hasUnipolar"
+                          :title="'Binarni signal'"
+                          :vertical_pool="[' 1', -1]"
+    >
+    </positive-only-signal>
+    <positive-only-signal v-if="hasUnipolar"
                           :data="unipolarSignal.values"
                           :canvas_id="'unipolar-signal'"
                           :is_binary="true"
-                          :title="'Unipolarni signal'">
-    </single-signal-canvas>
-    <single-signal-canvas v-if="hasPam4"
+                          :title="'Unipolarni signal'"
+                          :vertical_pool="[1]"
+    >
+    </positive-only-signal>
+    <positive-only-signal v-if="hasPam4"
                           :data="pam4Signal.values"
                           :canvas_id="'pam4-signal'"
                           :is_binary="true"
-                          :title="'PAM 4 signal'">
-    </single-signal-canvas>
+                          :title="'PAM 4 signal'"
+                          :vertical_pool="[' 3', ' 1', -1, -3]"
+    >
+    </positive-only-signal>
 
-    <single-signal-canvas :data="modulated"
+    <positive-only-signal :data="modulated"
                           :canvas_id="'modulated-signal'"
                           :is_binary="false"
-                          :title="'Moduliran signal'">
-    </single-signal-canvas>
+                          :title="'Moduliran signal'"
+                          :vertical_pool="[1, -1]"
+                          :is_modulated="true"
+    >
+    </positive-only-signal>
 
 </template>
 
@@ -67,11 +80,11 @@
  */
 
 import Collapsible from "@/components/global/Collapsible";
-import SingleSignalCanvas from "@/components/canvas/SingleSignalCanvas";
+import PositiveOnlySignal from "@/components/canvas/PositiveOnlySignal";
 
 export default {
     name: "Modulations",
-    components: {SingleSignalCanvas, Collapsible},
+    components: {PositiveOnlySignal, Collapsible},
     data() {
         return {
             intervalId: null,
@@ -149,7 +162,6 @@ export default {
                     hasBinary: false,
                     hasUnipolar: true,
                     hasPam4: false,
-
                 },
                 {
                     label: 'BPSK',
@@ -159,6 +171,7 @@ export default {
                     hasBinary: true,
                     hasUnipolar: false,
                     hasPam4: false,
+
                 },
                 {
                     label: 'PAM 4',
@@ -254,14 +267,12 @@ export default {
                 case 'fsk':
                     return carrier.map((el, index) => {
                         const currentValue = binary[index];
-                        let multiplier;
                         if(currentValue === 1) {
-                            multiplier = 2;
+                            return Math.sin( this.time * Math.PI * 2);
                         }
                         else {
-                            multiplier = 1;
+                            return Math.sin( this.time * Math.PI);
                         }
-                        return Math.sin(Math.asin(el) * Math.PI * multiplier);
                     });
                 case 'pam4':
                     return carrier.map((el, index) => {
@@ -291,7 +302,7 @@ export default {
          * @returns {number}
          */
         nextCarrierValue() {
-            return Math.sin(2 * Math.PI * this.time);
+            return Math.sin(20 * Math.PI * this.time);
         },
 
         /**

@@ -10,12 +10,16 @@ import P5 from 'p5';
 import CanvasContainer from "@/components/global/CanvasContainer";
 
 export default {
-    name: "SingleSignalCanvas",
+    name: "FullSignal",
     components: {CanvasContainer},
     data() {
         return {
             p5: null,
             previousValue: 1,
+            offset: {
+                x: 350,
+                y: 125,
+            }
         }
     },
     mounted() {
@@ -25,27 +29,29 @@ export default {
             p5.draw = () => {
                 p5.background(255);
                 // Draw axis and move center to defined offset coordinates
-                this.$c.drawAxis(p5, [this.offset.x, this.offset.y], null, [1, -1]);
-                if(this.offset.x !== 0) {
-                    p5.translate(350 - this.offset.x, this.offset.y);
-                }
-                else {
-                    p5.translate(this.offset.x, this.offset.y);
-                }
+                this.$c.drawAxisInMiddle(p5);
+                p5.stroke(0);
+                p5.textSize(18);
+                p5.fill(0);
+                p5.textFont('Montserrat');
+                p5.text('t', 650, this.offset.y + 20)
+                p5.text('x[t]', this.offset.x - 50, 15)
+                p5.translate(0, this.offset.y);
+
 
                 p5.noFill();
-                p5.stroke(this.$c.colors[this.color_id]);
+                p5.stroke(this.$c.colors[1]);
                 p5.strokeWeight(3);
 
                 // Draw the shape
                 p5.beginShape();
-                this.data.forEach((y, x) => {
+                this.normalizedData.forEach((y, x) => {
                     if (this.is_binary) {
                         // When value changes, start drawing on previous index to prevent skewed lines
-                        p5.vertex((this.previousValue !== y) ? x - 1 : x, y * this.offset.y)
+                        p5.vertex((this.previousValue !== y) ? x - 1 : x,  y * (this.offset.y - 3))
                         this.previousValue = y;
                     } else {
-                        p5.vertex(x, y * this.offset.y);
+                        p5.vertex(x, y * (this.offset.y - 3));
                     }
                 });
                 p5.endShape();
@@ -61,8 +67,7 @@ export default {
         normalizedData() {
             const max = Math.max(...this.data.map(el => Math.abs(el)));
             return this.data.map(el => el / max);
-
-        }
+        },
     },
     props: {
         data: {
@@ -81,21 +86,6 @@ export default {
             type: Boolean,
             required: false,
             default: false
-        },
-        color_id: {
-            type: Number,
-            required: false,
-            default: 0
-        },
-        offset: {
-            type: Object,
-            required: false,
-            default () {
-                return {
-                    x: 0,
-                    y: 120
-                }
-            },
         },
     }
 }

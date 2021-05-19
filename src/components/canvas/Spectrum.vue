@@ -14,10 +14,10 @@ export default {
     data() {
         return {
             p5: null,
-            previousValue: 1,
+            max: 0,
             offset: {
-                x: 1,
-                y: 200
+                x: 0,
+                y: 250
             },
         }
     },
@@ -29,16 +29,16 @@ export default {
                 p5.background(255);
 
                 // Draw axis and move center to defined offset coordinates
-                this.$c.drawAxis(p5, this.offset.x, this.offset.y);
-                p5.translate(this.offset.x, this.offset.y);
+                this.$c.spectrumAxis(p5, this.max);
+                p5.translate(this.offset.x + 41, this.offset.y - 7);
 
                 p5.noFill();
-                p5.stroke(this.$c.colors[this.color_id]);
+                p5.stroke(this.$c.colors[0]);
                 p5.strokeWeight(3);
 
                 // Draw the shape
                 p5.beginShape();
-                this.data.forEach((y, x) => p5.vertex(x, -Math.abs(y / this.data.length * 800)));
+                this.dataInView.forEach((y, x) => p5.vertex(x, y * (this.offset.y - 10)));
                 p5.endShape();
             }
             p5.removeCanvas = () => p5.remove();
@@ -47,6 +47,29 @@ export default {
     unmounted() {
         // Remove canvas, otherwise P5 object stays in memory
         this.p5.removeCanvas();
+    },
+    methods: {
+        maxValue(array) {
+            const max = Math.max(...array);
+            this.max = Math.ceil(max);
+            return max;
+        }
+    },
+    computed: {
+        normalizedData() {
+            const positiveValues = this.data.map(el => Math.abs(el));
+            const max = this.maxValue(positiveValues);
+            return positiveValues.map(el => -el / max);
+        },
+        dataInView() {
+            if(this.type === 'sin') {
+                return this.normalizedData.filter((el, index) => index >= 1400 && index < 2047);
+            }
+            if(this.type === 'cos') {
+                return this.normalizedData.filter((el, index) => index >= 0 && index < 700);
+            }
+            return this.normalizedData;
+        }
     },
     props: {
         data: {
@@ -61,11 +84,10 @@ export default {
             type: String,
             required: true
         },
-        color_id: {
-            type: Number,
-            required: false,
-            default: 0
-        }
+        type: {
+            type: String,
+            required: true
+        },
     }
 }
 </script>

@@ -30,19 +30,19 @@ const canvas = {
     /**
      * Draws both axis on canvas with defined offset, must be used before any translates
      * @param {Object} p5
-     * @param {number[]} offset
-     * @param {number[]} dimensions
-     * @param {number[]|null} horizontalPool
-     * @param {number[]|null} verticalPool
+     * @param {Object|null} verticalPool
      */
-    drawAxisWithScale(p5, offset, horizontalPool = null, verticalPool = null, dimensions = [this.dimensions.width, this.dimensions.height]) {
+    drawAxisOnSide(p5, verticalPool = null) {
+        const {x: x, y: y} =  this.dimensions
         const scaleOffset = 20;
         p5.stroke('#ccc');
         p5.strokeWeight(2);
+
         // Horizontal line from start of canvas to the end
-        p5.line(scaleOffset, offset[1], dimensions[0], offset[1]);
+        p5.line(scaleOffset, y / 2, x, y / 2);
         // Vertical line from top to bottom
-        p5.line(offset[0] + scaleOffset, 0, offset[0] + scaleOffset, dimensions[1]);
+        p5.line(scaleOffset, 0, scaleOffset, y);
+
         // Restore defaults
         p5.strokeWeight(1);
         p5.stroke(0);
@@ -51,37 +51,69 @@ const canvas = {
         p5.textSize(18);
         p5.fill(0);
         p5.textFont('Montserrat');
-        p5.text(0, offset[0] - scaleOffset, offset[1] + 6);
-        console.log(horizontalPool, verticalPool);
-        if(verticalPool !== null) {
-            switch(verticalPool.length) {
+        p5.text(0, -scaleOffset + 2, y/2 + 6);
+        if (verticalPool !== null) {
+            switch (verticalPool.length) {
                 case 1:
-                    p5.text(verticalPool[0], offset[0] - scaleOffset, 14);
+                    p5.text(verticalPool[0], -scaleOffset, 14);
                     break;
                 case 2:
-                    p5.text(verticalPool[0], offset[0] - scaleOffset, 14);
-                    p5.text(verticalPool[1], offset[0] - scaleOffset, dimensions[1]);
+                    p5.text(verticalPool[0], -scaleOffset, 14);
+                    p5.text(verticalPool[1], -scaleOffset, y - 3);
                     break;
-
+                case 4:
+                    p5.text(verticalPool[0], -scaleOffset, 14);
+                    p5.text(verticalPool[1], -scaleOffset, 75);
+                    p5.text(verticalPool[2], -scaleOffset, 180);
+                    p5.text(verticalPool[3], -scaleOffset, y - 3);
+                    break;
             }
-            // const intervalLength = dimensions[1] / (verticalPool.length - 1);
-            // verticalPool.forEach((el, index) => {
-            //     p5.text(el, 20, intervalLength * index + 20);
-            // });
         }
-        // if(horizontalPool !== null && horizontalPool.length > 0) {
-        //     const intervalLength = dimensions[0] / horizontalPool.length;
-        //     horizontalPool.forEach((el, index) => {
-        //         p5.text(el, intervalLength * index + 20, 20);
-        //     });
-        // }
-        // p5.translate(0, -offset[1]);
-        // if(verticalPool !== null && verticalPool.length > 0) {
-        //     const intervalLength = dimensions[0] / verticalPool.length;
-        //     verticalPool.forEach((el, index) => {
-        //         p5.text(el, 20, intervalLength * index + 20);
-        //     });
-        // }
+    },
+    drawAxisInMiddle(p5) {
+        const {x: x, y: y} = this.dimensions
+        p5.stroke('#ccc');
+        p5.strokeWeight(2);
+
+        // Horizontal line from start of canvas to the end
+        p5.line(0, y / 2, x, y / 2);
+        // Vertical line from top to bottom
+        p5.line(x/ 2, 0, x / 2, y);
+
+        // Restore defaults
+        p5.strokeWeight(1);
+        p5.stroke(0);
+        // Move chart right to create space for scale
+        p5.textSize(18);
+        p5.fill(0);
+        p5.textFont('Montserrat');
+        p5.text(0, x/2 + 10, y/2 + 20);
+        p5.text(' 1', x / 2 + 10, 14);
+        p5.text('-1', x / 2 + 10, y - 3);
+    },
+    spectrumAxis(p5, max = 0) {
+        const {x: x, y: y} =  this.dimensions
+        const scaleOffset = 40;
+        p5.stroke('#ccc');
+        p5.strokeWeight(2);
+
+        // Horizontal line from start of canvas to the end
+        p5.line(scaleOffset, y - 5, x, y - 5);
+        // Vertical line from top to bottom
+        p5.line(scaleOffset, 0, scaleOffset, y);
+
+
+        // Restore defaults
+        p5.strokeWeight(1);
+        p5.stroke(0);
+
+        p5.textSize(18);
+        p5.fill(0);
+        p5.textFont('Montserrat');
+        p5.text(max, 2, 14);
+        p5.text('0', 2, y - 3);
+        p5.text('X[f]', 50, 14);
+        p5.text('f', this.dimensions.x - 20, this.dimensions.y - 20);
     },
     /**
      * Draws both axis on canvas with defined offset, must be used before any translates

@@ -23,27 +23,26 @@
             {{ amplitude.label }}
         </button>
     </div>
-    <single-signal-canvas
+    <full-signal
         :canvas_id="'spectrum-original-signal'"
         :data="canvasInput"
         :is_binary="selectedObject.is_binary"
         :title="'Prvotni signal'"
-        :offset="offset"
     >
-    </single-signal-canvas>
+    </full-signal>
     <spectrum-canvas
         :canvas_id="'spectrum-signal-spectrum'"
         :data="output"
         :title="'Spekter signala'"
-        :color_id="1">
+        :type = "selectedObject.key">
     </spectrum-canvas>
 </template>
 
 <script>
 import TheorySpectrum from "@/components/theory/TheorySpectrum";
 import Collapsible from "@/components/global/Collapsible";
-import SingleSignalCanvas from "@/components/canvas/SingleSignalCanvas";
 import SpectrumCanvas from "@/components/canvas/Spectrum";
+import FullSignal from "@/components/canvas/FullSignal";
 
 /**
  * @typedef {Object} Signal
@@ -51,8 +50,6 @@ import SpectrumCanvas from "@/components/canvas/Spectrum";
  * @property {string} key
  * @property {function} fn
  * @property {boolean} is_binary
- * @property {string} show_only
- * @property {Offset|null} offset
  */
 
 /**
@@ -61,17 +58,9 @@ import SpectrumCanvas from "@/components/canvas/Spectrum";
  * @property {number} key
  */
 
-/**
- * @typedef {Object} Offset
- * @property {number} x
- * @property {number} y
- */
-
-
-
 export default {
     name: "Spectrum",
-    components: {SingleSignalCanvas, Collapsible, TheorySpectrum, SpectrumCanvas},
+    components: {FullSignal, Collapsible, TheorySpectrum, SpectrumCanvas},
     data() {
         return {
             fftSize: 2048,
@@ -84,29 +73,20 @@ export default {
                 {
                     label: 'Sinusni',
                     key: 'sin',
-                    fn: () => [...Array(this.fftSize).keys()].map(el => Math.sin(el * 0.05 * this.amplitude)),
+                    fn: () => [...[...Array(this.fftSize / 2).keys()].map(el => -el - 1).reverse(), ...[...Array(this.fftSize / 2).keys()]].map(el => Math.sin(el * this.amplitude * 0.5) * -1),
                     is_binary: false,
-                    show_only: 'start',
-                    offset: null,
                 },
                 {
                     label: 'Kosinusni',
                     key: 'cos',
-                    fn: () => [...Array(this.fftSize).keys()].map(el => Math.cos(el * 0.05 * this.amplitude)),
+                    fn: () => [...[...Array(this.fftSize / 2).keys()].map(el => -el - 1).reverse(), ...[...Array(this.fftSize / 2).keys()]].map(el => Math.cos(el * this.amplitude * 0.05) * -1),
                     is_binary: false,
-                    show_only: 'start',
-                    offset: null,
                 },
                 {
                     label: 'Kvadratni',
                     key: 'square',
                     fn: () => [...Array(Math.trunc(100 * this.amplitude)).keys()].map(() => -1),
                     is_binary: true,
-                    show_only: 'middle',
-                    offset: {
-                        x: 350,
-                        y: 200
-                    },
                 },
                 {
                     label: 'Gauss',
@@ -122,23 +102,12 @@ export default {
                         return gauss;
                     },
                     is_binary: false,
-                    show_only: 'middle',
-                    offset: null,
                 },
                 {
                     label: 'Sinc',
                     key: 'sinc',
-                    fn: () => {
-                        const sorted = [...Array(this.fftSize / 2).keys()].map(el => el * -1 - 1);
-                        sorted.sort((a, b) => a - b);
-                        return [...sorted, ...Array(this.fftSize / 2).keys()].map(el => (el === 0) ? -1 : -Math.sin(el * 0.05 * this.amplitude) / (el) * 6.5)
-                    },
+                    fn: () => [...[...Array(this.fftSize / 2).keys()].map(el => el * -1 - 1).reverse(), ...Array(this.fftSize / 2).keys()].map(el => (el === 0) ? -1 : -Math.sin(el * 0.05 * this.amplitude) / (el) * 6.5),
                     is_binary: false,
-                    show_only: 'middle',
-                    offset: {
-                        x: 350,
-                        y: 200
-                    },
                 },
             ],
             /**
@@ -203,16 +172,10 @@ export default {
 
         /**
          * @param {Array} array
-         * @param {string} position
          * @returns {number[]}
          **/
-        cutArray(array, position = 'middle') {
-            if (position === 'middle') {
-                return array.filter((el, index) => (index >= (array.length / 2 - 350) && index <= (array.length / 2 + 350)));
-            }
-            const cutArray = [...array];
-            cutArray.length = 700;
-            return cutArray;
+        cutArray(array) {
+            return array.filter((el, index) => (index >= (array.length / 2 - 350) && index <= (array.length / 2 + 350)));
         }
 
     },
@@ -256,13 +219,7 @@ export default {
          * @returns {number[]}
          */
         canvasInput() {
-            return this.cutArray(this.paddedInput, this.selectedObject.show_only);
-        },
-        offset() {
-            return this.selectedObject.offset ?? {
-                x: 1,
-                y: 150
-            };
+            return this.cutArray(this.paddedInput);
         },
         /**
          * Returns an array of FFT transformed numbers. Because fft.realTransform returns Complex array,
@@ -272,7 +229,6 @@ export default {
         output() {
             const out = this.fft.createComplexArray();
             this.fft.realTransform(out, this.paddedInput);
-            console.log(this.paddedInput, out.filter((el, index) => index % 2 === 0));
             return out.filter((el, index) => index % 2 === 0);
         }
     },

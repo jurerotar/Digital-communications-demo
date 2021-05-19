@@ -29,12 +29,12 @@ export default {
                     y: 15,
                 },
                 {
-                    text: 'y = Σ sin(k * x)',
+                    text: 'y = Σ sin(k * t)',
                     x: 40,
                     y: 15,
                 },
                 {
-                    text: 'x',
+                    text: 't',
                     x: 680,
                     y: 140,
                 },
