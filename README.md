@@ -2,10 +2,10 @@
 
 # Digital communications demo
 
-Digital communication demo project aims to provide students with explanations and visualizations of common occurrences in digital communications like signal modulations, signal spectrum,... 
+Digital communication demo project aims to provide students with explanations and visualizations of common occurrences in digital communications like signal modulations, signal spectrum,...
 
 ## Table of contents
-* [Built with](#Build-with)
+* [Built with](#Built-with)
 * [Includes](#Includes)
 * [Installation guide](#Installation-guide)
 
@@ -13,11 +13,12 @@ Digital communication demo project aims to provide students with explanations an
 ## Built with
 *  [Tailwind CSS](https://tailwindcss.com) - A utility-first CSS framework packed with classes that can be composed to build any design, directly in your markup.
 *  [Vue 3](https://v3.vuejs.org) - Vue is a progressive framework for building user interfaces.
-*  [Vuex](https://v3.vuejs.org) - Vuex is a state management pattern + library for Vue.js applications.
+*  [Vuex](https://vuex.vuejs.org) - Vuex is a state management pattern + library for Vue.js applications.
 *  [p5](https://p5js.org/) - p5 is a JavaScript library for creative coding.
 
 ## Includes
 
+* Pointers
 * Harmonics
 * Spectrum
 * Modulations (AM, FM, BASK, BPSK, PAM4)
@@ -29,7 +30,7 @@ Digital communication demo project aims to provide students with explanations an
 git clone https://github.com/jurerotar/Digital-communications-demo.git
 
 # Project setup
-npm install 
+npm install
 
 # Compiles and hot-reloads for development
 npm run serve
