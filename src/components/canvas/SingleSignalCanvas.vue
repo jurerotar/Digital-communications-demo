@@ -24,10 +24,9 @@ export default {
             this.$c.setup(p5);
             p5.draw = () => {
                 p5.background(255);
-
                 // Draw axis and move center to defined offset coordinates
-                this.$c.drawAxis(p5, this.offset.x, this.offset.y);
-                if(this.offset.x !== 1) {
+                this.$c.drawAxis(p5, [this.offset.x, this.offset.y], null, [1, -1]);
+                if(this.offset.x !== 0) {
                     p5.translate(350 - this.offset.x, this.offset.y);
                 }
                 else {
@@ -43,10 +42,10 @@ export default {
                 this.data.forEach((y, x) => {
                     if (this.is_binary) {
                         // When value changes, start drawing on previous index to prevent skewed lines
-                        p5.vertex((this.previousValue !== y) ? x - 1 : x, y * 30)
+                        p5.vertex((this.previousValue !== y) ? x - 1 : x, y * this.offset.y)
                         this.previousValue = y;
                     } else {
-                        p5.vertex(x, y * 80);
+                        p5.vertex(x, y * this.offset.y);
                     }
                 });
                 p5.endShape();
@@ -57,6 +56,13 @@ export default {
     unmounted() {
         // Remove canvas, otherwise P5 object stays in memory
         this.p5.removeCanvas();
+    },
+    computed: {
+        normalizedData() {
+            const max = Math.max(...this.data.map(el => Math.abs(el)));
+            return this.data.map(el => el / max);
+
+        }
     },
     props: {
         data: {
@@ -86,16 +92,11 @@ export default {
             required: false,
             default () {
                 return {
-                    x: 1,
-                    y: 150
+                    x: 0,
+                    y: 120
                 }
             },
         },
-        amplitude: {
-            type: Number,
-            required: false,
-            default: 80
-        }
     }
 }
 </script>

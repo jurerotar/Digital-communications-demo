@@ -105,7 +105,7 @@ export default {
                     show_only: 'middle',
                     offset: {
                         x: 350,
-                        y: 270
+                        y: 200
                     },
                 },
                 {
@@ -137,7 +137,7 @@ export default {
                     show_only: 'middle',
                     offset: {
                         x: 350,
-                        y: 270
+                        y: 200
                     },
                 },
             ],

@@ -169,6 +169,15 @@ export default {
                     hasUnipolar: false,
                     hasPam4: true,
                 },
+                {
+                    label: 'FSK',
+                    key: 'fsk',
+                    hasCarrier: true,
+                    hasSineModulation: false,
+                    hasBinary: false,
+                    hasUnipolar: true,
+                    hasPam4: false,
+                },
 
             ]
         }
@@ -242,6 +251,18 @@ export default {
                     return carrier.map((el, index) => el * unipolar[index]);
                 case 'bpsk':
                     return carrier.map((el, index) => el * binary[index]);
+                case 'fsk':
+                    return carrier.map((el, index) => {
+                        const currentValue = binary[index];
+                        let multiplier;
+                        if(currentValue === 1) {
+                            multiplier = 2;
+                        }
+                        else {
+                            multiplier = 1;
+                        }
+                        return Math.sin(Math.asin(el) * Math.PI * multiplier);
+                    });
                 case 'pam4':
                     return carrier.map((el, index) => {
                         const amplitudes = {
@@ -270,7 +291,7 @@ export default {
          * @returns {number}
          */
         nextCarrierValue() {
-            return Math.sin(20 * Math.PI * this.time);
+            return Math.sin(2 * Math.PI * this.time);
         },
 
         /**
