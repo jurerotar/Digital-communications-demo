@@ -40,11 +40,13 @@
                           :is_binary="true"
                           :title="'PAM 4 signal'">
     </single-signal-canvas>
+
     <single-signal-canvas :data="modulated"
                           :canvas_id="'modulated-signal'"
                           :is_binary="false"
                           :title="'Moduliran signal'">
     </single-signal-canvas>
+
 </template>
 
 <script>
@@ -93,7 +95,7 @@ export default {
              */
             binarySignal: {
                 values: [],
-                pool: [1, -1],
+                pool: [-1, 1],
                 currentlyReturns: 1,
             },
 
@@ -102,8 +104,8 @@ export default {
              */
             unipolarSignal: {
                 values: [],
-                pool: [1, 0],
-                currentlyReturns: 1,
+                pool: [-1, 0],
+                currentlyReturns: 0,
             },
 
             /**
@@ -111,7 +113,7 @@ export default {
              */
             pam4Signal: {
                 values: [],
-                pool: [3, 1, -1, -3],
+                pool: [-3, -1, 1, 3],
                 currentlyReturns: 1,
             },
 
@@ -129,31 +131,33 @@ export default {
                     hasUnipolar: false,
                     hasPam4: false,
                 },
-                {
-                    label: 'FM',
-                    key: 'fm',
-                    hasCarrier: true,
-                    hasSineModulation: true,
-                    hasBinary: false,
-                    hasUnipolar: false,
-                    hasPam4: false,
-                },
+                // {
+                //     label: 'FM',
+                //     key: 'fm',
+                //     hasCarrier: true,
+                //     hasSineModulation: true,
+                //     hasBinary: false,
+                //     hasUnipolar: false,
+                //     hasPam4: false,
+                //
+                // },
                 {
                     label: 'BASK',
                     key: 'bask',
                     hasCarrier: true,
                     hasSineModulation: false,
-                    hasBinary: true,
-                    hasUnipolar: false,
+                    hasBinary: false,
+                    hasUnipolar: true,
                     hasPam4: false,
+
                 },
                 {
                     label: 'BPSK',
                     key: 'bpsk',
                     hasCarrier: true,
                     hasSineModulation: false,
-                    hasBinary: false,
-                    hasUnipolar: true,
+                    hasBinary: true,
+                    hasUnipolar: false,
                     hasPam4: false,
                 },
                 {
@@ -165,6 +169,7 @@ export default {
                     hasUnipolar: false,
                     hasPam4: true,
                 },
+
             ]
         }
     },
@@ -216,28 +221,37 @@ export default {
                 sine,
                 binary,
                 unipolar,
-                pam4
+                pam4,
+
             ] = [
                 this.carrierSignalValues,
                 this.sineModulationSignalValues,
                 this.binarySignal.values,
-                this.unipolarSignal,
-                this.pam4Signal
+                this.unipolarSignal.values,
+                this.pam4Signal.values
             ];
             switch (this.selected) {
                 case 'am':
                     return carrier.map((el, index) => el * sine[index]);
                 case 'fm':
                     return sine.map((el) => {
-                        const multiplier = (el < 0) ? 2 : 0.4;
-                        return Math.sin(5 * Math.PI * multiplier * this.time);
+                        const multiplier = (el < 0) ? 0.2 : 4;
+                        return Math.sin(20 * Math.PI * this.time * multiplier);
                     });
                 case 'bask':
-                    return carrier.map((el, index) => el * binary[index]);
-                case 'bpsk':
                     return carrier.map((el, index) => el * unipolar[index]);
+                case 'bpsk':
+                    return carrier.map((el, index) => el * binary[index]);
                 case 'pam4':
-                    return carrier.map((el, index) => el * pam4[index]);
+                    return carrier.map((el, index) => {
+                        const amplitudes = {
+                            '3': 1,
+                            '1': 2,
+                            '-1': 3,
+                            '-3': 4
+                        }
+                        return amplitudes[`${pam4[index]}`] * el/3;
+                    });
                 default:
                     return [];
             }
@@ -246,7 +260,7 @@ export default {
     methods: {
         /**
          * Changes selected property
-         * @param {string} key - possible values: am, fm, bask, bpsk,
+         * @param {string} key - possible values: am, fm, bask, bpsk, pam4
          */
         changeSelected(key) {
             this.selected = key;
@@ -256,14 +270,14 @@ export default {
          * @returns {number}
          */
         nextCarrierValue() {
-            return Math.sin(2 * Math.PI * this.time);
+            return Math.sin(20 * Math.PI * this.time);
         },
 
         /**
          * @returns {number}
          */
         nextSineModulationValue() {
-            return Math.sin(20 * Math.PI * this.time);
+            return Math.sin(Math.PI * this.time);
         },
 
         /**
@@ -298,7 +312,6 @@ export default {
             }
             return this.pam4Signal.currentlyReturns;
         },
-
     },
     mounted() {
         // Create interval to push new signal values to arrays
@@ -323,8 +336,8 @@ export default {
                     array.pop();
                 }
             });
+            this.time += 0.005;
 
-            this.time += 0.007;
             this.binaryCounter = (this.binaryCounter === this.binarySymbolLength) ? 0 : this.binaryCounter + 1;
         }, 30);
     },

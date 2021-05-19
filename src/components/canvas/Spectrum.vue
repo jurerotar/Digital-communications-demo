@@ -8,14 +8,17 @@
 <script>
 import P5 from 'p5';
 import CanvasContainer from "@/components/global/CanvasContainer";
-
 export default {
-    name: "SingleSignalCanvas",
+    name: "SpectrumCanvas",
     components: {CanvasContainer},
     data() {
         return {
             p5: null,
             previousValue: 1,
+            offset: {
+                x: 1,
+                y: 200
+            },
         }
     },
     mounted() {
@@ -27,12 +30,7 @@ export default {
 
                 // Draw axis and move center to defined offset coordinates
                 this.$c.drawAxis(p5, this.offset.x, this.offset.y);
-                if(this.offset.x !== 1) {
-                    p5.translate(350 - this.offset.x, this.offset.y);
-                }
-                else {
-                    p5.translate(this.offset.x, this.offset.y);
-                }
+                p5.translate(this.offset.x, this.offset.y);
 
                 p5.noFill();
                 p5.stroke(this.$c.colors[this.color_id]);
@@ -40,15 +38,7 @@ export default {
 
                 // Draw the shape
                 p5.beginShape();
-                this.data.forEach((y, x) => {
-                    if (this.is_binary) {
-                        // When value changes, start drawing on previous index to prevent skewed lines
-                        p5.vertex((this.previousValue !== y) ? x - 1 : x, y * 30)
-                        this.previousValue = y;
-                    } else {
-                        p5.vertex(x, y * 80);
-                    }
-                });
+                this.data.forEach((y, x) => p5.vertex(x, -Math.abs(y / this.data.length * 800)));
                 p5.endShape();
             }
             p5.removeCanvas = () => p5.remove();
@@ -71,30 +61,10 @@ export default {
             type: String,
             required: true
         },
-        is_binary: {
-            type: Boolean,
-            required: false,
-            default: false
-        },
         color_id: {
             type: Number,
             required: false,
             default: 0
-        },
-        offset: {
-            type: Object,
-            required: false,
-            default () {
-                return {
-                    x: 1,
-                    y: 150
-                }
-            },
-        },
-        amplitude: {
-            type: Number,
-            required: false,
-            default: 80
         }
     }
 }

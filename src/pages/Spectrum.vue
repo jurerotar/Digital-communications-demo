@@ -4,7 +4,7 @@
         <theory-spectrum></theory-spectrum>
     </collapsible>
     <h2 class="font-semibold text-xl">Oblika signala</h2>
-    <div class="flex flex-col sm:flex-row">
+    <div class="flex flex-col sm:flex-row my-2">
         <button
             class="text-white w-fit-content font-bold py-2 px-4 mb-2 sm:mr-2 rounded outline-none duration-300 transition-colors h-12"
             :class="[selected === shape.key ? 'bg-blue-300' : 'bg-gray-300']"
@@ -14,7 +14,7 @@
         </button>
     </div>
     <h2 class="font-semibold text-xl">Amplituda</h2>
-    <div class="flex flex-col sm:flex-row">
+    <div class="flex flex-col sm:flex-row my-2">
         <button
             class="text-white w-fit-content font-bold py-2 px-4 mb-2 sm:mr-2 rounded outline-none duration-300 transition-colors h-12"
             :class="[amplitudeValue === amplitude.key ? 'bg-blue-300' : 'bg-gray-300']"
@@ -25,62 +25,125 @@
     </div>
     <single-signal-canvas
         :canvas_id="'spectrum-original-signal'"
-        :data="input"
-        :title="'Prvotni signal'">
+        :data="canvasInput"
+        :is_binary="selectedObject.is_binary"
+        :title="'Prvotni signal'"
+        :offset="offset"
+    >
     </single-signal-canvas>
-    <single-signal-canvas
-        :canvas_id="'spectrum-original-signal'"
+    <spectrum-canvas
+        :canvas_id="'spectrum-signal-spectrum'"
         :data="output"
         :title="'Spekter signala'"
-        :color_id = "1">
-    </single-signal-canvas>
+        :color_id="1">
+    </spectrum-canvas>
 </template>
 
 <script>
 import TheorySpectrum from "@/components/theory/TheorySpectrum";
 import Collapsible from "@/components/global/Collapsible";
 import SingleSignalCanvas from "@/components/canvas/SingleSignalCanvas";
+import SpectrumCanvas from "@/components/canvas/Spectrum";
+
+/**
+ * @typedef {Object} Signal
+ * @property {string} label
+ * @property {string} key
+ * @property {function} fn
+ * @property {boolean} is_binary
+ * @property {string} show_only
+ * @property {Offset|null} offset
+ */
+
+/**
+ * @typedef {Object} Amplitude
+ * @property {string} label
+ * @property {number} key
+ */
+
+/**
+ * @typedef {Object} Offset
+ * @property {number} x
+ * @property {number} y
+ */
+
+
 
 export default {
     name: "Spectrum",
-    components: {SingleSignalCanvas, Collapsible, TheorySpectrum},
+    components: {SingleSignalCanvas, Collapsible, TheorySpectrum, SpectrumCanvas},
     data() {
         return {
-            fftSize: 512,
+            fftSize: 2048,
             fft: null,
             amplitudeValue: 1,
+            /**
+             * @type {Array<Signal>}
+             */
             signalShapes: [
                 {
                     label: 'Sinusni',
                     key: 'sin',
                     fn: () => [...Array(this.fftSize).keys()].map(el => Math.sin(el * 0.05 * this.amplitude)),
+                    is_binary: false,
+                    show_only: 'start',
+                    offset: null,
                 },
                 {
                     label: 'Kosinusni',
                     key: 'cos',
                     fn: () => [...Array(this.fftSize).keys()].map(el => Math.cos(el * 0.05 * this.amplitude)),
+                    is_binary: false,
+                    show_only: 'start',
+                    offset: null,
                 },
                 {
                     label: 'Kvadratni',
                     key: 'square',
-                    fn: () => [...Array(100 * this.amplitude).keys()].map(() => -1),
+                    fn: () => [...Array(Math.trunc(100 * this.amplitude)).keys()].map(() => -1),
+                    is_binary: true,
+                    show_only: 'middle',
+                    offset: {
+                        x: 350,
+                        y: 270
+                    },
                 },
                 {
                     label: 'Gauss',
                     key: 'gauss',
                     fn: () => {
                         const gauss = [0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0002, 0.0002, 0.0002, 0.0003, 0.0004, 0.0004, 0.0005, 0.0006, 0.0007, 0.0009, 0.0010, 0.0012, 0.0015, 0.0017, 0.0020, 0.0024, 0.0028, 0.0033, 0.0038, 0.0044, 0.0051, 0.0060, 0.0069, 0.0079, 0.0091, 0.0104, 0.0119, 0.0136, 0.0154, 0.0175, 0.0198, 0.0224, 0.0252, 0.0283, 0.0317, 0.0355, 0.0396, 0.0440, 0.0488, 0.0540, 0.0596, 0.0656, 0.0721, 0.0790, 0.0863, 0.0940, 0.1023, 0.1109, 0.1200, 0.1295, 0.1394, 0.1497, 0.1604, 0.1714, 0.1826, 0.1942, 0.2059, 0.2179, 0.2299, 0.2420, 0.2541, 0.2661, 0.2780, 0.2897, 0.3011, 0.3123, 0.3230, 0.3332, 0.3429, 0.3521, 0.3605, 0.3683, 0.3752, 0.3814, 0.3867, 0.3910, 0.3945, 0.3970, 0.3984, 0.3989, 0.3989, 0.3984, 0.3970, 0.3945, 0.3910, 0.3867, 0.3814, 0.3752, 0.3683, 0.3605, 0.3521, 0.3429, 0.3332, 0.3230, 0.3123, 0.3011, 0.2897, 0.2780, 0.2661, 0.2541, 0.2420, 0.2299, 0.2179, 0.2059, 0.1942, 0.1826, 0.1714, 0.1604, 0.1497, 0.1394, 0.1295, 0.1200, 0.1109, 0.1023, 0.0940, 0.0863, 0.0790, 0.0721, 0.0656, 0.0596, 0.0540, 0.0488, 0.0440, 0.0396, 0.0355, 0.0317, 0.0283, 0.0252, 0.0224, 0.0198, 0.0175, 0.0154, 0.0136, 0.0119, 0.0104, 0.0091, 0.0079, 0.0069, 0.0060, 0.0051, 0.0044, 0.0038, 0.0033, 0.0028, 0.0024, 0.0020, 0.0017, 0.0015, 0.0012, 0.0010, 0.0009, 0.0007, 0.0006, 0.0005, 0.0004, 0.0004, 0.0003, 0.0002, 0.0002, 0.0002, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001].map((el) => -el * 3);
-                        if(this.amplitude > 1) {
+                        if (this.amplitude > 1) {
                             return gauss.map(el => Array(Math.trunc(this.amplitude)).fill(el)).flat();
                         }
-                        if(this.amplitude < 1) {
+                        if (this.amplitude < 1) {
                             return [...gauss.filter((el, index) => index % Math.trunc(this.amplitude ** -1) === 0)];
                         }
                         return gauss;
-
-                    }
+                    },
+                    is_binary: false,
+                    show_only: 'middle',
+                    offset: null,
+                },
+                {
+                    label: 'Sinc',
+                    key: 'sinc',
+                    fn: () => {
+                        const sorted = [...Array(this.fftSize / 2).keys()].map(el => el * -1 - 1);
+                        sorted.sort((a, b) => a - b);
+                        return [...sorted, ...Array(this.fftSize / 2).keys()].map(el => (el === 0) ? -1 : -Math.sin(el * 0.05 * this.amplitude) / (el) * 6.5)
+                    },
+                    is_binary: false,
+                    show_only: 'middle',
+                    offset: {
+                        x: 350,
+                        y: 270
+                    },
                 },
             ],
+            /**
+             * @type {Array<Amplitude>}
+             */
             amplitudes: [
                 {
                     label: '1/4',
@@ -118,13 +181,16 @@ export default {
          * @returns {number[]}
          */
         padArray(array) {
-            if(array.length === this.fftSize) {
+            if (array.length === this.fftSize) {
                 return array;
             }
             const padSize = (this.fftSize - array.length) / 2;
             const zerosArray = [...Array(Math.trunc(padSize)).keys()].map(() => 0);
             array.unshift(...zerosArray);
             array.push(...zerosArray);
+            if(array.length % 2 === 1) {
+                array.push(0);
+            }
             return array;
         },
         /**
@@ -134,6 +200,20 @@ export default {
         changeAmplitude(value) {
             this.amplitudeValue = value;
         },
+
+        /**
+         * @param {Array} array
+         * @param {string} position
+         * @returns {number[]}
+         **/
+        cutArray(array, position = 'middle') {
+            if (position === 'middle') {
+                return array.filter((el, index) => (index >= (array.length / 2 - 350) && index <= (array.length / 2 + 350)));
+            }
+            const cutArray = [...array];
+            cutArray.length = 700;
+            return cutArray;
+        }
 
     },
     created() {
@@ -149,6 +229,13 @@ export default {
             return this.$store.state.spectrum.selected;
         },
         /**
+         * Returns currently selected signal shape
+         * @returns {Signal}
+         */
+        selectedObject() {
+            return this.signalShapes.find(el => el.key === this.selected);
+        },
+        /**
          * Returns current amplitude value
          * @returns {number}
          */
@@ -160,19 +247,33 @@ export default {
          * If array length is lower than fft.size, array gets padded with 0s
          * @returns {number[]}
          */
-        input() {
-            return this.padArray(this.signalShapes.find(el => el.key === this.selected).fn());
+        paddedInput() {
+            return this.padArray(this.selectedObject.fn());
+        },
+        /**
+         * Since fft.size used in fft calculation does not fit on the canvas, we remove excess numbers
+         * of input array and return array of size 512
+         * @returns {number[]}
+         */
+        canvasInput() {
+            return this.cutArray(this.paddedInput, this.selectedObject.show_only);
+        },
+        offset() {
+            return this.selectedObject.offset ?? {
+                x: 1,
+                y: 150
+            };
         },
         /**
          * Returns an array of FFT transformed numbers. Because fft.realTransform returns Complex array,
-         * we filter the array to return only each odd number
+         * we filter the array to return only each even number
          * @returns {number[]}
          */
         output() {
             const out = this.fft.createComplexArray();
-            console.log(this.input);
-            this.fft.realTransform(out, this.input);
-            return out.filter((el, index) => index % 2 === 1);
+            this.fft.realTransform(out, this.paddedInput);
+            console.log(this.paddedInput, out.filter((el, index) => index % 2 === 0));
+            return out.filter((el, index) => index % 2 === 0);
         }
     },
 }
