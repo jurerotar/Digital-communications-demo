@@ -11,7 +11,7 @@
     </button>
     <!-- Range slider -->
     <div class="inline-flex flex-col mb-2">
-        <label :for="`harmonic-components`" class="text-xl">Število komponent</label>
+        <label :for="`harmonic-components`" class="text-xl">Število komponent: <span class = "font-medium">{{this.components}}</span></label>
         <input type="range" :id="`harmonic-components`"
                v-model.number="components"
                @change="updateAmountOfComponents(components)"

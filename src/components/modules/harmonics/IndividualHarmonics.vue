@@ -19,9 +19,31 @@ export default {
             time: 0,
             waveValues: {},
             offset: {
-                x: 180,
-                y: 150
+                x: 125,
+                y: 125
             },
+            texts: [
+                {
+                    text: '1',
+                    x: 130,
+                    y: 15,
+                },
+                {
+                    text: '1',
+                    x: 230,
+                    y: 140,
+                },
+                {
+                    text: 'y = sin(x)',
+                    x: 70,
+                    y: 15,
+                },
+                {
+                    text: 'x',
+                    x: 680,
+                    y: 140,
+                },
+            ]
         }
     },
     mounted() {
@@ -41,7 +63,15 @@ export default {
                 p5.background(255);
 
                 // Draw axis and move center to defined offset coordinates
-                this.$c.drawAxis(p5, this.offset.x, this.offset.y);
+                this.$c.drawAxis(p5, this.offset);
+                this.texts.forEach(el => p5.text(el.text, el.x, el.y));
+
+                // Dashed lines
+                this.context.setLineDash([5, 15]);
+                p5.line(0, 22, 700, 22);
+                p5.line(0, 228, 700, 228);
+                this.context.setLineDash([]);
+
                 p5.translate(this.offset.x, this.offset.y);
 
                 p5.noFill();
@@ -55,7 +85,7 @@ export default {
                     const n = i * 2 + 1;
                     const frequency = n * Math.PI * this.time;
                     const color = this.$c.colors[i];
-                    const radius = 135 / Math.sqrt(n);
+                    const radius = 100 / Math.sqrt(n);
                     const x = radius * Math.cos(frequency);
                     const y = radius * Math.sin(frequency);
 
@@ -85,7 +115,12 @@ export default {
                 }
                 this.time += 0.01;
             }
+            p5.removeCanvas = () => p5.remove();
         }, `${this.canvasId}`);
+    },
+    unmounted() {
+        // Remove canvas, otherwise P5 object stays in memory
+        this.p5.removeCanvas();
     },
     computed: {
         /**

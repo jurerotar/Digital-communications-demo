@@ -1,7 +1,7 @@
 <template>
     <h1 class="text-3xl font-medium mb-4">Kazalci</h1>
     <collapsible>
-        To je burek
+        <theory-pointer></theory-pointer>
     </collapsible>
     <canvas-container>
         <div :id="canvasId"></div>
@@ -13,28 +13,114 @@
 import Collapsible from "@/components/global/Collapsible";
 import P5 from 'p5';
 import CanvasContainer from "@/components/global/CanvasContainer";
+import TheoryPointer from "@/components/theory/TheoryPointer";
+
+/**
+ * @typedef {Object} Coordinates
+ * @property {number} x
+ * @property {number} y
+ */
+
+/**
+ * @typedef {Object} Text
+ * @property {string} text
+ * @property {number} x
+ * @property {number} y
+ */
 
 export default {
     name: "Pointers",
-    components: {Collapsible, CanvasContainer},
+    components: {TheoryPointer, Collapsible, CanvasContainer},
     data() {
         return {
             canvasId: 'canvas-pointers',
             context: null,
             time: 0,
-            waveValues: [],
-            offset: {
-                x: 180,
-                y: 150
-            },
-
-            wave: [],
             sinHorizontal: 0,
             cosHorizontal: 0,
             cosVertical: 0,
             sinVertical: 0,
+            wave: [],
+            /**
+             * @type {Coordinates}
+             */
+            offset: {
+                x: 150,
+                y: 150
+            },
+            /**
+             * @type {Coordinates}
+             */
+            dimensions: {
+                x: 800,
+                y: 800
+            },
+            /**
+             * @type {Text[]}
+             */
+            texts: [
+                {
+                    text: 'Im',
+                    x: 120,
+                    y: 15,
+                },
+                {
+                    text: 'Re',
+                    x: 290,
+                    y: 140,
+                },
+                {
+                    text: '1',
+                    x: 155,
+                    y: 15,
+                },
+                {
+                    text: '1',
+                    x: 295,
+                    y: 170,
+                },
+                {
+                    text: '-1',
+                    x: 155,
+                    y: 300,
+                },
+                {
+                    text: '-1',
+                    x: 5,
+                    y: 170,
+                },
+                {
+                    text: '180\xB0',
+                    x: 540,
+                    y: 170,
+                },
+                {
+                    text: '-180\xB0',
+                    x: 335,
+                    y: 140,
+                },
+                {
+                    text: '-180\xB0',
+                    x: 155,
+                    y: 360,
+                },
+                {
+                    text: '180\xB0',
+                    x: 155,
+                    y: 550,
+                },
+                {
+                    text: 'Φ',
+                    x: 720,
+                    y: 170,
+                },
+                {
+                    text: 'Φ',
+                    x: 155,
+                    y: 700,
+                },
 
-
+            ]
         }
     },
 
@@ -53,10 +139,41 @@ export default {
                 arr.push(startValue + (step * i));
             }
             return arr;
+        },
+        /**
+         */
+        drawArrow(p5, vectorStart, vectorEnd, color = 0) {
+            const arrowSize = 7;
+            p5.push();
+            p5.stroke(color);
+            p5.fill(color);
+            p5.translate(vectorStart.x, vectorStart.y);
+            p5.line(0, 0, vectorEnd.x, vectorEnd.y);
+            p5.rotate(vectorEnd.heading());
+            p5.translate(vectorEnd.mag() - arrowSize, 0);
+            p5.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+            p5.pop();
+        },
+
+        /**
+         * Draws both axis on canvas with defined offset, must be used before any translates
+         * @param {object} p5
+         * @param {number} offsetX
+         * @param {number} offsetY
+         */
+        drawAxis(p5, offsetX = this.offset.x, offsetY = this.offset.y) {
+            p5.stroke('#ccc');
+            p5.strokeWeight(2);
+            // Horizontal line from start of canvas to the end
+            p5.line(0, offsetY, this.dimensions.x, offsetY);
+            // Vertical line from top to bottom
+            p5.line(offsetX, 0, offsetX, this.dimensions.y);
+            // Restore defaults
+            p5.strokeWeight(1);
+            p5.stroke(0);
         }
     },
     mounted() {
-
         // Returns array of sine and cosine wave points
         const sineValues = this.linearSpace(0, 2 * Math.PI, 200).map(el => Math.sin(el));
         const cosineValues = this.linearSpace(0, 2 * Math.PI, 200).map(el => Math.cos(el));
@@ -64,20 +181,34 @@ export default {
         // Initiate new P5 instance and create canvas
         new P5((p5) => {
             p5.setup = () => {
-                p5.createCanvas(800, 800);
+                p5.createCanvas(this.dimensions.x, this.dimensions.y);
             }
 
             p5.draw = () => {
-
+                const radius = 100 * (4 / Math.PI);
+                p5.background(255);
                 // Add context to allow custom canvas transformations
                 this.context = document.querySelector(`#${this.canvasId} canvas`).getContext('2d');
 
-                const radius = 100 * (4 / Math.PI);
+                p5.textSize(18);
+                p5.fill(0);
+                p5.textFont('Montserrat');
 
-                p5.background(255);
+                p5.stroke(0);
+                p5.strokeWeight(1);
+                this.texts.forEach(el => p5.text(el.text, el.x, el.y));
+
+                this.drawAxis(p5);
+
+                this.context.setLineDash([5, 15]);
+                p5.line(277, 0, 277, this.dimensions.y);
+                p5.line(0, 277, this.dimensions.x, 277);
+                p5.line(23, 0, 23, this.dimensions.y);
+                p5.line(0, 23, this.dimensions.x, 23);
+                this.context.setLineDash([]);
 
                 // Moves the middle of the circle
-                p5.translate(150, 200);
+                p5.translate(150, 150);
                 p5.strokeWeight(3);
 
                 // Calculates the coordinates x and y(points on the circle)
@@ -86,15 +217,20 @@ export default {
 
                 p5.stroke(this.$c.colors[1]);
                 p5.noFill();
+
                 // Initializes the circle at the starting point
                 p5.ellipse(0, 0, radius * 2);
 
                 p5.stroke(this.$c.colors[1]);
+
                 // Draws a pointer
                 p5.line(0, 0, x, y);
 
+                this.drawArrow(p5, p5.createVector(0, 0), p5.createVector(x, y), this.$c.colors[1]);
+
                 p5.stroke(this.$c.colors[0]);
-                // Draws a sine wave with elements and index form lineSpace function and moves it
+
+                // Draws a sine wave with elements and indexes from linearSpace function and moves it
                 p5.translate(200, 0);
                 p5.beginShape();
                 sineValues.forEach((el, index) => p5.vertex(index, el * radius));
@@ -133,7 +269,7 @@ export default {
                 // Make line dotted
                 this.context.setLineDash([5, 15]);
                 // Connect current x,y coordinates to cosine graph
-                p5.line(x, y-200, this.cosVertical, this.cosHorizontal);
+                p5.line(x, y - 200, this.cosVertical, this.cosHorizontal);
                 // Make line full
                 this.context.setLineDash([]);
 
