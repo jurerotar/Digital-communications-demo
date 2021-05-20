@@ -14,6 +14,7 @@ export default {
     components: {CanvasContainer},
     data() {
         return {
+            p5: null,
             canvasId: 'canvas-harmonics-summed',
             context: null,
             time: 0,
@@ -43,7 +44,7 @@ export default {
     },
     mounted() {
         // Initiate new P5 instance and create canvas
-        new P5((p5) => {
+        this.p5 = new P5((p5) => {
             this.$c.setup(p5);
             p5.draw = () => {
 
@@ -57,11 +58,11 @@ export default {
                 this.$c.drawAxis(p5, this.offset);
                 this.texts.forEach(el => p5.text(el.text, el.x, el.y));
 
-                // Dashed lines
-                this.context.setLineDash([5, 15]);
-                p5.line(0, 22, 700, 22);
-                p5.line(0, 228, 700, 228);
-                this.context.setLineDash([]);
+                // Dashed lines to show values
+                this.$c.drawDashed(this.context, () => {
+                    p5.line(0, 22, 700, 22);
+                    p5.line(0, 228, 700, 228);
+                });
                 p5.translate(this.offset.x, this.offset.y);
 
                 p5.noFill();
@@ -105,12 +106,12 @@ export default {
                     p5.vertex(x + 200, y);
                 });
                 p5.endShape();
-                this.context.setLineDash([5, 15]);
 
-                // Draw a line from x, y to start of sine wave which is at position (200, first element of array)
-                p5.line(x, y, 200, this.waveValues[0]);
+                this.$c.drawDashed(this.context, () => {
+                    // Draw a line from x, y to start of sine wave which is at position (200, first element of array)
+                    p5.line(x, y, 200, this.waveValues[0]);
+                })
 
-                this.context.setLineDash([]);
                 if (this.waveValues.length > 300) {
                     this.waveValues.pop();
                 }
@@ -123,14 +124,11 @@ export default {
         // Remove canvas, otherwise P5 object stays in memory
         this.p5.removeCanvas();
     },
-    computed: {
-        /**
-         * Returns number of components to display
-         * @returns {number}
-         */
-        components() {
-            return this.$store.state.harmonics.components;
-        },
+    props: {
+        components: {
+            type: Number,
+            required: true
+        }
     }
 
 }
