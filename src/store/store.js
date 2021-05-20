@@ -68,53 +68,9 @@ const app = {
     }
 }
 
-/**
- * Spectrum settings
- */
-const spectrum = {
-    namespaced: true,
-    state() {
-        return {
-            selected: 'sin'
-        }
-    },
-    mutations: {
-        /**
-         * Sets the selected spectrum in state.selected
-         * @param {object} state
-         * @param {string} key - possible values: sin, cos, sawtooth, square
-         */
-        changeSelected(state, key) {
-            state.selected = key;
-        }
-    },
-};
-
-const harmonics = {
-    namespaced: true,
-    state() {
-        return {
-            components: 1,
-        }
-    },
-    mutations: {
-        /**
-         * Sets the components value
-         * @param {object} state
-         * @param {number} value
-         */
-        updateAmountOfComponents(state, value) {
-            state.components = value;
-        },
-    }
-}
-
-
 const store = createStore({
     modules: {
         app,
-        spectrum,
-        harmonics,
     }
 });
 
