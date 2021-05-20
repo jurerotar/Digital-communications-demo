@@ -33,6 +33,7 @@ export default {
     components: {TheoryPointer, Collapsible, CanvasContainer},
     data() {
         return {
+            p5: null,
             canvasId: 'canvas-pointers',
             context: null,
             time: 0,
@@ -123,7 +124,6 @@ export default {
             ]
         }
     },
-
     methods: {
         /**
          * Returns array of linearly spaced points between startValue and stopValue
@@ -140,8 +140,6 @@ export default {
             }
             return arr;
         },
-        /**
-         */
         drawArrow(p5, vectorStart, vectorEnd, color = 0) {
             const arrowSize = 7;
             p5.push();
@@ -154,24 +152,6 @@ export default {
             p5.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
             p5.pop();
         },
-
-        /**
-         * Draws both axis on canvas with defined offset, must be used before any translates
-         * @param {object} p5
-         * @param {number} offsetX
-         * @param {number} offsetY
-         */
-        drawAxis(p5, offsetX = this.offset.x, offsetY = this.offset.y) {
-            p5.stroke('#ccc');
-            p5.strokeWeight(2);
-            // Horizontal line from start of canvas to the end
-            p5.line(0, offsetY, this.dimensions.x, offsetY);
-            // Vertical line from top to bottom
-            p5.line(offsetX, 0, offsetX, this.dimensions.y);
-            // Restore defaults
-            p5.strokeWeight(1);
-            p5.stroke(0);
-        }
     },
     mounted() {
         // Returns array of sine and cosine wave points
@@ -179,7 +159,7 @@ export default {
         const cosineValues = this.linearSpace(0, 2 * Math.PI, 200).map(el => Math.cos(el));
 
         // Initiate new P5 instance and create canvas
-        new P5((p5) => {
+        this.p5 = new P5((p5) => {
             p5.setup = () => {
                 p5.createCanvas(this.dimensions.x, this.dimensions.y);
             }
@@ -188,7 +168,7 @@ export default {
                 const radius = 100 * (4 / Math.PI);
                 p5.background(255);
                 // Add context to allow custom canvas transformations
-                this.context = document.querySelector(`#${this.canvasId} canvas`).getContext('2d');
+                this.context = document.querySelector(`#${this.canvasId} canvas`)?.getContext('2d');
 
                 p5.textSize(18);
                 p5.fill(0);
@@ -198,14 +178,17 @@ export default {
                 p5.strokeWeight(1);
                 this.texts.forEach(el => p5.text(el.text, el.x, el.y));
 
-                this.drawAxis(p5);
+                this.$c.drawAxis(p5, {
+                    x: 150,
+                    y: 150
+                });
 
-                this.context.setLineDash([5, 15]);
-                p5.line(277, 0, 277, this.dimensions.y);
-                p5.line(0, 277, this.dimensions.x, 277);
-                p5.line(23, 0, 23, this.dimensions.y);
-                p5.line(0, 23, this.dimensions.x, 23);
-                this.context.setLineDash([]);
+                this.$c.drawDashed(this.context, () => {
+                    p5.line(277, 0, 277, this.dimensions.y);
+                    p5.line(0, 277, this.dimensions.x, 277);
+                    p5.line(23, 0, 23, this.dimensions.y);
+                    p5.line(0, 23, this.dimensions.x, 23);
+                });
 
                 // Moves the middle of the circle
                 p5.translate(150, 150);
@@ -244,12 +227,10 @@ export default {
                 this.sinHorizontal %= 200;
                 p5.ellipse(this.sinHorizontal, this.sinVertical, 15, 15);
 
-                // Make line dotted
-                this.context.setLineDash([5, 15]);
-                // Connect current x,y coordinates to sine graph
-                p5.line(x - 200, y, this.sinHorizontal, this.sinVertical);
-                // Make line full
-                this.context.setLineDash([]);
+                this.$c.drawDashed(this.context, () => {
+                    // Connect current x,y coordinates to sine graph
+                    p5.line(x - 200, y, this.sinHorizontal, this.sinVertical);
+                });
 
                 p5.stroke(this.$c.colors[2]);
                 // Draws a cosine wave with elements and index form lineSpace function and moves it
@@ -266,16 +247,18 @@ export default {
                 this.cosHorizontal %= 200;
                 p5.ellipse(this.cosVertical, this.cosHorizontal, 15, 15);
 
-                // Make line dotted
-                this.context.setLineDash([5, 15]);
-                // Connect current x,y coordinates to cosine graph
-                p5.line(x, y - 200, this.cosVertical, this.cosHorizontal);
-                // Make line full
-                this.context.setLineDash([]);
+                this.$c.drawDashed(this.context, () => {
+                    // Connect current x,y coordinates to cosine graph
+                    p5.line(x, y - 200, this.cosVertical, this.cosHorizontal);
+                });
 
                 this.time += 0.01;
-            }
+            };
+            p5.removeCanvas = () => p5.remove();
         }, `${this.canvasId}`);
     },
+    unmounted() {
+        this.p5.removeCanvas();
+    }
 }
 </script>

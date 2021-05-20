@@ -63,6 +63,7 @@ export default {
     components: {FullSignal, Collapsible, TheorySpectrum, SpectrumCanvas},
     data() {
         return {
+            selected: 'sin',
             fftSize: 2048,
             fft: null,
             amplitudeValue: 1,
@@ -143,7 +144,7 @@ export default {
          * @param key {string} - possible values: sin, cos, gauss, square
          */
         changeSelected(key) {
-            this.$store.commit('spectrum/changeSelected', key);
+            this.selected = key;
         },
         /**
          * Pads the array with zeros to match fft.size if array length is smaller than fft.size
@@ -171,7 +172,7 @@ export default {
         },
 
         /**
-         * @param {Array} array
+         * @param {number[]} array
          * @returns {number[]}
          **/
         cutArray(array) {
@@ -184,13 +185,6 @@ export default {
         this.fft = new FFT(this.fftSize);
     },
     computed: {
-        /**
-         * Returns currently selected signal shape
-         * @returns {string}
-         */
-        selected() {
-            return this.$store.state.spectrum.selected;
-        },
         /**
          * Returns currently selected signal shape
          * @returns {Signal}

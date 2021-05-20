@@ -35,7 +35,7 @@ export default {
                 p5.fill(0);
                 p5.textFont('Montserrat');
                 p5.text('t', 650, this.offset.y + 20)
-                p5.text(this.isModulated, 10, 15)
+                p5.text(this.isModulatedText, 10, 15)
                 p5.translate(this.offset.x, this.offset.y);
 
 
@@ -68,7 +68,7 @@ export default {
             const max = Math.max(...this.data.map(el => Math.abs(el)));
             return this.data.map(el => el / max);
         },
-        isModulated() {
+        isModulatedText() {
             return (this.is_modulated) ? 'y[t]' : 'x[t]';
         }
     },
