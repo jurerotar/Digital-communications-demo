@@ -20,7 +20,7 @@ export default {
             time: 0,
             waveValues: {},
             offset: {
-                x: 125,
+                x: 175,
                 y: 125
             },
             texts: [
@@ -94,7 +94,7 @@ export default {
                     p5.ellipse(0, 0, radius * 2);
 
                     // Draw a line from center to (x, y)
-                    p5.line(0, 0, x, y);
+                    //p5.line(0, 0, x, y);
 
                     // Add y to the start of waveValues[i] array
                     this.waveValues[i].unshift(y);
@@ -108,7 +108,10 @@ export default {
                     this.$c.drawDashed(this.context, () => {
                         // Draw a line from x, y to start of sine wave which is at position (200, first element of array)
                         p5.line(x, y, 200, this.waveValues[i][0]);
-                    })
+                    });
+
+                    this.$c.drawArrow(p5, p5.createVector(0, 0), p5.createVector(x * 0.99, y * 0.99), color, 7);
+
                     if (this.waveValues[i].length > 300) {
                         this.waveValues[i].pop();
                     }
@@ -128,6 +131,5 @@ export default {
             required: true
         }
     }
-
 }
 </script>

@@ -3,7 +3,7 @@
     <collapsible>
         <theory-spectrum></theory-spectrum>
     </collapsible>
-    <h2 class="font-semibold text-xl">Oblika signala</h2>
+    <h2 class="font-semibold text-xl">Oblika</h2>
     <div class="flex flex-col sm:flex-row my-2">
         <button
             class="text-white w-fit-content font-bold py-2 px-4 mb-2 sm:mr-2 rounded outline-none duration-300 transition-colors h-12"
@@ -13,7 +13,7 @@
             {{ shape.label }}
         </button>
     </div>
-    <h2 class="font-semibold text-xl">Amplituda</h2>
+    <h2 class="font-semibold text-xl">T</h2>
     <div class="flex flex-col sm:flex-row my-2">
         <button
             class="text-white w-fit-content font-bold py-2 px-4 mb-2 sm:mr-2 rounded outline-none duration-300 transition-colors h-12"
@@ -27,13 +27,13 @@
         :canvas_id="'spectrum-original-signal'"
         :data="canvasInput"
         :is_binary="selectedObject.is_binary"
-        :title="'Prvotni signal'"
+        :title="'Signal'"
     >
     </full-signal>
     <spectrum-canvas
         :canvas_id="'spectrum-signal-spectrum'"
         :data="output"
-        :title="'Spekter signala'"
+        :title="'Spekter'"
         :type = "selectedObject.key">
     </spectrum-canvas>
 </template>
@@ -67,9 +67,7 @@ export default {
             fftSize: 2048,
             fft: null,
             amplitudeValue: 1,
-            /**
-             * @type {Array<Signal>}
-             */
+            /** @type {Array<Signal>} */
             signalShapes: [
                 {
                     label: 'Sinusni',
@@ -111,9 +109,7 @@ export default {
                     is_binary: false,
                 },
             ],
-            /**
-             * @type {Array<Amplitude>}
-             */
+            /** @type {Array<Amplitude>} */
             amplitudes: [
                 {
                     label: '1/4',
@@ -223,7 +219,11 @@ export default {
         output() {
             const out = this.fft.createComplexArray();
             this.fft.realTransform(out, this.paddedInput);
-            return out.filter((el, index) => index % 2 === 0);
+            const absoluteSpectrumValues = [];
+            for(let i = 0; i < out.length; i += 2) {
+                absoluteSpectrumValues.push(Math.sqrt(out[i]**2 + out[i + 1]**2));
+            }
+            return absoluteSpectrumValues;
         }
     },
 }

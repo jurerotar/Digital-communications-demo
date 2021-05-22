@@ -140,18 +140,6 @@ export default {
             }
             return arr;
         },
-        drawArrow(p5, vectorStart, vectorEnd, color = 0) {
-            const arrowSize = 7;
-            p5.push();
-            p5.stroke(color);
-            p5.fill(color);
-            p5.translate(vectorStart.x, vectorStart.y);
-            p5.line(0, 0, vectorEnd.x, vectorEnd.y);
-            p5.rotate(vectorEnd.heading());
-            p5.translate(vectorEnd.mag() - arrowSize, 0);
-            p5.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
-            p5.pop();
-        },
     },
     mounted() {
         // Returns array of sine and cosine wave points
@@ -178,10 +166,7 @@ export default {
                 p5.strokeWeight(1);
                 this.texts.forEach(el => p5.text(el.text, el.x, el.y));
 
-                this.$c.drawAxis(p5, {
-                    x: 150,
-                    y: 150
-                });
+                this.$c.drawAxis(p5, this.offset, this.dimensions);
 
                 this.$c.drawDashed(this.context, () => {
                     p5.line(277, 0, 277, this.dimensions.y);
@@ -209,7 +194,7 @@ export default {
                 // Draws a pointer
                 p5.line(0, 0, x, y);
 
-                this.drawArrow(p5, p5.createVector(0, 0), p5.createVector(x, y), this.$c.colors[1]);
+                this.$c.drawArrow(p5, p5.createVector(0, 0), p5.createVector(x, y), this.$c.colors[1]);
 
                 p5.stroke(this.$c.colors[0]);
 

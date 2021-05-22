@@ -161,7 +161,19 @@ const canvas = {
         context.setLineDash([5, 15]);
         callback();
         context.setLineDash([]);
-    }
+    },
+    drawArrow(p5, vectorStart, vectorEnd, color, size = 7) {
+        const arrowSize = size;
+        p5.push();
+        p5.stroke(color);
+        p5.fill(color);
+        p5.translate(vectorStart.x, vectorStart.y);
+        p5.line(0, 0, vectorEnd.x, vectorEnd.y);
+        p5.rotate(vectorEnd.heading());
+        p5.translate(vectorEnd.mag() - arrowSize, 0);
+        p5.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+        p5.pop();
+    },
 };
 
 export default canvas;

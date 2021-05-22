@@ -26,8 +26,8 @@
                           :vertical_pool="[' 1', -1]"
     >
     </positive-only-signal>
-    <positive-only-signal v-if="hasBinary"
-                          :data="binarySignal.values"
+    <positive-only-signal v-if="hasBipolar"
+                          :data="bipolarSignal.values"
                           :canvas_id="'binary-signal'"
                           :is_binary="true"
                           :title="'Binarni signal'"
@@ -68,13 +68,15 @@
  * @property {number[]} values
  * @property {number[]} pool
  * @property {number} currentlyReturns
+ */
 
+/**
  * @typedef {Object} Modulation
  * @property {string} label
  * @property {string} key
  * @property {boolean} hasCarrier
  * @property {boolean} hasSineModulation
- * @property {boolean} hasBinary
+ * @property {boolean} hasBipolar
  * @property {boolean} hasUnipolar
  * @property {boolean} hasPam4
  */
@@ -93,37 +95,30 @@ export default {
             binaryCounter: 0,
             binarySymbolLength: 100,
 
-            /**
-             * @type {number[]}
-             */
+            /** @type {number[]} */
+            timeValues: [],
+
+            /** @type {number[]} */
             carrierSignalValues: [],
 
-            /**
-             * @type {number[]}
-             */
+            /** @type {number[]} */
             sineModulationSignalValues: [],
 
-            /**
-             * @type {BinarySignal}
-             */
-            binarySignal: {
+            /** @type {BinarySignal} */
+            bipolarSignal: {
                 values: [],
                 pool: [-1, 1],
                 currentlyReturns: 1,
             },
 
-            /**
-             * @type {BinarySignal}
-             */
+            /** @type {BinarySignal} */
             unipolarSignal: {
                 values: [],
                 pool: [-1, 0],
                 currentlyReturns: 0,
             },
 
-            /**
-             * @type {BinarySignal}
-             */
+            /** @type {BinarySignal} */
             pam4Signal: {
                 values: [],
                 pool: [-3, -1, 1, 3],
@@ -131,7 +126,7 @@ export default {
             },
 
             /**
-             * Objects in this array determine which canvases wll be drawn
+             * Objects in this array determine which canvases will be drawn
              * @type {Modulation[]}
              */
             modulations: [
@@ -140,26 +135,25 @@ export default {
                     key: 'am',
                     hasCarrier: true,
                     hasSineModulation: true,
-                    hasBinary: false,
+                    hasBipolar: false,
                     hasUnipolar: false,
                     hasPam4: false,
                 },
-                // {
-                //     label: 'FM',
-                //     key: 'fm',
-                //     hasCarrier: true,
-                //     hasSineModulation: true,
-                //     hasBinary: false,
-                //     hasUnipolar: false,
-                //     hasPam4: false,
-                //
-                // },
+                {
+                    label: 'FM',
+                    key: 'fm',
+                    hasCarrier: true,
+                    hasSineModulation: true,
+                    hasBipolar: false,
+                    hasUnipolar: false,
+                    hasPam4: false,
+                },
                 {
                     label: 'BASK',
                     key: 'bask',
                     hasCarrier: true,
                     hasSineModulation: false,
-                    hasBinary: false,
+                    hasBipolar: false,
                     hasUnipolar: true,
                     hasPam4: false,
                 },
@@ -168,17 +162,16 @@ export default {
                     key: 'bpsk',
                     hasCarrier: true,
                     hasSineModulation: false,
-                    hasBinary: true,
+                    hasBipolar: true,
                     hasUnipolar: false,
                     hasPam4: false,
-
                 },
                 {
                     label: 'PAM 4',
                     key: 'pam4',
                     hasCarrier: true,
                     hasSineModulation: false,
-                    hasBinary: false,
+                    hasBipolar: false,
                     hasUnipolar: false,
                     hasPam4: true,
                 },
@@ -187,11 +180,10 @@ export default {
                     key: 'fsk',
                     hasCarrier: true,
                     hasSineModulation: false,
-                    hasBinary: false,
-                    hasUnipolar: true,
+                    hasBipolar: true,
+                    hasUnipolar: false,
                     hasPam4: false,
                 },
-
             ]
         }
     },
@@ -203,33 +195,23 @@ export default {
         selectedModulationData() {
             return this.modulations.find(el => el.key === this.selected);
         },
-        /**
-         * @returns {boolean}
-         */
+        /** @returns {boolean} */
         hasCarrier() {
             return this.selectedModulationData.hasCarrier;
         },
-        /**
-         * @returns {boolean}
-         */
+        /** @returns {boolean} */
         hasSineModulation() {
             return this.selectedModulationData.hasSineModulation;
         },
-        /**
-         * @returns {boolean}
-         */
-        hasBinary() {
-            return this.selectedModulationData.hasBinary;
+        /** @returns {boolean} */
+        hasBipolar() {
+            return this.selectedModulationData.hasBipolar;
         },
-        /**
-         * @returns {boolean}
-         */
+        /** @returns {boolean} */
         hasUnipolar() {
             return this.selectedModulationData.hasUnipolar;
         },
-        /**
-         * @returns {boolean}
-         */
+        /** @returns {boolean} */
         hasPam4() {
             return this.selectedModulationData.hasPam4;
         },
@@ -241,48 +223,41 @@ export default {
             const [
                 carrier,
                 sine,
-                binary,
+                bipolar,
                 unipolar,
                 pam4,
-
+                time
             ] = [
                 this.carrierSignalValues,
                 this.sineModulationSignalValues,
-                this.binarySignal.values,
+                this.bipolarSignal.values,
                 this.unipolarSignal.values,
-                this.pam4Signal.values
+                this.pam4Signal.values,
+                this.timeValues
             ];
             switch (this.selected) {
                 case 'am':
                     return carrier.map((el, index) => el * sine[index]);
                 case 'fm':
-                    return sine.map((el) => {
-                        const multiplier = (el < 0) ? 0.2 : 4;
-                        return Math.sin(20 * Math.PI * this.time * multiplier);
+                    return time.map((el, index) => {
+                        const multiplier = (sine[index] >= 0) ? 8 : 20;
+                        return Math.sin(Math.PI * el * multiplier)
                     });
                 case 'bask':
                     return carrier.map((el, index) => el * unipolar[index]);
                 case 'bpsk':
-                    return carrier.map((el, index) => el * binary[index]);
+                    return carrier.map((el, index) => el * bipolar[index]);
                 case 'fsk':
-                    return carrier.map((el, index) => {
-                        const currentValue = binary[index];
-                        if(currentValue === 1) {
-                            return Math.sin( this.time * Math.PI * 2);
-                        }
-                        else {
-                            return Math.sin( this.time * Math.PI);
-                        }
+                    return time.map((el, index) => {
+                        const multiplier = (bipolar[index] === 1) ? 10 : 20;
+                        return Math.sin(Math.PI * el * multiplier)
                     });
                 case 'pam4':
                     return carrier.map((el, index) => {
                         const amplitudes = {
-                            '3': 1,
-                            '1': 2,
-                            '-1': 3,
-                            '-3': 4
+                            '3': 1, '1': 2, '-1': 3, '-3': 4
                         }
-                        return amplitudes[`${pam4[index]}`] * el/3;
+                        return amplitudes[`${pam4[index]}`] * el / 3;
                     });
                 default:
                     return [];
@@ -298,51 +273,27 @@ export default {
             this.selected = key;
         },
 
-        /**
-         * @returns {number}
-         */
+        /** @returns {number} */
         nextCarrierValue() {
-            return Math.sin(20 * Math.PI * this.time);
+            return Math.sin(15 * Math.PI * this.time);
         },
 
-        /**
-         * @returns {number}
-         */
+        /** @returns {number} */
         nextSineModulationValue() {
             return Math.sin(Math.PI * this.time);
         },
 
         /**
-         * Returns a value determined by binarySignal.currentlyReturns which randomizes every 100 calls
+         * Returns binary values periodically from
+         * @param {BinarySignal} obj
          * @returns {number}
          */
-        nextBinaryValue() {
+        nextBinaryValue(obj) {
             if (this.binaryCounter === this.binarySymbolLength) {
-                this.binarySignal.currentlyReturns = this.binarySignal.pool.random();
+                const currentlyReturnsIndex = obj.pool.findIndex(el => el === obj.currentlyReturns);
+                obj.currentlyReturns = (currentlyReturnsIndex === obj.pool.length -1) ? obj.pool[0] : obj.pool[currentlyReturnsIndex + 1];
             }
-            return this.binarySignal.currentlyReturns;
-        },
-
-        /**
-         * Returns a value determined by unipolarSignal.currentlyReturns which randomizes every 100 calls
-         * @returns {number}
-         */
-        nextUnipolarValue() {
-            if (this.binaryCounter === this.binarySymbolLength) {
-                this.unipolarSignal.currentlyReturns = this.unipolarSignal.pool.random();
-            }
-            return this.unipolarSignal.currentlyReturns;
-        },
-
-        /**
-         * Returns a value determined by pam4Signal.currentlyReturns which randomizes every 100 calls
-         * @returns {number}
-         */
-        nextPam4Value() {
-            if (this.binaryCounter === this.binarySymbolLength) {
-                this.pam4Signal.currentlyReturns = this.pam4Signal.pool.random();
-            }
-            return this.pam4Signal.currentlyReturns;
+            return obj.currentlyReturns;
         },
     },
     mounted() {
@@ -352,17 +303,19 @@ export default {
             // Push new values to arrays
             this.carrierSignalValues.unshift(this.nextCarrierValue());
             this.sineModulationSignalValues.unshift(this.nextSineModulationValue());
-            this.binarySignal.values.unshift(this.nextBinaryValue());
-            this.unipolarSignal.values.unshift(this.nextUnipolarValue());
-            this.pam4Signal.values.unshift(this.nextPam4Value());
+            this.bipolarSignal.values.unshift(this.nextBinaryValue(this.bipolarSignal));
+            this.unipolarSignal.values.unshift(this.nextBinaryValue(this.unipolarSignal));
+            this.pam4Signal.values.unshift(this.nextBinaryValue(this.pam4Signal));
+            this.timeValues.unshift(this.time);
 
             // Loop through arrays and remove last values if lengths are too big
             [
                 this.carrierSignalValues,
                 this.sineModulationSignalValues,
-                this.binarySignal.values,
+                this.bipolarSignal.values,
                 this.unipolarSignal.values,
-                this.pam4Signal.values
+                this.pam4Signal.values,
+                this.timeValues
             ].forEach(array => {
                 if (array.length > 600) {
                     array.pop();
