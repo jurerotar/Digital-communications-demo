@@ -16,14 +16,14 @@
                           :data="sineModulationSignalValues"
                           :canvas_id="'sine-modulation-signal'"
                           :title="'Sinusni modulacijski signal'"
-                          :vertical_pool="[' 1', -1]"
+                          :vertical_pool="[1, 0.5, -0.5, -1]"
     >
     </positive-only-signal>
     <positive-only-signal v-if="hasCarrier"
                           :data="carrierSignalValues"
                           :canvas_id="'carrier-signal'"
                           :title="'Nosilec'"
-                          :vertical_pool="[' 1', -1]"
+                          :vertical_pool="[1, 0.5, -0.5, -1]"
     >
     </positive-only-signal>
     <positive-only-signal v-if="hasBipolar"
@@ -31,7 +31,7 @@
                           :canvas_id="'binary-signal'"
                           :is_binary="true"
                           :title="'Binarni signal'"
-                          :vertical_pool="[' 1', -1]"
+                          :vertical_pool="[1, 0.5, -0.5, -1]"
     >
     </positive-only-signal>
     <positive-only-signal v-if="hasUnipolar"
@@ -39,7 +39,7 @@
                           :canvas_id="'unipolar-signal'"
                           :is_binary="true"
                           :title="'Unipolarni signal'"
-                          :vertical_pool="[1]"
+                          :vertical_pool="[1, 0.5, -0.5, -1]"
     >
     </positive-only-signal>
     <positive-only-signal v-if="hasPam4"
@@ -47,7 +47,7 @@
                           :canvas_id="'pam4-signal'"
                           :is_binary="true"
                           :title="'PAM 4 signal'"
-                          :vertical_pool="[' 3', ' 1', -1, -3]"
+                          :vertical_pool="[3, 1, -1, -3]"
     >
     </positive-only-signal>
 
@@ -55,7 +55,7 @@
                           :canvas_id="'modulated-signal'"
                           :is_binary="false"
                           :title="'Moduliran signal'"
-                          :vertical_pool="[1, -1]"
+                          :vertical_pool="[1, 0.5, -0.5, -1]"
                           :is_modulated="true"
     >
     </positive-only-signal>
@@ -121,7 +121,7 @@ export default {
             /** @type {BinarySignal} */
             pam4Signal: {
                 values: [],
-                pool: [-3, -1, 1, 3],
+                pool: [-2, -1, 1, 2],
                 currentlyReturns: 1,
             },
 
@@ -175,15 +175,15 @@ export default {
                     hasUnipolar: false,
                     hasPam4: true,
                 },
-                {
-                    label: 'FSK',
-                    key: 'fsk',
-                    hasCarrier: true,
-                    hasSineModulation: false,
-                    hasBipolar: true,
-                    hasUnipolar: false,
-                    hasPam4: false,
-                },
+                // {
+                //     label: 'FSK',
+                //     key: 'fsk',
+                //     hasCarrier: true,
+                //     hasSineModulation: false,
+                //     hasBipolar: true,
+                //     hasUnipolar: false,
+                //     hasPam4: false,
+                // },
             ]
         }
     },

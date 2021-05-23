@@ -96,7 +96,7 @@ export default {
                     // Update previous x and y to current x and y
                     previousX = x;
                     previousY = y;
-                    this.$c.drawArrow(p5, p5.createVector(previousX, previousY), p5.createVector(Math.cos(frequency) * 0.1, Math.sin(frequency) * 0.1), color, 6 - i);
+                    this.$c.drawArrow(p5, p5.createVector(previousX, previousY), p5.createVector(x, y), color, 6 - i);
                 }
                 // Add y to the start of waveValues array
                 this.waveValues.unshift(y);

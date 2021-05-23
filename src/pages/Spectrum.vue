@@ -72,13 +72,13 @@ export default {
                 {
                     label: 'Sinusni',
                     key: 'sin',
-                    fn: () => [...[...Array(this.fftSize / 2).keys()].map(el => -el - 1).reverse(), ...[...Array(this.fftSize / 2).keys()]].map(el => Math.sin(el * this.amplitude * 0.5) * -1),
+                    fn: () => this.createEmptyArrayOfFFTsize().map(el => Math.sin(el * this.amplitude * 0.05) * -1),
                     is_binary: false,
                 },
                 {
                     label: 'Kosinusni',
                     key: 'cos',
-                    fn: () => [...[...Array(this.fftSize / 2).keys()].map(el => -el - 1).reverse(), ...[...Array(this.fftSize / 2).keys()]].map(el => Math.cos(el * this.amplitude * 0.05) * -1),
+                    fn: () => this.createEmptyArrayOfFFTsize().map(el => Math.cos(el * this.amplitude * 0.05) * -1),
                     is_binary: false,
                 },
                 {
@@ -105,7 +105,7 @@ export default {
                 {
                     label: 'Sinc',
                     key: 'sinc',
-                    fn: () => [...[...Array(this.fftSize / 2).keys()].map(el => el * -1 - 1).reverse(), ...Array(this.fftSize / 2).keys()].map(el => (el === 0) ? -1 : -Math.sin(el * 0.05 * this.amplitude) / (el) * 6.5),
+                    fn: () => this.createEmptyArrayOfFFTsize().map(el => (el === 0) ? -1 : -Math.sin(el* this.amplitude) / (el * this.amplitude) * 6.5),
                     is_binary: false,
                 },
             ],
@@ -135,6 +135,9 @@ export default {
         }
     },
     methods: {
+        createEmptyArrayOfFFTsize() {
+            return [...[...Array(1200 / 2).keys()].map(el => el * -1 - 1).reverse(), ...Array(1200 / 2).keys()];
+        },
         /**
          * Sets spectrum type in the store
          * @param key {string} - possible values: sin, cos, gauss, square
