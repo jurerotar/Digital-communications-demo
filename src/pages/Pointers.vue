@@ -8,7 +8,6 @@
     </canvas-container>
 </template>
 
-
 <script>
 import Collapsible from "@/components/global/Collapsible";
 import P5 from 'p5';
@@ -62,7 +61,7 @@ export default {
             texts: [
                 {
                     text: 'Im',
-                    x: 120,
+                    x: 115,
                     y: 15,
                 },
                 {
@@ -72,7 +71,7 @@ export default {
                 },
                 {
                     text: '1',
-                    x: 155,
+                    x: 160,
                     y: 15,
                 },
                 {
@@ -174,6 +173,11 @@ export default {
                     p5.line(23, 0, 23, this.dimensions.y);
                     p5.line(0, 23, this.dimensions.x, 23);
                 });
+
+                p5.fill('#ccc');
+                p5.strokeWeight(0);
+                p5.triangle(150, -3, 145, 15, 155, 15);
+                p5.triangle(803,150,785,145,785,155);
 
                 // Moves the middle of the circle
                 p5.translate(150, 150);
