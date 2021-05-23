@@ -131,7 +131,7 @@ const canvas = {
 
         p5.text(max, 2, 14);
         p5.text('0', 2, y - 3);
-        p5.text('X[f]', 50, 14);
+        p5.text('X(f)', 50, 14);
         p5.text('f', this.dimensions.x - 20, this.dimensions.y - 20);
     },
     /**

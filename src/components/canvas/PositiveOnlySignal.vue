@@ -121,7 +121,7 @@ export default {
             return this.data.map(el => el / this.max);
         },
         isModulatedText() {
-            return (this.is_modulated) ? 'y[t]' : 'x[t]';
+            return (this.is_modulated) ? 'y(t)' : 'x(t)';
         }
     },
     props: {
