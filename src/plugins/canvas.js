@@ -17,7 +17,7 @@ const canvas = {
      */
     dimensions: {
         x: 700,
-        y: 250,
+        y: 300,
     },
     colors: [
         '#01FF70',
@@ -131,7 +131,7 @@ const canvas = {
 
         p5.text(max, 2, 14);
         p5.text('0', 2, y - 3);
-        p5.text('X[f]', 50, 14);
+        p5.text('X(f)', 50, 14);
         p5.text('f', this.dimensions.x - 20, this.dimensions.y - 20);
     },
     /**
@@ -161,6 +161,44 @@ const canvas = {
         context.setLineDash([5, 15]);
         callback();
         context.setLineDash([]);
+    },
+    drawArrow(p5, vectorStart, vectorEnd, color, size = 7, rotate = vectorEnd.heading()) {
+        const arrowSize = size;
+        p5.push();
+        p5.stroke(color);
+        p5.fill(color);
+        //p5.translate(vectorStart.x, vectorStart.y);
+        p5.line(vectorStart.x, vectorStart.y, vectorEnd.x, vectorEnd.y);
+        p5.rotate(rotate);
+        p5.translate(vectorEnd.mag() - arrowSize, 0);
+        p5.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+        p5.pop();
+    },
+
+    /**
+     * Returns array of linearly spaced points between startValue and stopValue
+     * @param {number} startValue
+     * @param {number} stopValue
+     * @param {number} cardinality
+     * @returns {number[]}
+     */
+    linearSpace(startValue, stopValue, cardinality) {
+        const arr = [];
+        const step = (stopValue - startValue) / (cardinality - 1);
+        for (let i = 0; i < cardinality; i++) {
+            arr.push(startValue + (step * i));
+        }
+        return arr;
+    },
+
+    max(array) {
+        let max = array[0];
+        for (let i = 1; i < array.length; i++) {
+            if (array[i] > max) {
+                max = array[i];
+            }
+        }
+        return max;
     }
 };
 

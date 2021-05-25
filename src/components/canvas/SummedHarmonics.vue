@@ -20,7 +20,7 @@ export default {
             time: 0,
             waveValues: [],
             offset: {
-                x: 125,
+                x: 175,
                 y: 125
             },
             texts: [
@@ -82,7 +82,7 @@ export default {
                     const n = i * 2 + 1;
                     const frequency = n * this.time * Math.PI;
                     const color = this.$c.colors[i];
-                    const radius = 60 / Math.sqrt(n);
+                    const radius = 90 / (Math.sqrt(n)) / (Math.sqrt(2 * i + 1));
 
                     p5.stroke(color);
                     p5.ellipse(previousX, previousY, radius * 2);
@@ -96,6 +96,7 @@ export default {
                     // Update previous x and y to current x and y
                     previousX = x;
                     previousY = y;
+                    this.$c.drawArrow(p5, p5.createVector(previousX, previousY), p5.createVector(x, y), color, 6 - i);
                 }
                 // Add y to the start of waveValues array
                 this.waveValues.unshift(y);
