@@ -132,7 +132,7 @@ export default {
             /** @type {BinarySignal} */
             pam4Signal: {
                 values: [],
-                pool: [-2, -1, 1, 2],
+                pool: [-3, -1, 1, 3],
                 currentlyReturns: 1,
             },
 
@@ -266,7 +266,7 @@ export default {
                 case 'pam4':
                     return carrier.map((el, index) => {
                         const amplitudes = {
-                            '3': 1, '1': 2, '-1': 3, '-3': 4
+                            '3': -4, '1': -2, '-1': 2, '-3': 4
                         }
                         return amplitudes[`${pam4[index]}`] * el / 3;
                     });

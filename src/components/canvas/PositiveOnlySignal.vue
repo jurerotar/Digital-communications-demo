@@ -1,7 +1,7 @@
 <template>
     <h2 class="font-semibold text-xl">{{ title }}</h2>
     <canvas-container>
-        <div :id="canvas_id" class = "border border-solid border-blue-300"></div>
+        <div :id="canvas_id"></div>
     </canvas-container>
 </template>
 
@@ -28,30 +28,44 @@ export default {
             this.$c.setup(p5);
             p5.draw = () => {
                 p5.stroke(0);
-                //this.max = this.$c.max(this.data.map(el => Math.abs(el)));
+
+                /**
+                 * Code bellow draws the axis lines and labels them
+                 */
                 p5.background(255);
                 const canvasDimensions = this.$c.dimensions;
                 const canvasPadding = 50;
                 p5.strokeWeight(2);
 
+                // Top-bottom line
                 p5.line(canvasPadding, canvasPadding, canvasPadding, canvasDimensions.y - canvasPadding);
+
                 p5.strokeWeight(1);
-                const yAxisLabels = [...this.vertical_pool]; // ?? this.$c.linearSpace(this.max, -this.max, 4);
+                // y-axis labels are passed through vertical_pool array, but they are missing zero, so we need to push it in
+                const yAxisLabels = [...this.vertical_pool];
                 yAxisLabels.splice(2, 0, 0);
+                // Draw left-right lines on y-axis and label each fifth
                 for(let i = 0; i <= 20; i++) {
+                    // Make each fifth line labeled and wider
                     if(i % 5 === 0) {
                         p5.text(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4), canvasPadding - 40, canvasPadding + i * 10 + 3);
                         p5.strokeWeight(2);
                         p5.line(canvasPadding - 5, canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10);
                         p5.strokeWeight(1);
+                        continue;
                     }
-                    else {
-                        p5.line(canvasPadding - 5, canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10);
-                    }
+                    p5.line(canvasPadding - 5, canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10);
                 }
+                // Y axis label
+                p5.text(this.isModulatedText, canvasPadding - 5, canvasPadding / 2);
+                // X axis label
+                p5.text('t', canvasDimensions.x - 30, canvasDimensions.y / 2 + 3);
                 p5.strokeWeight(2);
                 this.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y / 2), 'black', 7, 0);
 
+                /**
+                 * Start drawing the actual chart
+                 */
                 p5.noFill();
                 p5.stroke(this.$c.colors[this.color_id]);
                 p5.strokeWeight(2);
@@ -68,33 +82,6 @@ export default {
                     }
                 });
                 p5.endShape();
-                // // Draw axis and move center to defined offset coordinates
-                // this.$c.drawAxisOnSide(p5, this.vertical_pool);
-                // p5.stroke(0);
-                // p5.textSize(18);
-                // p5.fill(0);
-                // p5.textFont('Montserrat');
-                // p5.text('t', 650, this.offset.y + 20)
-                // p5.text(this.isModulatedText, 10, 15)
-                // p5.translate(this.offset.x, this.offset.y);
-                //
-                //
-                // p5.noFill();
-                // p5.stroke(this.$c.colors[this.color_id]);
-                // p5.strokeWeight(3);
-                //
-                // // Draw the shape
-                // p5.beginShape();
-                // this.normalizedData.forEach((y, x) => {
-                //     if (this.is_binary) {
-                //         // When value changes, start drawing on previous index to prevent skewed lines
-                //         p5.vertex((this.previousValue !== y) ? x - 1 : x,  y * (this.offset.y - 3))
-                //         this.previousValue = y;
-                //     } else {
-                //         p5.vertex(x, y * (this.offset.y - 3));
-                //     }
-                // });
-                // p5.endShape();
             }
             p5.removeCanvas = () => p5.remove();
         }, this.canvas_id);
@@ -104,7 +91,7 @@ export default {
         this.p5.removeCanvas();
     },
     methods: {
-        drawArrow(p5, vectorStart, vectorEnd, color, size = 7, rotate = 0) {
+        drawArrow(p5, vectorStart, vectorEnd, color, size = 7, rotate = vectorEnd.heading()) {
             const arrowSize = size;
             p5.push();
             p5.stroke(color);
@@ -113,12 +100,14 @@ export default {
             p5.rotate(rotate);
             p5.translate(vectorEnd.x, vectorEnd.y);
             p5.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+            p5.translate(-vectorEnd.x, -vectorEnd.y);
             p5.pop();
         },
     },
     computed: {
         normalizedData() {
-            return this.data.map(el => el / this.max);
+            const max = Math.max(...this.data.map(el => Math.abs(el)));
+            return this.data.map(el => el / max);
         },
         isModulatedText() {
             return (this.is_modulated) ? 'y(t)' : 'x(t)';
