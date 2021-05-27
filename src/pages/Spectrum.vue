@@ -1,6 +1,6 @@
 <template>
     <h1 class="text-3xl font-medium mb-4">Spekter</h1>
-    <collapsible :opened = "true">
+    <collapsible>
         <theory-spectrum></theory-spectrum>
     </collapsible>
     <h2 class="font-semibold text-xl">Oblika</h2>
@@ -19,7 +19,7 @@
             class="text-white w-fit-content font-bold py-2 px-4 mb-2 sm:mr-2 rounded outline-none duration-300 transition-colors h-12"
             :class="[frequencyValue === frequency.key ? 'bg-blue-300' : 'bg-gray-300']"
             @click="changeFrequency(frequency.key)"
-            v-for="frequency in frequencies" :key="frequency.key">
+            v-for="frequency in selectedObject.frequencies" :key="frequency.key">
             {{ frequency.label }}
         </button>
     </div>
@@ -38,8 +38,6 @@
         :type = "selectedObject.key"
         :frequency = "frequency">
     </spectrum-canvas>
-
-
 </template>
 
 <script>
@@ -54,6 +52,7 @@ import FullSignal from "@/components/canvas/FullSignal";
  * @property {string} key
  * @property {function} fn
  * @property {boolean} is_binary
+ * @property {Frequency} frequencies
  */
 
 /**
@@ -76,20 +75,82 @@ export default {
                 {
                     label: 'Sinusni',
                     key: 'sin',
-                    fn: () => this.createEmptyArrayOfFFTsize().map(el => Math.sin(el * this.frequency ** -1 * 0.04) * -1),
+                    fn: () => this.createEmptyArrayOfFFTSize().map(el => Math.sin(el * this.frequency ** -1 * 0.04) * -1),
                     is_binary: false,
+                    frequencies: [
+                        {
+                            label: '1/4',
+                            key: 0.25
+                        },
+                        {
+                            label: '1/2',
+                            key: 0.5
+                        },
+                        {
+                            label: '1',
+                            key: 1
+                        },
+                        {
+                            label: '2',
+                            key: 2
+                        },
+                        {
+                            label: '4',
+                            key: 4
+                        },
+                    ]
                 },
                 {
                     label: 'Kosinusni',
                     key: 'cos',
-                    fn: () => this.createEmptyArrayOfFFTsize().map(el => Math.cos(el * this.frequency ** -1 * 0.02) * -1),
+                    fn: () => this.createEmptyArrayOfFFTSize().map(el => Math.cos(el * this.frequency ** -1 * 0.02) * -1),
                     is_binary: false,
+                    frequencies: [
+                        {
+                            label: '1/4',
+                            key: 0.25
+                        },
+                        {
+                            label: '1/2',
+                            key: 0.5
+                        },
+                        {
+                            label: '1',
+                            key: 1
+                        },
+                        {
+                            label: '2',
+                            key: 2
+                        },
+                    ]
                 },
                 {
                     label: 'Kvadratni',
                     key: 'square',
-                    fn: () => [...Array(Math.trunc(41 * this.frequency)).keys()].map(() => -1),
+                    fn: () => [...Array(Math.trunc(41 * this.frequency)).keys()].fill(-1),
                     is_binary: true,
+                    frequencies: [
+                        {
+                            label: '1/4',
+                            key: 0.25
+                        },
+                        {
+                            label: '1/2',
+                            key: 0.5
+                        },
+                        {
+                            label: '1',
+                            key: 1
+                        },
+                        {
+                            label: '2',
+                            key: 2
+                        },
+                        {
+                            label: '4',
+                            key: 4
+                        },
+                    ]
                 },
                 {
                     label: 'Gauss',
@@ -105,41 +166,63 @@ export default {
                         return gauss;
                     },
                     is_binary: false,
+                    frequencies: [
+                        {
+                            label: '1/4',
+                            key: 0.25
+                        },
+                        {
+                            label: '1/2',
+                            key: 0.5
+                        },
+                        {
+                            label: '1',
+                            key: 1
+                        },
+                        {
+                            label: '2',
+                            key: 2
+                        },
+                        {
+                            label: '3',
+                            key: 3
+                        },
+                    ]
+
                 },
                 {
                     label: 'Sinc',
                     key: 'sinc',
-                    fn: () => this.createEmptyArrayOfFFTsize().map(el => (el === 0) ? -1 : -Math.sin(el * this.frequency ** -1 * 0.062) / (el * this.frequency ** -1  * 0.062)),
+                    fn: () => this.createEmptyArrayOfFFTSize().map(el => (el === 0) ? -1 : -Math.sin(el * this.frequency ** -1 * 0.062) / (el * this.frequency ** -1  * 0.062)),
                     is_binary: false,
-                },
-            ],
-            /** @type {Array<Frequency>} */
-            frequencies: [
-                {
-                    label: '1/4',
-                    key: 0.25
-                },
-                {
-                    label: '1/2',
-                    key: 0.5
-                },
-                {
-                    label: '1',
-                    key: 1
-                },
-                {
-                    label: '2',
-                    key: 2
-                },
-                {
-                    label: '3',
-                    key: 3
+                    frequencies: [
+                        {
+                            label: '1/4',
+                            key: 0.25
+                        },
+                        {
+                            label: '1/2',
+                            key: 0.5
+                        },
+                        {
+                            label: '1',
+                            key: 1
+                        },
+                        {
+                            label: '2',
+                            key: 2
+                        },
+                        {
+                            label: '4',
+                            key: 4
+                        },
+                    ]
                 },
             ],
         }
     },
     methods: {
-        createEmptyArrayOfFFTsize() {
+        createEmptyArrayOfFFTSize() {
             return [...[...Array(this.fftSize / 2).keys()].map(el => el * -1 - 1).reverse(), ...Array(this.fftSize / 2).keys()];
         },
         /**
@@ -147,6 +230,7 @@ export default {
          * @param key {string} - possible values: sin, cos, gauss, square
          */
         changeSelected(key) {
+            this.frequencyValue = 1;
             this.selected = key;
         },
         /**
@@ -158,7 +242,7 @@ export default {
                 return array;
             }
             const padSize = (this.fftSize - array.length) / 2;
-            const zerosArray = [...Array(Math.trunc(padSize)).keys()].map(() => 0);
+            const zerosArray = [...Array(Math.trunc(padSize)).keys()].fill(0);
             array.unshift(...zerosArray);
             array.push(...zerosArray);
             if(array.length % 2 === 1) {
@@ -179,7 +263,7 @@ export default {
          * @returns {number[]}
          **/
         cutArray(array) {
-            return array.filter((el, index) => (index >= (array.length / 2 - 300) && index <= (array.length / 2 + 300)));
+            return array.filter((el, index) => (index >= (array.length / 2 -  300) && index <= (array.length / 2 + 300)));
         }
 
     },
