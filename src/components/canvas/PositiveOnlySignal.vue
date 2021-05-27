@@ -63,6 +63,9 @@ export default {
                 p5.strokeWeight(2);
                 this.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y / 2), 'black', 7, 0);
 
+                p5.fill(1);
+                p5.triangle(50, 42, 46, 50, 54, 50);
+
                 /**
                  * Start drawing the actual chart
                  */
