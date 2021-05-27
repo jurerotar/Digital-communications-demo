@@ -28,6 +28,7 @@
                           :canvas_id="'sine-modulation-signal'"
                           :title="'Sinusni modulacijski signal'"
                           :vertical_pool="[1, 0.5, -0.5, -1]"
+                          :type = "'sin'"
     >
     </positive-only-signal>
     <positive-only-signal v-if="hasCarrier"
@@ -35,6 +36,7 @@
                           :canvas_id="'carrier-signal'"
                           :title="'Nosilec'"
                           :vertical_pool="[1, 0.5, -0.5, -1]"
+                          :type = "'carrier'"
     >
     </positive-only-signal>
     <positive-only-signal v-if="hasBipolar"
@@ -43,6 +45,7 @@
                           :is_binary="true"
                           :title="'Binarni signal'"
                           :vertical_pool="[1, 0.5, -0.5, -1]"
+                          :type = "'bipolar'"
     >
     </positive-only-signal>
     <positive-only-signal v-if="hasUnipolar"
@@ -51,6 +54,7 @@
                           :is_binary="true"
                           :title="'Unipolarni signal'"
                           :vertical_pool="[1, 0.5, -0.5, -1]"
+                          :type = "'unipolar'"
     >
     </positive-only-signal>
     <positive-only-signal v-if="hasPam4"
@@ -59,6 +63,7 @@
                           :is_binary="true"
                           :title="'PAM 4 signal'"
                           :vertical_pool="[3, 1, -1, -3]"
+                          :type = "'pam4'"
     >
     </positive-only-signal>
 
@@ -104,7 +109,7 @@ export default {
             selected: 'am',
             time: 0,
             binaryCounter: 0,
-            binarySymbolLength: 100,
+            binarySymbolLength: 120,
 
             /** @type {number[]} */
             timeValues: [],
@@ -186,15 +191,15 @@ export default {
                     hasUnipolar: false,
                     hasPam4: true,
                 },
-                // {
-                //     label: 'FSK',
-                //     key: 'fsk',
-                //     hasCarrier: true,
-                //     hasSineModulation: false,
-                //     hasBipolar: true,
-                //     hasUnipolar: false,
-                //     hasPam4: false,
-                // },
+                {
+                    label: 'FSK',
+                    key: 'fsk',
+                    hasCarrier: true,
+                    hasSineModulation: false,
+                    hasBipolar: true,
+                    hasUnipolar: false,
+                    hasPam4: false,
+                },
             ]
         }
     },
@@ -260,7 +265,7 @@ export default {
                     return carrier.map((el, index) => el * bipolar[index]);
                 case 'fsk':
                     return time.map((el, index) => {
-                        const multiplier = (bipolar[index] === 1) ? 10 : 20;
+                        const multiplier = (bipolar[index] === 1) ? 10 : 30;
                         return Math.sin(Math.PI * el * multiplier)
                     });
                 case 'pam4':

@@ -22,7 +22,6 @@ export default {
         }
     },
     mounted() {
-        this.dataWithFrequency;
         this.max = Math.max(...this.data);
         // Initiate new P5 instance and create canvas
         this.p5 = new P5((p5) => {
@@ -90,7 +89,7 @@ export default {
 
                 // Draw the shape
                 p5.beginShape();
-                this.normalizedData.forEach((y, x) => p5.vertex(x + canvasPadding, canvasDimensions.y - canvasPadding + y*200));
+                this.normalizedData.forEach((y, x) => p5.vertex(x + canvasPadding, canvasDimensions.y - canvasPadding + y * 200));
                 p5.endShape();
             }
             p5.removeCanvas = () => p5.remove();
@@ -118,22 +117,21 @@ export default {
         },
     },
     computed: {
-        dataWithFrequency() {
-            const divLength = 50;
-            const data = [...this.data];
-            const max = Math.max(...data);
-            const indexOfMax = data.findIndex(el => el === max);
-            const correctMaxIndex = this.frequency * divLength;
-            const safetyDistance = 20;
-            const difference = correctMaxIndex - indexOfMax - safetyDistance;
-            if(difference > 0) {
-                data.unshift(...[...Array(difference)].fill(data[0]))
-            }
-            console.log(data);
-            return data;
-        },
         normalizedData() {
-            const data = [...this.data];
+            let data = [...this.data];
+            if(this.type === 'sin' || this.type === 'cos') {
+                const correctPeak = Math.trunc(50 / this.frequency);
+                const peakIndex = data.findIndex(el => el === this.max);
+                const correctValues = data.slice(peakIndex, peakIndex + 50).filter(el => el > 1).reverse();
+                data = [...correctValues, ...data.filter((el, index) => index >= peakIndex)];
+                const newPeakIndex = data.findIndex(el => el === this.max);
+                if(newPeakIndex < correctPeak) {
+                    data.unshift(...[...Array(correctPeak - newPeakIndex).keys()].fill(0))
+                }
+                else {
+                    data = data.filter((el, index) => index >= 50 - correctPeak);
+                }
+            }
             data.length = 600;
             return data.map(el => -el / this.max);
         },

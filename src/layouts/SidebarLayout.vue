@@ -24,12 +24,11 @@ export default {
     name: 'SidebarLayout',
     components: {TopNavigationLinks, NavigationLinks, Logo, HamburgerMenu, MainComponent},
     mounted() {
-        this.$store.commit('app/setWidth', window.innerWidth);
-        this.$store.commit('app/setHeight', window.innerHeight);
-        window.addEventListener('resize', () => {
-            this.$store.commit('app/setWidth', window.innerWidth);
-            this.$store.commit('app/setHeight', window.innerHeight);
-        });
+        this.commitOnResize();
+        window.addEventListener('resize', () => this.commitOnResize());
+    },
+    unmounted() {
+        window.removeEventListener('resize', () => this.commitOnResize());
     },
     computed: {
         sidebarExtended() {
@@ -39,5 +38,11 @@ export default {
             return this.$store.getters['app/isWideScreen'];
         }
     },
+    methods: {
+        commitOnResize() {
+            this.$store.commit('app/setWidth', window.innerWidth);
+            this.$store.commit('app/setHeight', window.innerHeight);
+        }
+    }
 }
 </script>
