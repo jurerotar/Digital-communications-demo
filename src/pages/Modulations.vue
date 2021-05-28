@@ -1,7 +1,7 @@
 <template>
     <h1 class="text-3xl font-medium mb-4">Modulacije</h1>
     <collapsible>
-        To je burek
+        <theory-modulations></theory-modulations>
     </collapsible>
     <div class="flex flex-col sm:flex-row">
         <button
@@ -81,10 +81,11 @@
 
 import Collapsible from "@/components/global/Collapsible";
 import PositiveOnlySignal from "@/components/canvas/PositiveOnlySignal";
+import TheoryModulations from "@/components/theory/TheoryModulations";
 
 export default {
     name: "Modulations",
-    components: {PositiveOnlySignal, Collapsible},
+    components: {TheoryModulations, PositiveOnlySignal, Collapsible},
     data() {
         return {
             intervalId: null,
