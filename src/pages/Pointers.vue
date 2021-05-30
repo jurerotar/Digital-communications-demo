@@ -13,7 +13,7 @@ import Collapsible from "@/components/global/Collapsible";
 import P5 from 'p5';
 import CanvasContainer from "@/components/global/CanvasContainer";
 import TheoryPointer from "@/components/theory/TheoryPointer";
-import '../types.js';
+import '@/types.js';
 
 
 export default {

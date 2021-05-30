@@ -8,7 +8,7 @@
 <script>
 import P5 from 'p5';
 import CanvasContainer from "@/components/global/CanvasContainer";
-import '../types';
+import '@/types.js';
 
 export default {
     name: "FullSignal",

@@ -8,7 +8,7 @@
 <script>
 import CanvasContainer from "@/components/global/CanvasContainer";
 import P5 from 'p5';
-import '../types';
+import '@/types.js';
 
 export default {
     name: "SummedHarmonics",

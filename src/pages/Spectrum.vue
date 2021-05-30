@@ -45,7 +45,7 @@ import TheorySpectrum from "@/components/theory/TheorySpectrum";
 import Collapsible from "@/components/global/Collapsible";
 import SpectrumCanvas from "@/components/canvas/Spectrum";
 import FullSignal from "@/components/canvas/FullSignal";
-import '../types.js';
+import '@/types.js';
 
 export default {
     name: "Spectrum",

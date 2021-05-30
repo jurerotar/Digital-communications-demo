@@ -73,7 +73,7 @@
 import Collapsible from "@/components/global/Collapsible";
 import PositiveOnlySignal from "@/components/canvas/PositiveOnlySignal";
 import TheoryModulations from "@/components/theory/TheoryModulations";
-import '../types';
+import '@/types.js';
 
 export default {
     name: "Modulations",

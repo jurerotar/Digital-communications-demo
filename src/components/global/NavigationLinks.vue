@@ -12,6 +12,8 @@
 <script>
 import {routes} from '@/routes/routes.js';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import '@/types.js';
+
 export default {
     name: "NavigationLinks",
     components: {
