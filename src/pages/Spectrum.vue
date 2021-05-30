@@ -45,21 +45,7 @@ import TheorySpectrum from "@/components/theory/TheorySpectrum";
 import Collapsible from "@/components/global/Collapsible";
 import SpectrumCanvas from "@/components/canvas/Spectrum";
 import FullSignal from "@/components/canvas/FullSignal";
-
-/**
- * @typedef {Object} Signal
- * @property {string} label
- * @property {string} key
- * @property {function} fn
- * @property {boolean} is_binary
- * @property {Frequency} frequencies
- */
-
-/**
- * @typedef {Object} Frequency
- * @property {string} label
- * @property {number} key
- */
+import '../types.js';
 
 export default {
     name: "Spectrum",

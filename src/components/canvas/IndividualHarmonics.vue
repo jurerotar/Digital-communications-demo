@@ -8,6 +8,7 @@
 <script>
 import CanvasContainer from "@/components/global/CanvasContainer";
 import P5 from 'p5';
+import '../types';
 
 export default {
     name: "IndividualHarmonics",
@@ -19,10 +20,12 @@ export default {
             context: null,
             time: 0,
             waveValues: {},
+            /** @type {Coordinates} */
             offset: {
                 x: 175,
                 y: 125
             },
+            /** @type {Text[]} */
             texts: [
                 {
                     text: '1',

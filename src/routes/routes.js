@@ -4,9 +4,10 @@ import Spectrum from "@/pages/Spectrum";
 import Harmonics from "@/pages/Harmonics";
 import Modulations from "@/pages/Modulations";
 import Pointers from "@/pages/Pointers";
+import '../types';
 /**
  * Registered routes
- * @type {[{path: string, component: {components: {}, name: string}, name: string}]}
+ * @type {Array<Route>}
  */
 const routes = [
     {

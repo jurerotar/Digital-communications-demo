@@ -8,6 +8,7 @@
 <script>
 import P5 from 'p5';
 import CanvasContainer from "@/components/global/CanvasContainer";
+import '../types';
 
 export default {
     name: "FullSignal",
@@ -16,6 +17,7 @@ export default {
         return {
             p5: null,
             previousValue: 1,
+            /** @type {Coordinates} */
             offset: {
                 x: 0,
                 y: 125,
@@ -78,12 +80,7 @@ export default {
                 p5.text('x(t)', canvasDimensions.x / 2 - 5, 30);
                 p5.text('t', canvasDimensions.x - 25, canvasDimensions.y / 2 + 15);
 
-                //p5.background(255);
-                // Draw axis and move center to defined offset coordinates
-                //this.$c.drawAxisInMiddle(p5);
-                //p5.stroke(0);
                 p5.translate(0, 150);
-
 
                 p5.noFill();
                 p5.stroke(this.$c.colors[1]);

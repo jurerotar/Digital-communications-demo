@@ -21,6 +21,7 @@ export default {
         return {
             /**
              * Routes are defined in @/routes/routes.js array
+             * @type {Route[]}
              */
             routes: routes
         }

@@ -13,19 +13,8 @@ import Collapsible from "@/components/global/Collapsible";
 import P5 from 'p5';
 import CanvasContainer from "@/components/global/CanvasContainer";
 import TheoryPointer from "@/components/theory/TheoryPointer";
+import '../types.js';
 
-/**
- * @typedef {Object} Coordinates
- * @property {number} x
- * @property {number} y
- */
-
-/**
- * @typedef {Object} Text
- * @property {string} text
- * @property {number} x
- * @property {number} y
- */
 
 export default {
     name: "Pointers",
@@ -174,7 +163,7 @@ export default {
                     p5.line(0, 23, this.dimensions.x, 23);
                 });
 
-                p5.fill('#ccc');
+                p5.fill(0);
                 p5.strokeWeight(0);
                 p5.triangle(150, -3, 145, 15, 155, 15);
                 p5.triangle(803,150,785,145,785,155);

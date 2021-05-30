@@ -3,7 +3,6 @@ import App from './App.vue';
 import {router} from './routes/routes.js';
 import './css/index.css';
 import store from "./store/store";
-//import functions from "./plugins/functions";
 import canvas from "./plugins/canvas";
 
 /**

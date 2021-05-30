@@ -8,6 +8,7 @@
 <script>
 import CanvasContainer from "@/components/global/CanvasContainer";
 import P5 from 'p5';
+import '../types';
 
 export default {
     name: "SummedHarmonics",
@@ -19,6 +20,7 @@ export default {
             context: null,
             time: 0,
             waveValues: [],
+            /** @type {Coordinates} */
             offset: {
                 x: 175,
                 y: 125
@@ -30,6 +32,7 @@ export default {
                 '4': 27,
                 '5': 29,
             },
+            /** @type {Text[]} */
             texts: [
                 {
                     text: '1',
@@ -54,7 +57,6 @@ export default {
         this.p5 = new P5((p5) => {
             this.$c.setup(p5);
             p5.draw = () => {
-
 
                 p5.stroke(0);
                 //this.max = this.$c.max(this.data.map(el => Math.abs(el)));

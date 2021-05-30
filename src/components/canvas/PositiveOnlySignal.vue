@@ -8,6 +8,7 @@
 <script>
 import P5 from 'p5';
 import CanvasContainer from "@/components/global/CanvasContainer";
+import '../types';
 
 export default {
     name: "PositiveOnlySignal",
@@ -16,6 +17,7 @@ export default {
         return {
             p5: null,
             previousValue: 1,
+            /** @type {Coordinates} */
             offset: {
                 x: 0,
                 y: 125,

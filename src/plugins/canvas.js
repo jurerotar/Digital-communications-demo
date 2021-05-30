@@ -1,7 +1,7 @@
 /**
  * @typedef {Object} P5
- * @method frameRate
- * @method createCanvas
+ * @function frameRate
+ * @function createCanvas
  */
 
 /**
@@ -42,98 +42,6 @@ const canvas = {
             p5.frameRate(frameRate);
         }
     },
-    configureText(p5) {
-        p5.textSize(18);
-        p5.fill(0);
-        p5.textFont('Montserrat');
-    },
-    /**
-     * Draws both axis on canvas with defined offset, must be used before any translates
-     * @param {Object} p5
-     * @param {Object|null} verticalPool
-     */
-    drawAxisOnSide(p5, verticalPool = null) {
-        const {y: y} =  this.dimensions
-        const scaleOffset = 20;
-        p5.stroke('#ccc');
-        p5.strokeWeight(2);
-
-        this.drawAxis(p5, {
-            x: scaleOffset,
-            y: y / 2
-        });
-
-        // Restore defaults
-        p5.strokeWeight(1);
-        p5.stroke(0);
-        // Move chart right to create space for scale
-        p5.translate(scaleOffset, 0);
-        this.configureText(p5);
-        // Always show 0 in the middle
-        p5.text(0, -scaleOffset + 2, y/2 + 6);
-        if (verticalPool !== null) {
-            switch (verticalPool.length) {
-                // If pool has only 1 number, show it on the top
-                case 1:
-                    p5.text(verticalPool[0], -scaleOffset, 14);
-                    break;
-                // If pool has 2 numbers, show it on top and bottom
-                case 2:
-                    p5.text(verticalPool[0], -scaleOffset, 14);
-                    p5.text(verticalPool[1], -scaleOffset, y - 3);
-                    break;
-                // If pool has 4 numbers, distribute them equally
-                case 4:
-                    p5.text(verticalPool[0], -scaleOffset, 14);
-                    p5.text(verticalPool[1], -scaleOffset, 75);
-                    p5.text(verticalPool[2], -scaleOffset, 180);
-                    p5.text(verticalPool[3], -scaleOffset, y - 3);
-                    break;
-            }
-        }
-    },
-    drawAxisInMiddle(p5) {
-        const {x: x, y: y} = this.dimensions
-        p5.stroke('#ccc');
-        p5.strokeWeight(2);
-
-        this.drawAxis(p5, {
-            x: x / 2,
-            y: y / 2
-        });
-
-        // Restore defaults
-        p5.strokeWeight(1);
-        p5.stroke(0);
-
-        this.configureText(p5);
-
-        p5.text(0, x/2 + 10, y/2 + 20);
-        p5.text(' 1', x / 2 + 10, 14);
-        p5.text('-1', x / 2 + 10, y - 3);
-    },
-    spectrumAxis(p5, max = 0) {
-        const {y: y} =  this.dimensions
-        const scaleOffset = 40;
-        p5.stroke('#ccc');
-        p5.strokeWeight(2);
-
-        this.drawAxis(p5, {
-            x: scaleOffset,
-            y: y - 5
-        });
-
-        // Restore defaults
-        p5.strokeWeight(1);
-        p5.stroke(0);
-
-        this.configureText(p5);
-
-        p5.text(max, 2, 14);
-        p5.text('0', 2, y - 3);
-        p5.text('X(f)', 50, 14);
-        p5.text('f', this.dimensions.x - 20, this.dimensions.y - 20);
-    },
     /**
      * Draws both axis on canvas with defined offset, must be used before any translates
      * @param {object} p5
@@ -141,7 +49,7 @@ const canvas = {
      * @param {Size} dimensions
      */
     drawAxis(p5, offset, dimensions = this.dimensions) {
-        p5.stroke('#ccc');
+        p5.stroke(0);
         p5.strokeWeight(2);
         // Horizontal line from start of canvas to the end
         p5.line(0, offset.y, dimensions.x, offset.y);

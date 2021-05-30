@@ -8,6 +8,7 @@
 <script>
 import P5 from 'p5';
 import CanvasContainer from "@/components/global/CanvasContainer";
+import '../types';
 export default {
     name: "SpectrumCanvas",
     components: {CanvasContainer},
@@ -15,6 +16,7 @@ export default {
         return {
             p5: null,
             max: 0,
+            /** @type {Coordinates} */
             offset: {
                 x: 0,
                 y: 250
