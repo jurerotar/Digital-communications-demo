@@ -35,8 +35,8 @@ export default {
                  * Code bellow draws the axis lines and labels them
                  */
                 p5.background(255);
-                const canvasDimensions = this.$c.dimensions;
-                const canvasPadding = 50;
+                const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
+
                 p5.strokeWeight(2);
 
                 // Top-bottom line
@@ -112,7 +112,9 @@ export default {
     computed: {
         normalizedData() {
             const max = Math.max(...this.data.map(el => Math.abs(el)));
-            return this.data.map(el => {
+            const data = [...this.data];
+            data.length= 600;
+            return data.map(el => {
                 if(this.type === 'pam4') {
                     const sign = Math.sign(el);
                     return (Math.abs(el) === 1) ? el / max - sign * 0.83 : el / max;

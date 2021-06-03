@@ -12,50 +12,49 @@
             {{ modulation.label }}
         </button>
     </div>
-    <positive-only-signal v-if="hasSineModulation"
+    <positive-only-signal v-if="selectedModulationData.hasSineModulation"
                           :data="sineModulationSignalValues"
                           :canvas_id="'sine-modulation-signal'"
                           :title="'Sinusni modulacijski signal'"
                           :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :type = "'sin'"
+                          :type="'sin'"
     >
     </positive-only-signal>
-    <positive-only-signal v-if="hasCarrier"
+    <positive-only-signal v-if="selectedModulationData.hasCarrier"
                           :data="carrierSignalValues"
                           :canvas_id="'carrier-signal'"
                           :title="'Nosilec'"
                           :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :type = "'carrier'"
+                          :type="'carrier'"
     >
     </positive-only-signal>
-    <positive-only-signal v-if="hasBipolar"
+    <positive-only-signal v-if="selectedModulationData.hasBipolar"
                           :data="bipolarSignal.values"
                           :canvas_id="'binary-signal'"
                           :is_binary="true"
                           :title="'Binarni signal'"
                           :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :type = "'bipolar'"
+                          :type="'bipolar'"
     >
     </positive-only-signal>
-    <positive-only-signal v-if="hasUnipolar"
+    <positive-only-signal v-if="selectedModulationData.hasUnipolar"
                           :data="unipolarSignal.values"
                           :canvas_id="'unipolar-signal'"
                           :is_binary="true"
                           :title="'Unipolarni signal'"
                           :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :type = "'unipolar'"
+                          :type="'unipolar'"
     >
     </positive-only-signal>
-    <positive-only-signal v-if="hasPam4"
+    <positive-only-signal v-if="selectedModulationData.hasPam4"
                           :data="pam4Signal.values"
                           :canvas_id="'pam4-signal'"
                           :is_binary="true"
                           :title="'PAM 4 signal'"
                           :vertical_pool="[3, 1, -1, -3]"
-                          :type = "'pam4'"
+                          :type="'pam4'"
     >
     </positive-only-signal>
-
     <positive-only-signal :data="modulated"
                           :canvas_id="'modulated-signal'"
                           :is_binary="false"
@@ -64,12 +63,9 @@
                           :is_modulated="true"
     >
     </positive-only-signal>
-
 </template>
 
 <script>
-
-
 import Collapsible from "@/components/global/Collapsible";
 import PositiveOnlySignal from "@/components/canvas/PositiveOnlySignal";
 import TheoryModulations from "@/components/theory/TheoryModulations";
@@ -81,39 +77,39 @@ export default {
     data() {
         return {
             intervalId: null,
-            selected: 'am',
-            time: 0,
+            selected: 'am-lc',
+            time: 601 * 0.005,
             binaryCounter: 0,
             binarySymbolLength: 120,
 
             /** @type {number[]} */
-            timeValues: [],
+            timeValues: [...Array(600).fill(0)].map((t, i) => i * 0.005),
 
             /** @type {number[]} */
-            carrierSignalValues: [],
+            carrierSignalValues: [...Array(600).fill(0)].map((t, i) => Math.sin(i * 17 * Math.PI * 0.005)),
 
             /** @type {number[]} */
-            sineModulationSignalValues: [],
+            sineModulationSignalValues: [...Array(600).fill(0)].map((t, i) => Math.sin(i * 1.5 * Math.PI * 0.005)),
 
             /** @type {BinarySignal} */
             bipolarSignal: {
-                values: [],
+                values: Array(5).fill(0).map((el, i) => Array(120).fill((i % 2 === 1) ? 1 : -1)).flat(),
                 pool: [-1, 1],
                 currentlyReturns: 1,
             },
 
             /** @type {BinarySignal} */
             unipolarSignal: {
-                values: [],
+                values: Array(5).fill(0).map((el, i) => Array(120).fill((i % 2 === 1) ? -1 : 0)).flat(),
                 pool: [-1, 0],
-                currentlyReturns: 0,
+                currentlyReturns: -1,
             },
 
             /** @type {BinarySignal} */
             pam4Signal: {
-                values: [],
+                values: [Array(120).fill(-3), Array(120).fill(-1), Array(120).fill(1), Array(120).fill(3), Array(120).fill(-3)].flat(),
                 pool: [-3, -1, 1, 3],
-                currentlyReturns: 1,
+                currentlyReturns: -1,
             },
 
             /**
@@ -122,8 +118,17 @@ export default {
              */
             modulations: [
                 {
-                    label: 'AM',
-                    key: 'am',
+                    label: 'AM-LC',
+                    key: 'am-lc',
+                    hasCarrier: true,
+                    hasSineModulation: true,
+                    hasBipolar: false,
+                    hasUnipolar: false,
+                    hasPam4: false,
+                },
+                {
+                    label: 'AM-SC',
+                    key: 'am-sc',
                     hasCarrier: true,
                     hasSineModulation: true,
                     hasBipolar: false,
@@ -186,39 +191,14 @@ export default {
         selectedModulationData() {
             return this.modulations.find(el => el.key === this.selected);
         },
-        /** @returns {boolean} */
-        hasCarrier() {
-            return this.selectedModulationData.hasCarrier;
-        },
-        /** @returns {boolean} */
-        hasSineModulation() {
-            return this.selectedModulationData.hasSineModulation;
-        },
-        /** @returns {boolean} */
-        hasBipolar() {
-            return this.selectedModulationData.hasBipolar;
-        },
-        /** @returns {boolean} */
-        hasUnipolar() {
-            return this.selectedModulationData.hasUnipolar;
-        },
-        /** @returns {boolean} */
-        hasPam4() {
-            return this.selectedModulationData.hasPam4;
-        },
         /**
          * Returns an array of numbers computed by selected modulation key
          * @returns {number[]}
          */
         modulated() {
-            const [
-                carrier,
-                sine,
-                bipolar,
-                unipolar,
-                pam4,
-                time
-            ] = [
+            const pam4Amplitudes = {'3': -4, '1': -2, '-1': 2, '-3': 4};
+
+            const [carrier, sine, bipolar, unipolar, pam4, time] = [
                 this.carrierSignalValues,
                 this.sineModulationSignalValues,
                 this.bipolarSignal.values,
@@ -227,29 +207,20 @@ export default {
                 this.timeValues
             ];
             switch (this.selected) {
-                case 'am':
+                case 'am-lc':
+                    return carrier.map((el, index) => el * (1.5 + sine[index]));
+                case 'am-sc':
                     return carrier.map((el, index) => el * sine[index]);
                 case 'fm':
-                    return time.map((el, index) => {
-                        const multiplier = (sine[index] >= 0) ? 8 : 20;
-                        return Math.sin(Math.PI * el * multiplier)
-                    });
+                    return time.map(t => Math.cos(15 * Math.PI * t + (10 * (Math.cos(Math.PI * t) + 150))));
                 case 'bask':
                     return carrier.map((el, index) => el * unipolar[index]);
                 case 'bpsk':
                     return carrier.map((el, index) => el * bipolar[index]);
                 case 'fsk':
-                    return time.map((el, index) => {
-                        const multiplier = (bipolar[index] === 1) ? 10 : 30;
-                        return Math.sin(Math.PI * el * multiplier)
-                    });
+                    return time.map((t, index) => Math.sin(Math.PI * t * ((bipolar[index] === 1) ? 12 : 30)));
                 case 'pam4':
-                    return carrier.map((el, index) => {
-                        const amplitudes = {
-                            '3': -4, '1': -2, '-1': 2, '-3': 4
-                        }
-                        return amplitudes[`${pam4[index]}`] * el / 3;
-                    });
+                    return carrier.map((el, index) => pam4Amplitudes[`${pam4[index]}`] * el / 3);
                 default:
                     return [];
             }
@@ -266,12 +237,12 @@ export default {
 
         /** @returns {number} */
         nextCarrierValue() {
-            return Math.sin(15 * Math.PI * this.time);
+            return Math.sin(17 * Math.PI * this.time);
         },
 
         /** @returns {number} */
         nextSineModulationValue() {
-            return Math.sin(Math.PI * this.time);
+            return Math.sin(1.5 * Math.PI * this.time);
         },
 
         /**
@@ -282,7 +253,7 @@ export default {
         nextBinaryValue(obj) {
             if (this.binaryCounter === this.binarySymbolLength) {
                 const currentlyReturnsIndex = obj.pool.findIndex(el => el === obj.currentlyReturns);
-                obj.currentlyReturns = (currentlyReturnsIndex === obj.pool.length -1) ? obj.pool[0] : obj.pool[currentlyReturnsIndex + 1];
+                obj.currentlyReturns = (currentlyReturnsIndex === obj.pool.length - 1) ? obj.pool[0] : obj.pool[currentlyReturnsIndex + 1];
             }
             return obj.currentlyReturns;
         },
@@ -290,7 +261,6 @@ export default {
     mounted() {
         // Create interval to push new signal values to arrays
         this.intervalId = window.setInterval(() => {
-
             // Push new values to arrays
             this.carrierSignalValues.unshift(this.nextCarrierValue());
             this.sineModulationSignalValues.unshift(this.nextSineModulationValue());

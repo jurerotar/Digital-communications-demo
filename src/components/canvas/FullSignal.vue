@@ -29,12 +29,11 @@ export default {
         this.p5 = new P5((p5) => {
             this.$c.setup(p5);
             p5.draw = () => {
-
                 p5.stroke(0);
-                //this.max = this.$c.max(this.data.map(el => Math.abs(el)));
+
                 p5.background(255);
-                const canvasDimensions = this.$c.dimensions;
-                const canvasPadding = 50;
+                const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
+
                 p5.strokeWeight(2);
                 //adds scale.first for is for y-axis and the second one for x-axis
                 p5.line(canvasDimensions.x / 2, canvasPadding, canvasDimensions.x / 2, canvasDimensions.y - canvasPadding);
@@ -44,10 +43,8 @@ export default {
                 //this.$c.linearSpace(this.max, -this.max, 4);
                 yAxisLabels.splice(2, 0, 0);
                 for (let i = 0; i <= 20; i++) {
-                    if (i % 5 === 0) {
-                        if (i !== 10) {
-                            p5.text(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4), canvasDimensions.x / 2 - 40, canvasPadding + i * 10 + 3);
-                        }
+                    if (i % 5 === 0 && i !== 10) {
+                        p5.text(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4), canvasDimensions.x / 2 - 40, canvasPadding + i * 10 + 3);
                         p5.strokeWeight(2);
                         p5.line(canvasDimensions.x / 2 - 5, canvasPadding + i * 10, canvasDimensions.x / 2 + 5, canvasPadding + i * 10);
                         p5.strokeWeight(1);
@@ -57,10 +54,8 @@ export default {
                     }
                 }
                 for (let i = 0; i <= 60; i++) {
-                    if (i % 5 === 0) {
-                        if (i !== 30) {
-                            p5.text(`${xAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4), i * 10 + canvasPadding, canvasPadding + 125);
-                        }
+                    if (i % 5 === 0 && i !== 30) {
+                        p5.text(`${xAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4), i * 10 + canvasPadding, canvasPadding + 125);
                         p5.strokeWeight(2);
                         p5.line(canvasPadding + i * 10, canvasDimensions.y / 2 + 5, canvasPadding + i * 10, canvasDimensions.y / 2 - 5);
                         p5.strokeWeight(1);
@@ -76,6 +71,7 @@ export default {
                 p5.triangle(350, 43, 346, 50, 354, 50);
                 //adds texts on axis
                 p5.textSize(12);
+                p5.strokeWeight(1);
                 p5.textFont('Montserrat');
                 p5.text('x(t)', canvasDimensions.x / 2 - 5, 30);
                 p5.text('t', canvasDimensions.x - 25, canvasDimensions.y / 2 + 15);

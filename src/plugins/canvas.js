@@ -1,5 +1,6 @@
 /**
  * @typedef {Object} P5
+ * @property {function} setup
  * @function frameRate
  * @function createCanvas
  */
@@ -12,13 +13,12 @@
 
 const canvas = {
     frameRate: 30,
-    /**
-     * @type Size
-     */
+    /** @type Size */
     dimensions: {
         x: 700,
         y: 300,
     },
+    canvasPadding: 50,
     colors: [
         '#01FF70',
         '#0074D9',
@@ -40,6 +40,7 @@ const canvas = {
         p5.setup = () => {
             p5.createCanvas(x, y);
             p5.frameRate(frameRate);
+            p5.textFont('Montserrat');
         }
     },
     /**

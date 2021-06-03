@@ -38,6 +38,13 @@
         :type = "selectedObject.key"
         :frequency = "frequency">
     </spectrum-canvas>
+<!--    <logarithmic-->
+<!--        :canvas_id="'spectrum-signal-logarithmic'"-->
+<!--        :data="logarithmic"-->
+<!--        :title="'Spekter [dB]'"-->
+<!--        :type = "selectedObject.key"-->
+<!--        :frequency = "frequency"-->
+<!--    ></logarithmic>-->
 </template>
 
 <script>
@@ -46,14 +53,15 @@ import Collapsible from "@/components/global/Collapsible";
 import SpectrumCanvas from "@/components/canvas/Spectrum";
 import FullSignal from "@/components/canvas/FullSignal";
 import '@/types.js';
+//import Logarithmic from "@/components/canvas/Logarithmic";
 
 export default {
     name: "Spectrum",
-    components: {FullSignal, Collapsible, TheorySpectrum, SpectrumCanvas},
+    components: { FullSignal, Collapsible, TheorySpectrum, SpectrumCanvas},
     data() {
         return {
             selected: 'sin',
-            fftSize: 2048,
+            fftSize: 2**11,
             fft: null,
             frequencyValue: 1,
             /** @type {Array<Signal>} */
@@ -61,7 +69,7 @@ export default {
                 {
                     label: 'Sinusni',
                     key: 'sin',
-                    fn: () => this.createEmptyArrayOfFFTSize().map(el => Math.sin(el * this.frequency ** -1 * 0.04) * -1),
+                    fn: () => this.createEmptyArrayOfFFTSize().map(el => Math.sin(el * this.frequency ** -1 * 3.14 * 0.04) * -1),
                     is_binary: false,
                     frequencies: [
                         {
@@ -89,7 +97,7 @@ export default {
                 {
                     label: 'Kosinusni',
                     key: 'cos',
-                    fn: () => this.createEmptyArrayOfFFTSize().map(el => Math.cos(el * this.frequency ** -1 * 0.02) * -1),
+                    fn: () => this.createEmptyArrayOfFFTSize().map(el => Math.cos(el * this.frequency ** -1 *  3.14* 0.04) * -1),
                     is_binary: false,
                     frequencies: [
                         {
@@ -301,6 +309,10 @@ export default {
                 absoluteSpectrumValues.push(Math.sqrt(out[i]**2 + out[i + 1]**2));
             }
             return absoluteSpectrumValues;
+        },
+        logarithmic() {
+            const max = Math.max(...this.output);
+            return this.output.map(el => 20 * Math.log(el / max));
         }
     },
 }

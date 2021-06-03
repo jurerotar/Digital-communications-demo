@@ -36,18 +36,18 @@ export default {
             texts: [
                 {
                     text: '1',
-                    x: 10,
-                    y: -100,
+                    x: 40,
+                    y: -70,
                 },
                 {
-                    text: '1',
+                    text: '-1',
                     x: 100,
                     y: 15,
                 },
                 {
-                    text: 'y = Σ sin(k * t)',
-                    x: -36,
-                    y: -140,
+                    text: 'x(t)',
+                    x: 40,
+                    y: 20,
                 },
             ]
         }
@@ -57,18 +57,19 @@ export default {
         this.p5 = new P5((p5) => {
             this.$c.setup(p5);
             p5.draw = () => {
+                this.context = document.querySelector(`#${this.canvasId} canvas`).getContext('2d');
 
                 p5.stroke(0);
                 //this.max = this.$c.max(this.data.map(el => Math.abs(el)));
                 p5.background(255);
-                const canvasDimensions = this.$c.dimensions;
-                const canvasPadding = 50;
+                const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
+
                 p5.strokeWeight(2);
-                p5.line(canvasDimensions.x / 2-this.offset.x, canvasPadding-30, canvasDimensions.x / 2-this.offset.x, canvasDimensions.y - canvasPadding+20);
+                p5.line(canvasPadding, canvasPadding-30, canvasPadding, canvasDimensions.y - canvasPadding+20);
                 p5.strokeWeight(1);
                 //adds arrow on x-axis
                 p5.strokeWeight(2);
-                this.drawArrow(p5, p5.createVector(0, canvasDimensions.y/2), p5.createVector(canvasDimensions.x-30, canvasDimensions.y / 2), 'black', 7, 0);
+                this.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y/2), p5.createVector(canvasDimensions.x-30, canvasDimensions.y / 2), 'black', 7, 0);
                 //adds arrow on y-axis
                 p5.fill(1);
                 p5.triangle(175, 20, 171, 27, 179, 27);
@@ -77,27 +78,22 @@ export default {
                 p5.strokeWeight(1);
                 p5.textFont('Montserrat');
                 p5.text('t', canvasDimensions.x - 15, canvasDimensions.y / 2 + 3);
+                this.texts.forEach(el => p5.text(el.text, el.x, el.y));
 
-                this.context = document.querySelector(`#${this.canvasId} canvas`).getContext('2d');
 
                 // Dashed lines to show values
                 this.$c.drawDashed(this.context, () => {
                     const offset = this.lineOffsets[`${this.components}`];
-                    p5.line(0, canvasPadding + offset, canvasDimensions.x, canvasPadding + offset);
-                    p5.line(0, canvasDimensions.y - canvasPadding - offset, canvasDimensions.x, canvasDimensions.y - canvasPadding - offset);
+                    p5.line(canvasPadding, canvasPadding + offset, canvasDimensions.x, canvasPadding + offset);
+                    p5.line(canvasPadding, canvasDimensions.y - canvasPadding - offset, canvasDimensions.x, canvasDimensions.y - canvasPadding - offset);
                 });
 
-                p5.translate(this.offset.x, this.offset.y+canvasPadding/2);
+                p5.translate(0, this.offset.y+canvasPadding/2);
 
-                this.texts.forEach(el => p5.text(el.text, el.x, el.y));
 
                 p5.noFill();
                 p5.strokeWeight(3);
 
-
-                let previousX = 0;
-                let previousY = 0;
-                let x = 0;
                 let y = 0;
 
                 /**
@@ -108,39 +104,20 @@ export default {
                     // We'll use n to make sure radius is not 0
                     const n = i * 2 + 1;
                     const frequency = n * this.time * Math.PI;
-                    const color = this.$c.colors[i];
                     const radius = 90 / (Math.sqrt(n)) / (Math.sqrt(2 * i + 1));
-
-                    p5.stroke(color);
-                    p5.ellipse(previousX, previousY, radius * 2);
-                    x += radius * Math.cos(frequency);
                     y += radius * Math.sin(frequency);
-                    p5.noFill();
-
-                    // Draw a line from end of previous line to (x, y)
-                    p5.line(previousX, previousY, x, y);
-
-                    // Update previous x and y to current x and y
-                    previousX = x;
-                    previousY = y;
-                    this.$c.drawArrow(p5, p5.createVector(previousX, previousY), p5.createVector(x, y), color, 6 - i);
                 }
                 // Add y to the start of waveValues array
                 this.waveValues.unshift(y);
-
+                p5.stroke(this.$c.colors[this.components - 1]);
                 // Draw sine wave
                 p5.beginShape();
                 this.waveValues.forEach((y, x) => {
-                    p5.vertex(x + 150, y);
+                    p5.vertex(x + canvasPadding, y);
                 });
                 p5.endShape();
 
-                this.$c.drawDashed(this.context, () => {
-                    // Draw a line from x, y to start of sine wave which is at position (200, first element of array)
-                    p5.line(x, y, 150, this.waveValues[0]);
-                })
-
-                if (this.waveValues.length > 300) {
+                if (this.waveValues.length > 600) {
                     this.waveValues.pop();
                 }
                 this.time += 0.01;

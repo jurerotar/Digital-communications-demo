@@ -11,7 +11,7 @@ import CanvasContainer from "@/components/global/CanvasContainer";
 import '@/types.js';
 
 export default {
-    name: "SpectrumCanvas",
+    name: "Logarithmic",
     components: {CanvasContainer},
     data() {
         return {
@@ -25,18 +25,21 @@ export default {
         }
     },
     mounted() {
+        console.log(this.data);
         this.max = Math.max(...this.data);
         // Initiate new P5 instance and create canvas
         this.p5 = new P5((p5) => {
             this.$c.setup(p5);
             p5.draw = () => {
-                p5.stroke(0);
 
+
+                p5.stroke(0);
                 /**
                  * Code bellow draws the axis lines and labels them
                  */
                 p5.background(255);
-                const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
+                const canvasDimensions = this.$c.dimensions;
+                const canvasPadding = 50;
                 p5.strokeWeight(2);
 
                 // Top-bottom line
@@ -48,7 +51,7 @@ export default {
                 p5.fill(1);
                 p5.triangle(50,40,46,50,54,50);
 
-                const yAxisLabels = this.$c.linearSpace(this.max, 0, 5);
+                const yAxisLabels = [0, -20, -40, -60, -80];
 
                 for(let i = 0; i <= 20; i++) {
                     // Make each fifth line labeled and wider
@@ -64,29 +67,33 @@ export default {
                 for(let i = 0; i <= 60; i++) {
                     // Make each fifth line labeled and wider
                     if(i % 5 === 0) {
-                        p5.text(Math.trunc(i / 5), canvasPadding + i * 10 - 3, canvasDimensions.y - 30);
+                        p5.text(Math.trunc(i / 5), canvasPadding + i * 10 - 3, 30);
                         p5.strokeWeight(2);
-                        p5.line(canvasPadding + i * 10, canvasDimensions.y - canvasPadding + 5, canvasPadding + i * 10, canvasDimensions.y- canvasPadding -5);
+                        p5.line(canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10, canvasPadding -5);
                         p5.strokeWeight(1);
                         continue;
                     }
-                    p5.line(canvasPadding + i * 10, canvasDimensions.y - canvasPadding + 5, canvasPadding + i * 10, canvasDimensions.y- canvasPadding -5);
+                    p5.line(canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10, canvasPadding -5);
                 }
                 // Y axis label
-                p5.text('|X[f]|', canvasPadding - 15, canvasPadding / 2);
+                p5.text('|X[f]| [dB]', canvasPadding - 15, canvasPadding / 2);
                 // X axis label
-                p5.text('f', canvasDimensions.x - 30, canvasDimensions.y - canvasPadding);
+                p5.text('f', canvasDimensions.x - 30, canvasPadding);
 
                 p5.strokeWeight(2);
-                this.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y - canvasPadding), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y - canvasPadding), 'black', 7, 0);
+                this.drawArrow(p5, p5.createVector(canvasPadding, canvasPadding), p5.createVector(canvasDimensions.x - canvasPadding, canvasPadding), 'black', 7, 0);
 
+                // // Draw axis and move center to defined offset coordinates
+                // this.$c.spectrumAxis(p5, this.max);
+                // p5.translate(this.offset.x + 41, this.offset.y - 7);
+                //
                 p5.noFill();
                 p5.stroke(this.$c.colors[0]);
                 p5.strokeWeight(2);
 
                 // Draw the shape
                 p5.beginShape();
-                this.normalizedData.forEach((y, x) => p5.vertex(x + canvasPadding, canvasDimensions.y - canvasPadding + y * 200));
+                this.normalizedData.forEach((y, x) => p5.vertex(x + canvasPadding, -200 + y/10));
                 p5.endShape();
             }
             p5.removeCanvas = () => p5.remove();
@@ -116,19 +123,18 @@ export default {
     computed: {
         normalizedData() {
             let data = [...this.data];
-            // Removes the curve from spectrum to give infinite signal look
             if(this.type === 'sin' || this.type === 'cos') {
-                const correctPeakIndex = Math.trunc(50 / this.frequency);
+                const correctPeak = Math.trunc(50 / this.frequency);
                 const peakIndex = data.findIndex(el => el === this.max);
-                // If correct peak index is right of current index, add zeros
-                if(peakIndex < correctPeakIndex) {
-                    data.unshift(...[...Array(correctPeakIndex - peakIndex).keys()].fill(0))
+                const correctValues = data.slice(peakIndex, peakIndex + 50).filter(el => el > 1).reverse();
+                data = [...correctValues, ...data.filter((el, index) => index >= peakIndex)];
+                const newPeakIndex = data.findIndex(el => el === this.max);
+                if(newPeakIndex < correctPeak) {
+                    data.unshift(...[...Array(correctPeak - newPeakIndex).keys()].fill(0))
                 }
-                // If correct peak index is left of current index, remove zeros
                 else {
-                    data = data.filter((el, index) => index >= 50 - correctPeakIndex);
+                    data = data.filter((el, index) => index >= 50 - correctPeak);
                 }
-                data = data.map((el) => (el === this.max) ? this.max : 0);
             }
             data.length = 600;
             return data.map(el => -el / this.max);

@@ -98,8 +98,8 @@ export default {
                     const n = i * 2 + 1;
                     const frequency = n * Math.PI * this.time;
                     const color = this.$c.colors[i];
-                    const radius = 100 / Math.sqrt(n);
-                    const x = radius * Math.cos(frequency);
+                    const radius = 90 / (Math.sqrt(n)) / (Math.sqrt(2 * i + 1));
+                    const x = -radius * Math.cos(frequency);
                     const y = radius * Math.sin(frequency);
 
                     p5.stroke(color);

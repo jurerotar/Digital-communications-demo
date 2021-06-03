@@ -79,22 +79,22 @@ export default {
                     y: 170,
                 },
                 {
-                    text: '180\xB0',
-                    x: 540,
+                    text: '360\xB0',
+                    x: 565,
                     y: 170,
                 },
                 {
-                    text: '-180\xB0',
+                    text: '0\xB0',
                     x: 335,
-                    y: 140,
+                    y: 170,
                 },
                 {
-                    text: '-180\xB0',
+                    text: '0\xB0',
                     x: 155,
                     y: 360,
                 },
                 {
-                    text: '180\xB0',
+                    text: '360\xB0',
                     x: 155,
                     y: 550,
                 },
@@ -174,7 +174,7 @@ export default {
 
                 // Calculates the coordinates x and y(points on the circle)
                 const x = radius * Math.cos(Math.PI * this.time);
-                const y = radius * Math.sin(Math.PI * this.time);
+                const y = -radius * Math.sin(Math.PI * this.time);
 
                 p5.stroke(this.$c.colors[1]);
                 p5.noFill();
@@ -194,11 +194,11 @@ export default {
                 // Draws a sine wave with elements and indexes from linearSpace function and moves it
                 p5.translate(200, 0);
                 p5.beginShape();
-                sineValues.forEach((el, index) => p5.vertex(index, el * radius));
+                sineValues.forEach((el, index) => p5.vertex(index, -el * radius));
                 p5.endShape();
 
                 // Calculates vertical components
-                this.sinVertical = Math.sin(Math.PI * this.time) * radius;
+                this.sinVertical = -Math.sin(Math.PI * this.time) * radius;
                 // Moves horizontal component till it hits 200
                 this.sinHorizontal++;
                 // Defines the length of sine wave(one period is the same as cardinality in lineSpace function)
