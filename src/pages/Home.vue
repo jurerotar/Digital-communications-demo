@@ -1,5 +1,5 @@
 <template>
-    <h2 class="font-semibold text-xl">Domov</h2>
+    <h1 class="text-3xl font-medium mb-4">Domov</h1>
     <div>
        Spletna stran je nastala, kot projekt pri predmetu Digitalne komunikacije. Nazorno prikazuje vizualne primere iz snovi, s katerimi se lahko poigrate in si približate snov.
         Na povezavi najdete učbenik PROF. DR. SAŠO TOMAŽIČA:<br>
@@ -12,17 +12,5 @@
 
 export default {
     name: "Home",
-    components: {},
-    data() {
-        return {}
-    },
-
-    methods: {},
-    mounted() {
-
-    },
-
-    computed: {},
 }
-
 </script>
