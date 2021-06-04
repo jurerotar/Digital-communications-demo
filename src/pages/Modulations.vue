@@ -151,6 +151,15 @@ export default {
                     hasPam4: false,
                 },
                 {
+                    label: 'PM',
+                    key: 'pm',
+                    hasCarrier: true,
+                    hasSineModulation: true,
+                    hasBipolar: false,
+                    hasUnipolar: false,
+                    hasPam4: false,
+                },
+                {
                     label: 'BASK',
                     key: 'bask',
                     hasCarrier: true,
@@ -223,6 +232,9 @@ export default {
                 // Frequency modulation
                 case 'fm':
                     return time.map(t => Math.cos(15 * Math.PI * t + 10 * (Math.cos(Math.PI * t) + 150)));
+
+                case 'pm':
+                    return carrier.map((el , index) => el * ((sine[index]>sine[index+1] ) ? -1 : 1 ));
 
                 // Binary amplitude shift keying
                 case 'bask':
