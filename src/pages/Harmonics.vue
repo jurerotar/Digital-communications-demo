@@ -9,7 +9,7 @@
         <input type="range" :id="`harmonic-components`"
                v-model.number="components"
                @change="updateAmountOfComponents(components)"
-               min="1" max="5" step="1"
+               min="1" max="10" step="1"
         >
     </div>
     <individual-harmonics :components = "components"></individual-harmonics>

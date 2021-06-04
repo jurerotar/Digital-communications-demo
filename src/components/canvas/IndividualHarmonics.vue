@@ -18,8 +18,6 @@ export default {
             p5: null,
             canvasId: 'canvas-harmonics-individual',
             context: null,
-            time: 0,
-            waveValues: {},
             /** @type {Coordinates} */
             offset: {
                 x: 175,
@@ -28,7 +26,7 @@ export default {
             /** @type {Text[]} */
             texts: [
                 {
-                    text: '1',
+                    text: '-1',
                     x: 12,
                     y: -105,
                 },
@@ -46,97 +44,91 @@ export default {
         }
     },
     mounted() {
-        // Create empty arrays in waveValues object to store sine values for each component
-
-        [...Array(5).keys()].forEach((el, index) => this.waveValues[index] = []);
-
+        let time = 0;
         // Initiate new P5 instance and create canvas
         this.p5 = new P5((p5) => {
-            this.$c.setup(p5);
+            p5.setup = () => {
+                p5.createCanvas(700, 400);
+                p5.frameRate(30);
+                p5.textFont('Montserrat');
+            }
             p5.draw = () => {
                 const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
+                p5.translate(0, canvasPadding);
                 p5.background(255);
-                //p5.translate(canvasPadding + this.offset.x, this.offset.y);
+                p5.stroke(0);
                 p5.strokeWeight(2);
 
-                p5.line(canvasDimensions.x / 2, canvasPadding, canvasDimensions.x / 2, canvasDimensions.y - canvasPadding);
+                p5.line(canvasDimensions.x / 2, -30, canvasDimensions.x / 2, canvasDimensions.y);
                 p5.strokeWeight(1);
-
-                const yAxisLabels = [0.5, 0.25, 0, -0.25, -0.5];
-                const xAxisLabels = [-1.5, -1.25, -1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5];
-                for (let i = 0; i <= 20; i++) {
-                    if (i % 5 === 0 && i !== 10) {
-                        p5.text(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 5), canvasDimensions.x / 2 - 40, canvasPadding + i * 10 + 3);
-                        p5.strokeWeight(2);
-                        p5.line(canvasDimensions.x / 2 - 5, canvasPadding + i * 10, canvasDimensions.x / 2 + 5, canvasPadding + i * 10);
-                        p5.strokeWeight(1);
-                        //console.log(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4));
+                const yAxisLabels = [0.75, 0.5, 0.25, 0, -0.25, -0.5, -0.75];
+                const xAxisLabels = [-1.5, -1.25, '  -1', -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, '   1', 1.25, 1.5];
+                for (let i = 0; i <= 30; i++) {
+                    if (i % 5 === 0 && i !== 15) {
+                        p5.text(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 5), canvasDimensions.x / 2 - 40, i * 10 + 3);
+                        this.$c.temporaryState(p5, () => {
+                            p5.strokeWeight(2);
+                            p5.line(canvasDimensions.x / 2 - 5, i * 10, canvasDimensions.x / 2 + 5, i * 10);
+                        });
                     } else {
-                        p5.line(canvasDimensions.x / 2 - 5, canvasPadding + i * 10, canvasDimensions.x / 2 + 5, canvasPadding + i * 10);
+                        p5.line(canvasDimensions.x / 2 - 5, i * 10, canvasDimensions.x / 2 + 5, i * 10);
                     }
                 }
                 for (let i = 0; i <= 60; i++) {
                     if (i % 5 === 0 && i !== 30) {
-                        p5.text(`${xAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4), i * 10 + canvasPadding, canvasPadding + 125);
-                        p5.strokeWeight(2);
-                        p5.line(canvasPadding + i * 10, canvasDimensions.y / 2 + 5, canvasPadding + i * 10, canvasDimensions.y / 2 - 5);
-                        p5.strokeWeight(1);
+                        p5.text(`${xAxisLabels[Math.trunc(i / 5)]}`.substring(0, 5), i * 10 + canvasPadding - 15, canvasPadding + 125);
+                        this.$c.temporaryState(p5, () => {
+                            p5.strokeWeight(2);
+                            p5.line(canvasPadding + i * 10, canvasDimensions.y / 2 + 5, canvasPadding + i * 10, canvasDimensions.y / 2 - 5);
+
+                        });
                     } else {
                         p5.line(canvasPadding + i * 10, canvasDimensions.y / 2 + 5, canvasPadding + i * 10, canvasDimensions.y / 2 - 5);
                     }
                 }
+
                 //adds arrow on x-axis
                 p5.strokeWeight(2);
-                this.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - canvasPadding, 0), 'black', 7, 0);
+                this.$c.drawArrow1(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - canvasPadding, 0));
                 //adds arrow on y-axis
                 p5.fill(1);
-                p5.triangle(350, 43, 346, 50, 354, 50);
+                p5.triangle(350, -30, 346, -20, 354, -20);
                 //adds texts on axis
-                p5.textSize(12);
                 p5.strokeWeight(1);
-                p5.textFont('Montserrat');
-                p5.text('Im', canvasDimensions.x / 2 - 5, 30);
+                p5.text('Im', canvasDimensions.x / 2 - 6, -38);
                 p5.text('Re', canvasDimensions.x - 25, canvasDimensions.y / 2 + 15);
 
                 p5.translate(0, 150);
-
-                //x-Axis
-                //p5.line(canvasDimensions.x / 2, 0, canvasDimensions.x / 2, 0);
-                //y-axis
-                // p5.line(0,-canvasDimensions.y/2, 0, canvasDimensions.y / 2)
-
-                //p5.triangle(30, 75, 58, 20, 86, 75);
-
-                p5.stroke(255);
                 p5.noFill();
-                //ellipse(0, 0, 200);
                 let previousX = 0;
 
-                p5.translate(canvasDimensions.x / 2, 0)
+                p5.translate(canvasDimensions.x / 2, 0);
 
-                for (let i = 0; i < this.components; i++) {
-                    const n = i * 2 + 1;
-                    const frequency = (i + 1) *  this.time;
-                    const radius = 100 / Math.sqrt(n**2);
-                    //izračun kordinat x in y (točke na krožnici)
-                    const x = radius * (i % 2 === 0 ? -1 :1) * Math.sin(frequency + (i === 0 ? 1 : 0));
-                    const y = radius * Math.cos(frequency + (i === 0 ? 1 : 0));
+                for (let i = 1; i <= this.components; i++) {
+                    const frequency = (2 * i - 1) * time;
+                    const radius = 210 * (-2 / (2 * i - 1) / Math.PI * (-1) ** i);
+                    const x = -radius * Math.cos(frequency);
+                    const y = radius * Math.sin(frequency);
 
-                    // Zeleni imajo začetno koordinato y na 0 vedno
-                    p5.stroke('#29A829');
-                    // Sum previous offsets
-                    this.drawArrow(p5, p5.createVector(2 * previousX, 0), p5.createVector(x, y));
-                    // Modri imajo končno koordinato y na 0 vedno
-                    p5.stroke('#1974D2');
-                    this.drawArrow(p5, p5.createVector(2 * previousX + x, y), p5.createVector(x, -y));
-
+                    // Draw green and blue pointers
+                    this.$c.temporaryState(p5, () => {
+                        p5.strokeWeight(2);
+                        p5.stroke('#1974D2');
+                        // Sum previous offsets
+                        this.$c.drawArrow1(p5, p5.createVector(2 * previousX, 0), p5.createVector(x, y));
+                        // Modri imajo končno koordinato y na 0 vedno
+                        p5.stroke('#29A829');
+                        this.$c.drawArrow1(p5, p5.createVector(2 * previousX + x, y), p5.createVector(x, -y));
+                    });
                     previousX = x + previousX;
                 }
-                p5.fill('red');
-                p5.strokeWeight(0);
-                p5.ellipse(2 * previousX, 0, 8);
-                this.time += 0.008;
-                this.time += 0.01;
+                // Draw the red dot at the end of last pointer
+                this.$c.temporaryState(p5, () => {
+                    p5.strokeWeight(0);
+                    p5.fill('red');
+                    p5.ellipse(2 * previousX, 0, 8);
+                });
+                time += 0.03;
             }
             p5.removeCanvas = () => p5.remove();
         }, `${this.canvasId}`);
@@ -144,18 +136,6 @@ export default {
     unmounted() {
         // Remove canvas, otherwise P5 object stays in memory
         this.p5.removeCanvas();
-    },
-    methods: {
-        drawArrow(p5, base, vec) {
-            this.$c.temporaryState(p5, () => {
-                p5.translate(base.x, base.y);
-                p5.line(0, 0, vec.x, vec.y);
-                p5.rotate(vec.heading());
-                let arrowSize = 7;
-                p5.translate(vec.mag() - arrowSize, 0);
-                p5.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
-            });
-        }
     },
     props: {
         components: {
