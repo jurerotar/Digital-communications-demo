@@ -1,20 +1,9 @@
-/**
- * @typedef {Class} P5
- * @method setup
- * @function frameRate
- * @function createCanvas
- */
-
-/**
- * @typedef {Object} Size
- * @property {number} x
- * @property {number} y
- */
+import '../types';
 
 const canvas = {
     frameRate: 30,
     canvasPadding: 50,
-    /** @type Size */
+    /** @type {Coordinates} */
     dimensions: {
         x: 700,
         y: 300,
@@ -46,8 +35,8 @@ const canvas = {
     /**
      * Draws both axis on canvas with defined offset, must be used before any translates
      * @param {P5} p5
-     * @param {Size} offset
-     * @param {Size} dimensions
+     * @param {Coordinates} offset
+     * @param {Coordinates} dimensions
      */
     drawAxis(p5, offset, dimensions = this.dimensions) {
         p5.stroke(0);
@@ -71,6 +60,11 @@ const canvas = {
         callback();
         context.setLineDash([]);
     },
+    /**
+     *
+     * @param {P5} p5
+     * @param {function} callback
+     */
     temporaryState(p5, callback) {
         p5.push();
         callback();
@@ -78,22 +72,41 @@ const canvas = {
     },
     /**
      *
-     * @param p5
-     * @param vectorStart
-     * @param vectorEnd
-     * @param color
+     * @param {P5} p5
+     * @param {Vector} vectorStart
+     * @param {Vector} vectorEnd
+     * @param {string|number} color - hex or int[0, 255]
+     * @param {number} size - pixels
+     * @param {number} rotate - in radians
      */
-    drawArrow(p5, vectorStart, vectorEnd, color = 0) {
+    drawArrow(p5, vectorStart, vectorEnd, color, size = 7, rotate = 0) {
         this.temporaryState(p5, () => {
-            const arrowSize = 7;
-            p5.strokeWeight(2);
+            p5.push();
             p5.stroke(color);
             p5.fill(color);
             p5.line(vectorStart.x, vectorStart.y, vectorEnd.x, vectorEnd.y);
-            p5.rotate(Math.atan2(vectorStart.y - vectorStart.y, vectorEnd.x - vectorEnd.x) + 10);
-            p5.triangle(vectorEnd.x - arrowSize / 2, vectorEnd.y, vectorEnd.x + arrowSize / 2, vectorEnd.y, vectorEnd.x, vectorEnd.y + arrowSize);
-        })
+            p5.rotate(rotate);
+            p5.translate(vectorEnd.x, vectorEnd.y);
+            p5.triangle(0, size / 2, 0, -size / 2, size, 0);
+            p5.pop();
+        });
     },
+    /**
+     *
+     * @param {P5} p5
+     * @param {Vector} vectorStart
+     * @param {Vector} vectorEnd
+     */
+    drawArrow1(p5, vectorStart, vectorEnd) {
+        this.temporaryState(p5, () => {
+            const arrowSize = 7;
+            p5.translate(vectorStart.x, vectorStart.y);
+            p5.line(0, 0, vectorEnd.x, vectorEnd.y);
+            p5.rotate(vectorEnd.heading());
+            p5.translate(vectorEnd.mag() - arrowSize, 0);
+            p5.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+        });
+    }
 };
 
 export default canvas;

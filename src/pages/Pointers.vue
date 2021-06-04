@@ -159,7 +159,7 @@ export default {
                 p5.ellipse(0, 0, radius * 2);
 
                 // Draws a pointer
-                this.$c.drawArrow(p5, p5.createVector(0, 0), p5.createVector(x, y), this.$c.colors[1]);
+                this.drawArrow(p5, p5.createVector(0, 0), p5.createVector(x, y), this.$c.colors[1]);
 
                 p5.stroke(this.$c.colors[0]);
 
@@ -209,6 +209,20 @@ export default {
             };
             p5.removeCanvas = () => p5.remove();
         }, `${this.canvasId}`);
+    },
+    methods: {
+        drawArrow(p5, vectorStart, vectorEnd, color, size = 7, rotate = vectorEnd.heading()) {
+            const arrowSize = size;
+            p5.push();
+            p5.stroke(color);
+            p5.fill(color);
+            //p5.translate(vectorStart.x, vectorStart.y);
+            p5.line(vectorStart.x, vectorStart.y, vectorEnd.x, vectorEnd.y);
+            p5.rotate(rotate);
+            p5.translate(vectorEnd.mag() - arrowSize, 0);
+            p5.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+            p5.pop();
+        },
     },
     unmounted() {
         this.p5.removeCanvas();

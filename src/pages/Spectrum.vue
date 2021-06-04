@@ -38,13 +38,6 @@
         :type = "selectedObject.key"
         :frequency = "frequency">
     </spectrum-canvas>
-<!--    <logarithmic-->
-<!--        :canvas_id="'spectrum-signal-logarithmic'"-->
-<!--        :data="logarithmic"-->
-<!--        :title="'Spekter [dB]'"-->
-<!--        :type = "selectedObject.key"-->
-<!--        :frequency = "frequency"-->
-<!--    ></logarithmic>-->
 </template>
 
 <script>
@@ -53,7 +46,6 @@ import Collapsible from "@/components/global/Collapsible";
 import SpectrumCanvas from "@/components/canvas/Spectrum";
 import FullSignal from "@/components/canvas/FullSignal";
 import '@/types.js';
-//import Logarithmic from "@/components/canvas/Logarithmic";
 
 export default {
     name: "Spectrum",
@@ -226,10 +218,6 @@ export default {
             }
             return absoluteSpectrumValues;
         },
-        logarithmic() {
-            const max = Math.max(...this.output);
-            return this.output.map(el => 20 * Math.log(el / max));
-        }
     },
 }
 </script>

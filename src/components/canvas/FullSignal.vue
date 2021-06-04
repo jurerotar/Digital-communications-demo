@@ -65,7 +65,7 @@ export default {
                 }
                 //adds arrow on x-axis
                 p5.strokeWeight(2);
-                this.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y / 2), 'black', 7, 0);
+                this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y / 2), 'black', 7, 0);
                 //adds arrow on y-axis
                 p5.fill(1);
                 p5.triangle(350, 43, 346, 50, 354, 50);
@@ -106,20 +106,6 @@ export default {
         normalizedData() {
             const max = Math.max(...this.data.map(el => Math.abs(el)));
             return this.data.map(el => el / max);
-        },
-    },
-
-    methods: {
-        drawArrow(p5, vectorStart, vectorEnd, color, size = 7, rotate = 0) {
-            const arrowSize = size;
-            p5.push();
-            p5.stroke(color);
-            p5.fill(color);
-            p5.line(vectorStart.x, vectorStart.y, vectorEnd.x, vectorEnd.y);
-            p5.rotate(rotate);
-            p5.translate(vectorEnd.x, vectorEnd.y);
-            p5.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
-            p5.pop();
         },
     },
     props: {

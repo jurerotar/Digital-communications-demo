@@ -63,7 +63,7 @@ export default {
                 // X axis label
                 p5.text('t', canvasDimensions.x - 30, canvasDimensions.y / 2 + 3);
                 p5.strokeWeight(2);
-                this.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y / 2), 'black', 7, 0);
+                this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y / 2), 'black', 7, 0);
 
                 p5.fill(1);
                 p5.triangle(50, 42, 46, 50, 54, 50);
@@ -94,20 +94,6 @@ export default {
     unmounted() {
         // Remove canvas, otherwise P5 object stays in memory
         this.p5.removeCanvas();
-    },
-    methods: {
-        drawArrow(p5, vectorStart, vectorEnd, color, size = 7, rotate = vectorEnd.heading()) {
-            const arrowSize = size;
-            p5.push();
-            p5.stroke(color);
-            p5.fill(color);
-            p5.line(vectorStart.x, vectorStart.y, vectorEnd.x, vectorEnd.y);
-            p5.rotate(rotate);
-            p5.translate(vectorEnd.x, vectorEnd.y);
-            p5.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
-            p5.translate(-vectorEnd.x, -vectorEnd.y);
-            p5.pop();
-        },
     },
     computed: {
         normalizedData() {

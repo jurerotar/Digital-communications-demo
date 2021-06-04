@@ -51,3 +51,10 @@
  * @property {boolean} hasUnipolar
  * @property {boolean} hasPam4
  */
+
+/**
+ * @typedef {Class} P5
+ * @method setup
+ * @function frameRate
+ * @function createCanvas
+ */

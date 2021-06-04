@@ -82,12 +82,6 @@ export default {
             /** @type {string} */
             selected: 'am-lc',
 
-            /**
-             * Start time at 600 * 0.005, because we initiate arrays with 600 values already in
-             * @type {number}
-             */
-            time: 600 * 0.005,
-
             /** @type {number} */
             binaryCounter: 0,
 
@@ -277,15 +271,17 @@ export default {
         },
     },
     mounted() {
+        // Start time at 600 * 0.005, because we initiate arrays with 600 values already in
+        let time =  600 * 0.005;
         // Create interval to push new signal values to arrays
         this.intervalId = window.setInterval(() => {
             // Push new values to arrays
-            this.carrierSignalValues.unshift(Math.sin(15 * Math.PI * this.time));
-            this.sineModulationSignalValues.unshift(Math.sin(Math.PI * this.time));
+            this.carrierSignalValues.unshift(Math.sin(15 * Math.PI * time));
+            this.sineModulationSignalValues.unshift(Math.sin(Math.PI * time));
             this.bipolarSignal.values.unshift(this.nextBinaryValue(this.bipolarSignal));
             this.unipolarSignal.values.unshift(this.nextBinaryValue(this.unipolarSignal));
             this.pam4Signal.values.unshift(this.nextBinaryValue(this.pam4Signal));
-            this.timeValues.unshift(this.time);
+            this.timeValues.unshift(time);
 
             // Loop through arrays and remove last values if lengths are too big
             [
@@ -300,7 +296,7 @@ export default {
                     array.pop();
                 }
             });
-            this.time += 0.005;
+            time += 0.005;
 
             this.binaryCounter = (this.binaryCounter === this.binarySymbolLength) ? 0 : this.binaryCounter + 1;
         }, 30);

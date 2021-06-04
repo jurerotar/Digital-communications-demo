@@ -48,7 +48,7 @@ export default {
                 p5.fill(1);
                 p5.triangle(50,40,46,50,54,50);
 
-                const yAxisLabels = this.$c.linearSpace(this.max, 0, 5);
+                const yAxisLabels = this.$f.linearSpace(this.max, 0, 5);
 
                 for(let i = 0; i <= 20; i++) {
                     // Make each fifth line labeled and wider
@@ -78,7 +78,7 @@ export default {
                 p5.text('f', canvasDimensions.x - 30, canvasDimensions.y - canvasPadding);
 
                 p5.strokeWeight(2);
-                this.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y - canvasPadding), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y - canvasPadding), 'black', 7, 0);
+                this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y - canvasPadding), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y - canvasPadding), 'black', 7, 0);
 
                 p5.noFill();
                 p5.stroke(this.$c.colors[0]);
@@ -98,20 +98,6 @@ export default {
     unmounted() {
         // Remove canvas, otherwise P5 object stays in memory
         this.p5.removeCanvas();
-    },
-    methods: {
-        drawArrow(p5, vectorStart, vectorEnd, color, size = 7, rotate = vectorEnd.heading()) {
-            const arrowSize = size;
-            p5.push();
-            p5.stroke(color);
-            p5.fill(color);
-            p5.line(vectorStart.x, vectorStart.y, vectorEnd.x, vectorEnd.y);
-            p5.rotate(rotate);
-            p5.translate(vectorEnd.x, vectorEnd.y);
-            p5.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
-            p5.translate(-vectorEnd.x, -vectorEnd.y);
-            p5.pop();
-        },
     },
     computed: {
         normalizedData() {
