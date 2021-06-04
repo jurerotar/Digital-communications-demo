@@ -19,7 +19,7 @@
             class="text-white w-fit-content font-bold py-2 px-4 mb-2 sm:mr-2 rounded outline-none duration-300 transition-colors h-12"
             :class="[frequencyValue === frequency.key ? 'bg-blue-300' : 'bg-gray-300']"
             @click="changeFrequency(frequency.key)"
-            v-for="frequency in selectedObject.frequencies" :key="frequency.key">
+            v-for="frequency in frequencies" :key="frequency.key">
             {{ frequency.label }}
         </button>
     </div>
@@ -69,82 +69,26 @@ export default {
                 {
                     label: 'Sinusni',
                     key: 'sin',
-                    fn: () => this.createEmptyArrayOfFFTSize().map(el => Math.sin(el * this.frequency ** -1 * 3.14 * 0.04) * -1),
+                    fn: () => this.createEmptyArrayOfFFTSize().map(t => -Math.sin(t * this.frequency ** -1 *  Math.PI * 0.04)),
                     is_binary: false,
-                    frequencies: [
-                        {
-                            label: '1/4',
-                            key: 0.25
-                        },
-                        {
-                            label: '1/2',
-                            key: 0.5
-                        },
-                        {
-                            label: '1',
-                            key: 1
-                        },
-                        {
-                            label: '2',
-                            key: 2
-                        },
-                        {
-                            label: '4',
-                            key: 4
-                        },
-                    ]
                 },
                 {
                     label: 'Kosinusni',
                     key: 'cos',
-                    fn: () => this.createEmptyArrayOfFFTSize().map(el => Math.cos(el * this.frequency ** -1 *  3.14* 0.04) * -1),
+                    fn: () => this.createEmptyArrayOfFFTSize().map(t => -Math.cos(t * this.frequency ** -1 *  Math.PI * 0.04)),
                     is_binary: false,
                     frequencies: [
-                        {
-                            label: '1/4',
-                            key: 0.25
-                        },
-                        {
-                            label: '1/2',
-                            key: 0.5
-                        },
-                        {
-                            label: '1',
-                            key: 1
-                        },
-                        {
-                            label: '2',
-                            key: 2
-                        },
+                        {label: '1/4', key: 0.25},
+                        {label: '1/2', key: 0.5},
+                        {label: '1', key: 1},
+                        {label: '2', key: 2},
                     ]
                 },
                 {
                     label: 'Kvadratni',
                     key: 'square',
-                    fn: () => [...Array(Math.trunc(41 * this.frequency)).keys()].fill(-1),
+                    fn: () => Array(Math.trunc(41 * this.frequency)).fill(-1),
                     is_binary: true,
-                    frequencies: [
-                        {
-                            label: '1/4',
-                            key: 0.25
-                        },
-                        {
-                            label: '1/2',
-                            key: 0.5
-                        },
-                        {
-                            label: '1',
-                            key: 1
-                        },
-                        {
-                            label: '2',
-                            key: 2
-                        },
-                        {
-                            label: '4',
-                            key: 4
-                        },
-                    ]
                 },
                 {
                     label: 'Gauss',
@@ -161,56 +105,18 @@ export default {
                     },
                     is_binary: false,
                     frequencies: [
-                        {
-                            label: '1/4',
-                            key: 0.25
-                        },
-                        {
-                            label: '1/2',
-                            key: 0.5
-                        },
-                        {
-                            label: '1',
-                            key: 1
-                        },
-                        {
-                            label: '2',
-                            key: 2
-                        },
-                        {
-                            label: '3',
-                            key: 3
-                        },
+                        {label: '1/4', key: 0.25},
+                        {label: '1/2', key: 0.5},
+                        {label: '1', key: 1},
+                        {label: '2', key: 2},
+                        {label: '3', key: 3},
                     ]
-
                 },
                 {
                     label: 'Sinc',
                     key: 'sinc',
-                    fn: () => this.createEmptyArrayOfFFTSize().map(el => (el === 0) ? -1 : -Math.sin(el * this.frequency ** -1 * 0.062) / (el * this.frequency ** -1  * 0.062)),
+                    fn: () => this.createEmptyArrayOfFFTSize().map(t => (t === 0) ? -1 : -Math.sin(t * this.frequency ** -1 * 0.062) / (t * this.frequency ** -1  * 0.062)),
                     is_binary: false,
-                    frequencies: [
-                        {
-                            label: '1/4',
-                            key: 0.25
-                        },
-                        {
-                            label: '1/2',
-                            key: 0.5
-                        },
-                        {
-                            label: '1',
-                            key: 1
-                        },
-                        {
-                            label: '2',
-                            key: 2
-                        },
-                        {
-                            label: '4',
-                            key: 4
-                        },
-                    ]
                 },
             ],
         }
@@ -279,6 +185,16 @@ export default {
          */
         frequency() {
             return this.frequencyValue;
+        },
+        frequencies() {
+            return ('frequencies' in this.selectedObject) ? this.selectedObject.frequencies :
+                [
+                    {label: '1/4', key: 0.25},
+                    {label: '1/2', key: 0.5},
+                    {label: '1', key: 1},
+                    {label: '2', key: 2},
+                    {label: '4', key: 4},
+                ];
         },
         /**
          * Returns an array of numbers based on currently selected signal shape

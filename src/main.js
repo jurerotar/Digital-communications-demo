@@ -4,6 +4,7 @@ import {router} from './routes/routes.js';
 import './css/index.css';
 import store from "./store/store";
 import canvas from "./plugins/canvas";
+import functions from "./plugins/functions";
 
 /**
  * Returns a random element from an array
@@ -33,7 +34,7 @@ const app = createApp(App).use(router).use(store);
 /**
  * Mount functions plugin to be available globally
  */
-//app.config.globalProperties.$f = functions;
+app.config.globalProperties.$f = functions;
 
 /**
  * Mount canvas functions to be available globally

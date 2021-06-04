@@ -76,20 +76,32 @@ export default {
     components: {PositiveOnlySignal, Collapsible, TheoryModulations},
     data() {
         return {
+            /** @type {number|null} */
             intervalId: null,
+
+            /** @type {string} */
             selected: 'am-lc',
-            time: 601 * 0.005,
+
+            /**
+             * Start time at 600 * 0.005, because we initiate arrays with 600 values already in
+             * @type {number}
+             */
+            time: 600 * 0.005,
+
+            /** @type {number} */
             binaryCounter: 0,
+
+            /** @type {number} */
             binarySymbolLength: 120,
 
             /** @type {number[]} */
             timeValues: [...Array(600).fill(0)].map((t, i) => i * 0.005),
 
             /** @type {number[]} */
-            carrierSignalValues: [...Array(600).fill(0)].map((t, i) => Math.sin(i * 17 * Math.PI * 0.005)),
+            carrierSignalValues: [...Array(600).fill(0)].map((t, i) => Math.sin(i * 0.005 * 15 * Math.PI)),
 
             /** @type {number[]} */
-            sineModulationSignalValues: [...Array(600).fill(0)].map((t, i) => Math.sin(i * 1.5 * Math.PI * 0.005)),
+            sineModulationSignalValues: [...Array(600).fill(0)].map((t, i) => Math.sin(i * 0.005 * Math.PI)),
 
             /** @type {BinarySignal} */
             bipolarSignal: {
@@ -186,7 +198,7 @@ export default {
     computed: {
         /**
          * Finds currently selected modulation from modulations property by selected key
-         * @returns {object}
+         * @returns {Modulation}
          */
         selectedModulationData() {
             return this.modulations.find(el => el.key === this.selected);
@@ -197,7 +209,6 @@ export default {
          */
         modulated() {
             const pam4Amplitudes = {'3': -4, '1': -2, '-1': 2, '-3': 4};
-
             const [carrier, sine, bipolar, unipolar, pam4, time] = [
                 this.carrierSignalValues,
                 this.sineModulationSignalValues,
@@ -208,19 +219,37 @@ export default {
             ];
             switch (this.selected) {
                 case 'am-lc':
+                    // Multiply carrier and sine with 1.5 offset
                     return carrier.map((el, index) => el * (1.5 + sine[index]));
+
                 case 'am-sc':
+                    // Multiply carrier and sine
                     return carrier.map((el, index) => el * sine[index]);
+
+                // Frequency modulation
                 case 'fm':
-                    return time.map(t => Math.cos(15 * Math.PI * t + (10 * (Math.cos(Math.PI * t) + 150))));
+                    return time.map(t => Math.cos(15 * Math.PI * t + 10 * (Math.cos(Math.PI * t) + 150)));
+
+                // Binary amplitude shift keying
                 case 'bask':
                     return carrier.map((el, index) => el * unipolar[index]);
+
+                // Binary phase shift keying
                 case 'bpsk':
                     return carrier.map((el, index) => el * bipolar[index]);
+
+                // Frequency shift keying
                 case 'fsk':
-                    return time.map((t, index) => Math.sin(Math.PI * t * ((bipolar[index] === 1) ? 12 : 30)));
+                    return time.map((t, index) => {
+                        // We change frequency multiplier discretely based on current value of bipolar signal
+                        const multiplier = (bipolar[index] === 1) ? 12 : 30;
+                        return Math.sin(Math.PI * t * multiplier);
+                    });
+
+                // 4 level pulse amplitude modulations
                 case 'pam4':
                     return carrier.map((el, index) => pam4Amplitudes[`${pam4[index]}`] * el / 3);
+
                 default:
                     return [];
             }
@@ -229,22 +258,11 @@ export default {
     methods: {
         /**
          * Changes selected property
-         * @param {string} key - possible values: am, fm, bask, bpsk, pam4
+         * @param {string} key
          */
         changeSelected(key) {
             this.selected = key;
         },
-
-        /** @returns {number} */
-        nextCarrierValue() {
-            return Math.sin(17 * Math.PI * this.time);
-        },
-
-        /** @returns {number} */
-        nextSineModulationValue() {
-            return Math.sin(1.5 * Math.PI * this.time);
-        },
-
         /**
          * Returns binary values periodically from
          * @param {BinarySignal} obj
@@ -262,8 +280,8 @@ export default {
         // Create interval to push new signal values to arrays
         this.intervalId = window.setInterval(() => {
             // Push new values to arrays
-            this.carrierSignalValues.unshift(this.nextCarrierValue());
-            this.sineModulationSignalValues.unshift(this.nextSineModulationValue());
+            this.carrierSignalValues.unshift(Math.sin(15 * Math.PI * this.time));
+            this.sineModulationSignalValues.unshift(Math.sin(Math.PI * this.time));
             this.bipolarSignal.values.unshift(this.nextBinaryValue(this.bipolarSignal));
             this.unipolarSignal.values.unshift(this.nextBinaryValue(this.unipolarSignal));
             this.pam4Signal.values.unshift(this.nextBinaryValue(this.pam4Signal));
