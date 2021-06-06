@@ -16,7 +16,6 @@ export default {
     data() {
         return {
             p5: null,
-            previousValue: 1,
             /** @type {Coordinates} */
             offset: {
                 x: 0,
@@ -39,7 +38,7 @@ export default {
                 p5.line(canvasDimensions.x / 2, canvasPadding, canvasDimensions.x / 2, canvasDimensions.y - canvasPadding);
                 p5.strokeWeight(1);
                 const yAxisLabels = [...this.vertical_pool];
-                const xAxisLabels = [-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6];
+                const xAxisLabels = this.horizontal_pool;
                 //this.$c.linearSpace(this.max, -this.max, 4);
                 yAxisLabels.splice(2, 0, 0);
                 for (let i = 0; i <= 20; i++) {
@@ -70,9 +69,7 @@ export default {
                 p5.fill(1);
                 p5.triangle(350, 43, 346, 50, 354, 50);
                 //adds texts on axis
-                p5.textSize(12);
                 p5.strokeWeight(1);
-                p5.textFont('Montserrat');
                 p5.text('x(t)', canvasDimensions.x / 2 - 5, 30);
                 p5.text('t', canvasDimensions.x - 25, canvasDimensions.y / 2 + 15);
 
@@ -80,19 +77,19 @@ export default {
 
                 p5.noFill();
                 p5.stroke(this.$c.colors[1]);
-                p5.strokeWeight(3);
 
                 // Draw the shape
                 p5.beginShape();
-                this.normalizedData.forEach((y, x) => {
-                    if (this.is_binary) {
+                if (this.isBinary) {
+                    let previousY = 0;
+                    this.normalizedData.forEach((y, x) => {
                         // When value changes, start drawing on previous index to prevent skewed lines
-                        p5.vertex((this.previousValue !== y) ? x+canvasPadding - 1 : x+canvasPadding, y * (this.offset.y - (canvasPadding - 25)));
-                        this.previousValue = y;
-                    } else {
-                        p5.vertex(x+canvasPadding, y * (this.offset.y - (canvasPadding - 25)));
-                    }
-                });
+                        p5.vertex((previousY !== y) ? x + canvasPadding - 1 : x + canvasPadding, y * (this.offset.y - (canvasPadding - 25)));
+                        previousY = y;
+                    });
+                } else {
+                    this.normalizedData.forEach((y, x) => p5.vertex(x + canvasPadding, y * (this.offset.y - (canvasPadding - 25))));
+                }
                 p5.endShape();
             }
             p5.removeCanvas = () => p5.remove();
@@ -103,6 +100,9 @@ export default {
         this.p5.removeCanvas();
     },
     computed: {
+        isBinary() {
+            return ['square'].includes(this.type);
+        },
         normalizedData() {
             const max = Math.max(...this.data.map(el => Math.abs(el)));
             return this.data.map(el => el / max);
@@ -121,20 +121,19 @@ export default {
             type: String,
             required: true
         },
-        is_binary: {
-            type: Boolean,
-            required: false,
-            default: false
-        },
-        color_id: {
-            type: Number,
-            required: false,
-            default: 0
-        },
         vertical_pool: {
             type: Array,
             required: false,
-            default: null
+            default() {
+                return [1, 0.5, -0.5, -1];
+            }
+        },
+        horizontal_pool: {
+            type: Array,
+            required: false,
+            default() {
+                return [-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6];
+            }
         }
     }
 }

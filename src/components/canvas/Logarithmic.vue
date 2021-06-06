@@ -16,30 +16,64 @@ export default {
     data() {
         return {
             p5: null,
-            max: 0,
             /** @type {Coordinates} */
             offset: {
                 x: 0,
                 y: 250
             },
+            /** @type {Array<LogarithmicModifiers>} */
+            modifiers: [
+                {
+                    type: "sin",
+                    offset: 230,
+                    amplitude: 1,
+                    frequencyOffsets: {
+                        '0.25': -60,
+                        '0.5': -55,
+                        '1': -55,
+                        '2': -90,
+                        '4': -100,
+                    }
+                },
+                {
+                    type: "cos",
+                    offset: 180,
+                    amplitude: 1,
+                    frequencyOffsets: {
+                        '0.25': -10,
+                        '0.5': -10,
+                        '1': -10,
+                        '2': -50,
+                        '4': -60,
+                    }
+                },
+                {
+                    type: "square",
+                    offset: 50,
+                    amplitude: 1
+                },
+                {
+                    type: "sinc",
+                    offset: 50,
+                    amplitude: 1
+                },
+                {
+                    type: "gauss",
+                    offset: 50,
+                    amplitude: 2
+                }
+            ]
         }
     },
     mounted() {
-        console.log(this.data);
-        this.max = Math.max(...this.data);
         // Initiate new P5 instance and create canvas
         this.p5 = new P5((p5) => {
             this.$c.setup(p5);
             p5.draw = () => {
-
-
                 p5.stroke(0);
-                /**
-                 * Code bellow draws the axis lines and labels them
-                 */
                 p5.background(255);
-                const canvasDimensions = this.$c.dimensions;
-                const canvasPadding = 50;
+
+                const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
                 p5.strokeWeight(2);
 
                 // Top-bottom line
@@ -49,13 +83,13 @@ export default {
 
                 //y-axis arrow
                 p5.fill(1);
-                p5.triangle(50,40,46,50,54,50);
+                p5.triangle(50, 260, 46, 250, 54, 250);
 
                 const yAxisLabels = [0, -20, -40, -60, -80];
 
-                for(let i = 0; i <= 20; i++) {
+                for (let i = 0; i <= 20; i++) {
                     // Make each fifth line labeled and wider
-                    if(i % 5 === 0) {
+                    if (i % 5 === 0) {
                         p5.text(Math.trunc(yAxisLabels[Math.trunc(i / 5)]), canvasPadding - 40, canvasPadding + i * 10 + 3);
                         p5.strokeWeight(2);
                         p5.line(canvasPadding - 5, canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10);
@@ -64,81 +98,74 @@ export default {
                     }
                     p5.line(canvasPadding - 5, canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10);
                 }
-                for(let i = 0; i <= 60; i++) {
+                for (let i = 0; i <= 60; i++) {
                     // Make each fifth line labeled and wider
-                    if(i % 5 === 0) {
+                    if (i % 5 === 0) {
                         p5.text(Math.trunc(i / 5), canvasPadding + i * 10 - 3, 30);
                         p5.strokeWeight(2);
-                        p5.line(canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10, canvasPadding -5);
+                        p5.line(canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10, canvasPadding - 5);
                         p5.strokeWeight(1);
                         continue;
                     }
-                    p5.line(canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10, canvasPadding -5);
+                    p5.line(canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10, canvasPadding - 5);
                 }
                 // Y axis label
-                p5.text('|X[f]| [dB]', canvasPadding - 15, canvasPadding / 2);
+                p5.text('|X(f)/X(0)| [dB]', canvasPadding - 15, canvasPadding / 2 - 15);
                 // X axis label
                 p5.text('f', canvasDimensions.x - 30, canvasPadding);
 
                 p5.strokeWeight(2);
-                this.drawArrow(p5, p5.createVector(canvasPadding, canvasPadding), p5.createVector(canvasDimensions.x - canvasPadding, canvasPadding), 'black', 7, 0);
+                this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasPadding), p5.createVector(canvasDimensions.x - canvasPadding, canvasPadding), 'black', 7, 0);
 
-                // // Draw axis and move center to defined offset coordinates
-                // this.$c.spectrumAxis(p5, this.max);
-                // p5.translate(this.offset.x + 41, this.offset.y - 7);
-                //
                 p5.noFill();
                 p5.stroke(this.$c.colors[0]);
-                p5.strokeWeight(2);
+                p5.strokeWeight(1);
 
                 // Draw the shape
                 p5.beginShape();
-                this.normalizedData.forEach((y, x) => p5.vertex(x + canvasPadding, -200 + y/10));
+                this.dataInView.forEach((y, x) => p5.vertex(x + canvasPadding, y));
                 p5.endShape();
             }
             p5.removeCanvas = () => p5.remove();
         }, this.canvas_id);
     },
-    updated() {
-        this.max = Math.max(...this.data);
-    },
     unmounted() {
         // Remove canvas, otherwise P5 object stays in memory
         this.p5.removeCanvas();
     },
-    methods: {
-        drawArrow(p5, vectorStart, vectorEnd, color, size = 7, rotate = vectorEnd.heading()) {
-            const arrowSize = size;
-            p5.push();
-            p5.stroke(color);
-            p5.fill(color);
-            p5.line(vectorStart.x, vectorStart.y, vectorEnd.x, vectorEnd.y);
-            p5.rotate(rotate);
-            p5.translate(vectorEnd.x, vectorEnd.y);
-            p5.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
-            p5.translate(-vectorEnd.x, -vectorEnd.y);
-            p5.pop();
-        },
-    },
     computed: {
+        dataInView() {
+            // Charts are not correct, so we modify them a bit
+            const modifiers = this.modifiers.find(el => el.type === this.type);
+            // Multiply each value with defined amplitude and offset
+            let data = [...this.normalizedData].map(el => el * modifiers.amplitude + modifiers.offset);
+            // Sinusoid functions change position based on frequency, so we apply additional offset
+            if(this.isSinusoid) {
+                data = data.map(el => el + modifiers.frequencyOffsets[`${this.frequency}`]);
+            }
+            // Remove values that are to low so they dont overflow the charts
+            if(this.type === 'gauss') {
+                data = data.filter(el => el <= 260 + 5 * this.frequency);
+            }
+            return data;
+        },
         normalizedData() {
             let data = [...this.data];
-            if(this.type === 'sin' || this.type === 'cos') {
+            // Sinusoids are created with a higher frequency, so we can actually display the spectrum.
+            // That means, the peak is right of where it should be. We remove the values from the left until peak matches
+            if(this.isSinusoid) {
+                const max = Math.max(...data);
+                const maxIndex = data.findIndex(el => el === max);
                 const correctPeak = Math.trunc(50 / this.frequency);
-                const peakIndex = data.findIndex(el => el === this.max);
-                const correctValues = data.slice(peakIndex, peakIndex + 50).filter(el => el > 1).reverse();
-                data = [...correctValues, ...data.filter((el, index) => index >= peakIndex)];
-                const newPeakIndex = data.findIndex(el => el === this.max);
-                if(newPeakIndex < correctPeak) {
-                    data.unshift(...[...Array(correctPeak - newPeakIndex).keys()].fill(0))
-                }
-                else {
-                    data = data.filter((el, index) => index >= 50 - correctPeak);
-                }
+                data = data.filter((el, index) => index >= maxIndex - correctPeak);
             }
             data.length = 600;
-            return data.map(el => -el / this.max);
+            // Apply logarithm
+            return data.map(el => -20 * Math.log(el / data[0]));
         },
+        isSinusoid() {
+            return ['sin', 'cos'].includes(this.type);
+        }
     },
     props: {
         data: {

@@ -16,7 +16,6 @@ export default {
     data() {
         return {
             p5: null,
-            previousValue: 1,
             /** @type {Coordinates} */
             offset: {
                 x: 0,
@@ -30,10 +29,6 @@ export default {
             this.$c.setup(p5);
             p5.draw = () => {
                 p5.stroke(0);
-
-                /**
-                 * Code bellow draws the axis lines and labels them
-                 */
                 p5.background(255);
                 const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
 
@@ -68,24 +63,24 @@ export default {
                 p5.fill(1);
                 p5.triangle(50, 42, 46, 50, 54, 50);
 
-                /**
-                 * Start drawing the actual chart
-                 */
                 p5.noFill();
-                p5.stroke(this.$c.colors[this.color_id]);
+                p5.stroke(this.$c.colors[1]);
                 p5.strokeWeight(2);
 
                 // Draw the shape
                 p5.beginShape();
-                this.normalizedData.forEach((y, x) => {
-                    if (this.is_binary) {
-                        // When value changes, start drawing on previous index to prevent skewed lines
-                        p5.vertex((this.previousValue !== y) ? x - 1 + canvasPadding : x + canvasPadding,  y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2)
-                        this.previousValue = y;
-                    } else {
+                if(this.isBinary) {
+                    let previousY = 1;
+                    this.normalizedData.forEach((y, x) => {
+                        p5.vertex((previousY !== y) ? x - 1 + canvasPadding : x + canvasPadding, y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2);
+                        previousY = y;
+                    });
+                }
+                else {
+                    this.normalizedData.forEach((y, x) => {
                         p5.vertex(x + canvasPadding, y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2);
-                    }
-                });
+                    });
+                }
                 p5.endShape();
             }
             p5.removeCanvas = () => p5.remove();
@@ -99,7 +94,7 @@ export default {
         normalizedData() {
             const max = Math.max(...this.data.map(el => Math.abs(el)));
             const data = [...this.data];
-            data.length= 600;
+            data.length = 600;
             return data.map(el => {
                 if(this.type === 'pam4') {
                     const sign = Math.sign(el);
@@ -110,6 +105,9 @@ export default {
         },
         isModulatedText() {
             return (this.is_modulated) ? 'y(t)' : 'x(t)';
+        },
+        isBinary() {
+            return ['unipolar', 'bipolar', 'pam4'].includes(this.type);
         }
     },
     props: {
@@ -124,16 +122,6 @@ export default {
         canvas_id: {
             type: String,
             required: true
-        },
-        is_binary: {
-            type: Boolean,
-            required: false,
-            default: false
-        },
-        color_id: {
-            type: Number,
-            required: false,
-            default: 0
         },
         is_modulated: {
             type: Boolean,
