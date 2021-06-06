@@ -26,9 +26,9 @@
     <full-signal
         :canvas_id="'spectrum-original-signal'"
         :data="canvasInput"
-        :is_binary="selectedObject.is_binary"
         :title="'Signal'"
         :vertical_pool="[1, 0.5, -0.5, -1]"
+        :horizontal_pool="selectedObject.horizontal_pool"
     >
     </full-signal>
     <spectrum-canvas
@@ -38,6 +38,13 @@
         :type = "selectedObject.key"
         :frequency = "frequency">
     </spectrum-canvas>
+    <logarithmic
+        :canvas_id="'spectrum-signal-logarithmic'"
+        :data="output"
+        :title="'Spekter [dB]'"
+        :type = "selectedObject.key"
+        :frequency = "frequency">
+    </logarithmic>
 </template>
 
 <script>
@@ -45,11 +52,12 @@ import TheorySpectrum from "@/components/theory/TheorySpectrum";
 import Collapsible from "@/components/global/Collapsible";
 import SpectrumCanvas from "@/components/canvas/Spectrum";
 import FullSignal from "@/components/canvas/FullSignal";
+import Logarithmic from "@/components/canvas/Logarithmic";
 import '@/types.js';
 
 export default {
     name: "Spectrum",
-    components: { FullSignal, Collapsible, TheorySpectrum, SpectrumCanvas},
+    components: { FullSignal, Collapsible, TheorySpectrum, SpectrumCanvas, Logarithmic},
     data() {
         return {
             selected: 'sin',
@@ -61,26 +69,19 @@ export default {
                 {
                     label: 'Sinusni',
                     key: 'sin',
-                    fn: () => this.createEmptyArrayOfFFTSize().map(t => -Math.sin(t * this.frequency ** -1 *  Math.PI * 0.04)),
-                    is_binary: false,
+                    fn: () => this.createEmptyArrayOfFFTSize().map(t => -Math.sin(t * this.frequency ** -1 *  Math.PI * 0.12)),
+                    horizontal_pool:[-18, -15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15, 18]
                 },
                 {
                     label: 'Kosinusni',
                     key: 'cos',
-                    fn: () => this.createEmptyArrayOfFFTSize().map(t => -Math.cos(t * this.frequency ** -1 *  Math.PI * 0.04)),
-                    is_binary: false,
-                    frequencies: [
-                        {label: '1/4', key: 0.25},
-                        {label: '1/2', key: 0.5},
-                        {label: '1', key: 1},
-                        {label: '2', key: 2},
-                    ]
+                    fn: () => this.createEmptyArrayOfFFTSize().map(t => -Math.cos(t * this.frequency ** -1 *  Math.PI * 0.12)),
+                    horizontal_pool:[-18, -15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15, 18]
                 },
                 {
                     label: 'Kvadratni',
                     key: 'square',
                     fn: () => Array(Math.trunc(41 * this.frequency)).fill(-1),
-                    is_binary: true,
                 },
                 {
                     label: 'Gauss',
@@ -95,7 +96,6 @@ export default {
                         }
                         return gauss;
                     },
-                    is_binary: false,
                     frequencies: [
                         {label: '1/4', key: 0.25},
                         {label: '1/2', key: 0.5},
@@ -108,7 +108,6 @@ export default {
                     label: 'Sinc',
                     key: 'sinc',
                     fn: () => this.createEmptyArrayOfFFTSize().map(t => (t === 0) ? -1 : -Math.sin(t * this.frequency ** -1 * 0.062) / (t * this.frequency ** -1  * 0.062)),
-                    is_binary: false,
                 },
             ],
         }
