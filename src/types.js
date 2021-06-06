@@ -53,6 +53,13 @@
  */
 
 /**
+ * @typedef {Object} LogarithmicModifiers
+ * @property {number} offset
+ * @property {number} amplitude
+ * @property {boolean} frequencyOffsets
+ */
+
+/**
  * @typedef {Class} P5
  * @method setup
  * @function frameRate
