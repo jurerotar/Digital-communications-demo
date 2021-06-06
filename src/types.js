@@ -24,7 +24,6 @@
  * @property {string} label
  * @property {string} key
  * @property {function} fn
- * @property {boolean} is_binary
  * @property {Frequency} frequencies
  */
 
