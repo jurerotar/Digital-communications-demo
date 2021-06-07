@@ -25,6 +25,7 @@
  * @property {string} key
  * @property {function} fn
  * @property {Frequency} frequencies
+ * @property {number[]} horizontal_pool
  */
 
 /**
