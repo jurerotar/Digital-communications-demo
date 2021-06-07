@@ -53,7 +53,7 @@ export default {
                     y: 140,
                 },
                 {
-                    text: '1',
+                    text: 'j',
                     x: 160,
                     y: 15,
                 },
@@ -63,7 +63,7 @@ export default {
                     y: 170,
                 },
                 {
-                    text: '-1',
+                    text: '- j',
                     x: 155,
                     y: 300,
                 },
@@ -129,6 +129,7 @@ export default {
                 p5.fill(0);
                 p5.stroke(0);
                 p5.strokeWeight(1);
+
                 p5.triangle(150, -1, 145, 11, 155, 11);
                 p5.triangle(801,150,790,145,790,155);
 
@@ -177,7 +178,7 @@ export default {
                 // Defines the length of sine wave(one period is the same as cardinality in lineSpace function)
                 sinHorizontal %= 200;
 
-                p5.ellipse(sinHorizontal, sinVertical, 15, 15);
+                p5.ellipse(sinHorizontal+canvasPadding*2, sinVertical, 15, 15);
 
                 this.$c.drawDashed(this.context, () => {
                     // Connect current x,y coordinates to sine graph
