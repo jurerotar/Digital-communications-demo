@@ -129,8 +129,8 @@ export default {
                 p5.fill(0);
                 p5.stroke(0);
                 p5.strokeWeight(1);
-                p5.triangle(150, -3, 145, 15, 155, 15);
-                p5.triangle(803,150,785,145,785,155);
+                p5.triangle(150, -1, 145, 11, 155, 11);
+                p5.triangle(801,150,790,145,790,155);
 
                 p5.strokeWeight(1);
                 this.texts.forEach(el => p5.text(el.text, el.x, el.y));
