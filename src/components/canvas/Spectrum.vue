@@ -1,5 +1,6 @@
 <template>
     <h2 class="font-semibold text-xl">{{ title }}</h2>
+    <p class = "my-1" v-if = "notes !== ''"><span class = "font-semibold">Opomba: </span>{{ notes }}</p>
     <canvas-container>
         <div :id="canvas_id"></div>
     </canvas-container>
@@ -115,8 +116,17 @@ export default {
         },
         isSinusoid() {
             return ['sin', 'cos'].includes(this.type);
+        },
+        notes() {
+            switch(this.type) {
+                case 'sin':
+                    return 'Vrednost grafa v točkah, ki niso 1, je enak 0, ker je signal neskončno dolg. Če signal ne bi bil neskončno dolg, bi prehod bil zvezen.';
+                case 'cos':
+                    return 'Vrednost grafa v točkah, ki niso 1, je enak 0, ker je signal neskončno dolg. Če signal ne bi bil neskončno dolg, bi prehod bil zvezen.';
+                default:
+                    return '';
+            }
         }
-
     },
     props: {
         data: {

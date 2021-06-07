@@ -16,15 +16,7 @@
                           :canvas_id="'sine-modulation-signal'"
                           :title="'Sinusni modulacijski signal'"
                           :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :type="'sin'"
-    >
-    </positive-only-signal>
-    <positive-only-signal v-if="selectedModulationData.hasCarrier"
-                          :data="carrierSignalValues"
-                          :canvas_id="'carrier-signal'"
-                          :title="'Nosilec'"
-                          :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :type="'carrier'"
+                          :type="'sine'"
     >
     </positive-only-signal>
     <positive-only-signal v-if="selectedModulationData.hasBipolar"
@@ -43,12 +35,17 @@
                           :type="'unipolar'"
     >
     </positive-only-signal>
-    <positive-only-signal v-if="selectedModulationData.hasPam4"
-                          :data="pam4Signal.values"
-                          :canvas_id="'pam4-signal'"
-                          :title="'PAM 4 signal'"
-                          :vertical_pool="[3, 1, -1, -3]"
-                          :type="'pam4'"
+    <pam4
+        v-if="selectedModulationData.hasPam4"
+        :data="pam4Signal.values"
+    >
+    </pam4>
+    <positive-only-signal v-if="selectedModulationData.hasCarrier"
+                          :data="carrierSignalValues"
+                          :canvas_id="'carrier-signal'"
+                          :title="'Nosilec'"
+                          :vertical_pool="[1, 0.5, -0.5, -1]"
+                          :type="'carrier'"
     >
     </positive-only-signal>
     <positive-only-signal :data="modulated"
@@ -56,6 +53,7 @@
                           :title="'Moduliran signal'"
                           :vertical_pool="[1, 0.5, -0.5, -1]"
                           :is_modulated="true"
+                          :type="selected"
     >
     </positive-only-signal>
 </template>
@@ -112,9 +110,9 @@ export default {
 
             /** @type {BinarySignal} */
             pam4Signal: {
-                values: [Array(120).fill(-3), Array(120).fill(-1), Array(120).fill(1), Array(120).fill(3), Array(120).fill(-3)].flat(),
+                values: [Array(120).fill(3), Array(120).fill(1), Array(120).fill(-1), Array(120).fill(-3), Array(120).fill(3)].flat(),
                 pool: [-3, -1, 1, 3],
-                currentlyReturns: -1,
+                currentlyReturns: -3,
             },
 
             /**
@@ -143,15 +141,6 @@ export default {
                 {
                     label: 'FM',
                     key: 'fm',
-                    hasCarrier: true,
-                    hasSineModulation: true,
-                    hasBipolar: false,
-                    hasUnipolar: false,
-                    hasPam4: false,
-                },
-                {
-                    label: 'PM',
-                    key: 'pm',
                     hasCarrier: true,
                     hasSineModulation: true,
                     hasBipolar: false,
@@ -210,7 +199,7 @@ export default {
          * @returns {number[]}
          */
         modulated() {
-            const pam4Amplitudes = {'3': -4, '1': -2, '-1': 2, '-3': 4};
+            const pam4Amplitudes = {'3': -3.01, '1': -1, '-1': 1, '-3': 3.01};
             const [carrier, sine, bipolar, unipolar, pam4, time] = [
                 this.carrierSignalValues,
                 this.sineModulationSignalValues,
@@ -230,10 +219,7 @@ export default {
 
                 // Frequency modulation
                 case 'fm':
-                    return time.map(t => Math.cos(15 * Math.PI * t + 10 * (Math.cos(Math.PI * t) + 150)));
-
-                case 'pm':
-                    return carrier.map((el , index) => el * ((sine[index]>sine[index+1] ) ? -1 : 1 ));
+                    return time.map(t => Math.cos(15 * Math.PI * t + (10 * (Math.cos(Math.PI * t) + 150))))
 
                 // Binary amplitude shift keying
                 case 'bask':

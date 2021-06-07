@@ -1,5 +1,6 @@
 w<template>
     <h2 class="font-semibold text-xl">{{ title }}</h2>
+    <p class = "my-1" v-if = "notes !== ''"><span class = "font-semibold">Opis: </span>{{ notes }}</p>
     <canvas-container>
         <div :id="canvas_id"></div>
     </canvas-container>
@@ -95,19 +96,41 @@ export default {
             const max = Math.max(...this.data.map(el => Math.abs(el)));
             const data = [...this.data];
             data.length = 600;
-            return data.map(el => {
-                if(this.type === 'pam4') {
-                    const sign = Math.sign(el);
-                    return (Math.abs(el) === 1) ? el / max - sign * 0.83 : el / max;
-                }
-                return el / max;
-            });
+            return data.map(el => el / max);
         },
         isModulatedText() {
             return (this.is_modulated) ? 'y(t)' : 'x(t)';
         },
         isBinary() {
-            return ['unipolar', 'bipolar', 'pam4'].includes(this.type);
+            return ['unipolar', 'bipolar'].includes(this.type);
+        },
+        notes() {
+            switch(this.type) {
+                case 'carrier':
+                    return 'Nosilec je visokofrekvenčni signal, s katerim moduliramo podatkovni signal.';
+                case 'sine':
+                    return 'Sinusni podatkovni signal.';
+                case 'unipolar':
+                    return 'Unipolarni signal je sestavljen iz vrednosti 1 in 0.';
+                case 'bipolar':
+                    return 'Bipolarni signal je sestavljen iz vrednosti 1 in -1.';
+                case 'am-lc':
+                    return 'Pri AM-DSB-LC modulaciji se modulacijskemu signalu dodaja enosmerna komponenta, kar zagotovi konstantno polariteto signala pred množenjem z nosilcem. Modulacijski indeks m = 0.66.';
+                case 'am-sc':
+                    return 'AM-DSB-SC je dvobočno amplitudno modulirani signal brez nosilca v spektru.';
+                case 'fm':
+                    return 'Frekvenčna modulacija je postopek spreminjanja frekvence nosilnega signala v ritmu modulacijskega signala-informacije. Frekvenčna deviacija: Δf = +-10.';
+                case 'bask':
+                    return 'BASK modulacijo pridobimo z množenjem unipolarnega binarnega podatkovnega signala in harmoničnega nosilca.';
+                case 'bpsk':
+                    return 'BPSK modulacijo pridobimo z množenjem bipolarnega binarnega podatkovnega signala in harmoničnega nosilca.';
+                case 'fsk':
+                    return 'BFSK je postopek, pri katerem so binarni podatki posredovani preko spremembe frekvence nosilnega signala.';
+                case 'pam4':
+                    return 'PAM4 je večstopenjski modulacijski signalni format, ki se uporablja za prenos signala.';
+                default:
+                    return '';
+            }
         }
     },
     props: {
