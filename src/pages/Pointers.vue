@@ -49,7 +49,7 @@ export default {
                 },
                 {
                     text: 'Re',
-                    x: 290,
+                    x: 315,
                     y: 140,
                 },
                 {
@@ -79,18 +79,18 @@ export default {
                 },
                 {
                     text: '0\xB0',
-                    x: 335,
+                    x: 430,
                     y: 170,
                 },
                 {
                     text: '0\xB0',
                     x: 155,
-                    y: 360,
+                    y: 480,
                 },
                 {
                     text: '360\xB0',
                     x: 155,
-                    y: 550,
+                    y: 650,
                 },
                 {
                     text: 'Φ',
