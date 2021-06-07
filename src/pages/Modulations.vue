@@ -67,10 +67,12 @@ import TheoryModulations from "@/components/theory/TheoryModulations";
 import '@/types.js';
 import ButtonContainer from "@/components/global/ButtonContainer";
 import StyledButton from "@/components/global/StyledButton";
+import Pam4 from "@/components/canvas/Pam4";
+
 
 export default {
     name: "Modulations",
-    components: {StyledButton, ButtonContainer, PositiveOnlySignal, Collapsible, TheoryModulations},
+    components: {StyledButton, ButtonContainer, PositiveOnlySignal, Collapsible, TheoryModulations, Pam4},
     data() {
         return {
             /** @type {number|null} */
@@ -281,7 +283,7 @@ export default {
     },
     mounted() {
         // Start time at 600 * 0.005, because we initiate arrays with 600 values already in
-        let time =  600 * 0.005;
+        let time = 600 * 0.005;
         // Create interval to push new signal values to arrays
         this.intervalId = window.setInterval(() => {
             // Push new values to arrays
