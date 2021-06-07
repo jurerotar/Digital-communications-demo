@@ -3,26 +3,25 @@
     <collapsible>
         <theory-spectrum></theory-spectrum>
     </collapsible>
-    <h2 class="font-semibold text-xl">Oblika</h2>
-    <div class="flex flex-col sm:flex-row my-2">
-        <button
-            class="text-white w-fit-content font-bold py-2 px-4 mb-2 sm:mr-2 rounded outline-none duration-300 transition-colors h-12"
+    <h2 class="font-semibold text-xl mb-2">Oblika</h2>
+    <button-container>
+        <styled-button
             :class="[selected === shape.key ? 'bg-blue-300' : 'bg-gray-300']"
             @click="changeSelected(shape.key)"
             v-for="shape in signalShapes" :key="shape.key">
             {{ shape.label }}
-        </button>
-    </div>
-    <h2 class="font-semibold text-xl">T</h2>
-    <div class="flex flex-col sm:flex-row my-2">
-        <button
-            class="text-white w-fit-content font-bold py-2 px-4 mb-2 sm:mr-2 rounded outline-none duration-300 transition-colors h-12"
+        </styled-button>
+    </button-container>
+    <h2 class="font-semibold text-xl mb-2">T</h2>
+    <button-container>
+        <styled-button
+            class="text-white w-fit-content font-bold py-2 px-4 mb-2 mr-2 rounded outline-none duration-300 transition-colors h-12"
             :class="[frequencyValue === frequency.key ? 'bg-blue-300' : 'bg-gray-300']"
             @click="changeFrequency(frequency.key)"
             v-for="frequency in frequencies" :key="frequency.key">
             {{ frequency.label }}
-        </button>
-    </div>
+        </styled-button>
+    </button-container>
     <full-signal
         :canvas_id="'spectrum-original-signal'"
         :data="canvasInput"
@@ -35,15 +34,15 @@
         :canvas_id="'spectrum-signal-spectrum'"
         :data="output"
         :title="'Spekter'"
-        :type = "selectedObject.key"
-        :frequency = "frequency">
+        :type="selectedObject.key"
+        :frequency="frequency">
     </spectrum-canvas>
     <logarithmic
         :canvas_id="'spectrum-signal-logarithmic'"
         :data="output"
         :title="'Spekter [dB]'"
-        :type = "selectedObject.key"
-        :frequency = "frequency">
+        :type="selectedObject.key"
+        :frequency="frequency">
     </logarithmic>
 </template>
 
@@ -54,14 +53,16 @@ import SpectrumCanvas from "@/components/canvas/Spectrum";
 import FullSignal from "@/components/canvas/FullSignal";
 import Logarithmic from "@/components/canvas/Logarithmic";
 import '@/types.js';
+import ButtonContainer from "@/components/global/ButtonContainer";
+import StyledButton from "@/components/global/StyledButton";
 
 export default {
     name: "Spectrum",
-    components: { FullSignal, Collapsible, TheorySpectrum, SpectrumCanvas, Logarithmic},
+    components: {StyledButton, ButtonContainer, FullSignal, Collapsible, TheorySpectrum, SpectrumCanvas, Logarithmic},
     data() {
         return {
             selected: 'sin',
-            fftSize: 2**11,
+            fftSize: 2 ** 11,
             fft: null,
             frequencyValue: 1,
             /** @type {Array<Signal>} */
@@ -69,14 +70,14 @@ export default {
                 {
                     label: 'Sinusni',
                     key: 'sin',
-                    fn: () => this.createEmptyArrayOfFFTSize().map(t => -Math.sin(t * this.frequency ** -1 *  Math.PI * 0.12)),
-                    horizontal_pool:[-18, -15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15, 18]
+                    fn: () => this.createEmptyArrayOfFFTSize().map(t => -Math.sin(t * this.frequency ** -1 * Math.PI * 0.12)),
+                    horizontal_pool: [-18, -15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15, 18]
                 },
                 {
                     label: 'Kosinusni',
                     key: 'cos',
-                    fn: () => this.createEmptyArrayOfFFTSize().map(t => -Math.cos(t * this.frequency ** -1 *  Math.PI * 0.12)),
-                    horizontal_pool:[-18, -15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15, 18]
+                    fn: () => this.createEmptyArrayOfFFTSize().map(t => -Math.cos(t * this.frequency ** -1 * Math.PI * 0.12)),
+                    horizontal_pool: [-18, -15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15, 18]
                 },
                 {
                     label: 'Kvadratni',
@@ -107,7 +108,7 @@ export default {
                 {
                     label: 'Sinc',
                     key: 'sinc',
-                    fn: () => this.createEmptyArrayOfFFTSize().map(t => (t === 0) ? -1 : -Math.sin(t * this.frequency ** -1 * 0.062) / (t * this.frequency ** -1  * 0.062)),
+                    fn: () => this.createEmptyArrayOfFFTSize().map(t => (t === 0) ? -1 : -Math.sin(t * this.frequency ** -1 * 0.062) / (t * this.frequency ** -1 * 0.062)),
                 },
             ],
         }
@@ -136,7 +137,7 @@ export default {
             const zerosArray = [...Array(Math.trunc(padSize)).keys()].fill(0);
             array.unshift(...zerosArray);
             array.push(...zerosArray);
-            if(array.length % 2 === 1) {
+            if (array.length % 2 === 1) {
                 array.push(0);
             }
             return array;
@@ -154,7 +155,7 @@ export default {
          * @returns {number[]}
          **/
         cutArray(array) {
-            return array.filter((el, index) => (index >= (array.length / 2 -  300) && index <= (array.length / 2 + 300)));
+            return array.filter((el, index) => (index >= (array.length / 2 - 300) && index <= (array.length / 2 + 300)));
         }
 
     },
@@ -212,8 +213,8 @@ export default {
             const out = this.fft.createComplexArray();
             this.fft.realTransform(out, this.paddedInput);
             const absoluteSpectrumValues = [];
-            for(let i = 0; i < out.length; i += 2) {
-                absoluteSpectrumValues.push(Math.sqrt(out[i]**2 + out[i + 1]**2));
+            for (let i = 0; i < out.length; i += 2) {
+                absoluteSpectrumValues.push(Math.sqrt(out[i] ** 2 + out[i + 1] ** 2));
             }
             return absoluteSpectrumValues;
         },

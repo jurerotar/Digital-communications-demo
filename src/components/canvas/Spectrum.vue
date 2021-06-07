@@ -16,7 +16,6 @@ export default {
     data() {
         return {
             p5: null,
-            max: 0,
             /** @type {Coordinates} */
             offset: {
                 x: 0,
@@ -25,7 +24,6 @@ export default {
         }
     },
     mounted() {
-        this.max = Math.max(...this.data);
         // Initiate new P5 instance and create canvas
         this.p5 = new P5((p5) => {
             this.$c.setup(p5);
@@ -44,12 +42,12 @@ export default {
                 p5.fill(1);
                 p5.triangle(50, 40, 46, 50, 54, 50);
 
-                const yAxisLabels = this.$f.linearSpace(this.max, 0, 5);
+                const yAxisLabels = this.$f.linearSpace(1, 0, 5);
 
                 for (let i = 0; i <= 20; i++) {
                     // Make each fifth line labeled and wider
                     if (i % 5 === 0) {
-                        p5.text(Math.trunc(yAxisLabels[Math.trunc(i / 5)]), canvasPadding - 40, canvasPadding + i * 10 + 3);
+                        p5.text(yAxisLabels[Math.trunc(i / 5)], canvasPadding - 40, canvasPadding + i * 10 + 3);
                         p5.strokeWeight(2);
                         p5.line(canvasPadding - 5, canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10);
                         p5.strokeWeight(1);
@@ -97,9 +95,6 @@ export default {
             p5.removeCanvas = () => p5.remove();
         }, this.canvas_id);
     },
-    updated() {
-        this.max = Math.max(...this.data);
-    },
     unmounted() {
         // Remove canvas, otherwise P5 object stays in memory
         this.p5.removeCanvas();
@@ -107,15 +102,16 @@ export default {
     computed: {
         normalizedData() {
             let data = [...this.data];
+            const max = Math.max(...data);
             if(this.isSinusoid) {
                 const zeros = Array(Math.trunc(50 / this.frequency)).fill(0);
-                const maxIndex = data.findIndex(el => el === this.max);
+                const maxIndex = data.findIndex(el => el === max);
                 data = data.filter((el, index) => index >= maxIndex);
                 data.unshift(...zeros);
-                data = data.map((el) => (el === this.max) ? this.max : 0);
+                data = data.map((el) => (el === max) ? max : 0);
             }
             data.length = 600;
-            return data.map(el => -el / this.max);
+            return data.map(el => -el / max);
         },
         isSinusoid() {
             return ['sin', 'cos'].includes(this.type);

@@ -3,15 +3,14 @@
     <collapsible>
         <theory-modulations></theory-modulations>
     </collapsible>
-    <div class="flex flex-col sm:flex-row">
-        <button
-            class="text-white w-fit-content font-bold py-2 px-4 mb-2 sm:mr-2 rounded outline-none duration-300 transition-colors h-12"
+    <button-container>
+        <styled-button
             :class="[selected === modulation.key ? 'bg-blue-300' : 'bg-gray-300']"
             @click="changeSelected(modulation.key)"
             v-for="modulation in modulations" :key="modulation.key">
             {{ modulation.label }}
-        </button>
-    </div>
+        </styled-button>
+    </button-container>
     <positive-only-signal v-if="selectedModulationData.hasSineModulation"
                           :data="sineModulationSignalValues"
                           :canvas_id="'sine-modulation-signal'"
@@ -66,10 +65,12 @@ import Collapsible from "@/components/global/Collapsible";
 import PositiveOnlySignal from "@/components/canvas/PositiveOnlySignal";
 import TheoryModulations from "@/components/theory/TheoryModulations";
 import '@/types.js';
+import ButtonContainer from "@/components/global/ButtonContainer";
+import StyledButton from "@/components/global/StyledButton";
 
 export default {
     name: "Modulations",
-    components: {PositiveOnlySignal, Collapsible, TheoryModulations},
+    components: {StyledButton, ButtonContainer, PositiveOnlySignal, Collapsible, TheoryModulations},
     data() {
         return {
             /** @type {number|null} */
