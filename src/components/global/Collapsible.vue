@@ -45,4 +45,8 @@ details summary::marker {
 details[open] > summary .details-icon {
     transform: rotate(90deg);
 }
+
+summary::-webkit-details-marker {
+    display: none
+}
 </style>
