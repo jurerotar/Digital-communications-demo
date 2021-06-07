@@ -1,4 +1,4 @@
-<template>
+w<template>
     <h2 class="font-semibold text-xl">{{ title }}</h2>
     <canvas-container>
         <div :id="canvas_id"></div>
