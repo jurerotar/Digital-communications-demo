@@ -74,7 +74,7 @@ export default {
                 },
                 {
                     text: '360\xB0',
-                    x: 565,
+                    x: 660,
                     y: 170,
                 },
                 {
@@ -121,6 +121,7 @@ export default {
             }
 
             p5.draw = () => {
+                const canvasPadding = this.$c.canvasPadding;
                 const radius = 100 * (4 / Math.PI);
                 // Add context to allow custom canvas transformations
                 this.context = document.querySelector(`#${this.canvasId} canvas`)?.getContext('2d');
@@ -132,11 +133,23 @@ export default {
 
                 p5.triangle(150, -1, 145, 11, 155, 11);
                 p5.triangle(801,150,790,145,790,155);
+                p5.triangle(150, 800, 145, 790, 155, 790);
+                p5.triangle(330,150,320,145,320,155);
 
-                p5.strokeWeight(1);
-                this.texts.forEach(el => p5.text(el.text, el.x, el.y));
+                this.$c.temporaryState(p5, () => {
+                    p5.strokeWeight(0.5);
+                    p5.textSize(14);
+                    this.texts.forEach(el => p5.text(el.text, el.x, el.y));
+                })
 
                 this.$c.drawAxis(p5, this.offset, this.dimensions);
+
+                this.$c.temporaryState(p5, () => {
+                    p5.strokeWeight(5);
+                    p5.stroke(255);
+                    p5.line(this.offset.x * 2 + 31, this.offset.y,this.offset.x * 2 + 70, this.offset.y);
+                    p5.line(this.offset.x, this.offset.y * 2 + 31,this.offset.x, this.offset.y * 2 + 70);
+                })
 
                 this.$c.drawDashed(this.context, () => {
                     p5.line(277, 0, 277, this.dimensions.y);
@@ -160,14 +173,14 @@ export default {
                 p5.ellipse(0, 0, radius * 2);
 
                 // Draws a pointer
-                this.drawArrow(p5, p5.createVector(0, 0), p5.createVector(x, y), this.$c.colors[1]);
+                this.$c.drawArrow1(p5, p5.createVector(0, 0), p5.createVector(x, y));
 
                 p5.stroke(this.$c.colors[0]);
 
                 // Draws a sine wave with elements and indexes from linearSpace function and moves it
                 p5.translate(200, 0);
                 p5.beginShape();
-                sineValues.forEach((el, index) => p5.vertex(index, -el * radius));
+                sineValues.forEach((el, index) => p5.vertex(index + 2 * canvasPadding, -el * radius));
                 p5.endShape();
 
                 // Calculates vertical components
@@ -175,21 +188,21 @@ export default {
 
                 // Moves horizontal component until it hits 200
                 sinHorizontal++;
-                // Defines the length of sine wave(one period is the same as cardinality in lineSpace function)
+                // Defines the length of sine wave(one period is the same as cardinality in linearSpace function)
                 sinHorizontal %= 200;
 
                 p5.ellipse(sinHorizontal+canvasPadding*2, sinVertical, 15, 15);
 
                 this.$c.drawDashed(this.context, () => {
                     // Connect current x,y coordinates to sine graph
-                    p5.line(x - 200, y, sinHorizontal, sinVertical);
+                    p5.line(x - 200, y, sinHorizontal + canvasPadding * 2, sinVertical);
                 });
 
                 p5.stroke(this.$c.colors[2]);
                 // Draws a cosine wave with elements and index form lineSpace function and moves it
                 p5.translate(-200, 200);
                 p5.beginShape();
-                cosineValues.forEach((el, index) => p5.vertex(el * radius, index));
+                cosineValues.forEach((el, index) => p5.vertex(el * radius, index + 2 * canvasPadding));
                 p5.endShape();
 
                 // Calculates vertical components
@@ -199,31 +212,17 @@ export default {
                 // Defines the length of cosine wave(one period is the same as cardinality in lineSpace function
                 cosHorizontal %= 200;
 
-                p5.ellipse(cosVertical, cosHorizontal, 15, 15);
+                p5.ellipse(cosVertical, cosHorizontal + 2 * canvasPadding, 15, 15);
 
                 this.$c.drawDashed(this.context, () => {
                     // Connect current x,y coordinates to cosine graph
-                    p5.line(x, y - 200, cosVertical, cosHorizontal);
+                    p5.line(x, y - 200, cosVertical, cosHorizontal + canvasPadding * 2);
                 });
 
                 time += 0.01;
             };
             p5.removeCanvas = () => p5.remove();
         }, `${this.canvasId}`);
-    },
-    methods: {
-        drawArrow(p5, vectorStart, vectorEnd, color, size = 7, rotate = vectorEnd.heading()) {
-            const arrowSize = size;
-            p5.push();
-            p5.stroke(color);
-            p5.fill(color);
-            //p5.translate(vectorStart.x, vectorStart.y);
-            p5.line(vectorStart.x, vectorStart.y, vectorEnd.x, vectorEnd.y);
-            p5.rotate(rotate);
-            p5.translate(vectorEnd.mag() - arrowSize, 0);
-            p5.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
-            p5.pop();
-        },
     },
     unmounted() {
         this.p5.removeCanvas();
