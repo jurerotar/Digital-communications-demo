@@ -35,7 +35,7 @@ export default {
 
                 p5.strokeWeight(2);
                 //adds scale.first for is for y-axis and the second one for x-axis
-                p5.line(canvasDimensions.x / 2, canvasPadding, canvasDimensions.x / 2, canvasDimensions.y - canvasPadding);
+                p5.line(canvasDimensions.x / 2 - canvasPadding, canvasPadding, canvasDimensions.x / 2 - canvasPadding, canvasDimensions.y - canvasPadding);
                 p5.strokeWeight(1);
                 const yAxisLabels = [...this.vertical_pool];
                 const xAxisLabels = this.horizontal_pool;
@@ -43,35 +43,35 @@ export default {
                 yAxisLabels.splice(2, 0, 0);
                 for (let i = 0; i <= 20; i++) {
                     if (i % 5 === 0 && i !== 10) {
-                        p5.text(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4), canvasDimensions.x / 2 - 40, canvasPadding + i * 10 + 3);
+                        p5.text(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4), canvasDimensions.x / 2 - 40 - canvasPadding, canvasPadding + i * 10 + 3);
                         p5.strokeWeight(2);
-                        p5.line(canvasDimensions.x / 2 - 5, canvasPadding + i * 10, canvasDimensions.x / 2 + 5, canvasPadding + i * 10);
+                        p5.line(canvasDimensions.x / 2 - 5 - canvasPadding, canvasPadding + i * 10, canvasDimensions.x / 2 + 5 - canvasPadding, canvasPadding + i * 10);
                         p5.strokeWeight(1);
                         //console.log(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4));
                     } else {
-                        p5.line(canvasDimensions.x / 2 - 5, canvasPadding + i * 10, canvasDimensions.x / 2 + 5, canvasPadding + i * 10);
+                        p5.line(canvasDimensions.x / 2 - 5 - canvasPadding, canvasPadding + i * 10, canvasDimensions.x / 2 + 5 - canvasPadding, canvasPadding + i * 10);
                     }
                 }
                 for (let i = 0; i <= 60; i++) {
                     if (i % 5 === 0 && i !== 30) {
-                        p5.text(`${xAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4), i * 10 + canvasPadding, canvasPadding + 125);
+                        p5.text(`${xAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4), i * 10, canvasPadding + 125);
                         p5.strokeWeight(2);
-                        p5.line(canvasPadding + i * 10, canvasDimensions.y / 2 + 5, canvasPadding + i * 10, canvasDimensions.y / 2 - 5);
+                        p5.line(i * 10, canvasDimensions.y / 2 + 5, i * 10, canvasDimensions.y / 2 - 5);
                         p5.strokeWeight(1);
                     } else {
-                        p5.line(canvasPadding + i * 10, canvasDimensions.y / 2 + 5, canvasPadding + i * 10, canvasDimensions.y / 2 - 5);
+                        p5.line(i * 10, canvasDimensions.y / 2 + 5, i * 10, canvasDimensions.y / 2 - 5);
                     }
                 }
                 //adds arrow on x-axis
                 p5.strokeWeight(2);
-                this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y / 2), 'black', 7, 0);
+                this.$c.drawArrow(p5, p5.createVector(0, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - 2 * canvasPadding, canvasDimensions.y / 2), 'black', 7, 0);
                 //adds arrow on y-axis
                 p5.fill(1);
-                p5.triangle(350, 43, 346, 50, 354, 50);
+                p5.triangle(300, 43, 296, 50, 304, 50);
                 //adds texts on axis
                 p5.strokeWeight(1);
-                p5.text('x(t)', canvasDimensions.x / 2 - 5, 30);
-                p5.text('t', canvasDimensions.x - 25, canvasDimensions.y / 2 + 15);
+                p5.text('x(t)', canvasDimensions.x / 2 - 5  - canvasPadding, 30);
+                p5.text('t', canvasDimensions.x - 25 - canvasPadding, canvasDimensions.y / 2 + 15);
 
                 p5.translate(0, 150);
 
@@ -84,11 +84,11 @@ export default {
                     let previousY = 0;
                     this.normalizedData.forEach((y, x) => {
                         // When value changes, start drawing on previous index to prevent skewed lines
-                        p5.vertex((previousY !== y) ? x + canvasPadding - 1 : x + canvasPadding, y * (this.offset.y - (canvasPadding - 25)));
+                        p5.vertex((previousY !== y) ? x - 1 : x, y * (this.offset.y - (canvasPadding - 25)));
                         previousY = y;
                     });
                 } else {
-                    this.normalizedData.forEach((y, x) => p5.vertex(x + canvasPadding, y * (this.offset.y - (canvasPadding - 25))));
+                    this.normalizedData.forEach((y, x) => p5.vertex(x, y * (this.offset.y - (canvasPadding - 25))));
                 }
                 p5.endShape();
             }
