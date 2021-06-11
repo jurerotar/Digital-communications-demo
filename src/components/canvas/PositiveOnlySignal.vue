@@ -1,6 +1,11 @@
-w<template>
+<template>
     <h2 class="font-semibold text-xl">{{ title }}</h2>
-    <p class = "my-1" v-if = "notes !== ''"><span class = "font-semibold">Opis: </span>{{ notes }}</p>
+    <p class = "my-1" v-if = "description !== ''">
+        <span class = "font-semibold">Opis:</span>{{ description }}
+    </p>
+    <p class = "my-1" v-if = "note !== ''">
+        <span class = "font-semibold">Opomba:</span>{{ note }}
+    </p>
     <canvas-container>
         <div :id="canvas_id"></div>
     </canvas-container>
@@ -70,7 +75,7 @@ export default {
 
                 // Draw the shape
                 p5.beginShape();
-                if(this.isBinary) {
+                if(this.is_binary) {
                     let previousY = 1;
                     this.normalizedData.forEach((y, x) => {
                         p5.vertex((previousY !== y) ? x - 1 + canvasPadding : x + canvasPadding, y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2);
@@ -100,9 +105,6 @@ export default {
         },
         isModulatedText() {
             return (this.is_modulated) ? 'y(t)' : 'x(t)';
-        },
-        isBinary() {
-            return ['unipolar', 'bipolar'].includes(this.type);
         },
         notes() {
             switch(this.type) {
@@ -156,11 +158,21 @@ export default {
             required: false,
             default: null
         },
-        type: {
+        description: {
             type: String,
             required: false,
             default: ''
-        }
+        },
+        note: {
+            type: String,
+            required: false,
+            default: ''
+        },
+        is_binary: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
     }
 }
 </script>
