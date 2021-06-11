@@ -45,11 +45,13 @@
  * @typedef {Object} Modulation
  * @property {string} label
  * @property {string} key
+ * @property {string} description
+ * @property {string} note
  * @property {boolean} hasCarrier
  * @property {boolean} hasSineModulation
- * @property {boolean} hasBipolar
- * @property {boolean} hasUnipolar
- * @property {boolean} hasPam4
+ * @property {boolean} hasBinaryLevel1
+ * @property {boolean} hasBinaryLevel2
+ * @property {boolean} hasBinaryLevel4
  */
 
 /**
