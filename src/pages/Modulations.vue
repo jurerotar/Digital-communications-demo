@@ -26,8 +26,8 @@
                           :canvas_id="'sine-modulation-signal'"
                           :title="'Sinusni modulacijski signal'"
                           :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :description = "selectedModulationData.description"
-                          :note = "selectedModulationData.note"
+                          :description = "'Sinusni podatkovni signal.'"
+                          :note = "''"
                           :is_binary="isDigitalModulation(selectedModulationData)"
     >
     </positive-only-signal>
@@ -36,8 +36,8 @@
                           :canvas_id="'unipolar-signal'"
                           :title="'Unipolarni signal'"
                           :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :description = "selectedModulationData.description"
-                          :note = "selectedModulationData.note"
+                          :description = "'Unipolarni signal je sestavljen iz vrednosti 1 in 0.'"
+                          :note = "''"
                           :is_binary="isDigitalModulation(selectedModulationData)"
     >
     </positive-only-signal>
@@ -46,8 +46,8 @@
                           :canvas_id="'binary-signal'"
                           :title="'Binarni signal'"
                           :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :description = "selectedModulationData.description"
-                          :note = "selectedModulationData.note"
+                          :description = "'Bipolarni signal je sestavljen iz vrednosti 1 in -1.'"
+                          :note = "''"
                           :is_binary="isDigitalModulation(selectedModulationData)"
     >
     </positive-only-signal>
@@ -55,8 +55,8 @@
         v-if="selectedModulationData.hasBinaryLevel4"
         :data="binaryLevel4Signal.values"
         :title="'4-nivojski bipolarni signal'"
-        :description = "selectedModulationData.description"
-        :note = "selectedModulationData.note"
+        :description = "''"
+        :note = "'4-nivojski bipolarni signal je sestavljen iz vrednosti 3, 1, -1, -3.'"
         :is_binary="isDigitalModulation(selectedModulationData)"
     >
     </level4-signal>
@@ -65,8 +65,8 @@
                           :canvas_id="'carrier-signal'"
                           :title="'Nosilec'"
                           :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :description = "selectedModulationData.description"
-                          :note = "selectedModulationData.note"
+                          :description = "'Nosilec je visokofrekvenčni signal, s katerim moduliramo podatkovni signal.'"
+                          :note = "''"
                           :is_binary="isDigitalModulation(selectedModulationData)"
     >
     </positive-only-signal>
@@ -277,7 +277,7 @@ export default {
          */
         modulated() {
             const PSK2Amplitudes = {'1': 1, '-1': -1};
-            const PSK4Amplitudes = {'3': -Math.PI / 4, '1': Math.PI / 2, '-1': -3 * Math.PI / 4, '-3': Math.PI / 4};
+            const PSK4Amplitudes = {'3': Math.PI / 2, '1': Math.PI, '-1': 3 * Math.PI / 2, '-3': 2 * Math.PI};
 
             const FSK2Multipliers = {'1': 12, '-1': 30};
             const FSK4Multipliers = {'3': 5, '1': 15, '-1': 30, '-3': 60};

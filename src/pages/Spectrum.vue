@@ -35,14 +35,20 @@
         :data="output"
         :title="'Spekter'"
         :type="selectedObject.key"
-        :frequency="frequency">
+        :frequency="frequency"
+        :description = "selectedObject.spectrumGraphTexts.description"
+        :note = "selectedObject.spectrumGraphTexts.note"
+    >
     </spectrum-canvas>
     <logarithmic
         :canvas_id="'spectrum-signal-logarithmic'"
         :data="output"
         :title="'Spekter [dB]'"
         :type="selectedObject.key"
-        :frequency="frequency">
+        :frequency="frequency"
+        :description = "selectedObject.logarithmGraphTexts.description"
+        :note = "selectedObject.logarithmGraphTexts.note"
+    >
     </logarithmic>
 </template>
 
@@ -71,7 +77,15 @@ export default {
                     label: 'Sinusni',
                     key: 'sin',
                     fn: () => this.createEmptyArrayOfFFTSize().map(t => -Math.sin(t * this.frequency ** -1 * Math.PI * 0.12)),
-                    horizontal_pool: [-18, -15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15, 18]
+                    horizontal_pool: [-18, -15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15, 18],
+                    spectrumGraphTexts: {
+                        description: '',
+                        note: 'Prikazan je spekter signala omejenega na intervalu od 0 do 10^11/',
+                    },
+                    logarithmGraphTexts: {
+                        description: '',
+                        note: 'Vrednosti grafa v točkah, ki niso 1, bi morale biti -∞, vendar za izračun uporabljamo zgolj 2^11 vrednosti.',
+                    }
                 },
                 {
                     label: 'Kosinusni',

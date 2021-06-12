@@ -1,10 +1,10 @@
 <template>
     <h2 class="font-semibold text-xl">{{ title }}</h2>
     <p class = "my-1" v-if = "description !== ''">
-        <span class = "font-semibold">Opis:</span>{{ description }}
+        <span class = "font-semibold">Opis: </span>{{ description }}
     </p>
     <p class = "my-1" v-if = "note !== ''">
-        <span class = "font-semibold">Opomba:</span>{{ note }}
+        <span class = "font-semibold">Opomba: </span>{{ note }}
     </p>
     <canvas-container>
         <div :id="canvas_id"></div>
@@ -105,35 +105,9 @@ export default {
         },
         isModulatedText() {
             return (this.is_modulated) ? 'y(t)' : 'x(t)';
+            // return 'PAM4 je večstopenjski modulacijski signalni format, ki se uporablja za prenos signala.';
+
         },
-        notes() {
-            switch(this.type) {
-                case 'carrier':
-                    return 'Nosilec je visokofrekvenčni signal, s katerim moduliramo podatkovni signal.';
-                case 'sine':
-                    return 'Sinusni podatkovni signal.';
-                case 'unipolar':
-                    return 'Unipolarni signal je sestavljen iz vrednosti 1 in 0.';
-                case 'bipolar':
-                    return 'Bipolarni signal je sestavljen iz vrednosti 1 in -1.';
-                case 'am-lc':
-                    return 'Pri AM-DSB-LC modulaciji se modulacijskemu signalu dodaja enosmerna komponenta, kar zagotovi konstantno polariteto signala pred množenjem z nosilcem. Modulacijski indeks m = 0.66.';
-                case 'am-sc':
-                    return 'AM-DSB-SC je dvobočno amplitudno modulirani signal brez nosilca v spektru.';
-                case 'fm':
-                    return 'Frekvenčna modulacija je postopek spreminjanja frekvence nosilnega signala v ritmu modulacijskega signala-informacije. Frekvenčna deviacija: Δf = +-10.';
-                case 'bask':
-                    return 'BASK modulacijo pridobimo z množenjem unipolarnega binarnega podatkovnega signala in harmoničnega nosilca.';
-                case 'bpsk':
-                    return 'BPSK modulacijo pridobimo z množenjem bipolarnega binarnega podatkovnega signala in harmoničnega nosilca.';
-                case 'fsk':
-                    return 'BFSK je postopek, pri katerem so binarni podatki posredovani preko spremembe frekvence nosilnega signala.';
-                case 'pam4':
-                    return 'PAM4 je večstopenjski modulacijski signalni format, ki se uporablja za prenos signala.';
-                default:
-                    return '';
-            }
-        }
     },
     props: {
         data: {
