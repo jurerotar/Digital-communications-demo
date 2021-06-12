@@ -125,7 +125,7 @@ export default {
         notes() {
             switch(this.type) {
                 case 'sin':
-                    return 'Vrednost grafa v točkah, ki niso 1, je enak 0, ker je signal neskončno dolg. Če signal ne bi bil neskončno dolg, bi prehod bil zvezen.';
+                    return 'Prikazan je spekter signala omejenega na intervalu od 0 do 10^11/';
                 case 'cos':
                     return 'Vrednost grafa v točkah, ki niso 1, je enak 0, ker je signal neskončno dolg. Če signal ne bi bil neskončno dolg, bi prehod bil zvezen.';
                 default:

@@ -172,16 +172,6 @@ export default {
         isSinusoid() {
             return ['sin', 'cos'].includes(this.type);
         },
-        notes() {
-            switch(this.type) {
-                case 'sin':
-                    return 'Vrednosti grafa v točkah, ki niso 1, bi morale biti -∞, vendar za izračun uporabljamo zgolj 2**11 vrednosti.';
-                case 'cos':
-                    return 'Vrednosti grafa v točkah, ki niso 1, bi morale biti -∞, vendar za izračun uporabljamo zgolj 2**11 vrednosti.';
-                default:
-                    return '';
-            }
-        }
     },
     props: {
         data: {

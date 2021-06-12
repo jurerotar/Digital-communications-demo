@@ -150,7 +150,7 @@ export default {
                 {
                     label: 'AM-LC',
                     key: 'am-lc',
-                    description: '',
+                    description: 'Pri AM-DSB-LC modulaciji se modulacijskemu signalu dodaja enosmerna komponenta, kar zagotovi konstantno polariteto signala pred množenjem z nosilcem. Modulacijski indeks m = 0.66.',
                     note: '',
                     hasCarrier: true,
                     hasSineModulation: true,
@@ -161,7 +161,7 @@ export default {
                 {
                     label: 'AM-SC',
                     key: 'am-sc',
-                    description: '',
+                    description: 'AM-DSB-SC je dvobočno amplitudno modulirani signal brez nosilca v spektru.',
                     note: '',
                     hasCarrier: true,
                     hasSineModulation: true,
@@ -172,7 +172,7 @@ export default {
                 {
                     label: 'FM',
                     key: 'fm',
-                    description: '',
+                    description: 'Frekvenčna modulacija je postopek spreminjanja frekvence nosilnega signala v ritmu modulacijskega signala-informacije. Frekvenčna deviacija: Δf = +-10.',
                     note: '',
                     hasCarrier: true,
                     hasSineModulation: true,
@@ -183,7 +183,7 @@ export default {
                 {
                     label: '2ASK',
                     key: '2ask',
-                    description: '',
+                    description: '2ASK modulacijo pridobimo z množenjem unipolarnega binarnega podatkovnega signala in harmoničnega nosilca.',
                     note: '',
                     hasCarrier: true,
                     hasSineModulation: false,
@@ -194,7 +194,7 @@ export default {
                 {
                     label: '4ASK',
                     key: '4ask',
-                    description: '',
+                    description: '4ASK modulacijo pridobimo z množenjem   ???    podatkovnega signala in harmoničnega nosilca.',
                     note: '',
                     hasCarrier: true,
                     hasSineModulation: false,
@@ -205,7 +205,7 @@ export default {
                 {
                     label: '2PSK',
                     key: '2psk',
-                    description: '',
+                    description: '2PSK modulacijo pridobimo z množenjem bipolarnega binarnega podatkovnega signala in harmoničnega nosilca.',
                     note: '',
                     hasCarrier: true,
                     hasSineModulation: false,
@@ -216,7 +216,7 @@ export default {
                 {
                     label: '4PSK',
                     key: '4psk',
-                    description: '',
+                    description: '4PSK modulacijo pridobimo z množenjem bipolarnega binarnega podatkovnega signala in harmoničnega nosilca.',
                     note: '',
                     hasCarrier: true,
                     hasSineModulation: false,
@@ -227,7 +227,7 @@ export default {
                 {
                     label: '2FSK',
                     key: '2fsk',
-                    description: '',
+                    description: '2FSK je postopek, pri katerem so binarni podatki posredovani preko spremembe frekvence nosilnega signala. Pri 2FSK uporabljamo 2 različni frekvenci, ki pa ne prehajata zvezno.',
                     note: '',
                     hasCarrier: true,
                     hasSineModulation: false,

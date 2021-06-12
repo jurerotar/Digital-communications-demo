@@ -91,12 +91,28 @@ export default {
                     label: 'Kosinusni',
                     key: 'cos',
                     fn: () => this.createEmptyArrayOfFFTSize().map(t => -Math.cos(t * this.frequency ** -1 * Math.PI * 0.12)),
-                    horizontal_pool: [-18, -15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15, 18]
+                    horizontal_pool: [-18, -15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15, 18],
+                    spectrumGraphTexts: {
+                        description: '',
+                        note: 'Vrednost grafa v točkah, ki niso 1, je enak 0, ker je signal neskončno dolg. Če signal ne bi bil neskončno dolg, bi prehod bil zvezen.',
+                    },
+                    logarithmGraphTexts: {
+                        description: '',
+                        note: 'Vrednosti grafa v točkah, ki niso 1, bi morale biti -∞, vendar za izračun uporabljamo zgolj 2^11 vrednosti.',
+                    }
                 },
                 {
                     label: 'Kvadratni',
                     key: 'square',
                     fn: () => Array(Math.trunc(41 * this.frequency)).fill(-1),
+                    spectrumGraphTexts: {
+                        description: '',
+                        note: '',
+                    },
+                    logarithmGraphTexts: {
+                        description: '',
+                        note: '',
+                    }
                 },
                 {
                     label: 'Gauss',
@@ -117,12 +133,28 @@ export default {
                         {label: '1', key: 1},
                         {label: '2', key: 2},
                         {label: '3', key: 3},
-                    ]
+                    ],
+                    spectrumGraphTexts: {
+                        description: '',
+                        note: '',
+                    },
+                    logarithmGraphTexts: {
+                        description: '',
+                        note: '',
+                    }
                 },
                 {
                     label: 'Sinc',
                     key: 'sinc',
                     fn: () => this.createEmptyArrayOfFFTSize().map(t => (t === 0) ? -1 : -Math.sin(t * this.frequency ** -1 * 0.062) / (t * this.frequency ** -1 * 0.062)),
+                    spectrumGraphTexts: {
+                        description: '',
+                        note: '',
+                    },
+                    logarithmGraphTexts: {
+                        description: '',
+                        note: '',
+                    }
                 },
             ],
         }
