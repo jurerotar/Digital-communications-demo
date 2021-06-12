@@ -26,7 +26,16 @@
  * @property {function} fn
  * @property {Frequency} frequencies
  * @property {number[]} horizontal_pool
+ * @property {SignalTexts} spectrumGraphTexts
+ * @property {SignalTexts} logarithmGraphTexts
  */
+
+/**
+ * @typedef {Object} SignalTexts
+ * @property {string} description
+ * @property {string} note
+ */
+
 
 /**
  * @typedef {Object} Frequency
