@@ -1,6 +1,6 @@
 <template>
     <br>
-    Frekvenčni spekter energijskih signalov računa s pomopčjo Fourier Transforma:
+    Frekvenčni spekter energijskih signalov računamo s pomočjo Fourier Transforma:
     <br><br>
     <img src="/images/spekter_1.png" alt="Spekter enačba">
     <br><br>

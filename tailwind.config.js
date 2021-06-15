@@ -25,6 +25,9 @@ module.exports = {
                 'sidebar': '18rem',
                 'top-bar': 'calc(100% - 18rem)',
             },
+            columns: {
+                '4': 4,
+            }
         },
     },
     variants: {

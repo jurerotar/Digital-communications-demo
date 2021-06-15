@@ -125,7 +125,6 @@ export default {
 
                 p5.noFill();
                 p5.stroke(this.$c.colors[0]);
-                p5.strokeWeight(1);
 
                 // Draw the shape
                 p5.beginShape();

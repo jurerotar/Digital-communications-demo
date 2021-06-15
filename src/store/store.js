@@ -29,6 +29,7 @@ const app = {
              * @returns {boolean}
              */
             mobileSidebarExtended: false,
+            scheme: null,
         }
     },
     mutations: {
@@ -54,6 +55,9 @@ const app = {
          */
         toggleMobileSidebar: (state, position) => {
             state.mobileSidebarExtended = position;
+        },
+        setScheme(state, scheme) {
+            state.scheme = scheme;
         }
     },
     getters: {

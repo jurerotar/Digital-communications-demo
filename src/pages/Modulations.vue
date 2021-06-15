@@ -1,85 +1,89 @@
 <template>
-    <h1 class="text-3xl font-medium mb-4">Modulacije</h1>
-    <collapsible>
-        <theory-modulations></theory-modulations>
-    </collapsible>
-    <h2 class="text-xl font-medium mb-1">Analogne modulacije</h2>
-    <button-container>
-        <styled-button
-            :class="[selected === modulation.key ? 'bg-blue-300' : 'bg-gray-300']"
-            @click="changeSelected(modulation.key)"
-            v-for="modulation in analogModulations" :key="modulation.key">
-            {{ modulation.label }}
-        </styled-button>
-    </button-container>
-    <h2 class="text-xl font-medium mb-1">Digitalne modulacije</h2>
-    <button-container>
-        <styled-button
-            :class="[selected === modulation.key ? 'bg-blue-300' : 'bg-gray-300']"
-            @click="changeSelected(modulation.key)"
-            v-for="modulation in digitalModulations" :key="modulation.key">
-            {{ modulation.label }}
-        </styled-button>
-    </button-container>
-    <positive-only-signal v-if="selectedModulationData.hasSineModulation"
-                          :data="sineModulationSignalValues"
-                          :canvas_id="'sine-modulation-signal'"
-                          :title="'Sinusni modulacijski signal'"
-                          :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :description = "'Sinusni podatkovni signal.'"
-                          :note = "''"
-                          :is_binary="isDigitalModulation(selectedModulationData)"
-    >
-    </positive-only-signal>
-    <positive-only-signal v-if="selectedModulationData.hasBinaryLevel1"
-                          :data="binaryLevel1Signal.values"
-                          :canvas_id="'unipolar-signal'"
-                          :title="'Unipolarni signal'"
-                          :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :description = "'Unipolarni signal je sestavljen iz vrednosti 1 in 0.'"
-                          :note = "''"
-                          :is_binary="isDigitalModulation(selectedModulationData)"
-    >
-    </positive-only-signal>
-    <positive-only-signal v-if="selectedModulationData.hasBinaryLevel2"
-                          :data="binaryLevel2Signal.values"
-                          :canvas_id="'binary-signal'"
-                          :title="'Binarni signal'"
-                          :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :description = "'Bipolarni signal je sestavljen iz vrednosti 1 in -1.'"
-                          :note = "''"
-                          :is_binary="isDigitalModulation(selectedModulationData)"
-    >
-    </positive-only-signal>
-    <level4-signal
-        v-if="selectedModulationData.hasBinaryLevel4"
-        :data="binaryLevel4Signal.values"
-        :title="'4-nivojski bipolarni signal'"
-        :description = "''"
-        :note = "'4-nivojski bipolarni signal je sestavljen iz vrednosti 3, 1, -1, -3.'"
-        :is_binary="isDigitalModulation(selectedModulationData)"
-    >
-    </level4-signal>
-    <positive-only-signal v-if="selectedModulationData.hasCarrier"
-                          :data="carrierSignalValues"
-                          :canvas_id="'carrier-signal'"
-                          :title="'Nosilec'"
-                          :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :description = "'Nosilec je visokofrekvenčni signal, s katerim moduliramo podatkovni signal.'"
-                          :note = "''"
-                          :is_binary="isDigitalModulation(selectedModulationData)"
-    >
-    </positive-only-signal>
-    <positive-only-signal :data="modulated"
-                          :canvas_id="'modulated-signal'"
-                          :title="'Moduliran signal'"
-                          :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :is_modulated="true"
-                          :description = "selectedModulationData.description"
-                          :note = "selectedModulationData.note"
-                          :is_binary="isDigitalModulation(selectedModulationData)"
-    >
-    </positive-only-signal>
+    <div class="lg:ml-72">
+        <main class="p-4 container lg:mx-auto transition-colors duration-300 dark:bg-gray-800">
+            <h1 class="text-3xl font-medium mb-4 transition-colors duration-300 dark:text-white">Modulacije</h1>
+            <collapsible>
+                <theory-modulations></theory-modulations>
+            </collapsible>
+            <h2 class="text-xl font-medium mb-1 transition-colors duration-300 dark:text-white">Analogne modulacije</h2>
+            <button-container>
+                <styled-button
+                    :class="[selected === modulation.key ? 'dark:bg-blue-500 bg-blue-500': '']"
+                    @click="changeSelected(modulation.key)"
+                    v-for="modulation in analogModulations" :key="modulation.key">
+                    {{ modulation.label }}
+                </styled-button>
+            </button-container>
+            <h2 class="text-xl font-medium mb-1 transition-colors duration-300 dark:text-white">Digitalne modulacije</h2>
+            <button-container>
+                <styled-button
+                    :class="[selected === modulation.key ? 'dark:bg-blue-500 bg-blue-500': '']"
+                    @click="changeSelected(modulation.key)"
+                    v-for="modulation in digitalModulations" :key="modulation.key">
+                    {{ modulation.label }}
+                </styled-button>
+            </button-container>
+            <positive-only-signal v-if="selectedModulationData.hasSineModulation"
+                                  :data="sineModulationSignalValues"
+                                  :canvas_id="'sine-modulation-signal'"
+                                  :title="'Sinusni modulacijski signal'"
+                                  :vertical_pool="[1, 0.5, -0.5, -1]"
+                                  :description="'Sinusni podatkovni signal.'"
+                                  :note="''"
+                                  :is_binary="isDigitalModulation(selectedModulationData)"
+            >
+            </positive-only-signal>
+            <positive-only-signal v-if="selectedModulationData.hasBinaryLevel1"
+                                  :data="binaryLevel1Signal.values"
+                                  :canvas_id="'unipolar-signal'"
+                                  :title="'Unipolarni signal'"
+                                  :vertical_pool="[1, 0.5, -0.5, -1]"
+                                  :description="'Unipolarni signal je sestavljen iz vrednosti 1 in 0.'"
+                                  :note="''"
+                                  :is_binary="isDigitalModulation(selectedModulationData)"
+            >
+            </positive-only-signal>
+            <positive-only-signal v-if="selectedModulationData.hasBinaryLevel2"
+                                  :data="binaryLevel2Signal.values"
+                                  :canvas_id="'binary-signal'"
+                                  :title="'Binarni signal'"
+                                  :vertical_pool="[1, 0.5, -0.5, -1]"
+                                  :description="'Bipolarni signal je sestavljen iz vrednosti 1 in -1.'"
+                                  :note="''"
+                                  :is_binary="isDigitalModulation(selectedModulationData)"
+            >
+            </positive-only-signal>
+            <level4-signal
+                v-if="selectedModulationData.hasBinaryLevel4"
+                :data="binaryLevel4Signal.values"
+                :title="'4-nivojski bipolarni signal'"
+                :description="''"
+                :note="'4-nivojski bipolarni signal je sestavljen iz vrednosti 3, 1, -1, -3.'"
+                :is_binary="isDigitalModulation(selectedModulationData)"
+            >
+            </level4-signal>
+            <positive-only-signal v-if="selectedModulationData.hasCarrier"
+                                  :data="carrierSignalValues"
+                                  :canvas_id="'carrier-signal'"
+                                  :title="'Nosilec'"
+                                  :vertical_pool="[1, 0.5, -0.5, -1]"
+                                  :description="'Nosilec je visokofrekvenčni signal, s katerim moduliramo podatkovni signal.'"
+                                  :note="''"
+                                  :is_binary="isDigitalModulation(selectedModulationData)"
+            >
+            </positive-only-signal>
+            <positive-only-signal :data="modulated"
+                                  :canvas_id="'modulated-signal'"
+                                  :title="'Moduliran signal'"
+                                  :vertical_pool="[1, 0.5, -0.5, -1]"
+                                  :is_modulated="true"
+                                  :description="selectedModulationData.description"
+                                  :note="selectedModulationData.note"
+                                  :is_binary="isDigitalModulation(selectedModulationData)"
+            >
+            </positive-only-signal>
+        </main>
+    </div>
 </template>
 
 <script>
@@ -194,7 +198,7 @@ export default {
                 {
                     label: '4ASK',
                     key: '4ask',
-                    description: '4ASK modulacijo pridobimo z množenjem   ???    podatkovnega signala in harmoničnega nosilca.',
+                    description: '4ASK modulacijo pridobimo z množenjem digitalnega niza {-3,-1,1,3} in harmoničnega nosilca.',
                     note: '',
                     hasCarrier: true,
                     hasSineModulation: false,
@@ -227,7 +231,7 @@ export default {
                 {
                     label: '2FSK',
                     key: '2fsk',
-                    description: '2FSK je postopek, pri katerem so binarni podatki posredovani preko spremembe frekvence nosilnega signala. Pri 2FSK uporabljamo 2 različni frekvenci, ki pa ne prehajata zvezno.',
+                    description: '2FSK je postopek, pri katerem so binarni podatki posredovani preko spremembe frekvence nosilnega signala. Pri 2FSK uporabljamo 2 različni frekvenci.',
                     note: '',
                     hasCarrier: true,
                     hasSineModulation: false,
@@ -238,7 +242,7 @@ export default {
                 {
                     label: '4FSK',
                     key: '4fsk',
-                    description: '',
+                    description: '4FSK je postopek, pri katerem so binarni podatki posredovani preko spremembe frekvence nosilnega signala. Pri 4FSK uporabljamo 4 različne frekvence.',
                     note: '',
                     hasCarrier: true,
                     hasSineModulation: false,
