@@ -1,49 +1,59 @@
 <template>
-    <h1 class="text-3xl font-medium mb-4">Spekter</h1>
-    <collapsible>
-        <theory-spectrum></theory-spectrum>
-    </collapsible>
-    <h2 class="font-semibold text-xl mb-2">Oblika</h2>
-    <button-container>
-        <styled-button
-            :class="[selected === shape.key ? 'bg-blue-300' : 'bg-gray-300']"
-            @click="changeSelected(shape.key)"
-            v-for="shape in signalShapes" :key="shape.key">
-            {{ shape.label }}
-        </styled-button>
-    </button-container>
-    <h2 class="font-semibold text-xl mb-2">T</h2>
-    <button-container>
-        <styled-button
-            class="text-white w-fit-content font-bold py-2 px-4 mb-2 mr-2 rounded outline-none duration-300 transition-colors h-12"
-            :class="[frequencyValue === frequency.key ? 'bg-blue-300' : 'bg-gray-300']"
-            @click="changeFrequency(frequency.key)"
-            v-for="frequency in frequencies" :key="frequency.key">
-            {{ frequency.label }}
-        </styled-button>
-    </button-container>
-    <full-signal
-        :canvas_id="'spectrum-original-signal'"
-        :data="canvasInput"
-        :title="'Signal'"
-        :vertical_pool="[1, 0.5, -0.5, -1]"
-        :horizontal_pool="selectedObject.horizontal_pool"
-    >
-    </full-signal>
-    <spectrum-canvas
-        :canvas_id="'spectrum-signal-spectrum'"
-        :data="output"
-        :title="'Spekter'"
-        :type="selectedObject.key"
-        :frequency="frequency">
-    </spectrum-canvas>
-    <logarithmic
-        :canvas_id="'spectrum-signal-logarithmic'"
-        :data="output"
-        :title="'Spekter [dB]'"
-        :type="selectedObject.key"
-        :frequency="frequency">
-    </logarithmic>
+    <div class="lg:ml-72">
+        <main class="p-4 container lg:mx-auto transition-colors duration-300 dark:bg-gray-800">
+            <h1 class="text-3xl font-medium mb-4 transition-colors duration-300 dark:text-white">Spekter</h1>
+            <collapsible>
+                <theory-spectrum></theory-spectrum>
+            </collapsible>
+            <h2 class="font-semibold text-xl mb-2 transition-colors duration-300 dark:text-white">Oblika</h2>
+            <button-container>
+                <styled-button
+                    :class="[selectedObject.key === shape.key ? 'dark:bg-blue-500 bg-blue-500': '']"
+                    @click="changeSelected(shape.key)"
+                    v-for="shape in signalShapes" :key="shape.key">
+                    {{ shape.label }}
+                </styled-button>
+            </button-container>
+            <h2 class="font-semibold text-xl mb-2 transition-colors duration-300 dark:text-white">T</h2>
+            <button-container>
+                <styled-button
+                    class="text-white w-fit-content font-bold py-2 px-4 mb-2 mr-2 rounded outline-none duration-300 transition-colors h-12"
+                    :class="[frequencyValue === frequency.key ? 'dark:bg-blue-500 bg-blue-500': '']"
+                    @click="changeFrequency(frequency.key)"
+                    v-for="frequency in frequencies" :key="frequency.key">
+                    {{ frequency.label }}
+                </styled-button>
+            </button-container>
+            <full-signal
+                :canvas_id="'spectrum-original-signal'"
+                :data="canvasInput"
+                :title="'Signal'"
+                :vertical_pool="[1, 0.5, -0.5, -1]"
+                :horizontal_pool="selectedObject.horizontal_pool"
+            >
+            </full-signal>
+            <spectrum-canvas
+                :canvas_id="'spectrum-signal-spectrum'"
+                :data="output"
+                :title="'Spekter'"
+                :type="selectedObject.key"
+                :frequency="frequency"
+                :description="selectedObject.spectrumGraphTexts.description"
+                :note="selectedObject.spectrumGraphTexts.note"
+            >
+            </spectrum-canvas>
+            <logarithmic
+                :canvas_id="'spectrum-signal-logarithmic'"
+                :data="output"
+                :title="'Spekter [dB]'"
+                :type="selectedObject.key"
+                :frequency="frequency"
+                :description="selectedObject.logarithmGraphTexts.description"
+                :note="selectedObject.logarithmGraphTexts.note"
+            >
+            </logarithmic>
+        </main>
+    </div>
 </template>
 
 <script>
@@ -71,18 +81,42 @@ export default {
                     label: 'Sinusni',
                     key: 'sin',
                     fn: () => this.createEmptyArrayOfFFTSize().map(t => -Math.sin(t * this.frequency ** -1 * Math.PI * 0.12)),
-                    horizontal_pool: [-18, -15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15, 18]
+                    horizontal_pool: [-18, -15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15, 18],
+                    spectrumGraphTexts: {
+                        description: '',
+                        note: 'Prikazan je spekter signala omejenega na intervalu od 0 do 10^11/',
+                    },
+                    logarithmGraphTexts: {
+                        description: '',
+                        note: 'Vrednosti grafa v točkah, ki niso 1, bi morale biti -∞, vendar za izračun uporabljamo zgolj 2^11 vrednosti.',
+                    }
                 },
                 {
                     label: 'Kosinusni',
                     key: 'cos',
                     fn: () => this.createEmptyArrayOfFFTSize().map(t => -Math.cos(t * this.frequency ** -1 * Math.PI * 0.12)),
-                    horizontal_pool: [-18, -15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15, 18]
+                    horizontal_pool: [-18, -15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15, 18],
+                    spectrumGraphTexts: {
+                        description: '',
+                        note: 'Vrednost grafa v točkah, ki niso 1, je enak 0, ker je signal neskončno dolg. Če signal ne bi bil neskončno dolg, bi prehod bil zvezen.',
+                    },
+                    logarithmGraphTexts: {
+                        description: '',
+                        note: 'Vrednosti grafa v točkah, ki niso 1, bi morale biti -∞, vendar za izračun uporabljamo zgolj 2^11 vrednosti.',
+                    }
                 },
                 {
                     label: 'Kvadratni',
                     key: 'square',
                     fn: () => Array(Math.trunc(41 * this.frequency)).fill(-1),
+                    spectrumGraphTexts: {
+                        description: '',
+                        note: '',
+                    },
+                    logarithmGraphTexts: {
+                        description: '',
+                        note: '',
+                    }
                 },
                 {
                     label: 'Gauss',
@@ -103,12 +137,28 @@ export default {
                         {label: '1', key: 1},
                         {label: '2', key: 2},
                         {label: '3', key: 3},
-                    ]
+                    ],
+                    spectrumGraphTexts: {
+                        description: '',
+                        note: '',
+                    },
+                    logarithmGraphTexts: {
+                        description: '',
+                        note: '',
+                    }
                 },
                 {
                     label: 'Sinc',
                     key: 'sinc',
                     fn: () => this.createEmptyArrayOfFFTSize().map(t => (t === 0) ? -1 : -Math.sin(t * this.frequency ** -1 * 0.062) / (t * this.frequency ** -1 * 0.062)),
+                    spectrumGraphTexts: {
+                        description: '',
+                        note: '',
+                    },
+                    logarithmGraphTexts: {
+                        description: '',
+                        note: '',
+                    }
                 },
             ],
         }

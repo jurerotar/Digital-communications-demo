@@ -1,6 +1,11 @@
 <template>
-    <h2 class="font-semibold text-xl">{{ title }}</h2>
-    <p class = "my-1" v-if = "notes !== ''"><span class = "font-semibold">Opomba: </span>{{ notes }}</p>
+    <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white">{{ title }}</h2>
+    <p class = "my-1 transition-colors duration-300 dark:text-white" v-if = "description !== ''">
+        <span class = "font-semibold">Opis: </span>{{ description }}
+    </p>
+    <p class = "my-1 transition-colors duration-300 dark:text-white" v-if = "note !== ''">
+        <span class = "font-semibold">Opomba: </span>{{ note }}
+    </p>
     <canvas-container>
         <div :id="canvas_id"></div>
     </canvas-container>
@@ -120,7 +125,6 @@ export default {
 
                 p5.noFill();
                 p5.stroke(this.$c.colors[0]);
-                p5.strokeWeight(1);
 
                 // Draw the shape
                 p5.beginShape();
@@ -167,16 +171,6 @@ export default {
         isSinusoid() {
             return ['sin', 'cos'].includes(this.type);
         },
-        notes() {
-            switch(this.type) {
-                case 'sin':
-                    return 'Vrednosti grafa v točkah, ki niso 1, bi morale biti -∞, vendar za izračun uporabljamo zgolj 2**11 vrednosti.';
-                case 'cos':
-                    return 'Vrednosti grafa v točkah, ki niso 1, bi morale biti -∞, vendar za izračun uporabljamo zgolj 2**11 vrednosti.';
-                default:
-                    return '';
-            }
-        }
     },
     props: {
         data: {
@@ -198,7 +192,17 @@ export default {
         frequency: {
             type: Number,
             required: true
-        }
+        },
+        description: {
+            type: String,
+            required: false,
+            default: ''
+        },
+        note: {
+            type: String,
+            required: false,
+            default: ''
+        },
     }
 }
 </script>

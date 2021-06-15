@@ -1,6 +1,11 @@
-w<template>
-    <h2 class="font-semibold text-xl">{{ title }}</h2>
-    <p class = "my-1" v-if = "notes !== ''"><span class = "font-semibold">Opis: </span>{{ notes }}</p>
+<template>
+    <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white">{{ title }}</h2>
+    <p class = "my-1 transition-colors duration-300 dark:text-white" v-if = "description !== ''">
+        <span class = "font-semibold">Opis: </span>{{ description }}
+    </p>
+    <p class = "my-1 transition-colors duration-300 dark:text-white" v-if = "note !== ''">
+        <span class = "font-semibold">Opomba: </span>{{ note }}
+    </p>
     <canvas-container>
         <div :id="canvas_id"></div>
     </canvas-container>
@@ -70,7 +75,7 @@ export default {
 
                 // Draw the shape
                 p5.beginShape();
-                if(this.isBinary) {
+                if(this.is_binary) {
                     let previousY = 1;
                     this.normalizedData.forEach((y, x) => {
                         p5.vertex((previousY !== y) ? x - 1 + canvasPadding : x + canvasPadding, y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2);
@@ -100,38 +105,9 @@ export default {
         },
         isModulatedText() {
             return (this.is_modulated) ? 'y(t)' : 'x(t)';
+            // return 'PAM4 je večstopenjski modulacijski signalni format, ki se uporablja za prenos signala.';
+
         },
-        isBinary() {
-            return ['unipolar', 'bipolar'].includes(this.type);
-        },
-        notes() {
-            switch(this.type) {
-                case 'carrier':
-                    return 'Nosilec je visokofrekvenčni signal, s katerim moduliramo podatkovni signal.';
-                case 'sine':
-                    return 'Sinusni podatkovni signal.';
-                case 'unipolar':
-                    return 'Unipolarni signal je sestavljen iz vrednosti 1 in 0.';
-                case 'bipolar':
-                    return 'Bipolarni signal je sestavljen iz vrednosti 1 in -1.';
-                case 'am-lc':
-                    return 'Pri AM-DSB-LC modulaciji se modulacijskemu signalu dodaja enosmerna komponenta, kar zagotovi konstantno polariteto signala pred množenjem z nosilcem. Modulacijski indeks m = 0.66.';
-                case 'am-sc':
-                    return 'AM-DSB-SC je dvobočno amplitudno modulirani signal brez nosilca v spektru.';
-                case 'fm':
-                    return 'Frekvenčna modulacija je postopek spreminjanja frekvence nosilnega signala v ritmu modulacijskega signala-informacije. Frekvenčna deviacija: Δf = +-10.';
-                case 'bask':
-                    return 'BASK modulacijo pridobimo z množenjem unipolarnega binarnega podatkovnega signala in harmoničnega nosilca.';
-                case 'bpsk':
-                    return 'BPSK modulacijo pridobimo z množenjem bipolarnega binarnega podatkovnega signala in harmoničnega nosilca.';
-                case 'fsk':
-                    return 'BFSK je postopek, pri katerem so binarni podatki posredovani preko spremembe frekvence nosilnega signala.';
-                case 'pam4':
-                    return 'PAM4 je večstopenjski modulacijski signalni format, ki se uporablja za prenos signala.';
-                default:
-                    return '';
-            }
-        }
     },
     props: {
         data: {
@@ -156,11 +132,21 @@ export default {
             required: false,
             default: null
         },
-        type: {
+        description: {
             type: String,
             required: false,
             default: ''
-        }
+        },
+        note: {
+            type: String,
+            required: false,
+            default: ''
+        },
+        is_binary: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
     }
 }
 </script>

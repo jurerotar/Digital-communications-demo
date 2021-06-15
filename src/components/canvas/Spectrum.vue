@@ -1,6 +1,11 @@
 <template>
-    <h2 class="font-semibold text-xl">{{ title }}</h2>
-    <p class = "my-1" v-if = "notes !== ''"><span class = "font-semibold">Opomba: </span>{{ notes }}</p>
+    <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white">{{ title }}</h2>
+    <p class = "my-1 transition-colors duration-300 dark:text-white" v-if = "description !== ''">
+        <span class = "font-semibold">Opis: </span>{{ description }}
+    </p>
+    <p class = "my-1 transition-colors duration-300 dark:text-white" v-if = "note !== ''">
+        <span class = "font-semibold">Opomba: </span>{{ note }}
+    </p>
     <canvas-container>
         <div :id="canvas_id"></div>
     </canvas-container>
@@ -77,7 +82,6 @@ export default {
 
                 p5.noFill();
                 p5.stroke(this.$c.colors[0]);
-                p5.strokeWeight(1);
 
                 // Draw the shape
                 p5.beginShape();
@@ -120,7 +124,7 @@ export default {
         notes() {
             switch(this.type) {
                 case 'sin':
-                    return 'Vrednost grafa v točkah, ki niso 1, je enak 0, ker je signal neskončno dolg. Če signal ne bi bil neskončno dolg, bi prehod bil zvezen.';
+                    return 'Prikazan je spekter signala omejenega na intervalu od 0 do 10^11/';
                 case 'cos':
                     return 'Vrednost grafa v točkah, ki niso 1, je enak 0, ker je signal neskončno dolg. Če signal ne bi bil neskončno dolg, bi prehod bil zvezen.';
                 default:
@@ -148,7 +152,17 @@ export default {
         frequency: {
             type: Number,
             required: true
-        }
+        },
+        description: {
+            type: String,
+            required: false,
+            default: ''
+        },
+        note: {
+            type: String,
+            required: false,
+            default: ''
+        },
     }
 }
 </script>

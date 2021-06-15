@@ -26,7 +26,16 @@
  * @property {function} fn
  * @property {Frequency} frequencies
  * @property {number[]} horizontal_pool
+ * @property {SignalTexts} spectrumGraphTexts
+ * @property {SignalTexts} logarithmGraphTexts
  */
+
+/**
+ * @typedef {Object} SignalTexts
+ * @property {string} description
+ * @property {string} note
+ */
+
 
 /**
  * @typedef {Object} Frequency
@@ -45,11 +54,13 @@
  * @typedef {Object} Modulation
  * @property {string} label
  * @property {string} key
+ * @property {string} description
+ * @property {string} note
  * @property {boolean} hasCarrier
  * @property {boolean} hasSineModulation
- * @property {boolean} hasBipolar
- * @property {boolean} hasUnipolar
- * @property {boolean} hasPam4
+ * @property {boolean} hasBinaryLevel1
+ * @property {boolean} hasBinaryLevel2
+ * @property {boolean} hasBinaryLevel4
  */
 
 /**

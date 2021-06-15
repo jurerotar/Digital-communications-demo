@@ -1,61 +1,89 @@
 <template>
-    <h1 class="text-3xl font-medium mb-4">Modulacije</h1>
-    <collapsible>
-        <theory-modulations></theory-modulations>
-    </collapsible>
-    <button-container>
-        <styled-button
-            :class="[selected === modulation.key ? 'bg-blue-300' : 'bg-gray-300']"
-            @click="changeSelected(modulation.key)"
-            v-for="modulation in modulations" :key="modulation.key">
-            {{ modulation.label }}
-        </styled-button>
-    </button-container>
-    <positive-only-signal v-if="selectedModulationData.hasSineModulation"
-                          :data="sineModulationSignalValues"
-                          :canvas_id="'sine-modulation-signal'"
-                          :title="'Sinusni modulacijski signal'"
-                          :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :type="'sine'"
-    >
-    </positive-only-signal>
-    <positive-only-signal v-if="selectedModulationData.hasBipolar"
-                          :data="bipolarSignal.values"
-                          :canvas_id="'binary-signal'"
-                          :title="'Binarni signal'"
-                          :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :type="'bipolar'"
-    >
-    </positive-only-signal>
-    <positive-only-signal v-if="selectedModulationData.hasUnipolar"
-                          :data="unipolarSignal.values"
-                          :canvas_id="'unipolar-signal'"
-                          :title="'Unipolarni signal'"
-                          :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :type="'unipolar'"
-    >
-    </positive-only-signal>
-    <pam4
-        v-if="selectedModulationData.hasPam4"
-        :data="pam4Signal.values"
-    >
-    </pam4>
-    <positive-only-signal v-if="selectedModulationData.hasCarrier"
-                          :data="carrierSignalValues"
-                          :canvas_id="'carrier-signal'"
-                          :title="'Nosilec'"
-                          :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :type="'carrier'"
-    >
-    </positive-only-signal>
-    <positive-only-signal :data="modulated"
-                          :canvas_id="'modulated-signal'"
-                          :title="'Moduliran signal'"
-                          :vertical_pool="[1, 0.5, -0.5, -1]"
-                          :is_modulated="true"
-                          :type="selected"
-    >
-    </positive-only-signal>
+    <div class="lg:ml-72">
+        <main class="p-4 container lg:mx-auto transition-colors duration-300 dark:bg-gray-800">
+            <h1 class="text-3xl font-medium mb-4 transition-colors duration-300 dark:text-white">Modulacije</h1>
+            <collapsible>
+                <theory-modulations></theory-modulations>
+            </collapsible>
+            <h2 class="text-xl font-medium mb-1 transition-colors duration-300 dark:text-white">Analogne modulacije</h2>
+            <button-container>
+                <styled-button
+                    :class="[selected === modulation.key ? 'dark:bg-blue-500 bg-blue-500': '']"
+                    @click="changeSelected(modulation.key)"
+                    v-for="modulation in analogModulations" :key="modulation.key">
+                    {{ modulation.label }}
+                </styled-button>
+            </button-container>
+            <h2 class="text-xl font-medium mb-1 transition-colors duration-300 dark:text-white">Digitalne modulacije</h2>
+            <button-container>
+                <styled-button
+                    :class="[selected === modulation.key ? 'dark:bg-blue-500 bg-blue-500': '']"
+                    @click="changeSelected(modulation.key)"
+                    v-for="modulation in digitalModulations" :key="modulation.key">
+                    {{ modulation.label }}
+                </styled-button>
+            </button-container>
+            <positive-only-signal v-if="selectedModulationData.hasSineModulation"
+                                  :data="sineModulationSignalValues"
+                                  :canvas_id="'sine-modulation-signal'"
+                                  :title="'Sinusni modulacijski signal'"
+                                  :vertical_pool="[1, 0.5, -0.5, -1]"
+                                  :description="'Sinusni podatkovni signal.'"
+                                  :note="''"
+                                  :is_binary="isDigitalModulation(selectedModulationData)"
+            >
+            </positive-only-signal>
+            <positive-only-signal v-if="selectedModulationData.hasBinaryLevel1"
+                                  :data="binaryLevel1Signal.values"
+                                  :canvas_id="'unipolar-signal'"
+                                  :title="'Unipolarni signal'"
+                                  :vertical_pool="[1, 0.5, -0.5, -1]"
+                                  :description="'Unipolarni signal je sestavljen iz vrednosti 1 in 0.'"
+                                  :note="''"
+                                  :is_binary="isDigitalModulation(selectedModulationData)"
+            >
+            </positive-only-signal>
+            <positive-only-signal v-if="selectedModulationData.hasBinaryLevel2"
+                                  :data="binaryLevel2Signal.values"
+                                  :canvas_id="'binary-signal'"
+                                  :title="'Binarni signal'"
+                                  :vertical_pool="[1, 0.5, -0.5, -1]"
+                                  :description="'Bipolarni signal je sestavljen iz vrednosti 1 in -1.'"
+                                  :note="''"
+                                  :is_binary="isDigitalModulation(selectedModulationData)"
+            >
+            </positive-only-signal>
+            <level4-signal
+                v-if="selectedModulationData.hasBinaryLevel4"
+                :data="binaryLevel4Signal.values"
+                :title="'4-nivojski bipolarni signal'"
+                :description="''"
+                :note="'4-nivojski bipolarni signal je sestavljen iz vrednosti 3, 1, -1, -3.'"
+                :is_binary="isDigitalModulation(selectedModulationData)"
+            >
+            </level4-signal>
+            <positive-only-signal v-if="selectedModulationData.hasCarrier"
+                                  :data="carrierSignalValues"
+                                  :canvas_id="'carrier-signal'"
+                                  :title="'Nosilec'"
+                                  :vertical_pool="[1, 0.5, -0.5, -1]"
+                                  :description="'Nosilec je visokofrekvenčni signal, s katerim moduliramo podatkovni signal.'"
+                                  :note="''"
+                                  :is_binary="isDigitalModulation(selectedModulationData)"
+            >
+            </positive-only-signal>
+            <positive-only-signal :data="modulated"
+                                  :canvas_id="'modulated-signal'"
+                                  :title="'Moduliran signal'"
+                                  :vertical_pool="[1, 0.5, -0.5, -1]"
+                                  :is_modulated="true"
+                                  :description="selectedModulationData.description"
+                                  :note="selectedModulationData.note"
+                                  :is_binary="isDigitalModulation(selectedModulationData)"
+            >
+            </positive-only-signal>
+        </main>
+    </div>
 </template>
 
 <script>
@@ -65,12 +93,12 @@ import TheoryModulations from "@/components/theory/TheoryModulations";
 import '@/types.js';
 import ButtonContainer from "@/components/global/ButtonContainer";
 import StyledButton from "@/components/global/StyledButton";
-import Pam4 from "@/components/canvas/Pam4";
+import Level4Signal from "@/components/canvas/Level4Signal";
 
 
 export default {
     name: "Modulations",
-    components: {StyledButton, ButtonContainer, PositiveOnlySignal, Collapsible, TheoryModulations, Pam4},
+    components: {StyledButton, ButtonContainer, PositiveOnlySignal, Collapsible, TheoryModulations, Level4Signal},
     data() {
         return {
             /** @type {number|null} */
@@ -94,22 +122,25 @@ export default {
             /** @type {number[]} */
             sineModulationSignalValues: [...Array(600).fill(0)].map((t, i) => Math.sin(i * 0.005 * Math.PI)),
 
-            /** @type {BinarySignal} */
-            bipolarSignal: {
-                values: Array(5).fill(0).map((el, i) => Array(120).fill((i % 2 === 1) ? 1 : -1)).flat(),
-                pool: [-1, 1],
-                currentlyReturns: 1,
-            },
-
-            /** @type {BinarySignal} */
-            unipolarSignal: {
+            /** Unipolar signal
+             * @type {BinarySignal} */
+            binaryLevel1Signal: {
                 values: Array(5).fill(0).map((el, i) => Array(120).fill((i % 2 === 1) ? -1 : 0)).flat(),
                 pool: [-1, 0],
                 currentlyReturns: -1,
             },
 
-            /** @type {BinarySignal} */
-            pam4Signal: {
+            /** Bipolar signal
+             * @type {BinarySignal} */
+            binaryLevel2Signal: {
+                values: Array(5).fill(0).map((el, i) => Array(120).fill((i % 2 === 1) ? 1 : -1)).flat(),
+                pool: [-1, 1],
+                currentlyReturns: 1,
+            },
+
+            /** 4 level signal
+             * @type {BinarySignal} */
+            binaryLevel4Signal: {
                 values: [Array(120).fill(3), Array(120).fill(1), Array(120).fill(-1), Array(120).fill(-3), Array(120).fill(3)].flat(),
                 pool: [-3, -1, 1, 3],
                 currentlyReturns: -3,
@@ -117,71 +148,107 @@ export default {
 
             /**
              * Objects in this array determine which canvases will be drawn
-             * @type {Modulation[]}
+             * @type {Array<Modulation>}
              */
             modulations: [
                 {
                     label: 'AM-LC',
                     key: 'am-lc',
+                    description: 'Pri AM-DSB-LC modulaciji se modulacijskemu signalu dodaja enosmerna komponenta, kar zagotovi konstantno polariteto signala pred množenjem z nosilcem. Modulacijski indeks m = 0.66.',
+                    note: '',
                     hasCarrier: true,
                     hasSineModulation: true,
-                    hasBipolar: false,
-                    hasUnipolar: false,
-                    hasPam4: false,
+                    hasBinaryLevel1: false,
+                    hasBinaryLevel2: false,
+                    hasBinaryLevel4: false,
                 },
                 {
                     label: 'AM-SC',
                     key: 'am-sc',
+                    description: 'AM-DSB-SC je dvobočno amplitudno modulirani signal brez nosilca v spektru.',
+                    note: '',
                     hasCarrier: true,
                     hasSineModulation: true,
-                    hasBipolar: false,
-                    hasUnipolar: false,
-                    hasPam4: false,
+                    hasBinaryLevel1: false,
+                    hasBinaryLevel2: false,
+                    hasBinaryLevel4: false,
                 },
                 {
                     label: 'FM',
                     key: 'fm',
+                    description: 'Frekvenčna modulacija je postopek spreminjanja frekvence nosilnega signala v ritmu modulacijskega signala-informacije. Frekvenčna deviacija: Δf = +-10.',
+                    note: '',
                     hasCarrier: true,
                     hasSineModulation: true,
-                    hasBipolar: false,
-                    hasUnipolar: false,
-                    hasPam4: false,
+                    hasBinaryLevel1: false,
+                    hasBinaryLevel2: false,
+                    hasBinaryLevel4: false,
                 },
                 {
-                    label: 'BASK',
-                    key: 'bask',
+                    label: '2ASK',
+                    key: '2ask',
+                    description: '2ASK modulacijo pridobimo z množenjem unipolarnega binarnega podatkovnega signala in harmoničnega nosilca.',
+                    note: '',
                     hasCarrier: true,
                     hasSineModulation: false,
-                    hasBipolar: false,
-                    hasUnipolar: true,
-                    hasPam4: false,
+                    hasBinaryLevel1: true,
+                    hasBinaryLevel2: false,
+                    hasBinaryLevel4: false,
                 },
                 {
-                    label: 'BPSK',
-                    key: 'bpsk',
+                    label: '4ASK',
+                    key: '4ask',
+                    description: '4ASK modulacijo pridobimo z množenjem digitalnega niza {-3,-1,1,3} in harmoničnega nosilca.',
+                    note: '',
                     hasCarrier: true,
                     hasSineModulation: false,
-                    hasBipolar: true,
-                    hasUnipolar: false,
-                    hasPam4: false,
+                    hasBinaryLevel1: false,
+                    hasBinaryLevel2: false,
+                    hasBinaryLevel4: true,
                 },
                 {
-                    label: 'PAM 4',
-                    key: 'pam4',
+                    label: '2PSK',
+                    key: '2psk',
+                    description: '2PSK modulacijo pridobimo z množenjem bipolarnega binarnega podatkovnega signala in harmoničnega nosilca.',
+                    note: '',
                     hasCarrier: true,
                     hasSineModulation: false,
-                    hasBipolar: false,
-                    hasUnipolar: false,
-                    hasPam4: true,
+                    hasBinaryLevel1: false,
+                    hasBinaryLevel2: true,
+                    hasBinaryLevel4: false,
                 },
                 {
-                    label: 'FSK',
-                    key: 'fsk',
+                    label: '4PSK',
+                    key: '4psk',
+                    description: '4PSK modulacijo pridobimo z množenjem bipolarnega binarnega podatkovnega signala in harmoničnega nosilca.',
+                    note: '',
                     hasCarrier: true,
                     hasSineModulation: false,
-                    hasBipolar: true,
-                    hasUnipolar: false,
-                    hasPam4: false,
+                    hasBinaryLevel1: false,
+                    hasBinaryLevel2: false,
+                    hasBinaryLevel4: true,
+                },
+                {
+                    label: '2FSK',
+                    key: '2fsk',
+                    description: '2FSK je postopek, pri katerem so binarni podatki posredovani preko spremembe frekvence nosilnega signala. Pri 2FSK uporabljamo 2 različni frekvenci.',
+                    note: '',
+                    hasCarrier: true,
+                    hasSineModulation: false,
+                    hasBinaryLevel1: true,
+                    hasBinaryLevel2: false,
+                    hasBinaryLevel4: false,
+                },
+                {
+                    label: '4FSK',
+                    key: '4fsk',
+                    description: '4FSK je postopek, pri katerem so binarni podatki posredovani preko spremembe frekvence nosilnega signala. Pri 4FSK uporabljamo 4 različne frekvence.',
+                    note: '',
+                    hasCarrier: true,
+                    hasSineModulation: false,
+                    hasBinaryLevel1: false,
+                    hasBinaryLevel2: false,
+                    hasBinaryLevel4: true,
                 },
             ]
         }
@@ -195,17 +262,39 @@ export default {
             return this.modulations.find(el => el.key === this.selected);
         },
         /**
+         * Returns an array of analog modulations
+         * @returns {Array<Modulation>}
+         */
+        analogModulations() {
+            return this.modulations.filter(modulation => this.isDigitalModulation(modulation) === false);
+        },
+        /**
+         * Returns an array of digital modulations
+         * @returns {Array<Modulation>}
+         */
+        digitalModulations() {
+            return this.modulations.filter(modulation => this.isDigitalModulation(modulation) === true);
+        },
+        /**
          * Returns an array of numbers computed by selected modulation key
          * @returns {number[]}
          */
         modulated() {
-            const pam4Amplitudes = {'3': -3.01, '1': -1, '-1': 1, '-3': 3.01};
-            const [carrier, sine, bipolar, unipolar, pam4, time] = [
+            const PSK2Amplitudes = {'1': 1, '-1': -1};
+            const PSK4Amplitudes = {'3': Math.PI / 2, '1': Math.PI, '-1': 3 * Math.PI / 2, '-3': 2 * Math.PI};
+
+            const FSK2Multipliers = {'1': 12, '-1': 30};
+            const FSK4Multipliers = {'3': 5, '1': 15, '-1': 30, '-3': 60};
+
+            const ASK2Amplitudes = {'0': 0, '-1': -1};
+            const ASK4Amplitudes = {'3': 0.5, '1': 1, '-1': 2, '-3': 3};
+
+            const [carrier, sine, binary1Level, binary2Level, binary4Level, time] = [
                 this.carrierSignalValues,
                 this.sineModulationSignalValues,
-                this.bipolarSignal.values,
-                this.unipolarSignal.values,
-                this.pam4Signal.values,
+                this.binaryLevel1Signal.values,
+                this.binaryLevel2Signal.values,
+                this.binaryLevel4Signal.values,
                 this.timeValues
             ];
             switch (this.selected) {
@@ -222,24 +311,38 @@ export default {
                     return time.map(t => Math.cos(15 * Math.PI * t + (10 * (Math.cos(Math.PI * t) + 150))))
 
                 // Binary amplitude shift keying
-                case 'bask':
-                    return carrier.map((el, index) => el * unipolar[index]);
+                case '2ask':
+                    return carrier.map((el, index) => el * ASK2Amplitudes[`${binary1Level[index]}`]);
+
+                // Binary amplitude shift keying
+                case '4ask':
+                    return carrier.map((el, index) => el * ASK4Amplitudes[binary4Level[index]]);
 
                 // Binary phase shift keying
-                case 'bpsk':
-                    return carrier.map((el, index) => el * bipolar[index]);
+                case '2psk':
+                    return carrier.map((el, index) => el * PSK2Amplitudes[binary2Level[index]]);
+
+                // Binary phase shift keying
+                case '4psk':
+                    return time.map((el, index) => Math.sin(15 * Math.PI * el + PSK4Amplitudes[binary4Level[index]]));
 
                 // Frequency shift keying
-                case 'fsk':
+                case '2fsk':
                     return time.map((t, index) => {
                         // We change frequency multiplier discretely based on current value of bipolar signal
-                        const multiplier = (bipolar[index] === 1) ? 12 : 30;
-                        return Math.sin(Math.PI * t * multiplier);
+                        return Math.sin(Math.PI * t * FSK2Multipliers[binary2Level[index]]);
                     });
 
-                // 4 level pulse amplitude modulations
-                case 'pam4':
-                    return carrier.map((el, index) => pam4Amplitudes[`${pam4[index]}`] * el / 3);
+                // Frequency shift keying
+                case '4fsk':
+                    return time.map((t, index) => {
+                        // We change frequency multiplier discretely based on current value of 4-level binary signal
+                        return Math.sin(Math.PI * t * FSK4Multipliers[binary4Level[index]]);
+                    });
+
+                // // 4 level pulse amplitude modulations
+                // case 'pam4':
+                //     return carrier.map((el, index) => pam4Amplitudes[`${binary4Level[index]}`] * el / 3);
 
                 default:
                     return [];
@@ -266,6 +369,14 @@ export default {
             }
             return obj.currentlyReturns;
         },
+        /**
+         * Determines if modulation is digital
+         * @param {Modulation} modulation
+         * @returns {boolean}
+         */
+        isDigitalModulation(modulation) {
+            return modulation.hasBinaryLevel1 || modulation.hasBinaryLevel2 || modulation.hasBinaryLevel4;
+        }
     },
     mounted() {
         // Start time at 600 * 0.005, because we initiate arrays with 600 values already in
@@ -275,18 +386,18 @@ export default {
             // Push new values to arrays
             this.carrierSignalValues.unshift(Math.sin(15 * Math.PI * time));
             this.sineModulationSignalValues.unshift(Math.sin(Math.PI * time));
-            this.bipolarSignal.values.unshift(this.nextBinaryValue(this.bipolarSignal));
-            this.unipolarSignal.values.unshift(this.nextBinaryValue(this.unipolarSignal));
-            this.pam4Signal.values.unshift(this.nextBinaryValue(this.pam4Signal));
+            this.binaryLevel1Signal.values.unshift(this.nextBinaryValue(this.binaryLevel1Signal));
+            this.binaryLevel2Signal.values.unshift(this.nextBinaryValue(this.binaryLevel2Signal));
+            this.binaryLevel4Signal.values.unshift(this.nextBinaryValue(this.binaryLevel4Signal));
             this.timeValues.unshift(time);
 
             // Loop through arrays and remove last values if lengths are too big
             [
                 this.carrierSignalValues,
                 this.sineModulationSignalValues,
-                this.bipolarSignal.values,
-                this.unipolarSignal.values,
-                this.pam4Signal.values,
+                this.binaryLevel1Signal.values,
+                this.binaryLevel2Signal.values,
+                this.binaryLevel4Signal.values,
                 this.timeValues
             ].forEach(array => {
                 if (array.length > 600) {

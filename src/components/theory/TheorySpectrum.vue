@@ -1,6 +1,7 @@
 <template>
+    <p class="transition-colors duration-300 dark:text-white">
     <br>
-    Frekvenčni spekter energijskih signalov računa s pomopčjo Fourier Transforma:
+    Frekvenčni spekter energijskih signalov računamo s pomočjo Fourier Transforma:
     <br><br>
     <img src="/images/spekter_1.png" alt="Spekter enačba">
     <br><br>
@@ -15,7 +16,7 @@
     <img src="/images/spekter_3.png" alt="Spekter enačba">
     <br><br>
     Ker se v spektru frekvenca <span class = "font-semibold">f</span> deli s konstanto <span class = "font-semibold">a</span>, pomeni skrčenje v časovnem prostoru, razteg v frekvenčnem prostoru in obratno. Iz tega sledi, da imajo dolgi impulzi ozek spekter, kratki impulzi pa širok spekter.
-
+    </p>
 </template>
 
 <script>

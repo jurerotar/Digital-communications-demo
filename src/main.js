@@ -14,14 +14,16 @@ Array.prototype.random = function() {
     return this[Math.floor(Math.random() * this.length)];
 }
 
+
 /**
  * Font awesome icons and library
  */
 import {library} from '@fortawesome/fontawesome-svg-core'
-import {faChevronRight} from "@fortawesome/free-solid-svg-icons";
+import {faChevronRight, faCodeBranch} from "@fortawesome/free-solid-svg-icons";
+import {faMoon, faSun} from "@fortawesome/free-regular-svg-icons";
 import {faGithub} from "@fortawesome/free-brands-svg-icons";
 
-library.add(faGithub, faChevronRight);
+library.add(faGithub, faCodeBranch, faChevronRight, faMoon, faSun);
 
 /*
 Run these commands when postcss supports vue 3

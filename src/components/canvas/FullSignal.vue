@@ -1,5 +1,5 @@
 <template>
-    <h2 class="font-semibold text-xl">{{ title }}</h2>
+    <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white">{{ title }}</h2>
     <canvas-container>
         <div :id="canvas_id"></div>
     </canvas-container>
@@ -134,7 +134,7 @@ export default {
             default() {
                 return [-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6];
             }
-        }
+        },
     }
 }
 </script>

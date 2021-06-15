@@ -1,8 +1,13 @@
 <template>
-    <h2 class="font-semibold text-xl">PAM 4</h2>
-    <p class = "my-1"><span class = "font-semibold">Opis: </span>PAM 4 je 4 nivojski binarni signal z možnimi vrednostmi [3, 1, -1, -3]</p>
+    <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white">{{ title }}</h2>
+    <p class = "my-1" v-if = "description !== ''">
+        <span class = "font-semibold transition-colors duration-300 dark:text-white">Opis:</span>{{ description }}
+    </p>
+    <p class = "my-1" v-if = "note !== ''">
+        <span class = "font-semibold transition-colors duration-300 dark:text-white">Opomba:</span>{{ note }}
+    </p>
     <canvas-container>
-        <div id="pam4-signal"></div>
+        <div id="4-level-binary"></div>
     </canvas-container>
 </template>
 
@@ -69,21 +74,28 @@ export default {
 
                 // Draw the shape
                 p5.beginShape();
-                let previousY = 1;
-                const offsets = {
-                    '3': 16,
-                    '1': 19,
-                    '-1': 22,
-                    '-3': 25
-                };
-                this.normalizedData.forEach((y, x) => {
-                    p5.vertex((previousY !== y) ? x - 1 + canvasPadding : x + canvasPadding, y * (this.offset.y / 3) + this.offset.y + canvasPadding / 2 + offsets[`${y}`]);
-                    previousY = y;
-                });
+                if(this.is_binary) {
+                    const binaryOffsets = {
+                        '3': 15,
+                        '1': 18,
+                        '-1': 21,
+                        '-3': 25
+                    };
+                    let previousY = 1;
+                    this.normalizedData.forEach((y, x) => {
+                        p5.vertex((previousY !== y) ? x - 1 + canvasPadding : x + canvasPadding, y * this.offset.y / 3 + this.offset.y + canvasPadding / 2 + binaryOffsets[`${y}`]);
+                        previousY = y;
+                    });
+                }
+                else {
+                    this.normalizedData.forEach((y, x) => {
+                        p5.vertex(x + canvasPadding, y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2);
+                    });
+                }
                 p5.endShape();
             }
             p5.removeCanvas = () => p5.remove();
-        }, 'pam4-signal');
+        }, '4-level-binary');
     },
     unmounted() {
         // Remove canvas, otherwise P5 object stays in memory
@@ -91,15 +103,38 @@ export default {
     },
     computed: {
         normalizedData() {
+            const max = Math.max(...this.data.map(el => Math.abs(el)));
             const data = [...this.data];
             data.length = 600;
-            return data;
+            if(this.is_binary) {
+                return data;
+            }
+            return data.map(el => el / max);
         },
     },
     props: {
         data: {
             type: Array,
             required: true
+        },
+        title: {
+            type: String,
+            required: true
+        },
+        description: {
+            type: String,
+            required: false,
+            default: ''
+        },
+        note: {
+            type: String,
+            required: false,
+            default: ''
+        },
+        is_binary: {
+            type: Boolean,
+            required: false,
+            default: false
         },
     }
 }

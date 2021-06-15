@@ -1,11 +1,15 @@
 <template>
-    <h1 class="text-3xl font-medium mb-4">Kazalci</h1>
-    <collapsible>
-        <theory-pointer></theory-pointer>
-    </collapsible>
-    <canvas-container>
-        <div :id="canvasId"></div>
-    </canvas-container>
+    <div class="lg:ml-72">
+        <main class="p-4 container lg:mx-auto transition-colors duration-300 dark:bg-gray-800">
+            <h1 class="text-3xl font-medium mb-4 transition-colors duration-300 dark:text-white">Kazalci</h1>
+            <collapsible>
+                <theory-pointer></theory-pointer>
+            </collapsible>
+            <canvas-container>
+                <div :id="canvasId"></div>
+            </canvas-container>
+        </main>
+    </div>
 </template>
 
 <script>
@@ -132,9 +136,9 @@ export default {
                 p5.strokeWeight(1);
 
                 p5.triangle(150, -1, 145, 11, 155, 11);
-                p5.triangle(801,150,790,145,790,155);
+                p5.triangle(801, 150, 790, 145, 790, 155);
                 p5.triangle(150, 800, 145, 790, 155, 790);
-                p5.triangle(330,150,320,145,320,155);
+                p5.triangle(330, 150, 320, 145, 320, 155);
 
                 this.$c.temporaryState(p5, () => {
                     p5.strokeWeight(0.5);
@@ -147,8 +151,8 @@ export default {
                 this.$c.temporaryState(p5, () => {
                     p5.strokeWeight(5);
                     p5.stroke(255);
-                    p5.line(this.offset.x * 2 + 31, this.offset.y,this.offset.x * 2 + 70, this.offset.y);
-                    p5.line(this.offset.x, this.offset.y * 2 + 31,this.offset.x, this.offset.y * 2 + 70);
+                    p5.line(this.offset.x * 2 + 31, this.offset.y, this.offset.x * 2 + 70, this.offset.y);
+                    p5.line(this.offset.x, this.offset.y * 2 + 31, this.offset.x, this.offset.y * 2 + 70);
                 })
 
                 this.$c.drawDashed(this.context, () => {
@@ -191,7 +195,7 @@ export default {
                 // Defines the length of sine wave(one period is the same as cardinality in linearSpace function)
                 sinHorizontal %= 200;
 
-                p5.ellipse(sinHorizontal+canvasPadding*2, sinVertical, 15, 15);
+                p5.ellipse(sinHorizontal + canvasPadding * 2, sinVertical, 15, 15);
 
                 this.$c.drawDashed(this.context, () => {
                     // Connect current x,y coordinates to sine graph
