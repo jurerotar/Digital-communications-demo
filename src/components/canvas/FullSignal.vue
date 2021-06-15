@@ -1,5 +1,5 @@
 <template>
-    <h2 class="font-semibold text-xl">{{ title }}</h2>
+    <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white">{{ title }}</h2>
     <canvas-container>
         <div :id="canvas_id"></div>
     </canvas-container>

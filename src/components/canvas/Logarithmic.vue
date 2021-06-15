@@ -1,9 +1,9 @@
 <template>
-    <h2 class="font-semibold text-xl">{{ title }}</h2>
-    <p class = "my-1" v-if = "description !== ''">
+    <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white">{{ title }}</h2>
+    <p class = "my-1 transition-colors duration-300 dark:text-white" v-if = "description !== ''">
         <span class = "font-semibold">Opis: </span>{{ description }}
     </p>
-    <p class = "my-1" v-if = "note !== ''">
+    <p class = "my-1 transition-colors duration-300 dark:text-white" v-if = "note !== ''">
         <span class = "font-semibold">Opomba: </span>{{ note }}
     </p>
     <canvas-container>

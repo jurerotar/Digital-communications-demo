@@ -1,5 +1,5 @@
 <template>
-    <h2 class="font-semibold text-xl">Prikaz posameznik komponent</h2>
+    <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white">Prikaz posameznik komponent</h2>
     <canvas-container>
         <div :id="canvasId"></div>
     </canvas-container>

@@ -1,4 +1,5 @@
 <template>
+    <p class="transition-colors duration-300 dark:text-white">
     <br>
     V spodnji animaciji prikazujemo enotsko krožnico z središčem v izhodišču koordinatnega sistema in polmerom 1.
     Koordinatni sistem sestavljata <span class = "font-semibold">imaginarna</span> (vertikalna) in <span class = "font-semibold">realna</span> (horizontalna) os.
@@ -8,6 +9,7 @@
     <br><br>
     V animaciji prikazujemo eno periodo sinusnega signala, eno periodo kosinusnega signala in kazalec, ki predstavlja vsoto kvadratov teh dveh signalov.
     <br>
+    </p>
 </template>
 
 <script>
