@@ -140,11 +140,11 @@ export default {
             let data = [...this.normalizedData].map(el => el * modifiers.amplitude + modifiers.offset);
             // Sinusoid functions change position based on frequency, so we apply additional offset
             if(this.isSinusoid) {
-                data = data.map(el => el + modifiers.frequencyOffsets[`${this.frequency}`]);
+                data = data.map(el => el + modifiers.frequencyOffsets[`${this.period}`]);
             }
             // Remove values that are to low so they dont overflow the charts
             if(this.type === 'gauss') {
-                data = data.filter(el => el <= 260 + 5 * this.frequency);
+                data = data.filter(el => el <= 260 + 5 * this.period);
             }
             return data;
         },
@@ -155,7 +155,7 @@ export default {
             if(this.isSinusoid) {
                 const max = Math.max(...data);
                 const maxIndex = data.findIndex(el => el === max);
-                const correctPeak = Math.trunc(50 / this.frequency);
+                const correctPeak = Math.trunc(50 / this.period);
                 data = data.filter((el, index) => index >= maxIndex - correctPeak);
             }
             data.length = 600;
@@ -183,7 +183,7 @@ export default {
             type: String,
             required: true
         },
-        frequency: {
+        period: {
             type: Number,
             required: true
         },

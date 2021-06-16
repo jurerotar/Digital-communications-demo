@@ -22,7 +22,7 @@ const canvas = {
     ],
     darkModeBackgroundColor: '#1F2937',
     lightModeBackgroundColor: '#ffffff',
-    darkModeScaleColor: '#000000',
+    darkModeScaleColor: '#ffffff',
     lightModeScaleColor: '#000000',
     /**
      * Creates canvas with fixed dimensions
@@ -44,15 +44,14 @@ const canvas = {
      * @param {Coordinates} dimensions
      */
     drawAxis(p5, offset, dimensions = this.dimensions) {
-        p5.stroke(0);
-        p5.strokeWeight(2);
-        // Horizontal line from start of canvas to the end
-        p5.line(0, offset.y, dimensions.x, offset.y);
-        // Vertical line from top to bottom
-        p5.line(offset.x, 0, offset.x, dimensions.y);
-        // Restore defaults
-        p5.strokeWeight(1);
-        p5.stroke(0);
+        this.temporaryState(p5, () => {
+            p5.stroke(this.scale());
+            p5.strokeWeight(2);
+            // Horizontal line from start of canvas to the end
+            p5.line(0, offset.y, dimensions.x, offset.y);
+            // Vertical line from top to bottom
+            p5.line(offset.x, 0, offset.x, dimensions.y);
+        });
     },
 
     /**

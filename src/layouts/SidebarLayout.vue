@@ -27,7 +27,7 @@ export default {
         if(this.scheme === null) {
             const cookie = this.getCookieValue('color-scheme') ?? 'dark';
             this.$store.commit('app/setScheme', cookie);
-            document.querySelector('body').classList.add(cookie);
+            document.querySelector('html').classList.add(cookie);
         }
     },
     mounted() {
