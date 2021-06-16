@@ -34,52 +34,48 @@ export default {
         this.p5 = new P5((p5) => {
             this.$c.setup(p5);
             p5.draw = () => {
-                p5.stroke(0);
-                p5.background(255);
                 const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
-                p5.strokeWeight(2);
+                p5.background(this.$c.background());
 
-                // Top-bottom line
-                p5.line(canvasPadding, canvasPadding, canvasPadding, canvasDimensions.y - canvasPadding);
+                // Draw scale and texts
+                this.$c.temporaryState(p5, () => {
+                    const color = this.$c.scale();
+                    p5.stroke(color);
+                    p5.strokeWeight(1);
+                    this.$c.widerLine(p5, canvasPadding, canvasPadding, canvasPadding, canvasDimensions.y - canvasPadding);
+                    const yAxisLabels = this.$f.linearSpace(1, 0, 5);
 
-                p5.strokeWeight(1);
-
-                //y-axis arrow
-                p5.fill(1);
-                p5.triangle(50, 40, 46, 50, 54, 50);
-
-                const yAxisLabels = this.$f.linearSpace(1, 0, 5);
-
-                for (let i = 0; i <= 20; i++) {
-                    // Make each fifth line labeled and wider
-                    if (i % 5 === 0) {
-                        p5.text(yAxisLabels[Math.trunc(i / 5)], canvasPadding - 40, canvasPadding + i * 10 + 3);
-                        p5.strokeWeight(2);
+                    for (let i = 0; i <= 20; i++) {
+                        // Make each fifth line labeled and wider
+                        if (i % 5 === 0) {
+                            p5.text(yAxisLabels[Math.trunc(i / 5)], canvasPadding - 40, canvasPadding + i * 10 + 3);
+                            this.$c.widerLine(p5, canvasPadding - 5, canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10);
+                            continue;
+                        }
                         p5.line(canvasPadding - 5, canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10);
-                        p5.strokeWeight(1);
-                        continue;
                     }
-                    p5.line(canvasPadding - 5, canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10);
-                }
-                for (let i = 0; i <= 60; i++) {
-                    // Make each fifth line labeled and wider
-                    if (i % 5 === 0) {
-                        p5.text(Math.trunc(i / 5), canvasPadding + i * 10 - 3, canvasDimensions.y - 30);
-                        p5.strokeWeight(2);
+                    for (let i = 0; i <= 60; i++) {
+                        // Make each fifth line labeled and wider
+                        if (i % 5 === 0) {
+                            p5.text(Math.trunc(i / 5), canvasPadding + i * 10 - 3, canvasDimensions.y - 30);
+                            this.$c.widerLine(p5, canvasPadding + i * 10, canvasDimensions.y - canvasPadding + 5, canvasPadding + i * 10, canvasDimensions.y - canvasPadding - 5);
+                            continue;
+                        }
                         p5.line(canvasPadding + i * 10, canvasDimensions.y - canvasPadding + 5, canvasPadding + i * 10, canvasDimensions.y - canvasPadding - 5);
-                        p5.strokeWeight(1);
-                        continue;
                     }
-                    p5.line(canvasPadding + i * 10, canvasDimensions.y - canvasPadding + 5, canvasPadding + i * 10, canvasDimensions.y - canvasPadding - 5);
-                }
-                // Y axis label
-                p5.text('|X(f)|', canvasPadding - 15, canvasPadding / 2);
-                // X axis label
-                p5.text('f', canvasDimensions.x - 30, canvasDimensions.y - canvasPadding);
+                    // Y axis label
+                    p5.text('|X(f)|', canvasPadding - 15, canvasPadding / 2);
+                    // X axis label
+                    p5.text('f', canvasDimensions.x - 30, canvasDimensions.y - canvasPadding);
+
+                    p5.strokeWeight(2);
+                    this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y - canvasPadding), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y - canvasPadding), color, 7, 0);
+                    p5.fill(color);
+                    p5.triangle(50, 40, 46, 50, 54, 50);
+
+                });
 
                 p5.strokeWeight(2);
-                this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y - canvasPadding), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y - canvasPadding), 'black', 7, 0);
-
                 p5.noFill();
                 p5.stroke(this.$c.colors[0]);
 
@@ -121,16 +117,6 @@ export default {
         isSinusoid() {
             return ['sin', 'cos'].includes(this.type);
         },
-        notes() {
-            switch(this.type) {
-                case 'sin':
-                    return 'Prikazan je spekter signala omejenega na intervalu od 0 do 10^11/';
-                case 'cos':
-                    return 'Vrednost grafa v točkah, ki niso 1, je enak 0, ker je signal neskončno dolg. Če signal ne bi bil neskončno dolg, bi prehod bil zvezen.';
-                default:
-                    return '';
-            }
-        }
     },
     props: {
         data: {

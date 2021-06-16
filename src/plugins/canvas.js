@@ -1,4 +1,5 @@
 import '../types';
+import store from '../store/store';
 
 const canvas = {
     frameRate: 30,
@@ -19,6 +20,10 @@ const canvas = {
         '#001f3f',
         '#F012BE',
     ],
+    darkModeBackgroundColor: '#1F2937',
+    lightModeBackgroundColor: '#ffffff',
+    darkModeScaleColor: '#000000',
+    lightModeScaleColor: '#000000',
     /**
      * Creates canvas with fixed dimensions
      * @param {P5} p5
@@ -106,6 +111,18 @@ const canvas = {
             p5.translate(vectorEnd.mag() - arrowSize, 0);
             p5.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
         });
+    },
+    background(scheme = store.state.app.scheme) {
+        return (scheme === 'dark') ? this.darkModeBackgroundColor : this.lightModeBackgroundColor;
+    },
+    scale(scheme = store.state.app.scheme) {
+        return (scheme === 'dark') ? this.darkModeScaleColor : this.lightModeScaleColor;
+    },
+    widerLine(p5, x1, y1, x2, y2, weight = 2) {
+        this.temporaryState(p5, () => {
+            p5.strokeWeight(weight);
+            p5.line(x1, y1, x2, y2);
+        })
     }
 };
 

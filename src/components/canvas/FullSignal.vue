@@ -28,56 +28,57 @@ export default {
         this.p5 = new P5((p5) => {
             this.$c.setup(p5);
             p5.draw = () => {
-                p5.stroke(0);
-
-                p5.background(255);
+                p5.background(this.$c.background());
                 const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
 
-                p5.strokeWeight(2);
-                //adds scale.first for is for y-axis and the second one for x-axis
-                p5.line(canvasDimensions.x / 2 - canvasPadding, canvasPadding, canvasDimensions.x / 2 - canvasPadding, canvasDimensions.y - canvasPadding);
-                p5.strokeWeight(1);
-                const yAxisLabels = [...this.vertical_pool];
-                const xAxisLabels = this.horizontal_pool;
-                //this.$c.linearSpace(this.max, -this.max, 4);
-                yAxisLabels.splice(2, 0, 0);
-                for (let i = 0; i <= 20; i++) {
-                    if (i % 5 === 0 && i !== 10) {
-                        p5.text(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4), canvasDimensions.x / 2 - 40 - canvasPadding, canvasPadding + i * 10 + 3);
-                        p5.strokeWeight(2);
-                        p5.line(canvasDimensions.x / 2 - 5 - canvasPadding, canvasPadding + i * 10, canvasDimensions.x / 2 + 5 - canvasPadding, canvasPadding + i * 10);
-                        p5.strokeWeight(1);
-                        //console.log(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4));
-                    } else {
-                        p5.line(canvasDimensions.x / 2 - 5 - canvasPadding, canvasPadding + i * 10, canvasDimensions.x / 2 + 5 - canvasPadding, canvasPadding + i * 10);
+                p5.stroke(0);
+                this.$c.temporaryState(p5, () => {
+                    const color = this.$c.scale();
+                    p5.stroke(color);
+                    p5.strokeWeight(1);
+                    this.$c.widerLine(p5, canvasDimensions.x / 2 - canvasPadding, canvasPadding, canvasDimensions.x / 2 - canvasPadding, canvasDimensions.y - canvasPadding);
+                    // Top-bottom line
+                    this.$c.widerLine(p5, canvasDimensions.x / 2 - canvasPadding, canvasPadding, canvasDimensions.x / 2 - canvasPadding, canvasDimensions.y - canvasPadding);
+                    p5.strokeWeight(1);
+                    const yAxisLabels = [...this.vertical_pool];
+                    const xAxisLabels = this.horizontal_pool;
+                    //this.$c.linearSpace(this.max, -this.max, 4);
+                    yAxisLabels.splice(2, 0, 0);
+                    for (let i = 0; i <= 20; i++) {
+                        if (i % 5 === 0 && i !== 10) {
+                            p5.text(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4), canvasDimensions.x / 2 - 40 - canvasPadding, canvasPadding + i * 10 + 3);
+                            this.$c.widerLine(p5, canvasDimensions.x / 2 - 5 - canvasPadding, canvasPadding + i * 10, canvasDimensions.x / 2 + 5 - canvasPadding, canvasPadding + i * 10);
+                        } else {
+                            p5.line(canvasDimensions.x / 2 - 5 - canvasPadding, canvasPadding + i * 10, canvasDimensions.x / 2 + 5 - canvasPadding, canvasPadding + i * 10);
+                        }
                     }
-                }
-                for (let i = 0; i <= 60; i++) {
-                    if (i % 5 === 0 && i !== 30) {
-                        p5.text(`${xAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4), i * 10, canvasPadding + 125);
-                        p5.strokeWeight(2);
-                        p5.line(i * 10, canvasDimensions.y / 2 + 5, i * 10, canvasDimensions.y / 2 - 5);
-                        p5.strokeWeight(1);
-                    } else {
-                        p5.line(i * 10, canvasDimensions.y / 2 + 5, i * 10, canvasDimensions.y / 2 - 5);
+                    for (let i = 0; i <= 60; i++) {
+                        if (i % 5 === 0 && i !== 30) {
+                            p5.text(`${xAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4), i * 10, canvasPadding + 125);
+                            this.$c.widerLine(p5, i * 10, canvasDimensions.y / 2 + 5, i * 10, canvasDimensions.y / 2 - 5);
+                        } else {
+                            p5.line(i * 10, canvasDimensions.y / 2 + 5, i * 10, canvasDimensions.y / 2 - 5);
+                        }
                     }
-                }
-                //adds arrow on x-axis
-                p5.strokeWeight(2);
-                this.$c.drawArrow(p5, p5.createVector(0, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - 2 * canvasPadding, canvasDimensions.y / 2), 'black', 7, 0);
-                //adds arrow on y-axis
-                p5.fill(1);
-                p5.triangle(300, 43, 296, 50, 304, 50);
-                //adds texts on axis
-                p5.strokeWeight(1);
-                p5.text('x(t)', canvasDimensions.x / 2 - 5  - canvasPadding, 30);
-                p5.text('t', canvasDimensions.x - 25 - canvasPadding, canvasDimensions.y / 2 + 15);
+                    //adds texts on axis
+                    p5.text('x(t)', canvasDimensions.x / 2 - 5  - canvasPadding, 30);
+                    p5.text('t', canvasDimensions.x - 25 - canvasPadding, canvasDimensions.y / 2 + 15);
+                    //adds arrow on x-axis
+                    p5.strokeWeight(2);
+                    p5.fill(color);
+                    this.$c.drawArrow(p5, p5.createVector(0, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - 2 * canvasPadding, canvasDimensions.y / 2), color, 7, 0);
+                    //adds arrow on y-axis
+                    p5.triangle(300, 43, 296, 50, 304, 50);
+
+                });
 
                 p5.translate(0, 150);
-
                 p5.noFill();
                 p5.stroke(this.$c.colors[1]);
 
+                if(['gauss', 'square', 'sinc'].includes(this.type)) {
+                    p5.strokeWeight(2);
+                }
                 // Draw the shape
                 p5.beginShape();
                 if (this.isBinary) {
@@ -135,6 +136,10 @@ export default {
                 return [-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6];
             }
         },
+        type: {
+            type: String,
+            required: true
+        }
     }
 }
 </script>
