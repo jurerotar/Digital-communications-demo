@@ -1,10 +1,10 @@
 <template>
     <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white">{{ title }}</h2>
-    <p class = "my-1" v-if = "description !== ''">
-        <span class = "font-semibold transition-colors duration-300 dark:text-white">Opis:</span>{{ description }}
+    <p class = "my-1 transition-colors duration-300 dark:text-white" v-if = "description !== ''">
+        <span class = "font-semibold">Opis:</span>{{ description }}
     </p>
-    <p class = "my-1" v-if = "note !== ''">
-        <span class = "font-semibold transition-colors duration-300 dark:text-white">Opomba:</span>{{ note }}
+    <p class = "my-1 transition-colors duration-300 dark:text-white" v-if = "note !== ''">
+        <span class = "font-semibold">Opomba:</span>{{ note }}
     </p>
     <canvas-container>
         <div id="4-level-binary"></div>
@@ -35,7 +35,7 @@ export default {
             this.$c.setup(p5);
             p5.draw = () => {
                 p5.stroke(0);
-                p5.background(255);
+                p5.background(this.$c.background());
                 const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
 
                 p5.strokeWeight(2);

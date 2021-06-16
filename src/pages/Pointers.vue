@@ -129,7 +129,7 @@ export default {
                 const radius = 100 * (4 / Math.PI);
                 // Add context to allow custom canvas transformations
                 this.context = document.querySelector(`#${this.canvasId} canvas`)?.getContext('2d');
-                p5.background(255);
+                p5.background(this.$c.background());
 
                 p5.fill(0);
                 p5.stroke(0);
@@ -150,7 +150,7 @@ export default {
 
                 this.$c.temporaryState(p5, () => {
                     p5.strokeWeight(5);
-                    p5.stroke(255);
+                    p5.stroke(this.$c.background());
                     p5.line(this.offset.x * 2 + 31, this.offset.y, this.offset.x * 2 + 70, this.offset.y);
                     p5.line(this.offset.x, this.offset.y * 2 + 31, this.offset.x, this.offset.y * 2 + 70);
                 })

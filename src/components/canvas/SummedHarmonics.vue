@@ -52,7 +52,7 @@ export default {
             p5.draw = () => {
                 this.context = document.querySelector(`#${this.canvasId} canvas`).getContext('2d');
                 p5.stroke(0);
-                p5.background(255);
+                p5.background(this.$c.background());
                 const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
 
                 p5.strokeWeight(2);

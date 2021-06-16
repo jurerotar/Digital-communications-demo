@@ -30,6 +30,7 @@
                 :title="'Signal'"
                 :vertical_pool="[1, 0.5, -0.5, -1]"
                 :horizontal_pool="selectedObject.horizontal_pool"
+                :type = "selectedObject.key"
             >
             </full-signal>
             <spectrum-canvas
