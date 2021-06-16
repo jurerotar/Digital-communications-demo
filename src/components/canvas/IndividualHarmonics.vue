@@ -56,7 +56,6 @@ export default {
                 const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
                 p5.translate(0, canvasPadding);
                 p5.background(this.$c.background());
-                p5.stroke(0);
                 p5.strokeWeight(2);
 
                 p5.line(canvasDimensions.x / 2, -30, canvasDimensions.x / 2, canvasDimensions.y);

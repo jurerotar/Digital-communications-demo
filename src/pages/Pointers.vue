@@ -135,10 +135,14 @@ export default {
                 p5.stroke(0);
                 p5.strokeWeight(1);
 
-                p5.triangle(150, -1, 145, 11, 155, 11);
-                p5.triangle(801, 150, 790, 145, 790, 155);
-                p5.triangle(150, 800, 145, 790, 155, 790);
-                p5.triangle(330, 150, 320, 145, 320, 155);
+                this.$c.temporaryState(p5, () => {
+                    p5.stroke(color);
+                    p5.fill(color);
+                    p5.triangle(150, -1, 145, 11, 155, 11);
+                    p5.triangle(801, 150, 790, 145, 790, 155);
+                    p5.triangle(150, 800, 145, 790, 155, 790);
+                    p5.triangle(330, 150, 320, 145, 320, 155);
+                });
 
                 this.$c.temporaryState(p5, () => {
                     p5.strokeWeight(0.5);

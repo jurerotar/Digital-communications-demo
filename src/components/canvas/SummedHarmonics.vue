@@ -75,7 +75,6 @@ export default {
 
                 p5.translate(0, this.offset.y + canvasPadding / 2);
 
-
                 p5.noFill();
                 p5.strokeWeight(3);
 
