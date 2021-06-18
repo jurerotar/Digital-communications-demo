@@ -16,7 +16,7 @@
                     Poglej projekt na GitHubu
                 </p>
                 <a
-                    rel="noopener" href="https://github.com/jurerotar/digital-communication-demo" target="_blank"
+                    rel="noopener" href="https://github.com/jurerotar/digital-communications-demo" target="_blank"
                     class="github-star mt-4 inline-block text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-gray-800 active:bg-gray-700 uppercase text-sm shadow hover:shadow-lg ease-linear transition-all duration-150"
                 >
                     GITHUB
