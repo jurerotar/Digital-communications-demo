@@ -125,30 +125,37 @@ export default {
             }
 
             p5.draw = () => {
+                const color = this.$c.scale();
                 const canvasPadding = this.$c.canvasPadding;
                 const radius = 100 * (4 / Math.PI);
                 // Add context to allow custom canvas transformations
-                this.context = document.querySelector(`#${this.canvasId} canvas`)?.getContext('2d');
+                this.context = document.querySelector(`#${this.canvasId} canvas`).getContext('2d');
                 p5.background(this.$c.background());
 
                 p5.fill(0);
-                p5.stroke(0);
                 p5.strokeWeight(1);
 
-                p5.triangle(150, -1, 145, 11, 155, 11);
-                p5.triangle(801, 150, 790, 145, 790, 155);
-                p5.triangle(150, 800, 145, 790, 155, 790);
-                p5.triangle(330, 150, 320, 145, 320, 155);
+                this.$c.temporaryState(p5, () => {
+                    p5.stroke(color);
+                    p5.fill(color);
+                    p5.triangle(150, -1, 145, 11, 155, 11);
+                    p5.triangle(801, 150, 790, 145, 790, 155);
+                    p5.triangle(150, 800, 145, 790, 155, 790);
+                    p5.triangle(330, 150, 320, 145, 320, 155);
+                });
 
                 this.$c.temporaryState(p5, () => {
+                    p5.stroke(color);
                     p5.strokeWeight(0.5);
                     p5.textSize(14);
+                    p5.fill(color)
                     this.texts.forEach(el => p5.text(el.text, el.x, el.y));
-                })
+                    this.$c.drawAxis(p5, this.offset, this.dimensions);
+                });
 
-                this.$c.drawAxis(p5, this.offset, this.dimensions);
 
                 this.$c.temporaryState(p5, () => {
+                    p5.stroke(color);
                     p5.strokeWeight(5);
                     p5.stroke(this.$c.background());
                     p5.line(this.offset.x * 2 + 31, this.offset.y, this.offset.x * 2 + 70, this.offset.y);
@@ -156,6 +163,7 @@ export default {
                 })
 
                 this.$c.drawDashed(this.context, () => {
+                    p5.stroke(color);
                     p5.line(277, 0, 277, this.dimensions.y);
                     p5.line(0, 277, this.dimensions.x, 277);
                     p5.line(23, 0, 23, this.dimensions.y);

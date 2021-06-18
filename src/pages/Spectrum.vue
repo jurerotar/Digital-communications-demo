@@ -18,10 +18,10 @@
             <button-container>
                 <styled-button
                     class="text-white w-fit-content font-bold py-2 px-4 mb-2 mr-2 rounded outline-none duration-300 transition-colors h-12"
-                    :class="[frequencyValue === frequency.key ? 'dark:bg-blue-500 bg-blue-500': '']"
-                    @click="changeFrequency(frequency.key)"
-                    v-for="frequency in frequencies" :key="frequency.key">
-                    {{ frequency.label }}
+                    :class="[period === periodObject.key ? 'dark:bg-blue-500 bg-blue-500': '']"
+                    @click="changePeriod(periodObject.key)"
+                    v-for="periodObject in periods" :key="periodObject.key">
+                    {{ periodObject.label }}
                 </styled-button>
             </button-container>
             <full-signal
@@ -38,7 +38,7 @@
                 :data="output"
                 :title="'Spekter'"
                 :type="selectedObject.key"
-                :frequency="frequency"
+                :period="period"
                 :description="selectedObject.spectrumGraphTexts.description"
                 :note="selectedObject.spectrumGraphTexts.note"
             >
@@ -48,7 +48,7 @@
                 :data="output"
                 :title="'Spekter [dB]'"
                 :type="selectedObject.key"
-                :frequency="frequency"
+                :period="period"
                 :description="selectedObject.logarithmGraphTexts.description"
                 :note="selectedObject.logarithmGraphTexts.note"
             >
@@ -75,41 +75,42 @@ export default {
             selected: 'sin',
             fftSize: 2 ** 11,
             fft: null,
-            frequencyValue: 1,
+            period: 1,
+            samplingFrequency: 16.66664,
             /** @type {Array<Signal>} */
             signalShapes: [
                 {
                     label: 'Sinusni',
                     key: 'sin',
-                    fn: () => this.createEmptyArrayOfFFTSize().map(t => -Math.sin(t * this.frequency ** -1 * Math.PI * 0.12)),
+                    fn: () => this.createEmptyArrayOfFFTSize().map((n) => -Math.sin(2 * Math.PI * n * this.frequency / this.samplingFrequency)),
                     horizontal_pool: [-18, -15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15, 18],
                     spectrumGraphTexts: {
-                        description: '',
-                        note: 'Prikazan je spekter signala omejenega na intervalu od 0 do 10^11/',
+                        description: 'Vrednost grafa v točkah, ki niso 1, je enak 0, ker je signal neskončno dolg. Če signal ne bi bil neskončno dolg, bi prehod bil zvezen.',
+                        note: 'Prikazan je spekter signala omejenega na intervalu od [0 do 2^11 / 16.667]. Vzorčna frekvenca torej znaša 16.667 Hz.',
                     },
                     logarithmGraphTexts: {
                         description: '',
-                        note: 'Vrednosti grafa v točkah, ki niso 1, bi morale biti -∞, vendar za izračun uporabljamo zgolj 2^11 vrednosti.',
+                        note: 'Vrednosti grafa v točkah, ki niso 1, bi morale biti -∞, če bi dejansko imeli neskončno dolg signal. Vendar, ker za izračun uporabljamo zgolj 2^11 vrednosti, opazimo prehod.',
                     }
                 },
                 {
                     label: 'Kosinusni',
                     key: 'cos',
-                    fn: () => this.createEmptyArrayOfFFTSize().map(t => -Math.cos(t * this.frequency ** -1 * Math.PI * 0.12)),
+                    fn: () => this.createEmptyArrayOfFFTSize().map((n) => -Math.cos(2 * Math.PI * n * this.frequency / this.samplingFrequency)),
                     horizontal_pool: [-18, -15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15, 18],
                     spectrumGraphTexts: {
-                        description: '',
-                        note: 'Vrednost grafa v točkah, ki niso 1, je enak 0, ker je signal neskončno dolg. Če signal ne bi bil neskončno dolg, bi prehod bil zvezen.',
+                        description: 'Vrednost grafa v točkah, ki niso 1, je enak 0, ker je signal neskončno dolg. Če signal ne bi bil neskončno dolg, bi prehod bil zvezen.',
+                        note: 'Prikazan je spekter signala omejenega na intervalu od [0 do 2^11 / 16.667]. Vzorčna frekvenca torej znaša 16.667 Hz.',
                     },
                     logarithmGraphTexts: {
                         description: '',
-                        note: 'Vrednosti grafa v točkah, ki niso 1, bi morale biti -∞, vendar za izračun uporabljamo zgolj 2^11 vrednosti.',
+                        note: 'Vrednosti grafa v točkah, ki niso 1, bi morale biti -∞, če bi dejansko imeli neskončno dolg signal. Vendar, ker za izračun uporabljamo zgolj 2^11 vrednosti, opazimo prehod.',
                     }
                 },
                 {
                     label: 'Kvadratni',
                     key: 'square',
-                    fn: () => Array(Math.trunc(41 * this.frequency)).fill(-1),
+                    fn: () => Array(Math.trunc(41 * this.period)).fill(-1),
                     spectrumGraphTexts: {
                         description: '',
                         note: '',
@@ -124,15 +125,15 @@ export default {
                     key: 'gauss',
                     fn: () => {
                         const gauss = [0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0002, 0.0002, 0.0002, 0.0003, 0.0004, 0.0004, 0.0005, 0.0006, 0.0007, 0.0009, 0.0010, 0.0012, 0.0015, 0.0017, 0.0020, 0.0024, 0.0028, 0.0033, 0.0038, 0.0044, 0.0051, 0.0060, 0.0069, 0.0079, 0.0091, 0.0104, 0.0119, 0.0136, 0.0154, 0.0175, 0.0198, 0.0224, 0.0252, 0.0283, 0.0317, 0.0355, 0.0396, 0.0440, 0.0488, 0.0540, 0.0596, 0.0656, 0.0721, 0.0790, 0.0863, 0.0940, 0.1023, 0.1109, 0.1200, 0.1295, 0.1394, 0.1497, 0.1604, 0.1714, 0.1826, 0.1942, 0.2059, 0.2179, 0.2299, 0.2420, 0.2541, 0.2661, 0.2780, 0.2897, 0.3011, 0.3123, 0.3230, 0.3332, 0.3429, 0.3521, 0.3605, 0.3683, 0.3752, 0.3814, 0.3867, 0.3910, 0.3945, 0.3970, 0.3984, 0.3989, 0.3989, 0.3984, 0.3970, 0.3945, 0.3910, 0.3867, 0.3814, 0.3752, 0.3683, 0.3605, 0.3521, 0.3429, 0.3332, 0.3230, 0.3123, 0.3011, 0.2897, 0.2780, 0.2661, 0.2541, 0.2420, 0.2299, 0.2179, 0.2059, 0.1942, 0.1826, 0.1714, 0.1604, 0.1497, 0.1394, 0.1295, 0.1200, 0.1109, 0.1023, 0.0940, 0.0863, 0.0790, 0.0721, 0.0656, 0.0596, 0.0540, 0.0488, 0.0440, 0.0396, 0.0355, 0.0317, 0.0283, 0.0252, 0.0224, 0.0198, 0.0175, 0.0154, 0.0136, 0.0119, 0.0104, 0.0091, 0.0079, 0.0069, 0.0060, 0.0051, 0.0044, 0.0038, 0.0033, 0.0028, 0.0024, 0.0020, 0.0017, 0.0015, 0.0012, 0.0010, 0.0009, 0.0007, 0.0006, 0.0005, 0.0004, 0.0004, 0.0003, 0.0002, 0.0002, 0.0002, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001].map((el) => -el * 3);
-                        if (this.frequency > 1) {
-                            return gauss.map(el => Array(Math.trunc(this.frequency)).fill(el)).flat();
+                        if (this.period > 1) {
+                            return gauss.map(el => Array(Math.trunc(this.period)).fill(el)).flat();
                         }
-                        if (this.frequency < 1) {
-                            return [...gauss.filter((el, index) => index % Math.trunc(this.frequency ** -1) === 0)];
+                        if (this.period < 1) {
+                            return [...gauss.filter((el, index) => index % Math.trunc(this.frequency) === 0)];
                         }
                         return gauss;
                     },
-                    frequencies: [
+                    periods: [
                         {label: '1/4', key: 0.25},
                         {label: '1/2', key: 0.5},
                         {label: '1', key: 1},
@@ -151,7 +152,7 @@ export default {
                 {
                     label: 'Sinc',
                     key: 'sinc',
-                    fn: () => this.createEmptyArrayOfFFTSize().map(t => (t === 0) ? -1 : -Math.sin(t * this.frequency ** -1 * 0.062) / (t * this.frequency ** -1 * 0.062)),
+                    fn: () => this.createEmptyArrayOfFFTSize().map(t => (t === 0) ? -1 : -Math.sin(t * this.frequency * 0.062) / (t * this.frequency * 0.062)),
                     spectrumGraphTexts: {
                         description: '',
                         note: '',
@@ -173,7 +174,7 @@ export default {
          * @param key {string} - possible values: sin, cos, gauss, square
          */
         changeSelected(key) {
-            this.frequencyValue = 1;
+            this.period = 1;
             this.selected = key;
         },
         /**
@@ -194,11 +195,11 @@ export default {
             return array;
         },
         /**
-         * Updates frequencyValue property with currently selected value
-         * @param {number} value
+         * Updates period property with currently selected value
+         * @param {number} period
          */
-        changeFrequency(value) {
-            this.frequencyValue = value;
+        changePeriod(period) {
+            this.period = period;
         },
 
         /**
@@ -222,15 +223,8 @@ export default {
         selectedObject() {
             return this.signalShapes.find(el => el.key === this.selected);
         },
-        /**
-         * Returns current frequency value
-         * @returns {number}
-         */
-        frequency() {
-            return this.frequencyValue;
-        },
-        frequencies() {
-            return ('frequencies' in this.selectedObject) ? this.selectedObject.frequencies :
+        periods() {
+            return ('periods' in this.selectedObject) ? this.selectedObject.periods :
                 [
                     {label: '1/4', key: 0.25},
                     {label: '1/2', key: 0.5},
@@ -238,6 +232,9 @@ export default {
                     {label: '2', key: 2},
                     {label: '4', key: 4},
                 ];
+        },
+        frequency() {
+            return this.period ** -1;
         },
         /**
          * Returns an array of numbers based on currently selected signal shape

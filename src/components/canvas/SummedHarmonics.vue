@@ -50,35 +50,33 @@ export default {
         this.p5 = new P5((p5) => {
             this.$c.setup(p5);
             p5.draw = () => {
+                const color = this.$c.scale();
                 this.context = document.querySelector(`#${this.canvasId} canvas`).getContext('2d');
-                p5.stroke(0);
                 p5.background(this.$c.background());
                 const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
-
-                p5.strokeWeight(2);
-                p5.line(canvasPadding, canvasPadding - 30, canvasPadding, canvasDimensions.y - canvasPadding + 20);
-                this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - 30, canvasDimensions.y / 2), 'black', 7, 0);
-                //adds arrow on y-axis
-                p5.fill(1);
-                p5.triangle(50, 20, 46, 27, 54, 27);
-                //adds texts on axis
-                p5.strokeWeight(1);
-                p5.text('t', canvasDimensions.x - 15, canvasDimensions.y / 2 + 3);
-                this.texts.forEach(el => p5.text(el.text, el.x, el.y));
-
-
-                // Dashed lines to show values
-                this.$c.drawDashed(this.context, () => {
-                    p5.line(canvasPadding, canvasPadding + 28, canvasDimensions.x, canvasPadding + 28);
-                    p5.line(canvasPadding, canvasDimensions.y - canvasPadding - 28, canvasDimensions.x, canvasDimensions.y - canvasPadding - 28);
+                this.$c.temporaryState(p5, () => {
+                    p5.stroke(color);
+                    p5.strokeWeight(2);
+                    p5.line(canvasPadding, canvasPadding - 30, canvasPadding, canvasDimensions.y - canvasPadding + 20);
+                    this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - 30, canvasDimensions.y / 2), color, 7, 0);
+                    //adds arrow on y-axis
+                    p5.fill(color);
+                    p5.triangle(50, 20, 46, 27, 54, 27);
+                    //adds texts on axis
+                    p5.strokeWeight(1);
+                    p5.text('t', canvasDimensions.x - 15, canvasDimensions.y / 2 + 3);
+                    this.texts.forEach(el => p5.text(el.text, el.x, el.y));
+                    // Dashed lines to show values
+                    this.$c.drawDashed(this.context, () => {
+                        p5.line(canvasPadding, canvasPadding + 28, canvasDimensions.x, canvasPadding + 28);
+                        p5.line(canvasPadding, canvasDimensions.y - canvasPadding - 28, canvasDimensions.x, canvasDimensions.y - canvasPadding - 28);
+                    });
                 });
 
                 p5.translate(0, this.offset.y + canvasPadding / 2);
 
-
                 p5.noFill();
                 p5.strokeWeight(3);
-
                 let y = 0;
 
                 /**

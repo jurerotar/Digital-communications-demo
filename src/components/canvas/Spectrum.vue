@@ -105,7 +105,7 @@ export default {
             let data = [...this.data];
             const max = Math.max(...data);
             if(this.isSinusoid) {
-                const zeros = Array(Math.trunc(50 / this.frequency)).fill(0);
+                const zeros = Array(Math.trunc(50 / this.period)).fill(0);
                 const maxIndex = data.findIndex(el => el === max);
                 data = data.filter((el, index) => index >= maxIndex);
                 data.unshift(...zeros);
@@ -135,7 +135,7 @@ export default {
             type: String,
             required: true
         },
-        frequency: {
+        period: {
             type: Number,
             required: true
         },

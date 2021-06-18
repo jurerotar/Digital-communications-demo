@@ -31,7 +31,9 @@ module.exports = {
         },
     },
     variants: {
-        extend: {},
+        extend: {
+            invert: ['dark']
+        },
     },
     plugins: [],
 }

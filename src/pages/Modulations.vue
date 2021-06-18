@@ -199,7 +199,7 @@ export default {
                     label: '4ASK',
                     key: '4ask',
                     description: '4ASK modulacijo pridobimo z množenjem digitalnega niza {-3,-1,1,3} in harmoničnega nosilca.',
-                    note: '',
+                    note: '4ASK modulacija sicer predpostavlja 4 različne amplitude nivoje. Izkaže pa se, da je to neekonomično, ker porabi več energije. Zato v praksi 4ASK izvedemo z dvemi amplitudnimi nivoji in dvemi fazami.',
                     hasCarrier: true,
                     hasSineModulation: false,
                     hasBinaryLevel1: false,
@@ -287,7 +287,7 @@ export default {
             const FSK4Multipliers = {'3': 5, '1': 15, '-1': 30, '-3': 60};
 
             const ASK2Amplitudes = {'0': 0, '-1': -1};
-            const ASK4Amplitudes = {'3': 0.5, '1': 1, '-1': 2, '-3': 3};
+            const ASK4Amplitudes = {'3': 3, '1': 1, '-1': -1, '-3': -3};
 
             const [carrier, sine, binary1Level, binary2Level, binary4Level, time] = [
                 this.carrierSignalValues,

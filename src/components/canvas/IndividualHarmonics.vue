@@ -53,50 +53,43 @@ export default {
                 p5.textFont('Montserrat');
             }
             p5.draw = () => {
+                const color = this.$c.scale();
                 const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
                 p5.translate(0, canvasPadding);
                 p5.background(this.$c.background());
-                p5.stroke(0);
                 p5.strokeWeight(2);
 
-                p5.line(canvasDimensions.x / 2, -30, canvasDimensions.x / 2, canvasDimensions.y);
-                p5.strokeWeight(1);
-                const yAxisLabels = [0.75, 0.5, 0.25, 0, -0.25, -0.5, -0.75];
-                const xAxisLabels = [-1.5, -1.25, '  -1', -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, '   1', 1.25, 1.5];
-                for (let i = 0; i <= 30; i++) {
-                    if (i % 5 === 0 && i !== 15) {
-                        p5.text(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 5), canvasDimensions.x / 2 - 40, i * 10 + 3);
-                        this.$c.temporaryState(p5, () => {
-                            p5.strokeWeight(2);
+                this.$c.temporaryState(p5, () => {
+                    p5.stroke(color);
+                    p5.line(canvasDimensions.x / 2, -30, canvasDimensions.x / 2, canvasDimensions.y);
+                    p5.strokeWeight(1);
+                    const yAxisLabels = [0.75, 0.5, 0.25, 0, -0.25, -0.5, -0.75];
+                    const xAxisLabels = [-1.5, -1.25, '  -1', -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, '   1', 1.25, 1.5];
+                    for (let i = 0; i <= 30; i++) {
+                        if (i % 5 === 0 && i !== 15) {
+                            p5.text(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 5), canvasDimensions.x / 2 - 40, i * 10 + 3);
+                            this.$c.widerLine(p5, canvasDimensions.x / 2 - 5, i * 10, canvasDimensions.x / 2 + 5, i * 10);
+                        } else {
                             p5.line(canvasDimensions.x / 2 - 5, i * 10, canvasDimensions.x / 2 + 5, i * 10);
-                        });
-                    } else {
-                        p5.line(canvasDimensions.x / 2 - 5, i * 10, canvasDimensions.x / 2 + 5, i * 10);
+                        }
                     }
-                }
-                for (let i = 0; i <= 60; i++) {
-                    if (i % 5 === 0 && i !== 30) {
-                        p5.text(`${xAxisLabels[Math.trunc(i / 5)]}`.substring(0, 5), i * 10 + canvasPadding - 15, canvasPadding + 125);
-                        this.$c.temporaryState(p5, () => {
-                            p5.strokeWeight(2);
+                    for (let i = 0; i <= 60; i++) {
+                        if (i % 5 === 0 && i !== 30) {
+                            p5.text(`${xAxisLabels[Math.trunc(i / 5)]}`.substring(0, 5), i * 10 + canvasPadding - 15, canvasPadding + 125);
+                            this.$c.widerLine(p5, canvasPadding + i * 10, canvasDimensions.y / 2 + 5, canvasPadding + i * 10, canvasDimensions.y / 2 - 5);
+                        } else {
                             p5.line(canvasPadding + i * 10, canvasDimensions.y / 2 + 5, canvasPadding + i * 10, canvasDimensions.y / 2 - 5);
-
-                        });
-                    } else {
-                        p5.line(canvasPadding + i * 10, canvasDimensions.y / 2 + 5, canvasPadding + i * 10, canvasDimensions.y / 2 - 5);
+                        }
                     }
-                }
-
-                //adds arrow on x-axis
-                p5.strokeWeight(2);
-                this.$c.drawArrow1(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - canvasPadding, 0));
-                //adds arrow on y-axis
-                p5.fill(1);
-                p5.triangle(350, -30, 346, -20, 354, -20);
-                //adds texts on axis
-                p5.strokeWeight(1);
-                p5.text('Im', canvasDimensions.x / 2 - 6, -38);
-                p5.text('Re', canvasDimensions.x - 25, canvasDimensions.y / 2 + 15);
+                    p5.text('Im', canvasDimensions.x / 2 - 6, -38);
+                    p5.text('Re', canvasDimensions.x - 25, canvasDimensions.y / 2 + 15);
+                    //adds arrow on x-axis
+                    p5.strokeWeight(2);
+                    this.$c.drawArrow1(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - canvasPadding, 0));
+                    //adds arrow on y-axis
+                    p5.fill(color);
+                    p5.triangle(350, -30, 346, -20, 354, -20);
+                });
 
                 p5.translate(0, 150);
                 p5.noFill();
