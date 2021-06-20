@@ -27,10 +27,11 @@ const canvas = {
     /**
      * Creates canvas with fixed dimensions
      * @param {P5} p5
+     * @param {object} options
      */
-    setup(p5) {
+    setup(p5, options = {}) {
         const {x: x, y: y} = this.dimensions;
-        const frameRate = this.frameRate;
+        const frameRate = Object.prototype.hasOwnProperty.call(options, 'frameRate') ? options.frameRate : this.frameRate;
         p5.setup = () => {
             p5.createCanvas(x, y);
             p5.frameRate(frameRate);

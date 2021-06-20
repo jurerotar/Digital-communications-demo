@@ -118,7 +118,7 @@ export default {
                     label: 'Gauss',
                     key: 'gauss',
                     drawingValues: () => this.emptyArray.map(t => Math.E ** (-2 * (t * 0.0165 * this.frequency) ** 2) * -this.unitBox(t * this.frequency * 0.0005)),
-                    spectrumValues: () => this.emptyArray.map(t => Math.E ** (-2 * (t * 0.042 * this.frequency) ** 2) * -this.unitBox(t * this.frequency * 0.0005)),
+                    spectrumValues: () => this.emptyArray.map(t => Math.E ** (-2 * (t * 0.028 * this.frequency) ** 2) * -this.unitBox(t * this.frequency * 0.0005)),
                     pulseLengths: [
                         {label: '1/4', key: 0.25},
                         {label: '1/2', key: 0.5},

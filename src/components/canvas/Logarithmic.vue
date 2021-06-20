@@ -27,35 +27,12 @@ export default {
                 x: 0,
                 y: 250
             },
-            /** @type {Array<LogarithmicModifiers>} */
-            modifiers: [
-                {
-                    type: "cos",
-                    offset: 180,
-                    amplitude: 1,
-                },
-                {
-                    type: "square",
-                    offset: 50,
-                    amplitude: 1
-                },
-                {
-                    type: "sinc",
-                    offset: 50,
-                    amplitude: 1
-                },
-                {
-                    type: "gauss",
-                    offset: 50,
-                    amplitude: 2
-                }
-            ]
         }
     },
     mounted() {
         // Initiate new P5 instance and create canvas
         this.p5 = new P5((p5) => {
-            this.$c.setup(p5);
+            this.$c.setup(p5, {frameRate: 1});
             p5.draw = () => {
                 const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
                 p5.background(this.$c.background());
@@ -103,7 +80,7 @@ export default {
                 p5.strokeWeight(2);
                 // Draw the shape
                 p5.beginShape();
-                this.dataInView.forEach((y, x) => p5.vertex(x + canvasPadding, y));
+                this.normalizedData.forEach((y, x) => p5.vertex(x + canvasPadding, y));
                 p5.endShape();
             }
             p5.removeCanvas = () => p5.remove();
@@ -114,37 +91,10 @@ export default {
         this.p5.removeCanvas();
     },
     computed: {
-        dataInView() {
-            // Charts are not correct, so we modify them a bit
-            const modifiers = this.modifiers.find(el => el.type === this.type);
-            // Multiply each value with defined amplitude and offset
-            let data = [...this.normalizedData].map(el => el * modifiers.amplitude + modifiers.offset);
-            // Sinusoid functions change position based on frequency, so we apply additional offset
-            if(this.isSinusoid) {
-                data = data.map(el => el - 130);
-            }
-            // Remove values that are to low so they dont overflow the charts
-            if(this.type === 'gauss') {
-                data = data.filter(el => el <= 260 + 5 * this.period);
-            }
-            return data;
-        },
         normalizedData() {
             let data = [...this.data];
-            // Sinusoids are created with a higher frequency, so we can actually display the spectrum.
-            // That means, the peak is right of where it should be. We remove the values from the left until peak matches
-            if(this.isSinusoid) {
-                const max = Math.max(...data);
-                const maxIndex = data.findIndex(el => el === max);
-                const correctPeak = Math.trunc(50 / this.period);
-                data = data.filter((el, index) => index >= maxIndex - correctPeak);
-            }
             data.length = 600;
-            // Apply logarithm
-            return data.map(el => -20 * Math.log(el / data[0]));
-        },
-        isSinusoid() {
-            return ['sin', 'cos'].includes(this.type);
+            return data.map(el => -20 * Math.log(el / data[0]) + 50);
         },
     },
     props: {

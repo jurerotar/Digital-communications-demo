@@ -32,7 +32,7 @@ export default {
     mounted() {
         // Initiate new P5 instance and create canvas
         this.p5 = new P5((p5) => {
-            this.$c.setup(p5);
+            this.$c.setup(p5, {frameRate: 1});
             p5.draw = () => {
                 const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
                 p5.background(this.$c.background());
@@ -43,7 +43,7 @@ export default {
                     p5.stroke(color);
                     p5.strokeWeight(1);
                     this.$c.widerLine(p5, canvasPadding, canvasPadding, canvasPadding, canvasDimensions.y - canvasPadding);
-                    const yAxisLabels = this.$f.linearSpace(1 * this.pulseLength ** -1, 0, 5);
+                    const yAxisLabels = this.$f.linearSpace(1 * this.pulseLength, 0, 5);
 
                     for (let i = 0; i <= 20; i++) {
                         // Make each fifth line labeled and wider
