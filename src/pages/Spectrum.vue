@@ -9,7 +9,7 @@
             <button-container>
                 <styled-button
                     :class="{'dark:bg-blue-500 bg-blue-500': pulse.key === shape.key}"
-                    @click="changeSelected(shape.key)"
+                    @click="changePulse(shape.key)"
                     v-for="shape in pulseShapes" :key="shape.key">
                     {{ shape.label }}
                 </styled-button>
@@ -26,7 +26,7 @@
             <full-signal
                 :canvas_id="'spectrum-original-signal'"
                 :data="canvasInput"
-                :title="'Signal'"
+                :title="'Impulz'"
                 :vertical_pool="[1, 0.5, -0.5, -1]"
                 :horizontal_pool="pulse.horizontal_pool"
                 :type = "pulse.key"
@@ -73,7 +73,7 @@ export default {
         return {
             pulseShape: 'cos',
             fftSize: 2 ** 11,
-            emptyArray: [...[...Array(this.fftSize / 2).keys()].map(el => el * -1 - 1).reverse(), ...Array(this.fftSize / 2).keys()],
+            emptyArray: null,
             fft: null,
             pulseLength: 1,
             /** @type {Array<Pulse>} */
@@ -153,16 +153,13 @@ export default {
         }
     },
     methods: {
-        createEmptyArrayOfFFTSize() {
-            return [...[...Array(this.fftSize / 2).keys()].map(el => el * -1 - 1).reverse(), ...Array(this.fftSize / 2).keys()];
-        },
         /**
-         * Sets spectrum type in the store
-         * @param key {string} - possible values: sin, cos, gauss, square
+         * Set pulse type
+         * @param key {string} - possible values: cos, gauss, square, sinc
          */
-        changeSelected(key) {
+        changePulse(key) {
             this.pulseLength = 1;
-            this.selected = key;
+            this.pulseShape = key;
         },
         /**
          * Updates pulseLength property with currently selected value
@@ -180,26 +177,32 @@ export default {
         },
 
         /**
+         * Returns an array with only $size values around the middle
          * @param {number[]} array
          * @returns {number[]}
          **/
         cutArray(array) {
-            return array.filter((el, index) => (index >= (array.length / 2 - 300) && index <= (array.length / 2 + 300)));
+            const size = 600;
+            return array.filter((el, index) => (index >= (array.length / 2 - size / 2) && index <= (array.length / 2 + size / 2)));
         }
 
     },
     created() {
         const FFT = require('fft.js');
         this.fft = new FFT(this.fftSize);
+        this.emptyArray = [...[...Array(this.fftSize / 2).keys()].map(el => el * -1 - 1).reverse(), ...Array(this.fftSize / 2).keys()];
     },
     computed: {
         /**
-         * Returns currently selected signal shape
-         * @returns {Signal}
+         * Returns currently selected pulse shape object
+         * @returns {Pulse}
          */
         pulse() {
             return this.pulseShapes.find(el => el.key === this.pulseShape);
         },
+        /**
+         * @returns {Array<pulseLengths>}
+         */
         pulseLengths() {
             return ('pulseLengths' in this.pulse) ? this.pulse.pulseLengths :
                 [{label: '1/4', key: 0.25}, {label: '1/2', key: 0.5}, {label: '1', key: 1}, {label: '2', key: 2}, {label: '4', key: 4}];
