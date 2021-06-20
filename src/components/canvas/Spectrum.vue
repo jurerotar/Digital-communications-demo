@@ -43,7 +43,7 @@ export default {
                     p5.stroke(color);
                     p5.strokeWeight(1);
                     this.$c.widerLine(p5, canvasPadding, canvasPadding, canvasPadding, canvasDimensions.y - canvasPadding);
-                    const yAxisLabels = this.$f.linearSpace(1 * this.pulseLength ** -1, 0, 5);
+                    const yAxisLabels = this.$f.linearSpace(1 * this.pulseLength, 0, 5);
 
                     for (let i = 0; i <= 20; i++) {
                         // Make each fifth line labeled and wider
