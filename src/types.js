@@ -20,11 +20,12 @@
  */
 
 /**
- * @typedef {Object} Signal
+ * @typedef {Object} Pulse
  * @property {string} label
  * @property {string} key
- * @property {function} fn
- * @property {Frequency} frequencies
+ * @property {function} drawingValues
+ * @property {function} spectrumValues
+ * @property {PulseLength[]} pulseLengths
  * @property {number[]} horizontal_pool
  * @property {SignalTexts} spectrumGraphTexts
  * @property {SignalTexts} logarithmGraphTexts
@@ -38,7 +39,7 @@
 
 
 /**
- * @typedef {Object} Frequency
+ * @typedef {Object} PulseLength
  * @property {string} label
  * @property {number} key
  */
@@ -67,7 +68,6 @@
  * @typedef {Object} LogarithmicModifiers
  * @property {number} offset
  * @property {number} amplitude
- * @property {boolean} frequencyOffsets
  */
 
 /**

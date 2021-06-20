@@ -43,12 +43,12 @@ export default {
                     p5.stroke(color);
                     p5.strokeWeight(1);
                     this.$c.widerLine(p5, canvasPadding, canvasPadding, canvasPadding, canvasDimensions.y - canvasPadding);
-                    const yAxisLabels = this.$f.linearSpace(1, 0, 5);
+                    const yAxisLabels = this.$f.linearSpace(1 * this.pulseLength ** -1, 0, 5);
 
                     for (let i = 0; i <= 20; i++) {
                         // Make each fifth line labeled and wider
                         if (i % 5 === 0) {
-                            p5.text(yAxisLabels[Math.trunc(i / 5)], canvasPadding - 40, canvasPadding + i * 10 + 3);
+                            p5.text(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4), canvasPadding - 40, canvasPadding + i * 10 + 3);
                             this.$c.widerLine(p5, canvasPadding - 5, canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10);
                             continue;
                         }
@@ -116,7 +116,7 @@ export default {
             type: String,
             required: true
         },
-        period: {
+        pulseLength: {
             type: Number,
             required: true
         },

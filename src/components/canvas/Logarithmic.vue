@@ -164,7 +164,7 @@ export default {
             type: String,
             required: true
         },
-        period: {
+        pulseLength: {
             type: Number,
             required: true
         },

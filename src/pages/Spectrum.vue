@@ -5,23 +5,22 @@
             <collapsible>
                 <theory-spectrum></theory-spectrum>
             </collapsible>
-            <h2 class="font-semibold text-xl mb-2 transition-colors duration-300 dark:text-white">Oblika</h2>
+            <h2 class="font-semibold text-xl mb-2 transition-colors duration-300 dark:text-white">Oblika impulza</h2>
             <button-container>
                 <styled-button
-                    :class="[selectedObject.key === shape.key ? 'dark:bg-blue-500 bg-blue-500': '']"
+                    :class="{'dark:bg-blue-500 bg-blue-500': pulse.key === shape.key}"
                     @click="changeSelected(shape.key)"
-                    v-for="shape in signalShapes" :key="shape.key">
+                    v-for="shape in pulseShapes" :key="shape.key">
                     {{ shape.label }}
                 </styled-button>
             </button-container>
-            <h2 class="font-semibold text-xl mb-2 transition-colors duration-300 dark:text-white">Število period</h2>
+            <h2 class="font-semibold text-xl mb-2 transition-colors duration-300 dark:text-white">Dolžina impulza (T)</h2>
             <button-container>
                 <styled-button
-                    class="text-white w-fit-content font-bold py-2 px-4 mb-2 mr-2 rounded outline-none duration-300 transition-colors h-12"
-                    :class="[period === periodObject.key ? 'dark:bg-blue-500 bg-blue-500': '']"
-                    @click="changePeriod(periodObject.key)"
-                    v-for="periodObject in periods" :key="periodObject.key">
-                    {{ periodObject.label }}
+                    :class="{'dark:bg-blue-500 bg-blue-500': pulseLength === length.key}"
+                    @click="changePulseLength(length.key)"
+                    v-for="length in pulseLengths" :key="length.key">
+                    {{ length.label }}
                 </styled-button>
             </button-container>
             <full-signal
@@ -29,28 +28,28 @@
                 :data="canvasInput"
                 :title="'Signal'"
                 :vertical_pool="[1, 0.5, -0.5, -1]"
-                :horizontal_pool="selectedObject.horizontal_pool"
-                :type = "selectedObject.key"
+                :horizontal_pool="pulse.horizontal_pool"
+                :type = "pulse.key"
             >
             </full-signal>
             <spectrum-canvas
                 :canvas_id="'spectrum-signal-spectrum'"
                 :data="output"
                 :title="'Spekter'"
-                :type="selectedObject.key"
-                :period="period"
-                :description="selectedObject.spectrumGraphTexts.description"
-                :note="selectedObject.spectrumGraphTexts.note"
+                :type="pulse.key"
+                :pulseLength="pulseLength"
+                :description="pulse.spectrumGraphTexts.description"
+                :note="pulse.spectrumGraphTexts.note"
             >
             </spectrum-canvas>
             <logarithmic
                 :canvas_id="'spectrum-signal-logarithmic'"
                 :data="output"
                 :title="'Spekter [dB]'"
-                :type="selectedObject.key"
-                :period="period"
-                :description="selectedObject.logarithmGraphTexts.description"
-                :note="selectedObject.logarithmGraphTexts.note"
+                :type="pulse.key"
+                :pulseLength="pulseLength"
+                :description="pulse.logarithmGraphTexts.description"
+                :note="pulse.logarithmGraphTexts.note"
             >
             </logarithmic>
         </main>
@@ -63,29 +62,29 @@ import Collapsible from "@/components/global/Collapsible";
 import SpectrumCanvas from "@/components/canvas/Spectrum";
 import FullSignal from "@/components/canvas/FullSignal";
 import Logarithmic from "@/components/canvas/Logarithmic";
-import '@/types.js';
 import ButtonContainer from "@/components/global/ButtonContainer";
 import StyledButton from "@/components/global/StyledButton";
+import '@/types.js';
 
 export default {
     name: "Spectrum",
     components: {StyledButton, ButtonContainer, FullSignal, Collapsible, TheorySpectrum, SpectrumCanvas, Logarithmic},
     data() {
         return {
-            selected: 'cos',
+            pulseShape: 'cos',
             fftSize: 2 ** 11,
+            emptyArray: [...[...Array(this.fftSize / 2).keys()].map(el => el * -1 - 1).reverse(), ...Array(this.fftSize / 2).keys()],
             fft: null,
-            period: 1,
-            samplingFrequency: 16.66664,
-            /** @type {Array<Signal>} */
-            signalShapes: [
+            pulseLength: 1,
+            /** @type {Array<Pulse>} */
+            pulseShapes: [
                 {
                     label: 'Kosinusni',
                     key: 'cos',
-                    drawingValues: () => this.createEmptyArrayOfFFTSize().map(t => (-Math.cos(Math.PI * t * this.frequency * 0.01) - 1) * this.unitBox(t * this.frequency * 0.01 / 2)),
-                    spectrumValues: () => this.createEmptyArrayOfFFTSize().map(t => (-Math.cos(Math.PI * t * this.frequency * 0.05) - 1) * this.unitBox(t * this.frequency * 0.05 / 2)),
+                    drawingValues: () => this.emptyArray.map(t => (-Math.cos(Math.PI * t * this.frequency * 0.01) - 1) * this.unitBox(t * this.frequency * 0.01 / 2)),
+                    spectrumValues: () => this.emptyArray.map(t => (-Math.cos(Math.PI * t * this.frequency * 0.05) - 1) * this.unitBox(t * this.frequency * 0.05 / 2)),
                     horizontal_pool: [-3, -2.5, -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5, 3],
-                    periods: [
+                    pulseLengths: [
                         {label: '1/4', key: 0.25},
                         {label: '1/2', key: 0.5},
                         {label: '1', key: 1},
@@ -104,8 +103,8 @@ export default {
                 {
                     label: 'Kvadratni',
                     key: 'square',
-                    drawingValues: () => this.createEmptyArrayOfFFTSize().map(t => -this.unitBox(t * this.frequency * 0.01)),
-                    spectrumValues: () => this.createEmptyArrayOfFFTSize().map(t => -this.unitBox(t * this.frequency * 0.05)),
+                    drawingValues: () => this.emptyArray.map(t => -this.unitBox(t * this.frequency * 0.01)),
+                    spectrumValues: () => this.emptyArray.map(t => -this.unitBox(t * this.frequency * 0.05)),
                     spectrumGraphTexts: {
                         description: '',
                         note: '',
@@ -118,9 +117,9 @@ export default {
                 {
                     label: 'Gauss',
                     key: 'gauss',
-                    drawingValues: () => this.createEmptyArrayOfFFTSize().map(t => Math.E ** (-2 * (t * 0.0165 * this.frequency) ** 2) * -this.unitBox(t * this.frequency * 0.0005)),
-                    spectrumValues: () => this.createEmptyArrayOfFFTSize().map(t => Math.E ** (-2 * (t * 0.042 * this.frequency) ** 2) * -this.unitBox(t * this.frequency * 0.0005)),
-                    periods: [
+                    drawingValues: () => this.emptyArray.map(t => Math.E ** (-2 * (t * 0.0165 * this.frequency) ** 2) * -this.unitBox(t * this.frequency * 0.0005)),
+                    spectrumValues: () => this.emptyArray.map(t => Math.E ** (-2 * (t * 0.042 * this.frequency) ** 2) * -this.unitBox(t * this.frequency * 0.0005)),
+                    pulseLengths: [
                         {label: '1/4', key: 0.25},
                         {label: '1/2', key: 0.5},
                         {label: '1', key: 1},
@@ -139,8 +138,8 @@ export default {
                 {
                     label: 'Sinc',
                     key: 'sinc',
-                    drawingValues: () => this.createEmptyArrayOfFFTSize().map(t => (t === 0) ? -1 : -Math.sin(t * this.frequency * 0.062) / (t * this.frequency * 0.062) * this.unitBox(t * this.frequency * 0.0033)),
-                    spectrumValues: () => this.createEmptyArrayOfFFTSize().map(t => (t === 0) ? -1 : -Math.sin(t * this.frequency * 0.152) / (t * this.frequency * 0.152) * this.unitBox(t * this.frequency * 0.008)),
+                    drawingValues: () => this.emptyArray.map(t => (t === 0) ? -1 : -Math.sin(t * this.frequency * 0.062) / (t * this.frequency * 0.062) * this.unitBox(t * this.frequency * 0.0033)),
+                    spectrumValues: () => this.emptyArray.map(t => (t === 0) ? -1 : -Math.sin(t * this.frequency * 0.152) / (t * this.frequency * 0.152) * this.unitBox(t * this.frequency * 0.008)),
                     spectrumGraphTexts: {
                         description: '',
                         note: '',
@@ -162,16 +161,20 @@ export default {
          * @param key {string} - possible values: sin, cos, gauss, square
          */
         changeSelected(key) {
-            this.period = 1;
+            this.pulseLength = 1;
             this.selected = key;
         },
         /**
-         * Updates period property with currently selected value
-         * @param {number} period
+         * Updates pulseLength property with currently selected value
+         * @param {number} pulseLength
          */
-        changePeriod(period) {
-            this.period = period;
+        changePulseLength(pulseLength) {
+            this.pulseLength = pulseLength;
         },
+        /**
+         * Returns 1 if value of n is between [-0.5, 0.5] or 0 if not
+         * @param {number} n
+         */
         unitBox(n) {
             return Math.abs(n) <= 1/2 ? 1 : 0;
         },
@@ -194,38 +197,32 @@ export default {
          * Returns currently selected signal shape
          * @returns {Signal}
          */
-        selectedObject() {
-            return this.signalShapes.find(el => el.key === this.selected);
+        pulse() {
+            return this.pulseShapes.find(el => el.key === this.pulseShape);
         },
-        periods() {
-            return ('periods' in this.selectedObject) ? this.selectedObject.periods :
-                [
-                    {label: '1/4', key: 0.25},
-                    {label: '1/2', key: 0.5},
-                    {label: '1', key: 1},
-                    {label: '2', key: 2},
-                    {label: '4', key: 4},
-                ];
+        pulseLengths() {
+            return ('pulseLengths' in this.pulse) ? this.pulse.pulseLengths :
+                [{label: '1/4', key: 0.25}, {label: '1/2', key: 0.5}, {label: '1', key: 1}, {label: '2', key: 2}, {label: '4', key: 4}];
         },
         frequency() {
-            return this.period ** -1;
+            return this.pulseLength ** -1;
         },
         /**
          * Since fft.size used in fft calculation does not fit on the canvas, we remove excess numbers
-         * of input array and return array of size 512
+         * of input array and return array of size fft size / 2
          * @returns {number[]}
          */
         canvasInput() {
-            return this.cutArray(this.selectedObject.drawingValues());
+            return this.cutArray(this.pulse.drawingValues());
         },
         /**
          * Returns an array of FFT transformed numbers. Because fft.realTransform returns Complex array,
-         * we filter the array to return only each even number
+         * we filter the array to return only absolute value of each even number
          * @returns {number[]}
          */
         output() {
             const out = this.fft.createComplexArray();
-            this.fft.realTransform(out, this.selectedObject.spectrumValues());
+            this.fft.realTransform(out, this.pulse.spectrumValues());
             return out.filter((el, index) => index % 2 === 0).map(el => Math.abs(el));
         },
     },
