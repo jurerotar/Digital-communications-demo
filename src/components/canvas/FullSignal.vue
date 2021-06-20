@@ -76,9 +76,8 @@ export default {
                 p5.noFill();
                 p5.stroke(this.$c.colors[1]);
 
-                if(['gauss', 'square', 'sinc'].includes(this.type)) {
-                    p5.strokeWeight(2);
-                }
+                p5.strokeWeight(2);
+
                 // Draw the shape
                 p5.beginShape();
                 if (this.isBinary) {

@@ -30,28 +30,9 @@ export default {
             /** @type {Array<LogarithmicModifiers>} */
             modifiers: [
                 {
-                    type: "sin",
-                    offset: 230,
-                    amplitude: 1,
-                    frequencyOffsets: {
-                        '0.25': -60,
-                        '0.5': -55,
-                        '1': -55,
-                        '2': -90,
-                        '4': -100,
-                    }
-                },
-                {
                     type: "cos",
                     offset: 180,
                     amplitude: 1,
-                    frequencyOffsets: {
-                        '0.25': -10,
-                        '0.5': -10,
-                        '1': -10,
-                        '2': -50,
-                        '4': -60,
-                    }
                 },
                 {
                     type: "square",
@@ -99,7 +80,7 @@ export default {
                     for (let i = 0; i <= 60; i++) {
                         // Make each fifth line labeled and wider
                         if (i % 5 === 0) {
-                            p5.text(Math.trunc(i / 5), canvasPadding + i * 10 - 3, 30);
+                            p5.text(`${i / 10}`.substring(0, 3), canvasPadding + i * 10 - 3, 30);
                             this.$c.widerLine(p5, canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10, canvasPadding - 5);
                             continue;
                         }
@@ -140,7 +121,7 @@ export default {
             let data = [...this.normalizedData].map(el => el * modifiers.amplitude + modifiers.offset);
             // Sinusoid functions change position based on frequency, so we apply additional offset
             if(this.isSinusoid) {
-                data = data.map(el => el + modifiers.frequencyOffsets[`${this.period}`]);
+                data = data.map(el => el - 130);
             }
             // Remove values that are to low so they dont overflow the charts
             if(this.type === 'gauss') {

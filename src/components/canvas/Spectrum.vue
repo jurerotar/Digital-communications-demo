@@ -57,7 +57,7 @@ export default {
                     for (let i = 0; i <= 60; i++) {
                         // Make each fifth line labeled and wider
                         if (i % 5 === 0) {
-                            p5.text(Math.trunc(i / 5), canvasPadding + i * 10 - 3, canvasDimensions.y - 30);
+                            p5.text(`${i / 10}`.substring(0, 3), canvasPadding + i * 10 - 3, canvasDimensions.y - 30);
                             this.$c.widerLine(p5, canvasPadding + i * 10, canvasDimensions.y - canvasPadding + 5, canvasPadding + i * 10, canvasDimensions.y - canvasPadding - 5);
                             continue;
                         }
@@ -81,16 +81,7 @@ export default {
 
                 // Draw the shape
                 p5.beginShape();
-                if (this.isSinusoid) {
-                    let previousY = 0;
-                    this.normalizedData.forEach((y, x) => {
-                        p5.vertex((previousY !== y) ? x - 1 + canvasPadding: x + canvasPadding, canvasDimensions.y - canvasPadding + y * 200);
-                        previousY = y;
-                    });
-                }
-                else {
-                    this.normalizedData.forEach((y, x) => p5.vertex(x + canvasPadding, canvasDimensions.y - canvasPadding + y * 200));
-                }
+                this.normalizedData.forEach((y, x) => p5.vertex(x + canvasPadding, canvasDimensions.y - canvasPadding + y * 200));
                 p5.endShape();
             }
             p5.removeCanvas = () => p5.remove();
@@ -104,18 +95,8 @@ export default {
         normalizedData() {
             let data = [...this.data];
             const max = Math.max(...data);
-            if(this.isSinusoid) {
-                const zeros = Array(Math.trunc(50 / this.period)).fill(0);
-                const maxIndex = data.findIndex(el => el === max);
-                data = data.filter((el, index) => index >= maxIndex);
-                data.unshift(...zeros);
-                data = data.map((el) => (el === max) ? max : 0);
-            }
             data.length = 600;
             return data.map(el => -el / max);
-        },
-        isSinusoid() {
-            return ['sin', 'cos'].includes(this.type);
         },
     },
     props: {

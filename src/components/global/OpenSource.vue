@@ -10,7 +10,7 @@
                     Sodeluj pri projektu
                 </h3>
                 <p class="text-lg font-light leading-relaxed mt-4 mb-4 text-white">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    Celotna izvorna kode aplikacije je objavljena na GitHubu, do repozitorija pa pridete z klikom na spodnjo povezavo. Koda je licencirana z MIT odprto-kodno licenco, torej jo lahko poljubno spreminjate, dodajate ali dopolnjujete. K sodelovanju pri dopolnjevanju in izpopolnjevanju te spletne aplikacije, ste vabljeni vsi.
                 </p>
                 <p class="text-lg font-medium leading-relaxed mt-0 mb-4 text-white">
                     Poglej projekt na GitHubu
