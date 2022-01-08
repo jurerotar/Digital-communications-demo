@@ -5,6 +5,12 @@
             <collapsible>
                 <theory-correlation></theory-correlation>
             </collapsible>
+            <h2 class="font-semibold text-xl mb-2 transition-colors duration-300 dark:text-white">Korelacija med:</h2>
+            <button-container>
+                <styled-button :class="ButtonStyle">
+                    Harmonični signali
+                </styled-button>
+            </button-container>
         </main>
     </div>
 </template>
@@ -12,10 +18,26 @@
 <script>
     import Collapsible from "@/components/global/Collapsible"
     import TheoryCorrelation from '../components/theory/TheoryCorrelation'
+    import StyledButton from "../components/global/StyledButton.vue"
+    import ButtonContainer from "../components/global/ButtonContainer.vue"
 
     export default {
         name: "Correlation",
-        components: {Collapsible, TheoryCorrelation},
-
+        components: {Collapsible, TheoryCorrelation, StyledButton, ButtonContainer},
+        data(){
+            return{
+                ButtonStyle:{
+                    'dark:bg-blue-500 bg-blue-500': true
+                },
+                signalType: [
+                    {
+                        type: "Harmonični"
+                    },
+                    {
+                        type: "Impulzni"
+                    }
+                ]
+            }
+        }
     }
 </script>
