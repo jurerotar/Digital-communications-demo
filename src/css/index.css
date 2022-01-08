@@ -7,7 +7,7 @@
     font-style: normal;
     font-weight: 300;
     font-display: swap;
-    src: url("/fonts/montserrat-light-webfont.woff2") format("woff2");
+    src: url("@/assets/fonts/montserrat-light-webfont.woff2") format("woff2");
 }
 
 @font-face {
@@ -15,7 +15,7 @@
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url("/fonts/montserrat-regular-webfont.woff2") format("woff2");
+    src: url("@/assets/fonts/montserrat-regular-webfont.woff2") format("woff2");
 }
 
 @font-face {
@@ -23,7 +23,7 @@
     font-style: normal;
     font-weight: 500;
     font-display: swap;
-    src: url("/fonts/montserrat-medium-webfont.woff2") format("woff2");
+    src: url("@/assets/fonts/montserrat-medium-webfont.woff2") format("woff2");
 }
 
 @font-face {
@@ -31,7 +31,7 @@
     font-style: normal;
     font-weight: 600;
     font-display: swap;
-    src: url("/fonts/montserrat-semibold-webfont.woff2") format("woff2");
+    src: url("@/assets/fonts/montserrat-semibold-webfont.woff2") format("woff2");
 }
 
 /* Prism */
