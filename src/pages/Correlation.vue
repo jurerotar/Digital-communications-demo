@@ -28,33 +28,64 @@
                     {{signal.label}}
                 </styled-button>
             </button-container>
-            <full-signal
-                :canvas_id="'first-signal'"
-                :data="canvasInput"
-                :title="'Prvi Signal'"
-                :vertical_pool="[1, 0.5, -0.5, -1]"
-                :horizontal_pool="[-1.5, -1.25, -1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5]"
-                :type = signals[0].baseHarmonicSignal.key
-            >
-            </full-signal>
-            <!--<full-signal
-                :canvas_id="'second-signal'"
-                :data="canvasInput"
-                :title="'Drugi Signal'"
-                :vertical_pool="[1, 0.5, -0.5, -1]"
-                :horizontal_pool="horizontal_pool"
-                :type = "signal[1]"
-            >
-            </full-signal>
-            <full-signal
-                :canvas_id="'correlation-signal'"
-                :data="canvasInput"
-                :title="'Zmnožek prvega in drugega signala'"
-                :vertical_pool="[1, 0.5, -0.5, -1]"
-                :horizontal_pool="horizontal_pool"
-                :type = "correlation"
-            >
-            </full-signal>-->
+            <template v-if="signalType==='Harmonični'">
+                <full-signal
+                    :canvas_id="'first-signal'"
+                    :data="canvasInputFirstH"
+                    :title="'Prvi Signal'"
+                    :vertical_pool="[1, 0.5, -0.5, -1]"
+                    :horizontal_pool=this.horizontal_pool
+                    :type = type.firstSignal
+                >
+                </full-signal>
+                <!--<full-signal
+                    :canvas_id="'second-signal'"
+                    :data="canvasInputSecondH"
+                    :title="'Drugi Signal'"
+                    :vertical_pool="[1, 0.5, -0.5, -1]"
+                    :horizontal_pool="horizontal_pool"
+                    :type = type.secondSignal
+                >
+                </full-signal>
+                <full-signal
+                    :canvas_id="'correlation-signal'"
+                    :data="canvasInputCorrelationH"
+                    :title="'Zmnožek prvega in drugega signala'"
+                    :vertical_pool="[1, 0.5, -0.5, -1]"
+                    :horizontal_pool="horizontal_pool"
+                    :type = type.correlation
+                >
+                </full-signal>-->
+            </template>
+            <template v-if="signalType==='Impulzni'">
+                <!--<full-signal
+                    :canvas_id="'first-signal'"
+                    :data="canvasInputI"
+                    :title="'Prvi Signal'"
+                    :vertical_pool="[1, 0.5, -0.5, -1]"
+                    :horizontal_pool=this.horizontal_pool
+                    :type = type.firstSignal
+                >
+                </full-signal>
+                <full-signal
+                    :canvas_id="'second-signal'"
+                    :data="canvasInputI"
+                    :title="'Drugi Signal'"
+                    :vertical_pool="[1, 0.5, -0.5, -1]"
+                    :horizontal_pool="horizontal_pool"
+                    :type = type.secondSignal
+                >
+                </full-signal>
+                <full-signal
+                    :canvas_id="'correlation-signal'"
+                    :data="canvasInputI"
+                    :title="'Zmnožek prvega in drugega signala'"
+                    :vertical_pool="[1, 0.5, -0.5, -1]"
+                    :horizontal_pool="horizontal_pool"
+                    :type = type.correlation
+                >
+                </full-signal>-->
+            </template>
         </main>
     </div>
 </template>
@@ -77,16 +108,21 @@
                 secondSignalArray: null, 
                 correlationSignalArray: null,
                 frequency: null,
-                horizontal_pool: [-0.5, 0, 0.5],
+                horizontal_pool: [-1.5, -1.25, -1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5],
                 typeLabel: 0, //0 for "Harmonični", 1 for "Impulzni"
+                type: {
+                    firstSignal: "first",
+                    secondSignal: "second",
+                    correlation: "correlation"
+                },
                 signals: [
                     {
                         label: "Harmonični",
                         choosedSignal: "sin",
-                        horizontal_pool: [-0.5, 0, 0.5],
+                        horizontal_pool: [-1.5, -1.25, -1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5],
                         baseHarmonicSignal: {
-                            key: "baseCos",
-                            drawingValues: () => this.firstSignalArray.map(t => (Math.cos(Math.PI * t * 1 * 0.01 + 1.5))*this.unitBox(t)),    //1.5 je pi/2
+                                key: "baseCos",
+                                drawingValues: () => this.firstSignalArray.map(t => (Math.cos(Math.PI * t * 1 * 0.01 + 0.75))),    //0.75 je pi/2 
                         },
                         signal: [
                             {
@@ -106,7 +142,7 @@
                         label: "Impulzni",
                         choosedFirstSignal: "pravokotni",
                         choosedSecondSignal: "pravokotni",
-                        horizontal_pool: [-1, -0.5, 0, 0.5, 1],
+                        horizontal_pool: [-1.5, -1.25, -1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5],
                         signal: [
                             {
                                 key: "pravokotni",
@@ -161,18 +197,31 @@
                     return [this.signals[1].choosedFirstSignal, this.signals[1].choosedSecondSignal]
                 }
             },
-            unitBox(n) {
-                return (n <= 1/2) ? 1 : 0;
-            },
+            cutArray(array) {
+                const size = 600;
+                return array.filter((el, index) => (index <=  size));
+            }
         },
         created(){
-            this.firstSignalArray = [...[...Array(this.signalSize).keys()].map(el => el * -1 - 1).reverse(), ...Array(this.signalSize).keys()]
-            this.secondSignalArray = [...[...Array(this.signalSize).keys()].map(el => el * -1 - 1).reverse(), ...Array(this.signalSize).keys()]
-            this.correlationSignalArray = [...[...Array(this.signalSize).keys()].map(el => el * -1 - 1).reverse(), ...Array(this.signalSize).keys()]
+            this.firstSignalArray = [...[...Array(this.signalSize/2).keys()].map(el => el * -1 - 1).reverse(), ...Array(this.signalSize/2).keys()]
+            this.secondSignalArray = [...[...Array(this.signalSize/2).keys()].map(el => el * -1 - 1).reverse(), ...Array(this.signalSize/2).keys()]
+            this.correlationSignalArray = [...[...Array(this.signalSize/2).keys()].map(el => el * -1 - 1).reverse(), ...Array(this.signalSize/2).keys()]
         },
         computed: {
-            canvasInput() {
-                return this.signals[0].baseHarmonicSignal.drawingValues()
+            canvasInputFirstH() {
+                return this.cutArray(this.signals[0].baseHarmonicSignal.drawingValues())
+                    //this.cutArray(this.signals[0].signal.find(el => el.key === this.choosedSignal).drawingValues()),
+                    //this.cutArray(this.signals[0].co.drawingValues())
+            },
+            canvasInputSecondH() {
+                return this.cutArray(this.signals[this.typeLabel].baseHarmonicSignal.drawingValues())
+                    //this.cutArray(this.signals[0].signal.find(el => el.key === this.choosedSignal).drawingValues()),
+                    //this.cutArray(this.signals[0].co.drawingValues())
+            },
+            canvasInputCorrelationH() {
+                return this.cutArray(this.signals[0].baseHarmonicSignal.drawingValues())
+                    //this.cutArray(this.signals[0].signal.find(el => el.key === this.choosedSignal).drawingValues()),
+                    //this.cutArray(this.signals[0].co.drawingValues())
             },
             signal(){
                 return this.findSignal()
