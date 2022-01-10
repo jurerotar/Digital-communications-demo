@@ -17,7 +17,7 @@ export const getCookie = (name: string): string | null => {
 
 export const scheme = () => {
   const store = useStore<State>();
-  const cookie = getCookie('color-scheme') ?? 'dark';
+  const cookie: string = getCookie('color-scheme') ?? 'dark';
   store.commit('appState/setScheme', cookie);
   document.querySelector('html')!.classList.add(cookie);
 }
@@ -28,7 +28,7 @@ export const attachResizeHandlers = (): void => {
     store.commit('deviceProperties/setWidth', window.innerWidth);
     store.commit('deviceProperties/setHeight', window.innerHeight);
   }
-
+  onResize();
   onMounted(() => {
     window.addEventListener('resize', () => onResize());
   });

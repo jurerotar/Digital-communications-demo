@@ -2,11 +2,11 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 
 
 module.exports = {
+  darkMode: 'class',
   content: [
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx}'
   ],
-  darkMode: 'class',
   theme: {
     container: {
       screens: {
@@ -14,6 +14,7 @@ module.exports = {
         'md': '768px',
         'lg': '1024px',
         'xl': '1280px',
+        '2xl': '1920px',
       }
     },
     extend: {
@@ -23,14 +24,6 @@ module.exports = {
       width: {
         'fit-content': 'fit-content',
       },
-      maxWidth: {
-        'sidebar-mobile': '16rem',
-        'sidebar': '18rem',
-        'top-bar': 'calc(100% - 18rem)',
-      },
-      columns: {
-        '4': 4,
-      }
     },
   },
 }

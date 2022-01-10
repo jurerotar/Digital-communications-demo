@@ -30,3 +30,8 @@ pnpm-debug.log*
 
 # vscode
 /.vscode
+
+# visualizer
+/analyzer
+
+/public/fonts/vendor

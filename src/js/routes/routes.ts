@@ -1,54 +1,55 @@
 import {createWebHistory, createRouter, Router} from "vue-router";
-import Home from "@/js/views/Home.vue";
-import Spectrum from "@/js/views/Spectrum.vue";
-import Harmonics from "@/js/views/Harmonics.vue";
-import Modulations from "@/js/views/Modulations.vue";
-import Pointers from "@/js/views/Pointers.vue";
 
 export interface Route {
   path: string;
   name: string;
   label: string;
   // TODO: Type this
-  component: any;
+  component: () => any;
+  icon: string[];
 }
 
 const routes: Route[] = [
-    {
-        path: "/",
-        name: "Home",
-        label: 'Domov',
-        component: Home
-    },
-    {
-        path: "/spectrum",
-        name: "Spectrum",
-        label: 'Spekter',
-        component: Spectrum
-    },
-    {
-        path: "/modulations",
-        name: "Modulations",
-        label: 'Modulacije',
-        component: Modulations
-    },
-    {
-        path: "/harmonics",
-        name: "Harmonics",
-        label: 'Harmoniki',
-        component: Harmonics
-    },
-    {
-        path: "/pointers",
-        name: "Pointers",
-        label: 'Kazalci',
-        component: Pointers
-    },
+  {
+    path: "/",
+    name: "Home",
+    label: 'Domov',
+    component: () => import("@/js/views/Home.vue"),
+    icon: ['fas', 'home'],
+  },
+  {
+    path: "/spectrum",
+    name: "Spectrum",
+    label: 'Spekter',
+    component: () => import("@/js/views/Spectrum.vue"),
+    icon: ['fas', 'wave-square'],
+  },
+  {
+    path: "/modulations",
+    name: "Modulations",
+    label: 'Modulacije',
+    component: () => import("@/js/views/Modulations.vue"),
+    icon: ['fas', 'signal'],
+  },
+  {
+    path: "/harmonics",
+    name: "Harmonics",
+    label: 'Harmoniki',
+    component: () => import("@/js/views/Harmonics.vue"),
+    icon: ['fas', 'water'],
+  },
+  {
+    path: "/pointers",
+    name: "Pointers",
+    label: 'Kazalci',
+    component: () => import("@/js/views/Pointers.vue"),
+    icon: ['fas', 'long-arrow-alt-up'],
+  },
 ];
 
 const router: Router = createRouter({
-    history: createWebHistory(),
-    routes,
+  history: createWebHistory(),
+  routes,
 });
 
 export {routes};

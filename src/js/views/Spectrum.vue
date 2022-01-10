@@ -1,241 +1,231 @@
 <template>
   <div class="lg:ml-72">
-    <main class="p-4 container lg:mx-auto transition-colors duration-300 dark:bg-gray-800">
-      <h1 class="text-3xl font-medium mb-4 transition-colors duration-300 dark:text-white">
+    <main class="flex flex-col gap-4 p-4 container lg:mx-auto">
+      <app-main-heading>
         Spekter
-      </h1>
-      <collapsible>
+      </app-main-heading>
+      <app-collapsible>
         <theory-spectrum />
-      </collapsible>
-      <h2 class="font-semibold text-xl mb-2 transition-colors duration-300 dark:text-white">
+      </app-collapsible>
+      <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white text-zinc-900">
         Oblika impulza
       </h2>
       <button-container>
-        <styled-button
-          v-for="shape in pulseShapes"
+        <app-button
+          v-for="shape in pulses"
           :key="shape.key"
-          :class="{'dark:bg-blue-500 bg-blue-500': pulse.key === shape.key}"
-          @click="changePulse(shape.key)"
+          :class="{'bg-blue-600': pulse.key === shape.key}"
+          @click="setPulseShape(shape.key)"
         >
           {{ shape.label }}
-        </styled-button>
+        </app-button>
       </button-container>
-      <h2 class="font-semibold text-xl mb-2 transition-colors duration-300 dark:text-white">
+      <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white text-zinc-900">
         Dolžina impulza (T)
       </h2>
       <button-container>
-        <styled-button
-          v-for="length in pulseLengths"
+        <app-button
+          v-for="length in pulse.pulseLengths"
           :key="length.key"
-          :class="{'dark:bg-blue-500 bg-blue-500': pulseLength === length.key}"
-          @click="changePulseLength(length.key)"
+          :class="{'bg-blue-600': pulseLength === length.key}"
+          @click="setPulseLength(length.key)"
         >
           {{ length.label }}
-        </styled-button>
+        </app-button>
       </button-container>
       <full-signal
-        :canvas_id="'spectrum-original-signal'"
-        :data="canvasInput"
+        :canvas-id="'spectrum-original-signal'"
+        :data="baseSignal"
         :title="'Impulz'"
-        :vertical_pool="[1, 0.5, -0.5, -1]"
-        :horizontal_pool="pulse.horizontal_pool"
+        :vertical-pool="[1, 0.5, -0.5, -1]"
+        :horizontal-pool="pulse.horizontalPool"
         :type="pulse.key"
       />
       <spectrum-canvas
-        :canvas_id="'spectrum-signal-spectrum'"
-        :data="output"
+        :canvas-id="'spectrum-signal-spectrum'"
+        :data="transformedSignal"
         :title="'Spekter'"
         :type="pulse.key"
         :pulse-length="pulseLength"
-        :description="pulse.spectrumGraphTexts.description"
-        :note="pulse.spectrumGraphTexts.note"
+        :description="pulse?.spectrumGraphTexts?.description"
+        :note="pulse?.spectrumGraphTexts?.note"
       />
       <logarithmic
-        :canvas_id="'spectrum-signal-logarithmic'"
-        :data="output"
+        :canvas-id="'spectrum-signal-logarithmic'"
+        :data="transformedSignal"
         :title="'Spekter [dB]'"
         :type="pulse.key"
         :pulse-length="pulseLength"
-        :description="pulse.logarithmGraphTexts.description"
-        :note="pulse.logarithmGraphTexts.note"
+        :description="pulse?.logarithmGraphTexts?.description"
+        :note="pulse?.logarithmGraphTexts?.note"
       />
     </main>
   </div>
 </template>
 
-<script>
+<script
+  setup
+  lang="ts"
+>
 import TheorySpectrum from "@/js/components/theory/TheorySpectrum.vue";
-import Collapsible from "@/js/components/common/Collapsible.vue";
 import SpectrumCanvas from "@/js/components/canvas/Spectrum.vue";
 import FullSignal from "@/js/components/canvas/FullSignal.vue";
 import Logarithmic from "@/js/components/canvas/Logarithmic.vue";
-import ButtonContainer from "@/js/components/common/ButtonContainer.vue";
-import StyledButton from "@/js/components/common/StyledButton.vue";
-import '@/js/types/types.ts';
+import ButtonContainer from "@/js/components/common/buttons/AppButtonContainer.vue";
+import AppButton from "@/js/components/common/buttons/AppButton.vue";
+import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
+import AppCollapsible from "@/js/components/common/AppCollapsible.vue";
+import FFT from "fft.js";
+import {computed, ref} from "vue";
 
-export default {
-    name: "Spectrum",
-    components: {StyledButton, ButtonContainer, FullSignal, Collapsible, TheorySpectrum, SpectrumCanvas, Logarithmic},
-    data() {
-        return {
-            pulseShape: 'cos',
-            fftSize: 2 ** 11,
-            emptyArray: null,
-            fft: null,
-            pulseLength: 1,
-            /** @type {Array<Pulse>} */
-            pulseShapes: [
-                {
-                    label: 'Kosinusni',
-                    key: 'cos',
-                    drawingValues: () => this.emptyArray.map(t => (-Math.cos(Math.PI * t * this.frequency * 0.01) - 1) * this.unitBox(t * this.frequency * 0.01 / 2)),
-                    spectrumValues: () => this.emptyArray.map(t => (-Math.cos(Math.PI * t * this.frequency * 0.05) - 1) * this.unitBox(t * this.frequency * 0.05 / 2)),
-                    horizontal_pool: [-3, -2.5, -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5, 3],
-                    pulseLengths: [
-                        {label: '1/4', key: 0.25},
-                        {label: '1/2', key: 0.5},
-                        {label: '1', key: 1},
-                        {label: '2', key: 2},
-                        {label: '3', key: 3},
-                    ],
-                    spectrumGraphTexts: {
-                        description: '',
-                        note: '',
-                    },
-                    logarithmGraphTexts: {
-                        description: '',
-                        note: 'Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar, ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.',
-                    }
-                },
-                {
-                    label: 'Kvadratni',
-                    key: 'square',
-                    drawingValues: () => this.emptyArray.map(t => -this.unitBox(t * this.frequency * 0.01)),
-                    spectrumValues: () => this.emptyArray.map(t => -this.unitBox(t * this.frequency * 0.05)),
-                    spectrumGraphTexts: {
-                        description: '',
-                        note: '',
-                    },
-                    logarithmGraphTexts: {
-                        description: '',
-                        note: 'Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar, ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.',
-                    }
-                },
-                {
-                    label: 'Gauss',
-                    key: 'gauss',
-                    drawingValues: () => this.emptyArray.map(t => Math.E ** (-2 * (t * 0.0165 * this.frequency) ** 2) * -this.unitBox(t * this.frequency * 0.0005)),
-                    spectrumValues: () => this.emptyArray.map(t => Math.E ** (-2 * (t * 0.028 * this.frequency) ** 2) * -this.unitBox(t * this.frequency * 0.0005)),
-                    pulseLengths: [
-                        {label: '1/4', key: 0.25},
-                        {label: '1/2', key: 0.5},
-                        {label: '1', key: 1},
-                        {label: '2', key: 2},
-                        {label: '3', key: 3},
-                    ],
-                    spectrumGraphTexts: {
-                        description: '',
-                        note: '',
-                    },
-                    logarithmGraphTexts: {
-                        description: '',
-                        note: 'Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar, ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.',
-                    }
-                },
-                {
-                    label: 'Sinc',
-                    key: 'sinc',
-                    drawingValues: () => this.emptyArray.map(t => (t === 0) ? -1 : -Math.sin(t * this.frequency * 0.062) / (t * this.frequency * 0.062) * this.unitBox(t * this.frequency * 0.0033)),
-                    spectrumValues: () => this.emptyArray.map(t => (t === 0) ? -1 : -Math.sin(t * this.frequency * 0.152) / (t * this.frequency * 0.152) * this.unitBox(t * this.frequency * 0.008)),
-                    spectrumGraphTexts: {
-                        description: '',
-                        note: '',
-                    },
-                    logarithmGraphTexts: {
-                        description: '',
-                        note: 'Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar, ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.',
-                    }
-                },
-            ],
-        }
-    },
-    computed: {
-        /**
-         * Returns currently selected pulse shape object
-         * @returns {Pulse}
-         */
-        pulse() {
-            return this.pulseShapes.find(el => el.key === this.pulseShape);
-        },
-        /**
-         * @returns {Array<pulseLengths>}
-         */
-        pulseLengths() {
-            return ('pulseLengths' in this.pulse) ? this.pulse.pulseLengths :
-                [{label: '1/4', key: 0.25}, {label: '1/2', key: 0.5}, {label: '1', key: 1}, {label: '2', key: 2}, {label: '4', key: 4}];
-        },
-        frequency() {
-            return this.pulseLength ** -1;
-        },
-        /**
-         * Since fft.size used in fft calculation does not fit on the canvas, we remove excess numbers
-         * of input array and return array of size fft size / 2
-         * @returns {number[]}
-         */
-        canvasInput() {
-            return this.cutArray(this.pulse.drawingValues());
-        },
-        /**
-         * Returns an array of FFT transformed numbers. Because fft.realTransform returns Complex array,
-         * we filter the array to return only absolute value of each even number
-         * @returns {number[]}
-         */
-        output() {
-            const out = this.fft.createComplexArray();
-            this.fft.realTransform(out, this.pulse.spectrumValues());
-            return out.filter((el, index) => index % 2 === 0).map(el => Math.abs(el));
-        },
-    },
-    created() {
-        const FFT = require('fft.js');
-        this.fft = new FFT(this.fftSize);
-        this.emptyArray = [...[...Array(this.fftSize / 2).keys()].map(el => el * -1 - 1).reverse(), ...Array(this.fftSize / 2).keys()];
-    },
-    methods: {
-        /**
-         * Set pulse type
-         * @param key {string} - possible values: cos, gauss, square, sinc
-         */
-        changePulse(key) {
-            this.pulseLength = 1;
-            this.pulseShape = key;
-        },
-        /**
-         * Updates pulseLength property with currently selected value
-         * @param {number} pulseLength
-         */
-        changePulseLength(pulseLength) {
-            this.pulseLength = pulseLength;
-        },
-        /**
-         * Returns 1 if value of n is between [-0.5, 0.5] or 0 if not
-         * @param {number} n
-         */
-        unitBox(n) {
-            return Math.abs(n) <= 1/2 ? 1 : 0;
-        },
+export interface Pulse {
+  key: PulseShape;
+  // Button label
+  label: string;
+  // Original pulse values (displayed on upper chart)
+  drawingValues: (frequency: number) => number[];
+  // Transformed values (displayed on lower chart)
+  spectrumValues: (frequency: number) => number[];
+  // Pool of numbers to use on the chart
+  horizontalPool?: number[],
+  // Custom pool lengths, since some charts look clunky with defaults
+  pulseLengths: PulseLengthOption[];
+  // Additional texts displayed along spectrum chart
+  spectrumGraphTexts?: PulseGraphText;
+  // Additional texts displayed along logarithmic chart
+  logarithmGraphTexts?: PulseGraphText;
+}
 
-        /**
-         * Returns an array with only $size values around the middle
-         * @param {number[]} array
-         * @returns {number[]}
-         **/
-        cutArray(array) {
-            const size = 600;
-            return array.filter((el, index) => (index >= (array.length / 2 - size / 2) && index <= (array.length / 2 + size / 2)));
-        }
+interface PulseGraphText {
+  description?: string;
+  note?: string;
+}
 
-    },
+interface PulseLengthOption {
+  label: string;
+  key: PulseLength;
+}
+
+type PulseShape = 'cos' | 'sinc' | 'gauss' | 'square';
+type PulseLength = 0.25 | 0.5 | 1 | 2 | 3 | 4;
+
+// Amount of values used for FFT
+const fftSize: number = 2 ** 11;
+
+const fft: FFT = new FFT(fftSize);
+
+// We create an array of time values from [-2**11 / 2, 2**11 / 2] on which we'll apply our fft
+const baseValues: number[] = [...[...Array(fftSize / 2).keys()].map(el => el * -1 - 1).reverse(), ...Array(fftSize / 2).keys()];
+
+// Default pulse length options we give to the users
+const defaultPulseLengthOptions: PulseLengthOption[] = [
+  {label: '1/4', key: 0.25},
+  {label: '1/2', key: 0.5},
+  {label: '1', key: 1},
+  {label: '2', key: 2},
+  {label: '4', key: 4},
+];
+
+const pulses: Pulse[] = [
+  {
+    label: 'Kosinusni',
+    key: 'cos',
+    drawingValues: (frequency: number): number[] => baseValues.map((t: number) => {
+      return (-Math.cos(Math.PI * t * frequency * 0.01) - 1) * Math.unitBox(t * frequency * 0.01 / 2);
+    }),
+    spectrumValues: (frequency: number): number[] => baseValues.map((t: number) => {
+      return (-Math.cos(Math.PI * t * frequency * 0.05) - 1) * Math.unitBox(t * frequency * 0.05 / 2);
+    }),
+    horizontalPool: [-3, -2.5, -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5, 3],
+    // Remove length of 4, add length of 3
+    pulseLengths: defaultPulseLengthOptions
+      .filter((pulseLength: PulseLengthOption) => pulseLength.key !== 4)
+      .concat([{label: '3', key: 3}]),
+    logarithmGraphTexts: {
+      // eslint-disable-next-line max-len
+      note: 'Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar, ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.',
+    }
+  },
+  {
+    label: 'Kvadratni',
+    key: 'square',
+    drawingValues: (frequency: number): number[] => baseValues.map((t: number) => {
+      return -Math.unitBox(t * frequency * 0.01);
+    }),
+    spectrumValues: (frequency: number): number[] => baseValues.map((t: number) => {
+      return -Math.unitBox(t * frequency * 0.05);
+    }),
+    pulseLengths: defaultPulseLengthOptions,
+    logarithmGraphTexts: {
+      // eslint-disable-next-line max-len
+      note: 'Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar, ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.',
+    }
+  },
+  {
+    label: 'Gauss',
+    key: 'gauss',
+    drawingValues: (frequency: number): number[] => baseValues.map((t: number) => {
+      return Math.E ** (-2 * (t * 0.0165 * frequency) ** 2) * -Math.unitBox(t * frequency * 0.0005);
+    }),
+    spectrumValues: (frequency: number): number[] => baseValues.map((t: number) => {
+      return Math.E ** (-2 * (t * 0.028 * frequency) ** 2) * -Math.unitBox(t * frequency * 0.0005);
+    }),
+    // Remove length of 4, add length of 3
+    pulseLengths: defaultPulseLengthOptions
+      .filter((pulseLength: PulseLengthOption) => pulseLength.key !== 4)
+      .concat([{label: '3', key: 3}]),
+    logarithmGraphTexts: {
+      // eslint-disable-next-line max-len
+      note: 'Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar, ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.',
+    }
+  },
+  {
+    label: 'Sinc',
+    key: 'sinc',
+    drawingValues: (frequency: number): number[] => baseValues.map((t: number) => {
+      return (t === 0) ? -1 : -Math.sin(t * frequency * 0.062) / (t * frequency * 0.062) * Math.unitBox(t * frequency * 0.0033);
+    }),
+    spectrumValues: (frequency: number): number[] => baseValues.map((t: number) => {
+      return (t === 0) ? -1 : -Math.sin(t * frequency * 0.152) / (t * frequency * 0.152) * Math.unitBox(t * frequency * 0.008);
+    }),
+    pulseLengths: defaultPulseLengthOptions,
+    logarithmGraphTexts: {
+      // eslint-disable-next-line max-len
+      note: 'Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar, ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.',
+    }
+  },
+];
+
+// User selected pulse length
+const pulseLength = ref<PulseLength>(1);
+const setPulseLength = (length: PulseLength): void => {
+  pulseLength.value = length;
+}
+const frequency = computed<number>(() => pulseLength.value ** -1);
+
+// User selected pulse shape
+const pulseShape = ref<PulseShape>('cos');
+const setPulseShape = (shape: PulseShape): void => {
+  // Reset length to 1, since some lengths might be missing on certain shapes
+  setPulseLength(1);
+  pulseShape.value = shape;
+}
+
+// Pulse object determined by user selection
+const pulse = computed<Pulse>(() => pulses.find((pulse: Pulse) => pulse.key === pulseShape.value)!);
+
+const baseSignal = computed<number[]>(() => takeMiddleValues(pulse.value.drawingValues(frequency.value)));
+
+const transformedSignal = computed<number[]>(() => {
+  const out: number[] = fft.createComplexArray();
+  fft.realTransform(out, pulse.value.spectrumValues(frequency.value));
+  return out.filter((el: number, index: number) => index % 2 === 0).map((el: number) => Math.abs(el));
+});
+
+// Returns an array with only $size values around the middle
+const takeMiddleValues = (values: number[]): number[] =>  {
+  const size = 600;
+  return values.filter((el: number, index: number) => (index >= (values.length / 2 - size / 2) && index <= (values.length / 2 + size / 2)));
 }
 </script>
 

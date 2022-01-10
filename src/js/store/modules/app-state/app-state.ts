@@ -1,4 +1,5 @@
-import {AppState, Scheme} from "@/js/store/modules/app-state/app-state.types";
+import {AppState} from "@/js/store/modules/app-state/app-state.types";
+import {Scheme} from "@/js/types/types";
 
 const state = (): AppState => ({
   mobileSidebarExtended: false,
@@ -6,7 +7,7 @@ const state = (): AppState => ({
 });
 
 const mutations = {
-  setSidebarExtended(state: AppState, mode: boolean) {
+  setMobileSidebarExtended(state: AppState, mode: boolean) {
     state.mobileSidebarExtended = mode;
   },
   setScheme(state: AppState, scheme: Scheme) {

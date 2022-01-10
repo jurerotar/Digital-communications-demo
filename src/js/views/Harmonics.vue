@@ -1,28 +1,31 @@
 <template>
   <div class="lg:ml-72">
-    <main class="p-4 container lg:mx-auto transition-colors duration-300 dark:bg-gray-800">
-      <h1 class="text-3xl font-medium mb-4 transition-colors duration-300 dark:text-white">
+    <main class="p-4 container lg:mx-auto flex flex-col gap-4">
+      <app-main-heading>
         Harmoniki
-      </h1>
-      <collapsible>
+      </app-main-heading>
+      <app-collapsible>
         <theory-harmonics />
-      </collapsible>
+      </app-collapsible>
       <!-- Range slider -->
-      <div class="inline-flex flex-col mb-2">
+      <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
         <label
-          :for="`harmonic-components`"
+          :for="'harmonic-components'"
           class="text-xl transition-colors duration-300 dark:text-white"
-        >Število komponent: <span
-          class="font-medium"
-        >{{ components }}</span></label>
+        >
+          Število komponent:
+          <span class="font-medium">
+            {{ components }}
+          </span>
+        </label>
         <input
-          :id="`harmonic-components`"
+          :id="'harmonic-components'"
           v-model.number="components"
           type="range"
           min="1"
           max="10"
           step="1"
-          @change="updateAmountOfComponents(components)"
+          @change="updateComponents(components)"
         >
       </div>
       <individual-harmonics :components="components" />
@@ -31,24 +34,16 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import IndividualHarmonics from "@/js/components/canvas/IndividualHarmonics.vue";
 import SummedHarmonics from "@/js/components/canvas/SummedHarmonics.vue";
 import TheoryHarmonics from "@/js/components/theory/TheoryHarmonics.vue";
-import Collapsible from "@/js/components/common/Collapsible.vue";
+import AppCollapsible from "@/js/components/common/AppCollapsible.vue";
+import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
+import {ref} from "vue";
 
-export default {
-    name: "Harmonics",
-    components: {Collapsible, TheoryHarmonics, SummedHarmonics, IndividualHarmonics},
-    data() {
-        return {
-            components: 1,
-        }
-    },
-    methods: {
-        updateAmountOfComponents(value) {
-            this.components = value;
-        },
-    },
+const components = ref<number>(1);
+const updateComponents = (value: number): void => {
+  components.value = value;
 }
 </script>

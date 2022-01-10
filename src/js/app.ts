@@ -1,34 +1,26 @@
 import {createApp} from 'vue';
-import App from '@/js/App.vue';
 import {router} from '@/js/routes/routes';
-import '@/css/index.css';
 import {store} from "@/js/store/store";
 import canvas from "@/js/helpers/canvas.js";
+import App from '@/js/App.vue';
 import '@/js/helpers/prototypes/array';
+import '@/js/helpers/prototypes/math';
+import '@/css/index.css';
+import {KatexOptions} from "katex";
 
-/**
- * Font awesome icons and library
- */
-import {library} from '@fortawesome/fontawesome-svg-core'
-import {faChevronRight, faCodeBranch} from "@fortawesome/free-solid-svg-icons";
-import {faMoon, faSun} from "@fortawesome/free-regular-svg-icons";
-import {faGithub} from "@fortawesome/free-brands-svg-icons";
-
-library.add(faGithub, faCodeBranch, faChevronRight, faMoon, faSun);
-
-/*
-Run these commands when postcss supports vue 3
-npm uninstall tailwindcss @tailwindcss/postcss7-compat
-npm install -D tailwindcss@latest postcss@latest autoprefixer@latest
- */
+// Register katex as a window property
+declare global {
+  interface Window {
+    katex: KatexOptions;
+  }
+}
 
 const app = createApp(App)
   .use(router)
   .use(store);
 
-/**
- * Mount canvas functions to be available globally
- */
+// TODO: Remove global properties
+// Mount canvas functions to be available globally
 app.config.globalProperties.$c = canvas;
 app.mount('#app');
 

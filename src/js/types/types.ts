@@ -11,6 +11,7 @@ export interface CanvasOptions {
   frameRate?: number;
 }
 
+export type Scheme = 'dark' | 'light';
 
 /**
  * @typedef {Object} Text
