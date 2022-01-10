@@ -54,6 +54,7 @@
                     :type = type.secondSignal
                 >
                 </full-signal>
+                <h2 class="font-semibold text-xl mb-2 transition-colors duration-300 dark:text-white">Rezultat korelacijske funkcije: {{correlationResult}}</h2>
                 <full-signal
                     :canvas_id="'correlation-signal'"
                     :data="canvasInputCorrelationH"
@@ -78,25 +79,25 @@
                         {{signal.label}}
                     </styled-button>
                 </button-container>
-                <!--<full-signal
+                <full-signal
                     :canvas_id="'first-signal'"
-                    :data="canvasInputI"
+                    :data="canvasInputFirstI"
                     :title="'Prvi Signal'"
                     :vertical_pool="[1, 0.5, -0.5, -1]"
                     :horizontal_pool=this.horizontal_pool
-                    :type = type.firstSignal
+                    :type = signals[1].choosedFirstSignal
                 >
                 </full-signal>
                 <full-signal
                     :canvas_id="'second-signal'"
-                    :data="canvasInputI"
+                    :data="canvasInputSecondI"
                     :title="'Drugi Signal'"
                     :vertical_pool="[1, 0.5, -0.5, -1]"
                     :horizontal_pool="horizontal_pool"
-                    :type = type.secondSignal
+                    :type = signals[1].choosedSecondSignal
                 >
                 </full-signal>
-                <full-signal
+                <!--<full-signal
                     :canvas_id="'correlation-signal'"
                     :data="canvasInputI"
                     :title="'Zmnožek prvega in drugega signala'"
@@ -138,7 +139,10 @@
                     correlation: "correlation"
                 },
                 correlation: {
-                    drawingValues: () => this.multiplyArrays(this.firstSignalArray, this.secondSignalArray, this.xAxisArray.length)           
+                    drawingValues: () => {
+                        this.correlationSignalArray = this.multiplyArrays(this.firstSignalArray, this.secondSignalArray, this.xAxisArray.length)  
+                        return this.correlationSignalArray
+                    }         
                 },
                 signals: [
                     {
@@ -166,7 +170,7 @@
                             {
                                 key: "cos",
                                 label: "Cos(2πft)",
-                               drawingValues: () => {
+                                drawingValues: () => {
                                     this.secondSignalArray = this.xAxisArray.map(t => (Math.cos(Math.PI * (t + 200*this.tau/this.signals[0].frequency) * this.signals[0].frequency * 0.01 + (0.75 - (this.signals[0].frequency-1)*2.4))))
                                     return this.secondSignalArray
                                 },
@@ -175,14 +179,16 @@
                     },
                     {
                         label: "Impulzni",
-                        choosedFirstSignal: "pravokotni",
-                        choosedSecondSignal: "pravokotni",
+                        choosedFirstSignal: "square",
+                        choosedSecondSignal: "square",
                         horizontal_pool: [-1.5, -1.25, -1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5],
                         signal: [
                             {
-                                key: "pravokotni",
+                                key: "square",
                                 label: "Pravokotni Impulz",
-                                drawingValues: () => 0
+                                drawingValues: () => {
+                                   return this.impulse
+                                }
                             },
                             {
                                 key: "cos",
@@ -247,8 +253,8 @@
                 this.signals[0].frequency = frequency
             },
             updateTau(value) {
-            this.tau = value;
-        },
+                this.tau = value;
+            },
         },
         created(){
             this.xAxisArray = [...[...Array(this.signalSize/2).keys()].map(el => el * -1 - 1).reverse(), ...Array(this.signalSize/2).keys()]
@@ -266,8 +272,41 @@
             canvasInputCorrelationH() {
                 return this.cutArray(this.correlation.drawingValues())
             },
+            canvasInputFirstI(){
+                return this.cutArray(this.signals[1].signal.find(el => el.key === this.signals[1].choosedFirstSignal).drawingValues())
+            },
+            canvasInputSecondI(){
+                return this.cutArray(this.signals[1].signal.find(el => el.key === this.signals[1].choosedSecondSignal).drawingValues())
+            },
+            canvasInputCorrelationI(){
+                return this.cutArray(this.signals[1].signal.find(el => el.key === this.signals[1].choosedFirstSignal).drawingValues())
+            },
             signal(){
                 return this.findSignal()
+            },
+            correlationResult(){
+                let N = this.xAxisArray.length
+                let correlation = 0
+                for(let i = 0; i < N; i++){
+                    correlation -= this.correlationSignalArray[i]
+                }
+                correlation = correlation/N
+                if(Math.abs(correlation) < 0.011){
+                    correlation = 0
+                }  
+                return Math.floor(correlation*100)/100
+            },
+            impulse(){
+                let impulse = []
+                for(let i = 0; i < 600; i++){
+                    if(i > 200 && i < 401){
+                        impulse[i] = -1
+                    }
+                    else{
+                        impulse[i] = 0
+                    }
+                }
+                return impulse
             }
         }
     }

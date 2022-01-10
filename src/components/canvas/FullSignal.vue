@@ -87,7 +87,11 @@ export default {
                         p5.vertex((previousY !== y) ? x - 1 : x, y * (this.offset.y - (canvasPadding - 25)));
                         previousY = y;
                     });
-                } else {
+                } 
+                else if(this.isCorrelation){
+                    this.data.forEach((y, x) => p5.vertex(x, y * (this.offset.y - (canvasPadding - 25))));
+                }
+                else {
                     this.normalizedData.forEach((y, x) => p5.vertex(x, y * (this.offset.y - (canvasPadding - 25))));
                 }
                 p5.endShape();
@@ -102,6 +106,9 @@ export default {
     computed: {
         isBinary() {
             return ['square'].includes(this.type);
+        },
+        isCorrelation(){
+            return ['correlation'].includes(this.type)
         },
         normalizedData() {
             const max = Math.max(...this.data.map(el => Math.abs(el)));
