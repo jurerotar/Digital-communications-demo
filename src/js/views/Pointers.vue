@@ -1,17 +1,15 @@
 <template>
-  <div class="lg:ml-72">
-    <main class="p-4 container lg:mx-auto flex flex-col gap-4">
-      <app-main-heading>
-        Kazalci
-      </app-main-heading>
-      <app-collapsible>
-        <theory-pointer />
-      </app-collapsible>
-      <canvas-container>
-        <div :id="canvasId" />
-      </canvas-container>
-    </main>
-  </div>
+  <main class="p-4 container lg:mx-auto flex flex-col gap-4">
+    <app-main-heading>
+      Kazalci
+    </app-main-heading>
+    <app-collapsible>
+      <theory-pointer />
+    </app-collapsible>
+    <canvas-container>
+      <div :id="canvasId" />
+    </canvas-container>
+  </main>
 </template>
 
 <script>

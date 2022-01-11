@@ -1,99 +1,97 @@
 <template>
-  <div class="lg:ml-72">
-    <main class="p-4 container lg:mx-auto flex flex-col gap-4">
-      <app-main-heading>
-        Modulacije
-      </app-main-heading>
-      <app-collapsible>
-        <theory-modulations />
-      </app-collapsible>
-      <h2 class="text-xl font-medium mb-1 transition-colors duration-300 dark:text-white">
-        Analogne modulacije
-      </h2>
-      <app-button-container>
-        <app-button
-          v-for="modulation in analogModulations"
-          :key="modulation.key"
-          :class="{'bg-blue-600': selected === modulation.key}"
-          @click="changeSelected(modulation.key)"
-        >
-          {{ modulation.label }}
-        </app-button>
-      </app-button-container>
-      <h2 class="text-xl font-medium mb-1 transition-colors duration-300 dark:text-white">
-        Digitalne
-        modulacije
-      </h2>
-      <app-button-container>
-        <app-button
-          v-for="modulation in digitalModulations"
-          :key="modulation.key"
-          :class="{'bg-blue-600': selected === modulation.key}"
-          @click="changeSelected(modulation.key)"
-        >
-          {{ modulation.label }}
-        </app-button>
-      </app-button-container>
-      <positive-only-signal
-        v-if="selectedModulationData.hasSineModulation"
-        :data="sineModulationSignalValues"
-        :canvas-id="'sine-modulation-signal'"
-        :title="'Sinusni modulacijski signal'"
-        :vertical-pool="[1, 0.5, -0.5, -1]"
-        :description="'Sinusni podatkovni signal.'"
-        :note="''"
-        :is-binary="isDigitalModulation(selectedModulationData)"
-      />
-      <positive-only-signal
-        v-if="selectedModulationData.hasBinaryLevel1"
-        :data="binaryLevel1Signal.values"
-        :canvas-id="'unipolar-signal'"
-        :title="'Unipolarni signal'"
-        :vertical-pool="[1, 0.5, -0.5, -1]"
-        :description="'Unipolarni signal je sestavljen iz vrednosti 1 in 0.'"
-        :note="''"
-        :is-binary="isDigitalModulation(selectedModulationData)"
-      />
-      <positive-only-signal
-        v-if="selectedModulationData.hasBinaryLevel2"
-        :data="binaryLevel2Signal.values"
-        :canvas-id="'binary-signal'"
-        :title="'Binarni signal'"
-        :vertical-pool="[1, 0.5, -0.5, -1]"
-        :description="'Bipolarni signal je sestavljen iz vrednosti 1 in -1.'"
-        :note="''"
-        :is-binary="isDigitalModulation(selectedModulationData)"
-      />
-      <level4-signal
-        v-if="selectedModulationData.hasBinaryLevel4"
-        :data="binaryLevel4Signal.values"
-        :title="'4-nivojski bipolarni signal'"
-        :description="''"
-        :note="'4-nivojski bipolarni signal je sestavljen iz vrednosti 3, 1, -1, -3.'"
-        :is-binary="isDigitalModulation(selectedModulationData)"
-      />
-      <positive-only-signal
-        v-if="selectedModulationData.hasCarrier"
-        :data="carrierSignalValues"
-        :canvas-id="'carrier-signal'"
-        :title="'Nosilec'"
-        :vertical-pool="[1, 0.5, -0.5, -1]"
-        :description="'Nosilec je visokofrekvenčni signal, s katerim moduliramo podatkovni signal.'"
-        :note="''"
-        :is-binary="isDigitalModulation(selectedModulationData)"
-      />
-      <positive-only-signal
-        :data="modulated"
-        :canvas-id="'modulated-signal'"
-        :title="'Moduliran signal'"
-        :vertical-pool="[1, 0.5, -0.5, -1]"
-        :is-modulated="true"
-        :description="selectedModulationData.description"
-        :note="selectedModulationData.note"
-        :is-binary="isDigitalModulation(selectedModulationData)"
-      />
-    </main>
-  </div>
+  <main class="p-4 container lg:mx-auto flex flex-col gap-4">
+    <app-main-heading>
+      Modulacije
+    </app-main-heading>
+    <app-collapsible>
+      <theory-modulations />
+    </app-collapsible>
+    <h2 class="text-xl font-medium mb-1 transition-colors duration-300 dark:text-white">
+      Analogne modulacije
+    </h2>
+    <app-button-container>
+      <app-button
+        v-for="modulation in analogModulations"
+        :key="modulation.key"
+        :class="{'bg-blue-600': selected === modulation.key}"
+        @click="changeSelected(modulation.key)"
+      >
+        {{ modulation.label }}
+      </app-button>
+    </app-button-container>
+    <h2 class="text-xl font-medium mb-1 transition-colors duration-300 dark:text-white">
+      Digitalne
+      modulacije
+    </h2>
+    <app-button-container>
+      <app-button
+        v-for="modulation in digitalModulations"
+        :key="modulation.key"
+        :class="{'bg-blue-600': selected === modulation.key}"
+        @click="changeSelected(modulation.key)"
+      >
+        {{ modulation.label }}
+      </app-button>
+    </app-button-container>
+    <positive-only-signal
+      v-if="selectedModulationData.hasSineModulation"
+      :data="sineModulationSignalValues"
+      :canvas-id="'sine-modulation-signal'"
+      :title="'Sinusni modulacijski signal'"
+      :vertical-pool="[1, 0.5, -0.5, -1]"
+      :description="'Sinusni podatkovni signal.'"
+      :note="''"
+      :is-binary="isDigitalModulation(selectedModulationData)"
+    />
+    <positive-only-signal
+      v-if="selectedModulationData.hasBinaryLevel1"
+      :data="binaryLevel1Signal.values"
+      :canvas-id="'unipolar-signal'"
+      :title="'Unipolarni signal'"
+      :vertical-pool="[1, 0.5, -0.5, -1]"
+      :description="'Unipolarni signal je sestavljen iz vrednosti 1 in 0.'"
+      :note="''"
+      :is-binary="isDigitalModulation(selectedModulationData)"
+    />
+    <positive-only-signal
+      v-if="selectedModulationData.hasBinaryLevel2"
+      :data="binaryLevel2Signal.values"
+      :canvas-id="'binary-signal'"
+      :title="'Binarni signal'"
+      :vertical-pool="[1, 0.5, -0.5, -1]"
+      :description="'Bipolarni signal je sestavljen iz vrednosti 1 in -1.'"
+      :note="''"
+      :is-binary="isDigitalModulation(selectedModulationData)"
+    />
+    <level4-signal
+      v-if="selectedModulationData.hasBinaryLevel4"
+      :data="binaryLevel4Signal.values"
+      :title="'4-nivojski bipolarni signal'"
+      :description="''"
+      :note="'4-nivojski bipolarni signal je sestavljen iz vrednosti 3, 1, -1, -3.'"
+      :is-binary="isDigitalModulation(selectedModulationData)"
+    />
+    <positive-only-signal
+      v-if="selectedModulationData.hasCarrier"
+      :data="carrierSignalValues"
+      :canvas-id="'carrier-signal'"
+      :title="'Nosilec'"
+      :vertical-pool="[1, 0.5, -0.5, -1]"
+      :description="'Nosilec je visokofrekvenčni signal, s katerim moduliramo podatkovni signal.'"
+      :note="''"
+      :is-binary="isDigitalModulation(selectedModulationData)"
+    />
+    <positive-only-signal
+      :data="modulated"
+      :canvas-id="'modulated-signal'"
+      :title="'Moduliran signal'"
+      :vertical-pool="[1, 0.5, -0.5, -1]"
+      :is-modulated="true"
+      :description="selectedModulationData.description"
+      :note="selectedModulationData.note"
+      :is-binary="isDigitalModulation(selectedModulationData)"
+    />
+  </main>
 </template>
 
 <script>

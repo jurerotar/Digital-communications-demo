@@ -5,7 +5,7 @@ import canvas from "@/js/helpers/canvas.js";
 import App from '@/js/App.vue';
 import '@/js/helpers/prototypes/array';
 import '@/js/helpers/prototypes/math';
-import '@/css/index.css';
+import '@/css/index.scss';
 import {KatexOptions} from "katex";
 
 // Register katex as a window property

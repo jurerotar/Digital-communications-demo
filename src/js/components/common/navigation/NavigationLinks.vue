@@ -1,18 +1,19 @@
 <template>
-  <div class="flex flex-col items-start lg:mt-10 gap-2 w-full">
+  <div class="flex flex-col items-start gap-2 w-full">
     <router-link
       v-for="route in routes"
       :key="route.name"
       :to="route.path"
       class="flex text-lg justify-start items-center gap-4 font-medium transition-colors duration-300 text-zinc-900 dark:text-white w-full
-      p-2 rounded-lg hover:dark:bg-gray-800 hover:bg-gray-200 w-full"
-      :class="{'dark:bg-gray-800 bg-gray-200': currentRoute === route.path}"
+      p-3 rounded-lg hover:dark:bg-gray-700 hover:bg-gray-200 w-full"
+      :class="[{'dark:bg-gray-700 bg-gray-200': currentRoute === route.path}]"
       tabindex="0"
       @click="linkClick(route)"
     >
       <font-awesome-icon
         :icon="route.icon"
         :fixed-width="true"
+        class="text-blue-500 dark:text-white duration-300 transition-colors"
       />
       {{ route.label }}
     </router-link>
@@ -33,10 +34,10 @@ import {useStore} from "vuex";
 import {State} from "@/js/store/store";
 import {computed} from "vue";
 import {library} from "@fortawesome/fontawesome-svg-core";
-import {faWaveSquare, faWater, faLongArrowAltUp, faHome, faSignal} from "@fortawesome/free-solid-svg-icons";
+import {faWaveSquare, faWater, faLongArrowAltUp, faHome, faSignal, faEquals, faChartColumn} from "@fortawesome/free-solid-svg-icons";
 import {useRoute} from "vue-router";
 
-library.add(faWaveSquare, faLongArrowAltUp, faHome, faWater, faSignal);
+library.add(faWaveSquare, faLongArrowAltUp, faHome, faWater, faSignal, faEquals, faChartColumn);
 
 const store = useStore<State>();
 const isLgUp = computed<boolean>(() => store.getters['deviceProperties/isLgUp']);

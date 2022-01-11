@@ -44,3 +44,37 @@
   width: fit-content;
 }
 
+@layer base {
+  .colors-300 {
+    @apply transition-colors duration-300;
+  }
+
+  .opacity-300 {
+    @apply transition-opacity duration-300;
+  }
+
+  .styled-scrollbar {
+    &::-webkit-scrollbar {
+      background-color: inherit;
+      width: 5px;
+    }
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+    // TODO: This transition is not working
+    &::-webkit-scrollbar-thumb {
+      border-radius: 20px;
+      background-color: transparent;
+      transition: background-color .3s linear .5s;
+    }
+    &:hover::-webkit-scrollbar-thumb{
+      /* Light mode background color */
+      @apply bg-gray-200;
+      /* Dark mode background color */
+      .dark & {
+        @apply bg-gray-800;
+      }
+    }
+  }
+}
+

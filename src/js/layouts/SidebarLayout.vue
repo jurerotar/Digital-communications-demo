@@ -1,24 +1,25 @@
 <template>
   <!-- Top navigation -->
-  <nav
-    class="dark:bg-gray-900 transition-colors duration-300 relative flex flex-row justify-between lg:justify-end items-center top-0left-0
-    h-16 w-full lg:max-w-[calc(100%-18rem)] lg:ml-72 bg-gray-100 px-4 py-2 shadow-md"
-  >
-    <app-logo v-if="!isLgUp" />
-    <top-navigation-links v-if="isLgUp" />
-    <hamburger-menu v-if="!isLgUp" />
+  <nav class="dark:bg-gray-900 transition-colors duration-300 relative h-16 w-full bg-gray-100 shadow-md">
+    <div class="max-w-[1920px] mx-auto flex justify-between items-center w-full h-full px-4 py-2">
+      <app-logo />
+      <top-navigation-links v-if="isLgUp" />
+      <hamburger-menu v-if="!isLgUp" />
+    </div>
   </nav>
-  <!-- Sidebar navigation -->
-  <nav
-    class="dark:bg-gray-900 transition-all duration-300 flex flex-col p-4 items-start fixed bg-gray-100 shadow-lg top-0 left-0 h-full w-full
-     max-w-[16rem] lg:max-w-[18rem] transform lg:-translate-x-0 bg-white z-30"
-    :class="[mobileSidebarExtended ? 'translate-x-0' : '-translate-x-full']"
-  >
-    <app-logo v-if="isLgUp" />
-    <navigation-links />
-  </nav>
-
-  <router-view />
+  <div class="max-w-[1920px] mx-auto flex">
+    <!-- Sidebar navigation -->
+    <nav
+      class="transform colors-300 lg:bg-gray-900 shadow:2xl transition-transform w-full max-w-full styled-scrollbar
+            p-2 fixed z-10 top-16 left-0 h-[calc(100vh-4rem)] overflow-y-scroll
+            max-w-[18rem] lg:translate-x-0 lg:h-screen lg:top-0 lg:sticky"
+      :class="[mobileSidebarExtended ? 'translate-x-0' : '-translate-x-full']"
+    >
+      <navigation-links />
+    </nav>
+    <!-- View -->
+    <router-view />
+  </div>
 </template>
 
 <script

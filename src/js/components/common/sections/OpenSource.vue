@@ -5,7 +5,7 @@
         <app-circle-icon>
           <font-awesome-icon
             :icon="['fas', 'code-branch']"
-            class="text-3xl"
+            class="text-3xl text-blue-500"
           />
         </app-circle-icon>
         <app-section-heading>

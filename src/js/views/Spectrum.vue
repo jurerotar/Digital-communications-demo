@@ -1,66 +1,64 @@
 <template>
-  <div class="lg:ml-72">
-    <main class="flex flex-col gap-4 p-4 container lg:mx-auto">
-      <app-main-heading>
-        Spekter
-      </app-main-heading>
-      <app-collapsible>
-        <theory-spectrum />
-      </app-collapsible>
-      <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white text-zinc-900">
-        Oblika impulza
-      </h2>
-      <button-container>
-        <app-button
-          v-for="shape in pulses"
-          :key="shape.key"
-          :class="{'bg-blue-600': pulse.key === shape.key}"
-          @click="setPulseShape(shape.key)"
-        >
-          {{ shape.label }}
-        </app-button>
-      </button-container>
-      <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white text-zinc-900">
-        Dolžina impulza (T)
-      </h2>
-      <button-container>
-        <app-button
-          v-for="length in pulse.pulseLengths"
-          :key="length.key"
-          :class="{'bg-blue-600': pulseLength === length.key}"
-          @click="setPulseLength(length.key)"
-        >
-          {{ length.label }}
-        </app-button>
-      </button-container>
-      <full-signal
-        :canvas-id="'spectrum-original-signal'"
-        :data="baseSignal"
-        :title="'Impulz'"
-        :vertical-pool="[1, 0.5, -0.5, -1]"
-        :horizontal-pool="pulse.horizontalPool"
-        :type="pulse.key"
-      />
-      <spectrum-canvas
-        :canvas-id="'spectrum-signal-spectrum'"
-        :data="transformedSignal"
-        :title="'Spekter'"
-        :type="pulse.key"
-        :pulse-length="pulseLength"
-        :description="pulse?.spectrumGraphTexts?.description"
-        :note="pulse?.spectrumGraphTexts?.note"
-      />
-      <logarithmic
-        :canvas-id="'spectrum-signal-logarithmic'"
-        :data="transformedSignal"
-        :title="'Spekter [dB]'"
-        :type="pulse.key"
-        :pulse-length="pulseLength"
-        :description="pulse?.logarithmGraphTexts?.description"
-        :note="pulse?.logarithmGraphTexts?.note"
-      />
-    </main>
-  </div>
+  <main class="flex flex-col gap-4 p-4 container lg:mx-auto">
+    <app-main-heading>
+      Spekter
+    </app-main-heading>
+    <app-collapsible>
+      <theory-spectrum />
+    </app-collapsible>
+    <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white text-zinc-900">
+      Oblika impulza
+    </h2>
+    <button-container>
+      <app-button
+        v-for="shape in pulses"
+        :key="shape.key"
+        :class="{'bg-blue-600': pulse.key === shape.key}"
+        @click="setPulseShape(shape.key)"
+      >
+        {{ shape.label }}
+      </app-button>
+    </button-container>
+    <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white text-zinc-900">
+      Dolžina impulza (T)
+    </h2>
+    <button-container>
+      <app-button
+        v-for="length in pulse.pulseLengths"
+        :key="length.key"
+        :class="{'bg-blue-600': pulseLength === length.key}"
+        @click="setPulseLength(length.key)"
+      >
+        {{ length.label }}
+      </app-button>
+    </button-container>
+    <full-signal
+      :canvas-id="'spectrum-original-signal'"
+      :data="baseSignal"
+      :title="'Impulz'"
+      :vertical-pool="[1, 0.5, -0.5, -1]"
+      :horizontal-pool="pulse.horizontalPool"
+      :type="pulse.key"
+    />
+    <spectrum-canvas
+      :canvas-id="'spectrum-signal-spectrum'"
+      :data="transformedSignal"
+      :title="'Spekter'"
+      :type="pulse.key"
+      :pulse-length="pulseLength"
+      :description="pulse?.spectrumGraphTexts?.description"
+      :note="pulse?.spectrumGraphTexts?.note"
+    />
+    <logarithmic
+      :canvas-id="'spectrum-signal-logarithmic'"
+      :data="transformedSignal"
+      :title="'Spekter [dB]'"
+      :type="pulse.key"
+      :pulse-length="pulseLength"
+      :description="pulse?.logarithmGraphTexts?.description"
+      :note="pulse?.logarithmGraphTexts?.note"
+    />
+  </main>
 </template>
 
 <script
@@ -223,7 +221,7 @@ const transformedSignal = computed<number[]>(() => {
 });
 
 // Returns an array with only $size values around the middle
-const takeMiddleValues = (values: number[]): number[] =>  {
+const takeMiddleValues = (values: number[]): number[] => {
   const size = 600;
   return values.filter((el: number, index: number) => (index >= (values.length / 2 - size / 2) && index <= (values.length / 2 + size / 2)));
 }

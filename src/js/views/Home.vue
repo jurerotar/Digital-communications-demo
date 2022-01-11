@@ -1,5 +1,5 @@
 <template>
-  <div class="lg:ml-72">
+  <div>
     <main class="p-4 container lg:mx-auto flex flex-col gap-4">
       <app-main-heading>
         Digitalne komunikacije - demo

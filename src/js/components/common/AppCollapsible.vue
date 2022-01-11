@@ -34,7 +34,7 @@ export interface AppCollapsibleProps {
 }
 
 const props = withDefaults(defineProps<AppCollapsibleProps>(), {
-  opened: false,
+  opened: true,
   summary: 'Razlaga dogajanja'
 });
 </script>
