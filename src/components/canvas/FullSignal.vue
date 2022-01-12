@@ -26,7 +26,7 @@ export default {
     mounted() {
         // Initiate new P5 instance and create canvas
         this.p5 = new P5((p5) => {
-            this.$c.setup(p5, {frameRate: 1});
+            this.$c.setup(p5, {frameRate: 10});
             p5.draw = () => {
                 p5.background(this.$c.background());
                 const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
