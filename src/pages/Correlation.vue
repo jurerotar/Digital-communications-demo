@@ -181,16 +181,19 @@
                                 key: "square",
                                 label: "Pravokotni Impulz",
                                 drawingValues: () => this.xAxisArray.map((t) => -this.unitBox(t-0.75)),
+                                drawingValues2: () => this.xAxisArray.map((t) => -this.unitBox((t + 200*this.tau)-0.75)),
                             },
                             {
                                 key: "cos",
                                 label: "Dvignjeni Kosinusni Impulz",
-                                drawingValues: () => this.xAxisArray.map(t => (Math.cos(Math.PI * t * 1/2 * 0.01 + 1.95)*this.unitBox(t)))
+                                drawingValues: () => this.xAxisArray.map(t => (Math.cos(Math.PI * t * 1/2 * 0.01 + 1.95)*this.unitBox(t))),
+                                drawingValues2: () => this.xAxisArray.map(t => (Math.cos(Math.PI * (t + 200*this.tau) * 1/2 * 0.01 + 1.95)*this.unitBox(t + 200*this.tau)))
                             },
                             {
                                 key: "sin",
                                 label: "Sinusni Impulz",
-                                drawingValues: () => this.xAxisArray.map(t => (Math.sin(Math.PI * t * 2 * 0.01 - 1.65)*this.unitBox(t)))
+                                drawingValues: () => this.xAxisArray.map(t => (Math.sin(Math.PI * t * 2 * 0.01 - 1.65)*this.unitBox(t))),
+                                drawingValues2: () => this.xAxisArray.map(t => (Math.sin(Math.PI * (t + 200*this.tau) * 2 * 0.01 - 1.65)*this.unitBox(t + 200*this.tau)))
                             },
                         ],
                     }
@@ -261,13 +264,13 @@
                 return (this.signalType === "Harmonični") ? this.cutArray(this.signals[0].baseHarmonicSignal.drawingValues()) : this.cutArray(this.signals[1].signal.find(el => el.key === this.choosedFirstSignal).drawingValues())
             },
             canvasInputSecond() {
-                return (this.signalType === "Harmonični") ? this.cutArray(this.signals[0].signal.find(el => el.key === this.choosedSecondSignal).drawingValues()) : this.cutArray(this.signals[1].signal.find(el => el.key === this.choosedSecondSignal).drawingValues())
+                return (this.signalType === "Harmonični") ? this.cutArray(this.signals[0].signal.find(el => el.key === this.choosedSecondSignal).drawingValues()) : this.cutArray(this.signals[1].signal.find(el => el.key === this.choosedSecondSignal).drawingValues2())
             },
             canvasInputCorrelation() {
                 return this.cutArray(this.correlation.drawingValues())
             },
             correlationResult(){
-                let N = this.correlationSignalArray.length
+                let N = (this.signalType === "Harmonični") ? this.correlationSignalArray.length : 200
                 let correlation = 0
                 correlation = -this.correlationSignalArray.reduce((prevVal, currVal) => prevVal + currVal)/N
                 if(Math.abs(correlation) < 0.011){
