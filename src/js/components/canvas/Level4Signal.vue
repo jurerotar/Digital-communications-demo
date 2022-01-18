@@ -111,7 +111,7 @@ export default {
         // Y axis label
         p5.text('x(t)', canvasPadding - 5, canvasPadding / 2);
         // X axis label
-        p5.text('t', canvasDimensions.x - 30, canvasDimensions.y / 2 + 3);
+        p5.text('t', canvasDimensions.x - 30, canvasDimensions.y / 2 + 30);
         p5.strokeWeight(2);
         this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2 + 20), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y / 2 + 20), color, 7, 0);
 

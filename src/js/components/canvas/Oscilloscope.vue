@@ -94,12 +94,10 @@ export default {
                 p5.stroke(this.$c.colors[1]);
                 p5.strokeWeight(2);
 
-                for(var i = this.data.length - 1; i >= 0 ; i--){
+                for(let i = this.data.length - 1; i >= 0 ; i--){
                     p5.beginShape();
-
                     const t = i/(this.data.length-1);
                     const alpha = -0.0078*(Math.exp(4.86*t)-1)+1;
-
                     let color = p5.color(this.$c.colors[1])
 
                     if (i === 0){ // is the latest line?
