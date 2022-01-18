@@ -4,6 +4,7 @@ import Spectrum from "@/pages/Spectrum";
 import Harmonics from "@/pages/Harmonics";
 import Modulations from "@/pages/Modulations";
 import Pointers from "@/pages/Pointers";
+import Correlation from "@/pages/Correlation"
 import '../types';
 /**
  * Registered routes
@@ -39,6 +40,12 @@ const routes = [
         name: "Pointers",
         label: 'Kazalci',
         component: Pointers
+    },
+    {
+        path: "/correlation-function",
+        name: "correlation-function",
+        label: 'Korelacijska Funkcija',
+        component: Correlation
     },
 ];
 

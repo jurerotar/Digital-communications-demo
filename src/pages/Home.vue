@@ -52,6 +52,10 @@ export default {
                     href: '/pointers',
                     text: 'Kazalci'
                 },
+                {
+                    href: '/correlation-function',
+                    text: 'Korelacijska Funkcija'
+                },
             ]
         }
     },

@@ -26,7 +26,7 @@ export default {
     mounted() {
         // Initiate new P5 instance and create canvas
         this.p5 = new P5((p5) => {
-            this.$c.setup(p5, {frameRate: 1});
+            this.$c.setup(p5, {frameRate: 10});
             p5.draw = () => {
                 p5.background(this.$c.background());
                 const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
@@ -87,7 +87,11 @@ export default {
                         p5.vertex((previousY !== y) ? x - 1 : x, y * (this.offset.y - (canvasPadding - 25)));
                         previousY = y;
                     });
-                } else {
+                } 
+                else if(this.isCorrelation){
+                    this.data.forEach((y, x) => p5.vertex(x, y * (this.offset.y - (canvasPadding - 25))));
+                }
+                else {
                     this.normalizedData.forEach((y, x) => p5.vertex(x, y * (this.offset.y - (canvasPadding - 25))));
                 }
                 p5.endShape();
@@ -102,6 +106,9 @@ export default {
     computed: {
         isBinary() {
             return ['square'].includes(this.type);
+        },
+        isCorrelation(){
+            return ['correlation'].includes(this.type)
         },
         normalizedData() {
             const max = Math.max(...this.data.map(el => Math.abs(el)));
