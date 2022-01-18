@@ -1,131 +1,162 @@
 <template>
-    <div class="lg:ml-72">
-        <main class="p-4 container lg:mx-auto transition-colors duration-300 dark:bg-gray-800">
-            <app-main-heading>
-                Intersimbolna interferenca
-            </app-main-heading>
-            <br>
-            <app-collapsible>
-                <theory-isi></theory-isi>
-            </app-collapsible>
-            <br>
-            <div class="inline-flex flex-col mb-2">
-                <label :for="`fm-multiplier`" class="text-xl transition-colors duration-300 dark:text-white">
-                    Mejna frekvenca kanala (VP filter):<span class="font-semibold"> f<sub>m</sub></span>=
-                    <span class="font-medium">{{ Number(this.tfParams.fm_multi).toFixed(2) }}</span><span class="font-semibold"> f<sub>s</sub></span>
-                </label>
-                <div class="slider_container">
-                    <input type="range" class = "slider" :id="`fm-multiplier`"
-                        v-model.number="this.tfParams.fm_multi"
-                        min="0.1" max="2" step="0.05"
-                    >
-                </div>
-            </div>
-            <positive-only-signal
-                :data="transferFunction"
-                :canvasId="'transfer-function'"
-                :title="'Ekvivalentni prenosni kanal'"
-                :verticalPool="[1, 0.5, -0.5, -1]"
-                :description="''"
-                :note="''"
-                :isBinary=false
-                :xTicks="{
-                    'text':['ts1=t0','ts2','ts3','ts4','ts5'],
-                    'pos':[
-                        this.tfParams.t0+0*this.binarySymbolLength,
-                        this.tfParams.t0+1*this.binarySymbolLength,
-                        this.tfParams.t0+2*this.binarySymbolLength,
-                        this.tfParams.t0+3*this.binarySymbolLength,
-                        this.tfParams.t0+4*this.binarySymbolLength]
-                        }"
-                :isInverted=true
-                :speed="speed"
-            ></positive-only-signal>
+  <div class="lg:ml-72">
+    <main class="p-4 container lg:mx-auto transition-colors duration-300 dark:bg-gray-800">
+      <app-main-heading>
+        Intersimbolna interferenca
+      </app-main-heading>
+      <br>
+      <app-collapsible>
+        <theory-isi />
+      </app-collapsible>
+      <br>
+      <div class="inline-flex flex-col mb-2">
+        <label
+          :for="`fm-multiplier`"
+          class="text-xl transition-colors duration-300 dark:text-white"
+        >
+          Mejna frekvenca kanala (VP filter):<span class="font-semibold"> f<sub>m</sub></span>=
+          <span class="font-medium">{{ Number(tranFuncParams.fmMulti).toFixed(2) }}</span><span class="font-semibold"> f<sub>s</sub></span>
+        </label>
+        <div class="slider_container">
+          <input
+            :id="`fm-multiplier`"
+            v-model.number="tranFuncParams.fmMulti"
+            type="range"
+            class="slider"
+            min="0.1"
+            max="2"
+            step="0.05"
+          >
+        </div>
+      </div>
+      <positive-only-signal
+        :data="tranFunc"
+        :canvas-id="'transfer-function'"
+        :title="'Ekvivalentni prenosni kanal'"
+        :vertical-pool="[1, 0.5, -0.5, -1]"
+        :description="''"
+        :note="''"
+        :is-binary="false"
+        :x-ticks="{
+          'text':['ts1=t0','ts2','ts3','ts4','ts5'],
+          'pos':[
+            tranFuncParams.t0+0*binarySymbolLength,
+            tranFuncParams.t0+1*binarySymbolLength,
+            tranFuncParams.t0+2*binarySymbolLength,
+            tranFuncParams.t0+3*binarySymbolLength,
+            tranFuncParams.t0+4*binarySymbolLength]
+        }"
+        :is-inverted="true"
+        :speed="speed"
+      />
 
-            <app-button-container>
-                <app-button
-                    :class="[speed === sp ? 'dark:bg-blue-500 bg-blue-500': '']"
-                    @click="changeSpeed(sp)"
-                    v-for="sp in possibleSpeeds" :key="sp">
-                    {{ sp }}x
-                </app-button>
+      <app-button-container>
+        <app-button
+          v-for="sp in possibleSpeeds"
+          :key="sp"
+          :class="[speed === sp ? 'dark:bg-blue-500 bg-blue-500': '']"
+          @click="changeSpeed(sp)"
+        >
+          {{ sp }}x
+        </app-button>
             
             
-                <div @click = "togglePlay()"
-                    class="switcher__tab w-20 cursor-pointer flex flex-row relative bg-gray-200 dark:bg-gray-700 p-1 rounded-3xl items-center justify-center h-8 transition-all duration-300 ">
-                    <div v-for="state in states" 
-                        :key="state.key"
-                        :class="[mode === state.key ? 'switcher__front' : 'switcher__back']"
-                        class="flex flex-row justify-center items-center w-full h-full absolute top-0 left-0 transition-transform duration-300">
-                        <font-awesome-icon :icon = "state.icon" class = "text-sm mr-1 text-gray-800 transition-colors duration-300 dark:text-white"></font-awesome-icon>
-                        <p class="text-sm text-gray-800 dark:text-white transition-colors duration-300 select-none font-medium">
-                            {{ state.label }}
-                        </p>
-                    </div>
-                </div>
-            </app-button-container>
-            <br>
+        <div
+          class="switcher__tab w-20 cursor-pointer flex flex-row relative bg-gray-200 dark:bg-gray-700 p-1 rounded-3xl items-center justify-center h-8 transition-all duration-300 "
+          @click="togglePlay()"
+        >
+          <div
+            v-for="state in states" 
+            :key="state.key"
+            :class="[isPlaying === state.key ? 'switcher__front' : 'switcher__back']"
+            class="flex flex-row justify-center items-center w-full h-full absolute top-0 left-0 transition-transform duration-300"
+          >
+            <font-awesome-icon
+              :icon="state.icon"
+              class="text-sm mr-1 text-gray-800 transition-colors duration-300 dark:text-white"
+            />
+            <p class="text-sm text-gray-800 dark:text-white transition-colors duration-300 select-none font-medium">
+              {{ state.label }}
+            </p>
+          </div>
+        </div>
+      </app-button-container>
+      <br>
             
 
-            <level4-signal
-                :data="binaryLevel4Signal.values"
-                :title="'4-nivojski bipolarni signal'"
-                :description="''"
-                :note="''"
-                :isBinary=true
-                :speed="speed"
-            ></level4-signal>
+      <level4-signal
+        :data="binaryLevel4Signal.values"
+        :title="'4-nivojski bipolarni signal'"
+        :description="''"
+        :note="''"
+        :is-binary="true"
+        :speed="speed"
+      />
 
-            <positive-only-signal
-                :data="conv"
-                :canvasId="'distorted-signal'"
-                :title="'Popačen signal na izhodu prenosnega kanala'"
-                :verticalPool="[3, 1.5, -1.5, -3]"
-                :description="'Signal na izhodu je konvolucija med vhodnim signalom in prenosno funkcijo kanala'"
-                :note="''"
-                :isBinary=false
-                :xTicks="{'text':['ts','ts','ts','ts','ts'],'pos':tsTicks}"
-                :isInverted=false
-                :absMax="this.tfParams.max_convoluted_value"
-                :speed="speed"
-            ></positive-only-signal>
+      <positive-only-signal
+        :data="conv"
+        :canvas-id="'distorted-signal'"
+        :title="'Popačen signal na izhodu prenosnega kanala'"
+        :vertical-pool="[3, 1.5, -1.5, -3]"
+        :description="'Signal na izhodu je konvolucija med vhodnim signalom in prenosno funkcijo kanala'"
+        :note="''"
+        :is-binary="false"
+        :x-ticks="{'text':['ts','ts','ts','ts','ts'],'pos':tsTicks}"
+        :is-inverted="false"
+        :abs-max="tranFuncParams.maxConvValue"
+        :speed="speed"
+      />
 
-            <div class="inline-flex flex-col mb-2">
-                <label :for="`fm-multiplier`" class="text-xl transition-colors duration-300 dark:text-white">
-                    Mejna frekvenca kanala (VP filter):<span class="font-semibold"> f<sub>m</sub></span>=
-                    <span class="font-medium">{{ Number(this.tfParams.fm_multi).toFixed(2) }}</span><span class="font-semibold"> f<sub>s</sub></span>
-                </label>
-                <div class="slider_container">
-                    <input type="range" class = "slider" :id="`fm-multiplier`"
-                        v-model.number="this.tfParams.fm_multi"
-                        min="0.1" max="2" step="0.05"
-                    >
-                </div>
-            </div>
+      <div class="inline-flex flex-col mb-2">
+        <label
+          :for="`fm-multiplier`"
+          class="text-xl transition-colors duration-300 dark:text-white"
+        >
+          Mejna frekvenca kanala (VP filter):<span class="font-semibold"> f<sub>m</sub></span>=
+          <span class="font-medium">{{ Number(tranFuncParams.fmMulti).toFixed(2) }}</span><span class="font-semibold"> f<sub>s</sub></span>
+        </label>
+        <div class="slider_container">
+          <input
+            :id="`fm-multiplier`"
+            v-model.number="tranFuncParams.fmMulti"
+            type="range"
+            class="slider"
+            min="0.1"
+            max="2"
+            step="0.05"
+          >
+        </div>
+      </div>
 
-            <oscilloscope
-                :data = "dataISI"
-                :canvasId = "'eye-diagram'"
-                :name = "'Očesni diagram'"
-                :symbolLength = "binarySymbolLength"
-                :speed="speed"
-                :ticks="oscTicks"
-            ></oscilloscope> 
+      <oscilloscope
+        :data="dataISI"
+        :canvas-id="'eye-diagram'"
+        :name="'Očesni diagram'"
+        :symbol-length="binarySymbolLength"
+        :speed="speed"
+        :ticks="oscTicks"
+      /> 
 
-            <div @click = "clearOscilloscope"
-                class="switcher__tab w-20 cursor-pointer flex flex-row relative bg-gray-200 dark:bg-gray-700 p-1 rounded-3xl items-center justify-center h-8 transition-all duration-300">
-                <div  
-                    :class="'switcher__front'"
-                    class="flex flex-row justify-center items-center w-full h-full absolute top-0 left-0 transition-transform duration-300">
-                    <font-awesome-icon :icon = "['fas', 'trash-alt']" class = "text-sm mr-1 text-gray-800 transition-colors duration-300 dark:text-white"></font-awesome-icon>
-                    <p class="text-sm text-gray-800 dark:text-white transition-colors duration-300 select-none font-medium">
-                        Počisti
-                    </p>
-                </div>
-            </div>
-
-        </main>
-    </div>
+      <div
+        class="switcher__tab w-20 cursor-pointer flex flex-row relative bg-gray-200 dark:bg-gray-700 p-1 rounded-3xl items-center justify-center h-8 transition-all duration-300"
+        @click="clearOscilloscope"
+      >
+        <div  
+          :class="'switcher__front'"
+          class="flex flex-row justify-center items-center w-full h-full absolute top-0 left-0 transition-transform duration-300"
+        >
+          <font-awesome-icon
+            :icon="['fas', 'trash-alt']"
+            class="text-sm mr-1 text-gray-800 transition-colors duration-300 dark:text-white"
+          />
+          <p class="text-sm text-gray-800 dark:text-white transition-colors duration-300 select-none font-medium">
+            Počisti
+          </p>
+        </div>
+      </div>
+      <br>
+    </main>
+  </div>
 </template>
 
 <script>
@@ -180,7 +211,7 @@ export default {
                 currentlyReturns: 1,
             },
 
-            combinationsSequence: {
+            combSeq: {
                 values : [-1,-3,3,3,1,-1,3,-3,-3,1,3,-1,1,1,-3,-1,-3,1,1,-1,3,1,-3,-3,3,-1,1,3,3,-3,-1],
                 idx : 0
             },
@@ -191,55 +222,37 @@ export default {
             conv: [...Array(600).fill(0)],
 
             /** @type {number[]} */
-            transferFunction: [...Array(600).fill(0)],
-            tfParams: {
-                fm_multi: 1,
-                fm_multi_old: 0,
+            tranFunc: [...Array(600).fill(0)],
+            tranFuncParams: {
+                fmMulti: 1,
+                fmMulti_old: 0,
                 fm: 1/120,
                 t0: 120/2,
                 t0_old: 120/2,
                 a: 1,
-                max_convoluted_value: 3
+                maxConvValue: 3
             },
 
             tsTicks : [],
 
             dataPartial : [],
             
-            dataISI : Array.from(Array(1), () => new Array()),
+            dataISI : [],
 
             oscTicks : [],
 
             /** @type {number[]} */
             timeValues: [...Array(600).fill(0)].map((t, i) => i * 0.005),
 
-             /**
-             * Objects in this array determine which canvases will be drawn
-             * @type {Array<Modulation>}
-             */           
-            modulations: [
-                {
-                    label: '4ASK',
-                    key: '4ask',
-                    description: '4ASK modulacijo pridobimo z množenjem digitalnega niza {-3,-1,1,3} in harmoničnega nosilca.',
-                    note: '4ASK modulacija sicer predpostavlja 4 različne amplitude nivoje. Izkaže pa se, da je to neekonomično, ker porabi več energije. Zato v praksi 4ASK izvedemo z dvemi amplitudnimi nivoji in dvemi fazami.',
-                    hasCarrier: true,
-                    hasSineModulation: false,
-                    hasBinaryLevel1: false,
-                    hasBinaryLevel2: false,
-                    hasBinaryLevel4: true,
-                },
-
-            ],
             // PLAY PAUSE BUTTON
             states: [
                 {
-                    key: 'stop',
+                    key: false,
                     label: 'Play',
                     icon: ['fas', 'play']
                 },
                 {
-                    key: 'play',
+                    key: true,
                     label: 'Stop',
                     icon: ['fas', 'stop']
                 },
@@ -250,185 +263,42 @@ export default {
              * @type {String}
              */             
             play: 'play',
+
+            isPlaying : true,
         }
     },
-    computed: {
-        mode() {
-            //return this.$store.state.app.state;
-            return this.play;
-        },
-    },
-    methods: {
-        /**
-         * Changes selected property
-         * @param {string} key
-         */
-        changeSelected(key) {
-            this.selected = key;
-        },
-        /**
-         * Returns binary values periodically from
-         * @param {BinarySignal} obj
-         * @returns {number}
-         */
-        nextBinaryValue(obj) {
-            if (this.binaryCounter === (this.binarySymbolLength-1)) {
-                let random = false;
-                if (random){
-                    let idx = Math.floor(Math.random()*4);
-                    obj.currentlyReturns = this.binaryLevel4Signal.pool[idx];
-                }else{
-                    this.combinationsSequence.idx = this.combinationsSequence.idx + 1;
-                    if(this.combinationsSequence.idx === this.combinationsSequence.values.length){
-                        this.combinationsSequence.idx = 0;
-                    }              
-                    obj.currentlyReturns = this.combinationsSequence.values[this.combinationsSequence.idx];
-                }
-            }else{
-                obj.currentlyReturns = 0;
-            }
-            return obj.currentlyReturns;
-        },
 
-        /**
-         * is called when speed changes (buttons)
-         * 
-         */
-        changeSpeed(sp){
-            if(sp > this.speed){
-                // if speed increases == signal data gets shorter take every <speed>-th element
-                this.binaryLevel4Signal.values = this.binaryLevel4Signal.values.filter((i,t) => t % this.speed === 0);
-            }else{
-                // if speed decreases == signal data gets longer copy every element <speed>-th times
-                this.binaryLevel4Signal.values = this.binaryLevel4Signal.values.filter((i,t) => t % this.speed === 0);
-            }
-            this.speed = sp;
-            this.binarySymbolLength = this.binarySymbolLengthInit/this.speed;
-            this.signalLength = 600/this.speed;
-
-            this.updateTfParams();
-            this.recalculateTicks(true)
-
-            this.binaryLevel4Signal.values = [];
-            this.binaryCounter = 0;
-            this.conv = [];
-            this.dataPartial = [];
-            this.dataISI = Array.from(Array(1), () => new Array());
-        },
-
-        recalculateTicks(reset){
-            if(reset){
-                this.tsTicks = [...Array(Math.floor(this.signalLength/this.binarySymbolLength)).fill(0)]; // reset ticks
-                for (var i = 0; i < this.tsTicks.length; i++){
-                    this.tsTicks[i] = (i+this.tfParams.t0/this.binarySymbolLength)*this.binarySymbolLength;
-                }
-            }else{
-                for (i = 0; i < this.tsTicks.length; i++){
-                    let dt0 = this.tfParams.t0 - this.tfParams.t0_old;
-                    this.tsTicks[i] = this.tsTicks[i]-dt0;
-                }
-                this.tsTicks.map(i => i >= (this.signalLength - 1) ? i - this.signalLength : i); // cut ticks that are out of range
-                this.tfParams.t0_old = this.tfParams.t0;
-            }
-
-            this.oscTicks = [];
-            for(i = 0; i <= 2; i++){
-                this.oscTicks[i] = this.tfParams.t0 + i*this.binarySymbolLength;
-                if (this.oscTicks[i] >= 2*this.binarySymbolLength){
-                    this.oscTicks[i] = this.oscTicks[i] - 2*this.binarySymbolLength;
-                }
-            }
-        },
-
-        /**
-         * is called when fm_multi changes (slider) by callback setInterval
-         * is called by changeSpeed()
-         * 
-         * 
-         */
-        updateTfParams(){
-            this.tfParams.fm = 1*1/this.binarySymbolLength,  //                    
-            this.tfParams.t0 = 0.5*1/(this.tfParams.fm*this.tfParams.fm_multi); 
-
-            this.recalculateTicks(false)
-            this.updateTransferFunction();
-        },
-
-        /**
-         * Calculates sinc transfer function
-         * @param {number} fm
-         * @param {number} t0
-         * @param {number} a
-         * @param {BinarySignal} obj
-         * @returns {number}
-         */
-        updateTransferFunction(){
-            let multi = this.tfParams.fm_multi;
-            let fm = this.tfParams.fm;
-            let t0 = this.tfParams.t0;
-            let a  = this.tfParams.a;
-            this.transferFunction = [...Array(this.signalLength).fill(0)];
-            this.transferFunction = this.transferFunction.map((i,t) => Math.sin(2*Math.PI*fm*multi*(t-t0)/a)/(2*Math.PI*fm*multi*(t-t0)/a))
-            this.transferFunction = this.transferFunction.map(i => isNaN(i) ? 1 : i); // 1/(t-t0); t=t0 => NaN
-            
-            let worstCaseSignal = [...Array(this.signalLength).fill(0)].map((tf,t) => t % this.binarySymbolLength === (this.binarySymbolLength - 1) ? 3 : 0);
-            let worstCaseConvol = new Array;
-            for(var n = 0; n < this.signalLength; n++){
-                var conv = new Array;
-                for(var m = 0; m <= (this.signalLength - n - 1); m++){
-                    conv.push(this.transferFunction[m]*worstCaseSignal[m+n]);
-                }
-                worstCaseConvol.push(conv.reduce((a,b)=>a+b));
-            }
-            this.tfParams.max_convoluted_value = worstCaseConvol[Math.round(this.signalLength - 1 - this.tfParams.t0)];
-            //this.tfParams.max_convoluted_value = this.transferFunction.map(tf => tf*3).reduce((a,b)=>a+b); // for square signal
-        },
-
-
-        /**
-         * 
-         * 
-         */
-        
-        togglePlay(){
-            this.play = this.play === 'play' ? 'stop' : 'play';
-        },
-        
-        clearOscilloscope(){
-            this.dataISI = Array.from(Array(1), () => new Array(600));
-        },
-
-
-    },
     mounted(){
         // Start time at 600 * 0.005, because we initiate arrays with 600 values already in
-        let time = this.signalLength * 0.005;
+        var time = this.signalLength * 0.005;
+
+        this.changeSpeed(2);
 
         this.recalculateTicks(true)
 
         // Create interval to push new signal values to arrays
         this.intervalId = window.setInterval(() => {
-            if (this.play === 'play'){
-                if(this.tfParams.fm_multi_old != this.tfParams.fm_multi){
-                    this.tfParams.fm_multi_old = this.tfParams.fm_multi;
-                    this.updateTfParams()
+            if (this.isPlaying){
+                if(this.tranFuncParams.fmMulti_old != this.tranFuncParams.fmMulti){
+                    this.tranFuncParams.fmMulti_old = this.tranFuncParams.fmMulti;
+                    this.updatetranFuncParams()
                 } 
 
                 // CONVOLUTE
-                let f = this.binaryLevel4Signal.values; 
-                let g = this.transferFunction;
+                const f = this.binaryLevel4Signal.values; 
+                const g = this.tranFunc;
                 
                 // use map to multiply, use reduce to sum
-                let conv0 = f.map((f,i)=>f*g[i]).reduce((a,b) => a+b,0);
+                const conv0 = f.map((f,i)=>f*g[i]).reduce((a,b) => a+b,0);
                 this.conv.unshift(conv0);
 
                 // ISI oscilloscope plot
-                this.dataPartial.push(conv0/this.tfParams.max_convoluted_value);
+                this.dataPartial.push(conv0/this.tranFuncParams.maxConvValue);
                 this.dataISI[0] = this.dataPartial;
 
                 if (this.dataPartial.length === 2*this.binarySymbolLength){
                     this.dataISI.unshift([]);
-                    if (this.dataISI.length === this.combinationsSequence.values.length){
+                    if (this.dataISI.length === this.combSeq.values.length){
                         this.dataISI.pop();
                     }
                     this.dataPartial = [];
@@ -454,6 +324,136 @@ export default {
                 this.binaryCounter = (this.binaryCounter === (this.binarySymbolLength-1)) ? 0 : this.binaryCounter + 1;
             }  
         }, 30);
+    },
+    methods: {
+        /**
+         * Changes selected property
+         * @param {string} key
+         */
+        changeSelected(key) {
+            this.selected = key;
+        },
+        /**
+         * Returns binary values periodically from
+         * @param {BinarySignal} obj
+         * @returns {number}
+         */
+        nextBinaryValue(obj) {
+            if (this.binaryCounter === (this.binarySymbolLength-1)) {
+                this.combSeq.idx = this.combSeq.idx === (this.combSeq.values.length - 1) ? 0 : this.combSeq.idx + 1;
+                obj.currentlyReturns = this.combSeq.values[this.combSeq.idx];
+            }else{
+                obj.currentlyReturns = 0;
+            }
+            return obj.currentlyReturns;
+        },
+
+        /**
+         * is called when speed changes (buttons)
+         * 
+         */
+        changeSpeed(sp){
+            this.binaryLevel4Signal.values = this.binaryLevel4Signal.values.filter((i,t) => t % this.speed === 0);
+            
+            this.speed = sp;
+            this.binarySymbolLength = this.binarySymbolLengthInit/this.speed;
+            this.signalLength = 600/this.speed;
+
+            this.updatetranFuncParams();
+            this.recalculateTicks(true)
+
+            this.binaryLevel4Signal.values = [];
+            this.binaryCounter = 0;
+            this.conv = [];
+            this.dataPartial = [];
+            this.dataISI =[];
+        },
+
+        recalculateTicks(reset){
+            if(reset){
+                this.tsTicks = [...Array(Math.floor(this.signalLength/this.binarySymbolLength)).fill(0)]; // reset ticks
+                for (var i = 0; i < this.tsTicks.length; i++){
+                    this.tsTicks[i] = (i+this.tranFuncParams.t0/this.binarySymbolLength)*this.binarySymbolLength;
+                }
+            }else{
+                for (i = 0; i < this.tsTicks.length; i++){
+                    const dt0 = this.tranFuncParams.t0 - this.tranFuncParams.t0_old;
+                    this.tsTicks[i] = this.tsTicks[i]-dt0;
+                }
+                this.tsTicks.map(i => i >= (this.signalLength - 1) ? i - this.signalLength : i); // cut ticks that are out of range
+                this.tranFuncParams.t0_old = this.tranFuncParams.t0;
+            }
+
+            this.oscTicks = [];
+            for(i = 0; i <= 2; i++){
+                this.oscTicks[i] = this.tranFuncParams.t0 + i*this.binarySymbolLength;
+                if (this.oscTicks[i] >= 2*this.binarySymbolLength){
+                    this.oscTicks[i] = this.oscTicks[i] - 2*this.binarySymbolLength;
+                }
+            }
+        },
+
+        /**
+         * is called when fmMulti changes (slider) by callback setInterval
+         * is called by changeSpeed()
+         * 
+         * 
+         */
+        updatetranFuncParams(){
+            this.tranFuncParams.fm = 1/this.binarySymbolLength,  //                    
+            this.tranFuncParams.t0 = 0.5*1/(this.tranFuncParams.fm*this.tranFuncParams.fmMulti); 
+
+            this.recalculateTicks(false)
+            this.updatetranFunc();
+        },
+
+        /**
+         * Calculates sinc transfer function
+         * @param {number} fm
+         * @param {number} t0
+         * @param {number} a
+         * @param {BinarySignal} obj
+         * @returns {number}
+         */
+        updatetranFunc(){
+            const multi = this.tranFuncParams.fmMulti;
+            const fm = this.tranFuncParams.fm;
+            const t0 = this.tranFuncParams.t0;
+            const a  = this.tranFuncParams.a;
+            this.tranFunc = [...Array(this.signalLength).fill(0)];
+            this.tranFunc = this.tranFunc.map((i,t) => Math.sin(2*Math.PI*fm*multi*(t-t0)/a)/(2*Math.PI*fm*multi*(t-t0)/a))
+            this.tranFunc = this.tranFunc.map(i => isNaN(i) ? 1 : i); // 1/(t-t0); t=t0 => NaN
+            
+            // think of a better way to calculate maximum possible value, this method is heavy
+            var worstCaseSignal = [...Array(this.signalLength).fill(0)].map((tf,t) => t % this.binarySymbolLength === (this.binarySymbolLength - 1) ? 3 : 0);
+            var worstCaseConv = [];
+            for(var n = 0; n < this.signalLength; n++){
+                var conv = [];
+                for(var m = 0; m <= (this.signalLength - n - 1); m++){
+                    conv.push(this.tranFunc[m]*worstCaseSignal[m+n]);
+                }
+                worstCaseConv.push(conv.reduce((a,b)=>a+b));
+            }
+            this.tranFuncParams.maxConvValue = worstCaseConv[Math.round(this.signalLength - 1 - this.tranFuncParams.t0)]; 
+            
+            //this.tranFuncParams.maxConvValue = this.tranFunc.map(tf => tf*3).reduce((a,b)=>a+b); // for square signal
+        },
+
+
+        /**
+         * 
+         * 
+         */
+        
+        togglePlay(){
+            this.isPlaying = !this.isPlaying;
+        },
+        
+        clearOscilloscope(){
+            this.dataISI = Array.from(Array(1), () => new Array(600));
+        },
+
+
     },
 
 }

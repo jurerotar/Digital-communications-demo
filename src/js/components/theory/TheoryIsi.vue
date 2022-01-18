@@ -1,5 +1,5 @@
 <template>
-    <p class="transition-colors duration-300 dark:text-white">
+  <p class="transition-colors duration-300 dark:text-white">
     <br>
     Izvorni signal se pri prenosu skozi prenosni kanal popači - raztegne se po časovni osi.
     V primeru ilustriranem na tej strani je ekvivalentni prenosni kanal modeliran kot idealni nizko pasovni filter z mejno frekvenco <span class="font-semibold">f<sub>m</sub></span>, 
@@ -29,18 +29,24 @@
     /><br><br>
     Ker se <span class="font-semibold">h(t)</span> razteza čez več period, to pomeni, da se tudi posamezni simbol razteza v čas, ko vzorčimo naslednji simbol. 
     Vrednost se prišteje naslednjemu vzorcu in spremeni njegovo vrednost. Nastane intersimbolna interferenca. 
-    <br><br></p>
-    <h1 class="text-2xl font-medium mb-4 transition-colors duration-300 dark:text-white">Nyquistov kriterij v časovnem prostoru </h1>
-    <p class="transition-colors duration-300 dark:text-white">
+    <br><br>
+  </p>
+  <h1 class="text-2xl font-medium mb-4 transition-colors duration-300 dark:text-white">
+    Nyquistov kriterij v časovnem prostoru
+  </h1>
+  <p class="transition-colors duration-300 dark:text-white">
     Kljub, da <span class="font-semibold">h(t)</span> povzroči, da se simbol razširi čez več period vzorčenja, to ni problem, če je vrednost <span class="font-semibold">h(t)</span> enaka 
     <span class="font-semibold">h(t)</span> za vse <span class="font-semibold">t=nT<sub>s</sub></span>.
     Če <span class="font-semibold">h(t)</span> izpolnjuje to zahtevo, pravimo, da izpoljuje <i>Nyquistov kriterij za prenos brez intersimbolne interference v časovnem prostoru.</i>
     <br><br><span
       ref="h1NyquistRef"
       class="katex-inline"
-    /><br><br></p>
-    <h1 class="text-2xl font-medium mb-4 transition-colors duration-300 dark:text-white">Nyquistov kriterij v frekvenčnem prostoru </h1>
-    <p class="transition-colors duration-300 dark:text-white">
+    /><br><br>
+  </p>
+  <h1 class="text-2xl font-medium mb-4 transition-colors duration-300 dark:text-white">
+    Nyquistov kriterij v frekvenčnem prostoru
+  </h1>
+  <p class="transition-colors duration-300 dark:text-white">
     Zanima nas še, kako mora izgledati prenosna funkcija ekvivalentnega prenosnega kanala <span class="font-semibold">H(f)</span>. 
     Zgoraj zapisan izraz za <span class="font-semibold">h(t)</span> ne določa vrednosti 
     <span class="font-semibold">h(t)</span> za <span class="font-semibold">t</span> <span class="font-semibold">&#8800;</span> <span class="font-semibold">nT<sub>s</sub></span>, zato ga zapišemo drugače:
@@ -56,18 +62,19 @@
     /><br><br>
     Če je pogoj izpolnjen, pravimo, da velja Nyquistov kriterij za prenos brez ISI v frekvenčnem prostoru: 
     <br><i>Če je prekrita prenosna funkcija ekvivalentnega prenosnega kanala konstantna, potem pri digitalnem prenosu 
-    ne bo prišlo do intersimbolne interference. </i>
-    <br><br></p>
-    <h1 class="text-2xl font-medium mb-4 transition-colors duration-300 dark:text-white">Očesni diagram</h1>
-    <p class="transition-colors duration-300 dark:text-white">
+      ne bo prišlo do intersimbolne interference. </i>
+    <br><br>
+  </p>
+  <h1 class="text-2xl font-medium mb-4 transition-colors duration-300 dark:text-white">
+    Očesni diagram
+  </h1>
+  <p class="transition-colors duration-300 dark:text-white">
     Na očesnem diagramu vidimo 2 periodi prejetega signala pri čemer za proženje uporabimo frekvenco vzorčenja. 
     Na spodnjem zaslonu osciloskopa je proženje nastavljeno na vzorčno frekvenco izvornega signala, 
     zato se ob spreminjanju zakasnitve na kanalu <span class="font-semibold">t<sub>0</sub></span> spremeni pozicija mesta, kjer odčitavamo signal (ilustrirano z zeleno črto).
     <br>
     <br><br>
-    
-    
-    </p>
+  </p>
 </template>
 
 <script

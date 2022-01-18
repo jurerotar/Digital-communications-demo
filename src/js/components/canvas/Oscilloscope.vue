@@ -1,9 +1,11 @@
 <template>
-    <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white">{{name}}</h2>
+  <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white">
+    {{ name }}
+  </h2>
     
-    <canvas-container>
-        <div :id="canvasId"></div>
-    </canvas-container>
+  <canvas-container>
+    <div :id="canvasId" />
+  </canvas-container>
 </template>
 
 
@@ -15,6 +17,35 @@ import '@/js/types/types.ts';
 export default {
     name: "Oscilloscope",
     components: {CanvasContainer},
+        
+    props: {
+        data: {
+            type: Array,
+            required: true
+        },
+        canvasId: {
+            type: String,
+            required: true
+        },
+        name: {
+            type: String,
+            required: true
+        },
+        symbolLength: {
+            type: Number,
+            required: true
+        },
+        speed: {
+            type: Number,
+            required: false,
+            default: 1
+        },
+        ticks: {
+            type: Array,
+            required: false,
+            default: null
+        },
+    },
     data() {
         return {
             p5: null,
@@ -66,8 +97,8 @@ export default {
                 for(var i = this.data.length - 1; i >= 0 ; i--){
                     p5.beginShape();
 
-                    let t = i/(this.data.length-1);
-                    let alpha = -0.0078*(Math.exp(4.86*t)-1)+1;
+                    const t = i/(this.data.length-1);
+                    const alpha = -0.0078*(Math.exp(4.86*t)-1)+1;
 
                     let color = p5.color(this.$c.colors[1])
 
@@ -77,10 +108,7 @@ export default {
                         
                         color = p5.lerpColor(p5.color(this.$c.scale()),p5.color(this.$c.colors[1]),p);
                     }
-                    let v1 = color.levels[1]
-                    let v2 = color.levels[2]
-                    let v3 = color.levels[3]
-                    p5.stroke(v1,v2,v3,alpha*255);
+                    p5.stroke(color.levels[1],color.levels[2],color.levels[3],alpha*255);
 
                     this.data[i].forEach((y,x)=>{
                         p5.vertex(this.speed*2*x + canvasPadding, y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2);
@@ -94,35 +122,6 @@ export default {
     unmounted() {
         // Remove canvas, otherwise P5 object stays in memory
         this.p5.removeCanvas();
-    },
-        
-    props: {
-        data: {
-            type: Array,
-            required: true
-        },
-        canvasId: {
-            type: String,
-            required: true
-        },
-        name: {
-            type: String,
-            required: true
-        },
-        symbolLength: {
-            type: Number,
-            required: true
-        },
-        speed: {
-            type: Number,
-            required: false,
-            default: 1
-        },
-        ticks: {
-            type: Array,
-            required: false,
-            default: null
-        },
     }
 }
 </script>

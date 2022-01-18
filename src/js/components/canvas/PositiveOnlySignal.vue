@@ -98,16 +98,13 @@ export default {
   },
   computed: {
     normalizedData() {
-        let max = 1;
-        if(this.absMax !== null){
-            max = this.absMax;
-        }else{
-            max = Math.max(...this.data.map(el => Math.abs(el)));
-        }
+        const max = this.absMax !== null ? this.absMax : Math.max(...this.data.map(el => Math.abs(el)));
         const data = [...this.data];
         data.length = 600;
 
-        return this.isInverted ? data.map(el => -1* el / max) : data.map(el => 1* el / max) ;
+        const isInvertedModifier = this.isInverted ? -1 : 1;
+
+        return data.map(el => isInvertedModifier * el / max);
     },
     isModulatedText() {
       return (this.isModulated) ? 'y(t)' : 'x(t)';
