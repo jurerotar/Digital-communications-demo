@@ -51,6 +51,11 @@ export default {
       required: false,
       default: false
     },
+    speed: {
+      type: Number,
+      required: false,
+      default: 1
+    },
   },
   data() {
     return {
@@ -78,7 +83,8 @@ export default {
     this.p5 = new P5((p5) => {
       this.$c.setup(p5);
       p5.draw = () => {
-        p5.stroke(0);
+        const color = this.$c.scale();
+        p5.stroke(color);
         p5.background(this.$c.background());
         const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
 
@@ -107,7 +113,7 @@ export default {
         // X axis label
         p5.text('t', canvasDimensions.x - 30, canvasDimensions.y / 2 + 3);
         p5.strokeWeight(2);
-        this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2 + 20), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y / 2 + 20), 'black', 7, 0);
+        this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2 + 20), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y / 2 + 20), color, 7, 0);
 
         p5.fill(1);
         p5.triangle(50, 42, 46, 50, 54, 50);
@@ -123,16 +129,17 @@ export default {
             '3': 15,
             '1': 18,
             '-1': 21,
-            '-3': 25
+            '-3': 25,
+            '0': 19
           };
           let previousY = 1;
           this.normalizedData.forEach((y, x) => {
-            p5.vertex((previousY !== y) ? x - 1 + canvasPadding : x + canvasPadding, y * this.offset.y / 3 + this.offset.y + canvasPadding / 2 + binaryOffsets[`${y}`]);
+            p5.vertex((previousY !== y) ? this.speed*x - 1 + canvasPadding : this.speed*x + canvasPadding, y * this.offset.y / 3 + this.offset.y + canvasPadding / 2 + binaryOffsets[`${y}`]);
             previousY = y;
           });
         } else {
           this.normalizedData.forEach((y, x) => {
-            p5.vertex(x + canvasPadding, y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2);
+            p5.vertex(this.speed*x + canvasPadding, y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2);
           });
         }
         p5.endShape();
