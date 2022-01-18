@@ -90,6 +90,19 @@
                 :speed="speed"
             ></positive-only-signal>
 
+            <div class="inline-flex flex-col mb-2">
+                <label :for="`fm-multiplier`" class="text-xl transition-colors duration-300 dark:text-white">
+                    Mejna frekvenca kanala (VP filter):<span class="font-semibold"> f<sub>m</sub></span>=
+                    <span class="font-medium">{{ Number(this.tfParams.fm_multi).toFixed(2) }}</span><span class="font-semibold"> f<sub>s</sub></span>
+                </label>
+                <div class="slider_container">
+                    <input type="range" class = "slider" :id="`fm-multiplier`"
+                        v-model.number="this.tfParams.fm_multi"
+                        min="0.1" max="2" step="0.05"
+                    >
+                </div>
+            </div>
+
             <oscilloscope
                 :data = "dataISI"
                 :canvasId = "'eye-diagram'"
