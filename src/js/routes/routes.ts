@@ -45,6 +45,20 @@ const routes: Route[] = [
     component: () => import("@/js/views/Pointers.vue"),
     icon: ['fas', 'long-arrow-alt-up'],
   },
+  {
+    path: "/#",
+    name: "Intersymbol interference",
+    label: 'Intersimbolna interferenca',
+    component: () => null,
+    icon: ['fas', 'chart-column'],
+  },
+  {
+    path: "/correlation",
+    name: "Correlation",
+    label: 'Korelacija',
+    component: () => import("@/js/views/Correlation.vue"),
+    icon: ['fas', 'equals'],
+  },
 ];
 
 const router: Router = createRouter({
