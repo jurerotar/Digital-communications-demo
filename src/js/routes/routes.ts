@@ -46,6 +46,13 @@ const routes: Route[] = [
     icon: ['fas', 'long-arrow-alt-up'],
   },
   {
+    path: "/correlation",
+    name: "Correlation",
+    label: 'Korelacija',
+    component: () => import("@/js/views/Correlation.vue"),
+    icon: ['fas', 'equals'],
+  },
+  {
     path: "/isi",
     name: "ISI",
     label: 'Intersimbolna interferenca',
