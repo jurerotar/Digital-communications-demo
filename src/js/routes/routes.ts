@@ -45,6 +45,13 @@ const routes: Route[] = [
     component: () => import("@/js/views/Pointers.vue"),
     icon: ['fas', 'long-arrow-alt-up'],
   },
+  {
+    path: "/isi",
+    name: "ISI",
+    label: 'Intersimbolna interferenca',
+    component: () => import("@/js/views/ISI.vue"),
+    icon: ['fas', 'eye'],
+  },
 ];
 
 const router: Router = createRouter({
