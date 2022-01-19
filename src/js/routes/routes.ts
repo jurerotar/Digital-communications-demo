@@ -46,13 +46,6 @@ const routes: Route[] = [
     icon: ['fas', 'long-arrow-alt-up'],
   },
   {
-    path: "/#",
-    name: "Intersymbol interference",
-    label: 'Intersimbolna interferenca',
-    component: () => null,
-    icon: ['fas', 'chart-column'],
-  },
-  {
     path: "/correlation",
     name: "Correlation",
     label: 'Korelacija',

@@ -186,13 +186,12 @@ export default {
     data(){
         return{
             signalType: "Harmonični",
-            signalSize: 2**11,
-            xAxisArray: null,
+            xAxisArray: [...[...Array(2**10).keys()].map(el => el * -1 - 1).reverse(), ...Array(2**10).keys()],
+            firstSignalArray: [...Array(601)],
+            secondSignalArray: [...Array(601)],
+            correlationSignalArray: [...Array(601)],
             choosedFirstSignal: "baseCos",
             choosedSecondSignal: "sin",
-            firstSignalArray: null, 
-            secondSignalArray: null, 
-            correlationSignalArray: null,
             horizontal_pool: [-1.5, -1.25, -1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5],
             typeLabel: 0, //0 for "Harmonični", 1 for "Impulzni"
             tau: 0,
@@ -263,20 +262,10 @@ export default {
             return this.cutArray(this.correlation.drawingValues());
         },
         correlationResult(){
-            const N = (this.signalType === "Harmonični") ? this.correlationSignalArray.length : 200;
-            let correlation = 0;
-            correlation = -this.correlationSignalArray.reduce((prevVal, currVal) => prevVal + currVal)/N;
-            if(Math.abs(correlation) < 0.011){
-                correlation = 0;
-            }  
-            return Math.trunc(correlation*100)/100;
+            const numberOfSamples = (this.signalType === "Harmonični") ? this.correlationSignalArray.length : 200;
+            const correlation = -this.correlationSignalArray.reduce((prevVal, currVal) => prevVal + currVal)/numberOfSamples;
+            return (Math.abs(correlation) < 0.011) ? 0 : Math.trunc(correlation*100)/100;
         },
-    },
-    created(){
-        this.xAxisArray = [...[...Array(this.signalSize/2).keys()].map(el => el * -1 - 1).reverse(), ...Array(this.signalSize/2).keys()];
-        this.firstSignalArray = [...Array(601)];
-        this.secondSignalArray = [...Array(601)];
-        this.correlationSignalArray = [...Array(601)];
     },
     methods: {
         changeSignalType(signalType){
@@ -293,12 +282,12 @@ export default {
             this.tau = 0;
             this.signalType = signalType;
         },
-        changeSignal(signal, type, num = 0){
+        changeSignal(signal, type, channel = 0){
             if(type === "harmonični"){
                 this.choosedSecondSignal = signal;
             }
             else{
-                if(num === 1){
+                if(channel === 1){
                     this.choosedFirstSignal=signal;
                 }
                 else{
@@ -307,11 +296,11 @@ export default {
             }
         },
         cutArray(array) {
-            const size = 600;
-            return array.filter((el, index) => (index <=  size));
+            array.length = 600;
+            return array;
         },
         multiplyArrays(array1, array2, arrayLength){
-            let multipliedArray = [];
+            const multipliedArray = [];
             for(let i = 0; i < arrayLength; i++){
                 multipliedArray[i] = -1*array1[i]*array2[i];
             }
