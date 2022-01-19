@@ -52,6 +52,13 @@ const routes: Route[] = [
     component: () => import("@/js/views/Correlation.vue"),
     icon: ['fas', 'equals'],
   },
+  {
+    path: "/isi",
+    name: "ISI",
+    label: 'Intersimbolna interferenca',
+    component: () => import("@/js/views/ISI.vue"),
+    icon: ['fas', 'eye'],
+  },
 ];
 
 const router: Router = createRouter({
