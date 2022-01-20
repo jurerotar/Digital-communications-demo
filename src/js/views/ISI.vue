@@ -189,16 +189,16 @@ export default {
             speed: 1,
             
             /** @type {number[]} */
-            possibleSpeeds: [2,3,4,5],
+            possibleSpeeds: [2,4,5],
 
             /** @type {number} */
             binaryCounter: 0,
 
             /** @type {number} */
-            binarySymbolLength: 120,
+            binarySymbolLength: 100,
 
             /** @type {number} */
-            binarySymbolLengthInit: 120,
+            binarySymbolLengthInit: 100,
 
             /** @type {number} */
             fs: 1/this.binarySymbolLength, 
@@ -236,9 +236,9 @@ export default {
             transferFunctionParams: {
                 fCutMulti: 1,
                 fCutMulti_old: 0,
-                fCut: 1/120,
-                tOffset: 120/2,
-                tOffset_old: 120/2,
+                fCut: 1/100,
+                tOffset: 100/2,
+                tOffset_old: 100/2,
                 maxConvValue: 3,
                 ticks: [],
                 tickNames: [],
