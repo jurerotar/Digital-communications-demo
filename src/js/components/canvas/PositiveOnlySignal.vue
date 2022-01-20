@@ -141,9 +141,10 @@ export default {
           if(this.xTicks !== null){
               for(let i = 0; i < this.xTicks.pos.length; i++){
                   this.$c.widerLine(p5,this.speed*this.xTicks.pos[i] + canvasPadding, this.offset.y - 5 + canvasPadding/2,this.speed*this.xTicks.pos[i] + canvasPadding, this.offset.y + 5 + canvasPadding/2);
+                  p5.strokeWeight(0.5);
                   p5.line(this.speed*this.xTicks.pos[i] + canvasPadding, this.offset.y - canvasPadding*2,this.speed*this.xTicks.pos[i] + canvasPadding, this.offset.y + canvasPadding*3);
                   p5.textAlign(p5.RIGHT,p5.TOP);
-                  p5.strokeWeight(1);
+                  p5.strokeWeight(0.25);
                   p5.text(this.xTicks.text[i],this.speed*this.xTicks.pos[i] + canvasPadding, this.offset.y + 7 + canvasPadding/2);
               }
           }
