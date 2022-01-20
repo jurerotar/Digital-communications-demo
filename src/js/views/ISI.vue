@@ -430,8 +430,6 @@ export default {
             //  ticks for future symbols  (right from t0 on transfer function plot)
             const max = Math.floor((this.signalLength-this.transferFunctionParams.tOffset)/this.binarySymbolLength);
             for (let i = min; i <= max; i++){
-              // this.transferFunctionParams.ticks[i-min] = this.transferFunctionParams.tOffset+i*this.binarySymbolLength;
-              // this.transferFunctionParams.tickNames[i-min] = "ts".concat(i.toString());
               this.transferFunctionParams.ticks.unshift(this.transferFunctionParams.tOffset+i*this.binarySymbolLength);
               this.transferFunctionParams.tickNames.unshift("ts".concat(i.toString()));
             }
