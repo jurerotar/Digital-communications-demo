@@ -162,7 +162,7 @@
 import AppButtonContainer from "@/js/components/common/buttons/AppButtonContainer.vue";
 import AppButton from "@/js/components/common/buttons/AppButton.vue";
 import AppCollapsible from "@/js/components/common/AppCollapsible.vue";
-import TheoryIsi from "@/js/components/theory/TheoryIsi.vue";
+import TheoryIsi from "@/js/components/theory/TheoryIntersymbolInterference.vue";
 import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
 
 import Oscilloscope from "@/js/components/canvas/Oscilloscope.vue";
@@ -423,16 +423,18 @@ export default {
             }
             
             // transfer function ticks
-            //  ticks for past symbols
-            let min = -Math.floor(this.transferFunctionParams.tOffset/this.binarySymbolLength); 
-            //  ticks for future symbols
-            let max = Math.floor((this.signalLength-this.transferFunctionParams.tOffset)/this.binarySymbolLength) 
+            this.transferFunctionParams.ticks = []
+            this.transferFunctionParams.ticksNames = [];
+            //  ticks for past symbols (left from t0 on transfer function plot)
+            const min = - Math.floor(this.transferFunctionParams.tOffset/this.binarySymbolLength); 
+            //  ticks for future symbols  (right from t0 on transfer function plot)
+            const max = Math.floor((this.signalLength-this.transferFunctionParams.tOffset)/this.binarySymbolLength);
             for (let i = min; i <= max; i++){
-              this.transferFunctionParams.ticks[i-min] = this.transferFunctionParams.tOffset+i*this.binarySymbolLength
-              this.transferFunctionParams.tickNames[i-min] = "ts".concat(i.toString())
+              // this.transferFunctionParams.ticks[i-min] = this.transferFunctionParams.tOffset+i*this.binarySymbolLength;
+              // this.transferFunctionParams.tickNames[i-min] = "ts".concat(i.toString());
+              this.transferFunctionParams.ticks.unshift(this.transferFunctionParams.tOffset+i*this.binarySymbolLength);
+              this.transferFunctionParams.tickNames.unshift("ts".concat(i.toString()));
             }
-
-
 
         },
 
@@ -442,7 +444,7 @@ export default {
          */
         updateTransferFunctionParams(){
             this.transferFunctionParams.fCut = 1/this.binarySymbolLength,  //                    
-            this.transferFunctionParams.tOffset = 1.5*1/(this.transferFunctionParams.fCut*this.transferFunctionParams.fCutMulti); 
+            this.transferFunctionParams.tOffset = 1.5/(this.transferFunctionParams.fCut*this.transferFunctionParams.fCutMulti); 
 
             this.recalculateTicks(false)
             this.updatetransferFunction();
