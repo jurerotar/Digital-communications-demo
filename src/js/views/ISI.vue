@@ -14,8 +14,9 @@
           :for="`fCut-multiplier`"
           class="text-xl transition-colors duration-300 dark:text-white"
         >
-          Mejna frekvenca kanala (VP filter):<span class="font-semibold"> f<sub>m</sub></span>=
-          <span class="font-medium">{{ Number(transferFunctionParams.fCutMulti).toFixed(2) }}</span><span class="font-semibold"> f<sub>s</sub></span>
+          Mejna frekvenca kanala (NP filter):<span class="font-semibold"> f<sub>m</sub></span>=
+          <span class="font-medium">{{ Number(transferFunctionParams.fCutMulti).toFixed(2) }}</span>
+          <span class="font-semibold"> f<sub>s</sub></span>
         </label>
         <div class="slider_container">
           <input
@@ -38,13 +39,8 @@
         :note="''"
         :is-binary="false"
         :x-ticks="{
-          'text':['ts1=t0','ts2','ts3','ts4','ts5'],
-          'pos':[
-            transferFunctionParams.tOffset+0*binarySymbolLength,
-            transferFunctionParams.tOffset+1*binarySymbolLength,
-            transferFunctionParams.tOffset+2*binarySymbolLength,
-            transferFunctionParams.tOffset+3*binarySymbolLength,
-            transferFunctionParams.tOffset+4*binarySymbolLength]
+          'text':transferFunctionParams.tickNames,
+          'pos':transferFunctionParams.ticks
         }"
         :is-inverted="true"
         :speed="speed"
@@ -62,7 +58,8 @@
             
             
         <div
-          class="switcher__tab w-20 cursor-pointer flex flex-row relative bg-gray-200 dark:bg-gray-700 p-1 rounded-3xl items-center justify-center h-8 transition-all duration-300 "
+          class="switcher__tab w-20 cursor-pointer flex flex-row relative bg-gray-200 
+          dark:bg-gray-700 p-1 rounded-3xl items-center justify-center h-8 transition-all duration-300 "
           @click="togglePlay()"
         >
           <div
@@ -112,8 +109,9 @@
           :for="`fCut-multiplier`"
           class="text-xl transition-colors duration-300 dark:text-white"
         >
-          Mejna frekvenca kanala (VP filter):<span class="font-semibold"> f<sub>m</sub></span>=
-          <span class="font-medium">{{ Number(transferFunctionParams.fCutMulti).toFixed(2) }}</span><span class="font-semibold"> f<sub>s</sub></span>
+          Mejna frekvenca kanala (NP filter):<span class="font-semibold"> f<sub>m</sub></span>=
+          <span class="font-medium">{{ Number(transferFunctionParams.fCutMulti).toFixed(2) }}</span>
+          <span class="font-semibold"> f<sub>s</sub></span>
         </label>
         <div class="slider_container">
           <input
@@ -138,7 +136,8 @@
       /> 
 
       <div
-        class="switcher__tab w-20 cursor-pointer flex flex-row relative bg-gray-200 dark:bg-gray-700 p-1 rounded-3xl items-center justify-center h-8 transition-all duration-300"
+        class="switcher__tab w-20 cursor-pointer flex flex-row relative bg-gray-200 dark:bg-gray-700 
+        p-1 rounded-3xl items-center justify-center h-8 transition-all duration-300"
         @click="clearOscilloscope"
       >
         <div  
@@ -180,14 +179,17 @@ library.add(faPlay, faStop, faTrashAlt);
 
 export default {
     name: "ISI",
-    components : {Oscilloscope, Level4Signal, PositiveOnlySignal,FontAwesomeIcon,AppMainHeading,AppButtonContainer,AppButton,AppCollapsible,TheoryIsi},
+    components : {
+      Oscilloscope, Level4Signal, PositiveOnlySignal,FontAwesomeIcon,
+      AppMainHeading,AppButtonContainer,AppButton,AppCollapsible,TheoryIsi
+    },
     data(){
         return {
             /** @type {number} */
             speed: 1,
             
             /** @type {number[]} */
-            possibleSpeeds: [1,2,3,4,5],
+            possibleSpeeds: [2,3,4,5],
 
             /** @type {number} */
             binaryCounter: 0,
@@ -237,7 +239,9 @@ export default {
                 fCut: 1/120,
                 tOffset: 120/2,
                 tOffset_old: 120/2,
-                maxConvValue: 3
+                maxConvValue: 3,
+                ticks: [],
+                tickNames: [],
             },
 
             /** 
@@ -313,7 +317,8 @@ export default {
                 // when vector fills up with 2 symbols unshift() to dataISI
                 if (this.dataIsiPartial.length === 2*this.binarySymbolLength){
                     this.dataISI.unshift([]);
-                    if (this.dataISI.length === this.combinationsSequence.values.length){
+                    //if (this.dataISI.length === (this.combinationsSequence.values.length/2)){
+                    if (this.dataISI.length === 25){
                         this.dataISI.pop();
                     }
                     this.dataIsiPartial = [];
@@ -394,7 +399,11 @@ export default {
                 this.tsTicks = [...Array(Math.floor(this.signalLength/this.binarySymbolLength)).fill(0)]; // reset ticks
                 for (let i = 0; i < this.tsTicks.length; i++){
                     this.tsTicks[i] = (i+this.transferFunctionParams.tOffset/this.binarySymbolLength)*this.binarySymbolLength;
+                    if(this.tsTicks[i] >= this.signalLength){
+                      this.tsTicks[i] = this.tsTicks[i] - this.signalLength;
+                    }
                 }
+
             }else{
                 for (let i = 0; i < this.tsTicks.length; i++){
                     const dtOffset = this.transferFunctionParams.tOffset - this.transferFunctionParams.tOffset_old;
@@ -406,12 +415,25 @@ export default {
 
             // eye diagram ticks
             this.isiTicks = [];
-            for(let i = 0; i <= 2; i++){
+            for(let i = 0; i < 2; i++){
                 this.isiTicks[i] = this.transferFunctionParams.tOffset + i*this.binarySymbolLength;
                 if (this.isiTicks[i] >= 2*this.binarySymbolLength){
                     this.isiTicks[i] = this.isiTicks[i] - 2*this.binarySymbolLength;
                 }
             }
+            
+            // transfer function ticks
+            //  ticks for past symbols
+            let min = -Math.floor(this.transferFunctionParams.tOffset/this.binarySymbolLength); 
+            //  ticks for future symbols
+            let max = Math.floor((this.signalLength-this.transferFunctionParams.tOffset)/this.binarySymbolLength) 
+            for (let i = min; i <= max; i++){
+              this.transferFunctionParams.ticks[i-min] = this.transferFunctionParams.tOffset+i*this.binarySymbolLength
+              this.transferFunctionParams.tickNames[i-min] = "ts".concat(i.toString())
+            }
+
+
+
         },
 
         /**
@@ -420,7 +442,7 @@ export default {
          */
         updateTransferFunctionParams(){
             this.transferFunctionParams.fCut = 1/this.binarySymbolLength,  //                    
-            this.transferFunctionParams.tOffset = 0.5*1/(this.transferFunctionParams.fCut*this.transferFunctionParams.fCutMulti); 
+            this.transferFunctionParams.tOffset = 1.5*1/(this.transferFunctionParams.fCut*this.transferFunctionParams.fCutMulti); 
 
             this.recalculateTicks(false)
             this.updatetransferFunction();
