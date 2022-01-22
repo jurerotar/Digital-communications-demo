@@ -166,7 +166,7 @@ export default {
       speed: 1,
 
       /** @type {number[]} */
-      possibleSpeeds: [2, 4, 5],
+      possibleSpeeds: [1, 2, 3, 4, 5],
       /** @type {number} */
       binaryCounter: 0,
       /** @type {number} */

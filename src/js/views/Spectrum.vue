@@ -20,7 +20,7 @@
       </app-button>
     </button-container>
     <app-section-heading>
-      Dolžina impulza (T)
+      Dolžina impulza
     </app-section-heading>
     <button-container>
       <app-button
@@ -29,7 +29,7 @@
         :active="pulseLength === length.key"
         @click="setPulseLength(length.key)"
       >
-        {{ length.label }}
+        {{ length.label }} T
       </app-button>
     </button-container>
     <full-signal
