@@ -80,6 +80,7 @@ const canvas: Canvas = {
   darkModeScaleColor: '#ffffff',
   lightModeScaleColor: '#000000',
   setup(p5, options = {}) {
+    p5.disableFriendlyErrors = true;
     const {x: x, y: y} = this.dimensions;
     const frameRate: number = options.frameRate ?? this.frameRate;
     p5.setup = () => {

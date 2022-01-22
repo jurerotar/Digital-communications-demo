@@ -37,18 +37,19 @@
     <app-section-heading>
       Nyquistov kriterij v časovnem prostoru
     </app-section-heading>
-    <p class="transition-colors duration-300 dark:text-white">
+    <app-paragraph>
       Kljub temu, da <span class="font-semibold">h(t)</span> povzroči, da se simbol razširi čez več period vzorčenja, to ni problem, če je
       vrednost
       <span class="font-semibold">h(t)</span> enaka
-      <span class="font-semibold">0</span> za vse <span class="font-semibold">t=nT<sub>s</sub>, n</span> <span class="font-semibold">&#8800;0</span>.
+      <span class="font-semibold">0</span> za vse <span class="font-semibold">t=nT<sub>s</sub>, n</span>
+      <span class="font-semibold">&#8800;0</span>.
       Če <span class="font-semibold">h(t)</span> izpolnjuje to zahtevo, pravimo, da izpoljuje
       <span class="font-semibold">Nyquistov kriterij za prenos brez intersimbolne interference v časovnem prostoru</span>.
       <span
         ref="h1NyquistRef"
         class="katex-block"
       />
-    </p>
+    </app-paragraph>
     <app-section-heading>
       Nyquistov kriterij v frekvenčnem prostoru
     </app-section-heading>
@@ -60,7 +61,7 @@
       <span
         ref="h2NyquistRef"
         class="katex-block"
-      />, 
+      />,
       kjer je <span class="font-semibold">v<sub>δ</sub>(t)</span> vzorčevalna funkcija (niz enotskih impulzov) s frekvenco
       <span class="font-semibold">f<sub>v</sub> = f<sub>s</sub></span>,
       katere Fourier transform poznamo. Izraz preuredimo in dobimo izraz za prekrito prenosno funkcijo:

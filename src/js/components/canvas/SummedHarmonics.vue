@@ -1,20 +1,21 @@
 <template>
-  <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white">
+  <app-section-heading>
     Prikaz seštetega signala
-  </h2>
+  </app-section-heading>
   <canvas-container>
     <div :id="canvasId" />
   </canvas-container>
 </template>
 
 <script>
+import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 import P5 from 'p5';
 import CanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 import '@/js/types/types.ts';
 
 export default {
   name: "SummedHarmonics",
-  components: {CanvasContainer},
+  components: {AppSectionHeading, CanvasContainer},
   props: {
     components: {
       type: Number,

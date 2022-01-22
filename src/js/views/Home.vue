@@ -10,7 +10,7 @@
           s katerimi se lahko poigrate in se na tak način dodatno seznanite s snovjo.
         </app-paragraph>
         <app-paragraph class="font-semibold">
-          Aplikacija trenutno prikazuje naslednje podstrani:
+          Aplikacija trenutno prikazuje naslednja poglavja:
         </app-paragraph>
         <div class="my-1 mb-4 flex flex-col md:flex-row gap-2">
           <div
@@ -54,7 +54,8 @@
 import OpenSource from "@/js/components/common/sections/OpenSource.vue";
 import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
 import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
-import {Route, routes} from "@/js/routes/routes";
+import {routes} from "@/js/routes/routes";
+import {Route} from "@/js/routes/routes.types";
 import AppButton from "@/js/components/common/buttons/AppButton.vue";
 import AppParagraph from "@/js/components/common/AppParagraph.vue";
 

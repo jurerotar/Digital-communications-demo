@@ -8,7 +8,7 @@
       p-2 rounded-lg hover:dark:bg-gray-800 hover:bg-gray-200 w-full"
       :class="{'dark:bg-gray-800 bg-gray-200': currentRoute === route.path}"
       tabindex="0"
-      @click="linkClick(route)"
+      @click="linkClick()"
     >
       <font-awesome-icon
         :icon="route.icon"
@@ -26,7 +26,7 @@
   lang="ts"
 >
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {Route, routes} from '@/js/routes/routes';
+import {routes} from '@/js/routes/routes';
 import SchemeSwitcher from "@/js/components/common/navigation/SchemeSwitcher.vue";
 import AppGithubIcon from "@/js/components/common/icons/AppGithubIcon.vue";
 import {useStore} from "vuex";
@@ -40,13 +40,12 @@ library.add(faWaveSquare, faLongArrowAltUp, faHome, faWater, faSignal, faEye, fa
 const store = useStore<State>();
 const isLgUp = computed<boolean>(() => store.getters['deviceProperties/isLgUp']);
 
+const linkClick = (): void => {
+  store.commit('appState/setMobileSidebarExtended', false);
+}
+
 const routeObject = useRoute();
 const currentRoute = computed<string>(() => routeObject.path);
-
-const linkClick = (route: Route): void => {
-  store.commit('appState/setMobileSidebarExtended', false);
-  document.title = route.label;
-}
 </script>
 
 <style>
