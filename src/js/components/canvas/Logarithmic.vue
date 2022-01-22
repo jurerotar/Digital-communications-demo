@@ -1,7 +1,7 @@
 <template>
-  <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white">
+  <app-section-heading>
     {{ title }}
-  </h2>
+  </app-section-heading>
   <p
     v-if="description !== ''"
     class="my-1 transition-colors duration-300 dark:text-white"
@@ -20,13 +20,14 @@
 </template>
 
 <script>
+import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 import P5 from 'p5';
 import CanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 import '@/js/types/types.ts';
 
 export default {
   name: "Logarithmic",
-  components: {CanvasContainer},
+  components: {AppSectionHeading, CanvasContainer},
   props: {
     data: {
       type: Array,

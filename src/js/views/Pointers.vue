@@ -1,20 +1,19 @@
 <template>
-  <div class="lg:ml-72">
-    <main class="p-4 container lg:mx-auto flex flex-col gap-4">
-      <app-main-heading>
-        Kazalci
-      </app-main-heading>
-      <app-collapsible>
-        <theory-pointer />
-      </app-collapsible>
-      <canvas-container>
-        <div :id="canvasId" />
-      </canvas-container>
-    </main>
-  </div>
+  <app-main-container>
+    <app-main-heading>
+      Kazalci
+    </app-main-heading>
+    <app-collapsible>
+      <theory-pointer />
+    </app-collapsible>
+    <canvas-container>
+      <div :id="canvasId" />
+    </canvas-container>
+  </app-main-container>
 </template>
 
 <script>
+import AppMainContainer from "@/js/components/common/AppMainContainer.vue";
 import P5 from 'p5';
 import CanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 import TheoryPointer from "@/js/components/theory/TheoryPointer.vue";
@@ -24,7 +23,7 @@ import AppCollapsible from "@/js/components/common/AppCollapsible.vue";
 
 export default {
   name: "Pointers",
-  components: {AppCollapsible, AppMainHeading, TheoryPointer, CanvasContainer},
+  components: {AppMainContainer, AppCollapsible, AppMainHeading, TheoryPointer, CanvasContainer},
   data() {
     return {
       p5: null,

@@ -1,7 +1,8 @@
 <template>
-  <button
+  <router-link
     tabindex="0"
     class="flex h-full lg:h-auto lg:w-full justify-start lg:justify-center py-2 lg:px-12"
+    :to="'/'"
   >
     <svg
       class="h-full lg:w-full"
@@ -44,7 +45,7 @@
         d="M372.5 31.8V14.6H358V0h30.4v31.8z"
       />
     </svg>
-  </button>
+  </router-link>
 </template>
 
 <script

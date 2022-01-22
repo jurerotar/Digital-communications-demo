@@ -1,66 +1,64 @@
 <template>
-  <div class="lg:ml-72">
-    <main class="flex flex-col gap-4 p-4 container lg:mx-auto">
-      <app-main-heading>
-        Spekter
-      </app-main-heading>
-      <app-collapsible>
-        <theory-spectrum />
-      </app-collapsible>
-      <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white text-zinc-900">
-        Oblika impulza
-      </h2>
-      <button-container>
-        <app-button
-          v-for="shape in pulses"
-          :key="shape.key"
-          :class="{'bg-blue-600': pulse.key === shape.key}"
-          @click="setPulseShape(shape.key)"
-        >
-          {{ shape.label }}
-        </app-button>
-      </button-container>
-      <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white text-zinc-900">
-        Dolžina impulza (T)
-      </h2>
-      <button-container>
-        <app-button
-          v-for="length in pulse.pulseLengths"
-          :key="length.key"
-          :class="{'bg-blue-600': pulseLength === length.key}"
-          @click="setPulseLength(length.key)"
-        >
-          {{ length.label }}
-        </app-button>
-      </button-container>
-      <full-signal
-        :canvas-id="'spectrum-original-signal'"
-        :data="baseSignal"
-        :title="'Impulz'"
-        :vertical-pool="[1, 0.5, -0.5, -1]"
-        :horizontal-pool="pulse.horizontalPool"
-        :type="pulse.key"
-      />
-      <spectrum-canvas
-        :canvas-id="'spectrum-signal-spectrum'"
-        :data="transformedSignal"
-        :title="'Spekter'"
-        :type="pulse.key"
-        :pulse-length="pulseLength"
-        :description="pulse?.spectrumGraphTexts?.description"
-        :note="pulse?.spectrumGraphTexts?.note"
-      />
-      <logarithmic
-        :canvas-id="'spectrum-signal-logarithmic'"
-        :data="transformedSignal"
-        :title="'Spekter [dB]'"
-        :type="pulse.key"
-        :pulse-length="pulseLength"
-        :description="pulse?.logarithmGraphTexts?.description"
-        :note="pulse?.logarithmGraphTexts?.note"
-      />
-    </main>
-  </div>
+  <app-main-container>
+    <app-main-heading>
+      Spekter
+    </app-main-heading>
+    <app-collapsible>
+      <theory-spectrum />
+    </app-collapsible>
+    <app-section-heading>
+      Oblika impulza
+    </app-section-heading>
+    <button-container>
+      <app-button
+        v-for="shape in pulses"
+        :key="shape.key"
+        :active="pulse.key === shape.key"
+        @click="setPulseShape(shape.key)"
+      >
+        {{ shape.label }}
+      </app-button>
+    </button-container>
+    <app-section-heading>
+      Dolžina impulza (T)
+    </app-section-heading>
+    <button-container>
+      <app-button
+        v-for="length in pulse.pulseLengths"
+        :key="length.key"
+        :active="pulseLength === length.key"
+        @click="setPulseLength(length.key)"
+      >
+        {{ length.label }}
+      </app-button>
+    </button-container>
+    <full-signal
+      :canvas-id="'spectrum-original-signal'"
+      :data="baseSignal"
+      :title="'Impulz'"
+      :vertical-pool="[1, 0.5, -0.5, -1]"
+      :horizontal-pool="pulse.horizontalPool"
+      :type="pulse.key"
+    />
+    <spectrum-canvas
+      :canvas-id="'spectrum-signal-spectrum'"
+      :data="transformedSignal"
+      :title="'Spekter'"
+      :type="pulse.key"
+      :pulse-length="pulseLength"
+      :description="pulse?.spectrumGraphTexts?.description"
+      :note="pulse?.spectrumGraphTexts?.note"
+    />
+    <logarithmic
+      :canvas-id="'spectrum-signal-logarithmic'"
+      :data="transformedSignal"
+      :title="'Spekter [dB]'"
+      :type="pulse.key"
+      :pulse-length="pulseLength"
+      :description="pulse?.logarithmGraphTexts?.description"
+      :note="pulse?.logarithmGraphTexts?.note"
+    />
+  </app-main-container>
 </template>
 
 <script
@@ -77,6 +75,8 @@ import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
 import AppCollapsible from "@/js/components/common/AppCollapsible.vue";
 import FFT from "fft.js";
 import {computed, ref} from "vue";
+import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
+import AppMainContainer from "@/js/components/common/AppMainContainer.vue";
 
 export interface Pulse {
   key: PulseShape;
@@ -131,10 +131,10 @@ const pulses: Pulse[] = [
     label: 'Kosinusni',
     key: 'cos',
     drawingValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return (-Math.cos(Math.PI * t * frequency * 0.01) - 1) * Math.unitBox(t * frequency * 0.01 / 2);
+      return (-Math.cos(Math.PI * t * frequency * 0.01) - 1) * Math.unitBox(t * frequency * 0.01 / 2, [-0.5, 0.5]);
     }),
     spectrumValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return (-Math.cos(Math.PI * t * frequency * 0.05) - 1) * Math.unitBox(t * frequency * 0.05 / 2);
+      return (-Math.cos(Math.PI * t * frequency * 0.05) - 1) * Math.unitBox(t * frequency * 0.05 / 2, [-0.5, 0.5]);
     }),
     horizontalPool: [-3, -2.5, -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5, 3],
     // Remove length of 4, add length of 3
@@ -142,56 +142,56 @@ const pulses: Pulse[] = [
       .filter((pulseLength: PulseLengthOption) => pulseLength.key !== 4)
       .concat([{label: '3', key: 3}]),
     logarithmGraphTexts: {
-      // eslint-disable-next-line max-len
-      note: 'Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar, ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.',
+      note: `Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar,
+      ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.`,
     }
   },
   {
     label: 'Kvadratni',
     key: 'square',
     drawingValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return -Math.unitBox(t * frequency * 0.01);
+      return -Math.unitBox(t * frequency * 0.01, [-0.5, 0.5]);
     }),
     spectrumValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return -Math.unitBox(t * frequency * 0.05);
+      return -Math.unitBox(t * frequency * 0.05, [-0.5, 0.5]);
     }),
     pulseLengths: defaultPulseLengthOptions,
     logarithmGraphTexts: {
-      // eslint-disable-next-line max-len
-      note: 'Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar, ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.',
+      note: `Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar,
+      ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.`,
     }
   },
   {
     label: 'Gauss',
     key: 'gauss',
     drawingValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return Math.E ** (-2 * (t * 0.0165 * frequency) ** 2) * -Math.unitBox(t * frequency * 0.0005);
+      return Math.E ** (-2 * (t * 0.0165 * frequency) ** 2) * -Math.unitBox(t * frequency * 0.0005, [-0.5, 0.5]);
     }),
     spectrumValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return Math.E ** (-2 * (t * 0.028 * frequency) ** 2) * -Math.unitBox(t * frequency * 0.0005);
+      return Math.E ** (-2 * (t * 0.028 * frequency) ** 2) * -Math.unitBox(t * frequency * 0.0005, [-0.5, 0.5]);
     }),
     // Remove length of 4, add length of 3
     pulseLengths: defaultPulseLengthOptions
       .filter((pulseLength: PulseLengthOption) => pulseLength.key !== 4)
       .concat([{label: '3', key: 3}]),
     logarithmGraphTexts: {
-      // eslint-disable-next-line max-len
-      note: 'Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar, ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.',
+      note: `Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar,
+      ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.`,
     }
   },
   {
     label: 'Sinc',
     key: 'sinc',
     drawingValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return (t === 0) ? -1 : -Math.sin(t * frequency * 0.062) / (t * frequency * 0.062) * Math.unitBox(t * frequency * 0.0033);
+      return t === 0 ? -1 : -Math.sin(t * frequency * 0.062) / (t * frequency * 0.062) * Math.unitBox(t * frequency * 0.0033, [-0.5, 0.5]);
     }),
     spectrumValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return (t === 0) ? -1 : -Math.sin(t * frequency * 0.152) / (t * frequency * 0.152) * Math.unitBox(t * frequency * 0.008);
+      return t === 0 ? -1 : -Math.sin(t * frequency * 0.152) / (t * frequency * 0.152) * Math.unitBox(t * frequency * 0.008, [-0.5, 0.5]);
     }),
     pulseLengths: defaultPulseLengthOptions,
     logarithmGraphTexts: {
-      // eslint-disable-next-line max-len
-      note: 'Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar, ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.',
+      note: `Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar,
+      ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.`,
     }
   },
 ];

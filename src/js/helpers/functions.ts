@@ -36,3 +36,22 @@ export const attachResizeHandlers = (): void => {
     window.removeEventListener('resize', () => onResize());
   });
 }
+
+export const appFullTitle = (title: string): string => {
+  const appName = "Digitalne komunikacije";
+  return `${title} - ${appName}`;
+}
+
+export const binaryValues = (pool: number[], changeOn: number): () => number => {
+  let counter = 0;
+  let currentlyReturnsAtIndex = 0;
+  const poolLength: number = pool.length;
+  return (): number => {
+    counter ++;
+    if(counter >= changeOn) {
+      counter = 0;
+      currentlyReturnsAtIndex = (currentlyReturnsAtIndex === poolLength - 1) ? 0 : currentlyReturnsAtIndex + 1;
+    }
+    return pool[currentlyReturnsAtIndex];
+  }
+}
