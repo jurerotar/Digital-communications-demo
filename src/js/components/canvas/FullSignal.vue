@@ -46,6 +46,13 @@ export default {
     type: {
       type: String,
       required: true
+    },
+    yAxisLabel: {
+      type: String,
+      required: false,
+      default(){
+        return 'x(t)'
+      }
     }
   },
   data() {
@@ -64,6 +71,9 @@ export default {
     },
     isCorrelation(){
       return ['correlation'].includes(this.type);
+    },
+    isCorrelationFunction(){
+      return ['correlationFunction'].includes(this.type);
     },
     normalizedData() {
       const max = Math.max(...this.data.map(el => Math.abs(el)));
@@ -135,7 +145,7 @@ export default {
             previousY = y;
           });
         }
-        else if(this.isCorrelation){
+        else if(this.isCorrelation || this.isCorrelationFunction){
           this.data.forEach((y, x) => p5.vertex(x, y * (this.offset.y - (canvasPadding - 25))));
         }
         else {
