@@ -1,21 +1,20 @@
 <template>
-  <app-section-heading>
+  <h2 class="font-semibold text-xl transition-colors duration-300 dark:text-white">
     {{ title }}
-  </app-section-heading>
+  </h2>
   <canvas-container>
     <div :id="canvasId" />
   </canvas-container>
 </template>
 
 <script>
-import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 import P5 from 'p5';
 import CanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 import '@/js/types/types.ts';
 
 export default {
   name: "FullSignal",
-  components: {AppSectionHeading, CanvasContainer},
+  components: {CanvasContainer},
   props: {
     data: {
       type: Array,
@@ -46,6 +45,13 @@ export default {
     type: {
       type: String,
       required: true
+    },
+    yAxisLabel: {
+      type: String,
+      required: false,
+      default(){
+        return 'x(t)'
+      }
     }
   },
   data() {
@@ -64,6 +70,9 @@ export default {
     },
     isCorrelation(){
       return ['correlation'].includes(this.type);
+    },
+    isCorrelationFunction(){
+      return ['correlationFunction'].includes(this.type);
     },
     normalizedData() {
       const max = Math.max(...this.data.map(el => Math.abs(el)));
@@ -108,7 +117,7 @@ export default {
             }
           }
           //adds texts on axis
-          p5.text('x(t)', canvasDimensions.x / 2 - 5 - canvasPadding, 30);
+          p5.text(this.yAxisLabel, canvasDimensions.x / 2 - 5 - canvasPadding, 30);
           p5.text('t', canvasDimensions.x - 25 - canvasPadding, canvasDimensions.y / 2 + 15);
           //adds arrow on x-axis
           p5.strokeWeight(2);
@@ -135,7 +144,7 @@ export default {
             previousY = y;
           });
         }
-        else if(this.isCorrelation){
+        else if(this.isCorrelation || this.isCorrelationFunction){  
           this.data.forEach((y, x) => p5.vertex(x, y * (this.offset.y - (canvasPadding - 25))));
         }
         else {
