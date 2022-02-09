@@ -54,6 +54,13 @@ export default {
         return 'x(t)'
       }
     }
+    xAxisLabel: {
+      type: String,
+      required: false,
+      default(){
+        return 't'
+      }
+    }
   },
   data() {
     return {
@@ -119,7 +126,7 @@ export default {
           }
           //adds texts on axis
           p5.text(this.yAxisLabel, canvasDimensions.x / 2 - 5 - canvasPadding, 30);
-          p5.text('t', canvasDimensions.x - 25 - canvasPadding, canvasDimensions.y / 2 + 15);
+          p5.text(this.xAxisLabel, canvasDimensions.x - 25 - canvasPadding, canvasDimensions.y / 2 + 15);
           //adds arrow on x-axis
           p5.strokeWeight(2);
           p5.fill(color);
