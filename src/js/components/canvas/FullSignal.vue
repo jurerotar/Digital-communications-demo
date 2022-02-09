@@ -53,7 +53,7 @@ export default {
       default(){
         return 'x(t)'
       }
-    }
+    },
     xAxisLabel: {
       type: String,
       required: false,
