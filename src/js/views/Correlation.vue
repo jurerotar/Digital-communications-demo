@@ -15,7 +15,7 @@
         <app-button
           v-for="signal in signals"
           :key="signal.label"
-          :class="{'bg-blue-700': signal.label===signalType}"
+          :active="signal.label===signalType"
           @click="changeSignalType(signal.label)"
         >
           {{ signal.label }}
@@ -30,7 +30,7 @@
           <app-button
             v-for="signal in signals[0].signal"
             :key="signal.key"
-            :class="{'bg-blue-700': choosedSecondSignal===signal.key}"
+            :active="choosedSecondSignal===signal.key"
             @click="changeSignal(signal.key, 'harmonični')"
           >
             {{ signal.label }}
@@ -43,7 +43,7 @@
           <app-button
             v-for="frequency in signals[0].frequencyRange"
             :key="frequency"
-            :class="{'bg-blue-700': signals[0].frequency===frequency}"
+            :active="signals[0].frequency===frequency"
             @click="changeFrequency(frequency)"
           >
             {{ frequency }}
@@ -116,7 +116,7 @@
           <app-button
             v-for="signal in signals[1].signal"
             :key="signal.key"
-            :class="{'bg-blue-700': choosedFirstSignal===signal.key}"
+            :active="choosedFirstSignal===signal.key"
             @click="changeSignal(signal.key, 'impulzni', 1)"
           >
             {{ signal.label }}
@@ -129,7 +129,7 @@
           <app-button
             v-for="signal in signals[1].signal"
             :key="signal.key"
-            :class="{'bg-blue-700': choosedSecondSignal===signal.key}"
+            :active="choosedSecondSignal===signal.key"
             @click="changeSignal(signal.key, 'impulzni', 2)"
           >
             {{ signal.label }}
