@@ -103,6 +103,7 @@
           :horizontal-pool="horizontal_pool"
           :type="correlationFunction.type"
           :yAxisLabel="'R(τ)'"
+          :xAxisLabel="'τ'"
       />
     </template>
 
@@ -189,6 +190,7 @@
           :horizontal-pool="horizontal_pool"
           :type="correlationFunction.type"
           :yAxisLabel="'R(τ)'"
+          :xAxisLabel="'τ'"
       />
     </template>
   </app-main-container>
