@@ -118,7 +118,7 @@ export default {
             }
           }
           //adds texts on axis
-          p5.text('x(t)', canvasDimensions.x / 2 - 5 - canvasPadding, 30);
+          p5.text(this.yAxisLabel, canvasDimensions.x / 2 - 5 - canvasPadding, 30);
           p5.text('t', canvasDimensions.x - 25 - canvasPadding, canvasDimensions.y / 2 + 15);
           //adds arrow on x-axis
           p5.strokeWeight(2);
