@@ -2,6 +2,7 @@
   <div class="flex flex-col gap-4">
     <app-paragraph>
       Teorija
+      bla bla bla
       <!--Izvorni signal se pri prenosu skozi prenosni kanal popači - raztegne se po časovni osi.
       V primeru ilustriranem na tej strani je ekvivalentni prenosni kanal modeliran kot idealni nizko pasovni filter z mejno frekvenco
       <span class="font-semibold">f<sub>m</sub></span>,
