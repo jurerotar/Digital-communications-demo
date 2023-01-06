@@ -129,6 +129,26 @@ const routes: Route[] = [
       ]
     }
   },
+
+  {
+    path: "/digital-filters",
+    name: "Digitalni filtri",
+    label: 'Digitalni filtri',
+    component: () => import("@/js/views/DigitalFilters.vue"),
+    icon: ['fas', 'filter'],
+    meta: {
+      title: appFullTitle("Digitalni filtri"),
+      properties: [
+        {propertyName: "description", propertyType: "name", content: ""},
+        {propertyName: "twitter:title", propertyType: "name", content: appFullTitle("Digitalni filtri")},
+        {propertyName: "twitter:description", propertyType: "name", content: ""},
+        {propertyName: "og:title", propertyType: "property", content: appFullTitle("Digitalni filtri")},
+        {propertyName: "og:description", propertyType: "property", content: ""},
+        {propertyName: "og:url", propertyType: "property", content: ""},
+      ]
+    }
+  },
+
 ];
 
 const router: Router = createRouter({

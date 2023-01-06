@@ -33,9 +33,9 @@ import {useStore} from "vuex";
 import {State} from "@/js/store/store";
 import {computed} from "vue";
 import {library} from "@fortawesome/fontawesome-svg-core";
-import {faWaveSquare, faWater, faLongArrowAltUp, faHome, faSignal, faEquals, faEye} from "@fortawesome/free-solid-svg-icons";
+import {faWaveSquare, faWater, faLongArrowAltUp, faHome, faSignal, faEquals, faEye, faFilter} from "@fortawesome/free-solid-svg-icons";
 import {useRoute} from "vue-router";
-library.add(faWaveSquare, faLongArrowAltUp, faHome, faWater, faSignal, faEye, faEquals);
+library.add(faWaveSquare, faLongArrowAltUp, faHome, faWater, faSignal, faEye, faEquals, faFilter);
 
 const store = useStore<State>();
 const isLgUp = computed<boolean>(() => store.getters['deviceProperties/isLgUp']);
