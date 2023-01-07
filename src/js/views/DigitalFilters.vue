@@ -74,42 +74,22 @@
       :type="filter.key"
     /> -->
     <graph title="graph_1" :g_width=width
-    :signal_1="filter.signal_1" :trig_draw="filter.trig_draw_1"/>
+    :signal_1="filter.signal_1" :g_height="500" :trig_draw="filter.trig_draw_1"/>
     <h1>
       {{ filter.trig_draw_1 }}
     </h1>
-    <!-- <spectrum-canvas
-      :canvas-id="'spectrum-signal-spectrum'"
-      :data="transformedSignal"
-      :title="'Spekter'"
-      :type="pulse.key"
-      :pulse-length="pulseLength"
-      :description="pulse?.spectrumGraphTexts?.description"
-      :note="pulse?.spectrumGraphTexts?.note"
-    />
-    <logarithmic
-      :canvas-id="'spectrum-signal-logarithmic'"
-      :data="transformedSignal"
-      :title="'Spekter [dB]'"
-      :type="pulse.key"
-      :pulse-length="pulseLength"
-      :description="pulse?.logarithmGraphTexts?.description"
-      :note="pulse?.logarithmGraphTexts?.note"
-    /> -->
+
   </app-main-container>
 </template>
 
-<script
-  setup
-  lang="ts"
->
+<script setup lang="ts" >
+
 import TheoryDigitalFilters from "@/js/components/theory/TheoryDigitalFilters.vue";
 import ButtonContainer from "@/js/components/common/buttons/AppButtonContainer.vue";
 import AppButton from "@/js/components/common/buttons/AppButton.vue";
 import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
 import AppCollapsible from "@/js/components/common/AppCollapsible.vue";
 
-// import IndividualHarmonics from "@/js/components/canvas/TransferFunction.vue";
 import SummedHarmonics from "@/js/components/canvas/SummedHarmonics.vue";
 import TransferFunction from "@/js/components/canvas/TransferFunction.vue";
 import Graph from "@/js/components/canvas/graph.vue";
@@ -142,12 +122,15 @@ export interface Filter {
   // window func
   windovFunc?: FiltFunc[];
   // order
-  filtOrder?: number;
+  winLen: number;
 
   trig_draw_1:boolean;
 
-  signal_1: {x:number,y:number}[];
+  signal_1: {x:number, y:number}[];
 
+  winParam: number;
+
+  freqRes: number;
 }
 
 type FilterType = 'FIR' | 'IIR';
@@ -204,23 +187,26 @@ const filter: Filter = {
   // filter type
   filterType: FilterTypes,
   // window func
-  winFunct: "hamming",
+  winFunct: "gaussian",
   // window func
   windovFunc: WindowFunctions,
   // order
-  filtOrder: 3,
+  winLen: 3,
   trig_draw_1: false,
-  signal_1: gen_signal(-3, 3, 10, 1, 0.01),
+  signal_1: [{x:0, y:0}],
+  winParam: 0.2,
+  freqRes: 10000,
 };
 
 const UpdateFiltOrd = (value: number): void => {
   // setFiltOrder(value);
-  filter.filtOrder = value; 
-  filter.signal_1 = gen_signal(-3,3,3,value,0.01);
+  filter.winLen = value; 
+  // filter.signal_1 = gen_signal(-3,3,3,value,0.01);
+  FirFilter();
   filter.trig_draw_1 = !filter.trig_draw_1;
   console.log(filter.trig_draw_1)
-  console.log(filter.signal_1.length);
-  console.log(filter.filtOrder)
+  // console.log(filter.signal_1.length);
+  console.log(filter.winLen)
 }
 
 const setFilterType = (tip: FilterType): void => {
@@ -234,8 +220,6 @@ const setFilterFunc = (tip: WindowFunc): void => {
   filter.winFunct = tip;
   console.log(filter.winFunct);
 }
-
-const baseSignal: number[] = [0, 1, 2, 3, 4, 5];
 
 /*
 *   FIR filter - generates transfer function based on window type and order
@@ -252,7 +236,7 @@ const baseSignal: number[] = [0, 1, 2, 3, 4, 5];
 *   magMin      (magnitude minimum)
 *   magMax      (magnitude maximum)
 */
-function FirFilter(filter: Filter) {
+function FirFilter() {
     let bn = new Array(filter.winLen);
     let wSum = 0;
 
@@ -285,9 +269,9 @@ function FirFilter(filter: Filter) {
         bn[idx] = bn[idx] / wSum;
     }
 
-    let freq = Array(filter.freqRes);
-    let mag = Array(filter.freqRes);
-    let magMin, magMax;
+    var freq: number[] = [filter.freqRes];
+    var mag: number[] = [filter.freqRes];
+    let magMin = 0, magMax = 0;
 
     /* Generates frequency and magnitude arrays */
     for (let idxa = 0; idxa < filter.freqRes; idxa++) {
@@ -310,220 +294,33 @@ function FirFilter(filter: Filter) {
         /* Min/Max of magnitude */
         if (idxa == 0) {
             magMin = magMax = mag[idxa];
-        }
-        else if (mag[idxa] < magMin) {
+        } else if (mag[idxa] < magMin) {
             magMin = mag[idxa];
-        }
-        else if (mag[idxa] > magMax) {
+        } else if (mag[idxa] > magMax) {
             magMax = mag[idxa];
-        }
-        else { }
-    }
-
-    return [freq, mag, magMin, magMax];
-}
-
-
-/*
-*   IIR filter - generates transfer function based on biquad type, cuttoff, quality, and gain
-*   
-*   Paramters:
-*   .type       (type of biquad filter)
-*   .cutoff     (normalized cutoff frequency or f_c/(2*f_s))
-*   .quality    (quality factor of resonance ("lowpass", "highpass", "bandpass", "notch", "peak"))
-*   .gain       (gain (in dB) of resonance ("peak", "low-shelf", "high-shelf"))
-*   .freqRes    (number of frequency point in range 0 to f_s)
-*
-*   Returns:
-*   freq        (normalized frequency or f/(2*f_s))
-*   mag         (magnitude in decibels)
-*   magMin      (magnitude minimum)
-*   magMax      (magnitude maximum)
-*/
-function IirFilter(filter: Filter) {
-    let a0, a1, a2, b1, b2, norm;
-    let V = Math.pow(10, Math.abs(filter.gain) / 20);  // gain in linear units
-    let K = Math.tan(Math.PI * (filter.cutoff / 2));    // f_cutoff as normalized frequency
-
-    /* Calculate window weights */
-    switch (filter.type) {
-        case "one-pole-lp":
-            b1 = Math.exp(-2.0 * Math.PI * (filter.cutoff / 2));
-            a0 = 1.0 - b1;
-            b1 = -b1;
-            a1 = a2 = b2 = 0;
-            break;
-
-        case "one-pole-hp":
-            b1 = -Math.exp(-2.0 * Math.PI * (0.5 - filter.cutoff / 2));
-            a0 = 1.0 + b1;
-            b1 = -b1;
-            a1 = a2 = b2 = 0;
-            break;
-
-        case "lowpass":
-            norm = 1 / (1 + K / filter.quality + K * K);
-            a0 = K * K * norm;
-            a1 = 2 * a0;
-            a2 = a0;
-            b1 = 2 * (K * K - 1) * norm;
-            b2 = (1 - K / filter.quality + K * K) * norm;
-            break;
-
-        case "highpass":
-            norm = 1 / (1 + K / filter.quality + K * K);
-            a0 = 1 * norm;
-            a1 = -2 * a0;
-            a2 = a0;
-            b1 = 2 * (K * K - 1) * norm;
-            b2 = (1 - K / filter.quality + K * K) * norm;
-            break;
-
-        case "bandpass":
-            norm = 1 / (1 + K / filter.quality + K * K);
-            a0 = K / filter.quality * norm;
-            a1 = 0;
-            a2 = -a0;
-            b1 = 2 * (K * K - 1) * norm;
-            b2 = (1 - K / filter.quality + K * K) * norm;
-            break;
-
-        case "notch":
-            norm = 1 / (1 + K / filter.quality + K * K);
-            a0 = (1 + K * K) * norm;
-            a1 = 2 * (K * K - 1) * norm;
-            a2 = a0;
-            b1 = a1;
-            b2 = (1 - K / filter.quality + K * K) * norm;
-            break;
-
-        case "peak":
-            /* Simplify for positive/negative gains */
-            if (filter.gain >= 0) {
-                norm = 1 / (1 + 1 / filter.quality * K + K * K);
-                a0 = (1 + V / filter.quality * K + K * K) * norm;
-                a1 = 2 * (K * K - 1) * norm;
-                a2 = (1 - V / filter.quality * K + K * K) * norm;
-                b1 = a1;
-                b2 = (1 - 1 / filter.quality * K + K * K) * norm;
-            } else {
-                norm = 1 / (1 + V / filter.quality * K + K * K);
-                a0 = (1 + 1 / filter.quality * K + K * K) * norm;
-                a1 = 2 * (K * K - 1) * norm;
-                a2 = (1 - 1 / filter.quality * K + K * K) * norm;
-                b1 = a1;
-                b2 = (1 - V / filter.quality * K + K * K) * norm;
-            }
-            break;
-
-        case "low-shelf":
-            /* Simplify for positive/negative gains */
-            if (filter.gain >= 0) {
-                norm = 1 / (1 + Math.SQRT2 * K + K * K);
-                a0 = (1 + Math.sqrt(2 * V) * K + V * K * K) * norm;
-                a1 = 2 * (V * K * K - 1) * norm;
-                a2 = (1 - Math.sqrt(2 * V) * K + V * K * K) * norm;
-                b1 = 2 * (K * K - 1) * norm;
-                b2 = (1 - Math.SQRT2 * K + K * K) * norm;
-            } else {
-                norm = 1 / (1 + Math.sqrt(2 * V) * K + V * K * K);
-                a0 = (1 + Math.SQRT2 * K + K * K) * norm;
-                a1 = 2 * (K * K - 1) * norm;
-                a2 = (1 - Math.SQRT2 * K + K * K) * norm;
-                b1 = 2 * (V * K * K - 1) * norm;
-                b2 = (1 - Math.sqrt(2 * V) * K + V * K * K) * norm;
-            }
-            break;
-        case "high-shelf":
-            /* Simplify for positive/negative gains */
-            if (filter.gain >= 0) {
-                norm = 1 / (1 + Math.SQRT2 * K + K * K);
-                a0 = (V + Math.sqrt(2 * V) * K + K * K) * norm;
-                a1 = 2 * (K * K - V) * norm;
-                a2 = (V - Math.sqrt(2 * V) * K + K * K) * norm;
-                b1 = 2 * (K * K - 1) * norm;
-                b2 = (1 - Math.SQRT2 * K + K * K) * norm;
-            } else {
-                norm = 1 / (V + Math.sqrt(2 * V) * K + K * K);
-                a0 = (1 + Math.SQRT2 * K + K * K) * norm;
-                a1 = 2 * (K * K - 1) * norm;
-                a2 = (1 - Math.SQRT2 * K + K * K) * norm;
-                b1 = 2 * (K * K - V) * norm;
-                b2 = (V - Math.sqrt(2 * V) * K + K * K) * norm;
-            }
-            break;
-    }
-
-    let freq = Array(filter.freqRes);
-    let mag = Array(filter.freqRes);
-    let yMin, yMax;
-
-    /* Generates frequency and magnitude arrays */
-    for (let idx = 0; idx < filter.freqRes; idx++) {
-        freq[idx] = (idx / (filter.freqRes - 1)) * Math.PI;
-
-        /* BiQuad filer transfer function of 2nd order */
-        let phi = Math.pow(Math.sin(freq[idx] / 2), 2);
-        mag[idx] = Math.log(Math.pow(a0 + a1 + a2, 2) - 4 * (a0 * a1 + 4 * a0 * a2 + a1 * a2) * phi + 16 * a0 * a2 * phi * phi) - Math.log(Math.pow(1 + b1 + b2, 2) - 4 * (b1 + 4 * b2 + b1 * b2) * phi + 16 * b2 * phi * phi);
-        mag[idx] = mag[idx] * 10 / Math.LN10;
-
-        /* Due to notches, some values go towards -Ininity */
-        if ((mag[idx] == -Infinity) || (mag[idx] <= -200)) {
-            mag[idx] = -200;
-        }
-
-        /* Min/Max of magnitude */
-        if (idx == 0) {
-            yMin = yMax = mag[idx];
-        } else if (mag[idx] < yMin) {
-            yMin = mag[idx];
-        } else if (mag[idx] > yMax) {
-            yMax = mag[idx];
         } else { }
-        freq[idx] = idx / (filter.freqRes - 1);
     }
-
-    let magMin, magMax;
-
-    /* Adapt y-axis if magnitude values are less than some default values */
-    switch (filter.type) {
-        default:
-        case "lowpass" || "highpass" || "bandpass" || "notch":
-            magMin = -100;
-            magMax = 0;
-            if (yMax > magMax) {
-                magMax = yMax;
-            }
-            break;
-        case "peak" || "lowShelf" || "highShelf":
-            magMin = -10;
-            magMax = 10;
-            if (yMax > magMax) {
-                magMax = yMax;
-            } else if (yMin < magMin) {
-                magMin = yMin;
-            } else { }
-            break;
-        case "one-pole lp" || "one-pole hp":
-            magMin = -40;
-            magMax = 0;
-            break;
+    // console.log(freq);
+    // console.log(mag[idxa]);
+    for (let idxa = 0; idxa < filter.freqRes; idxa++) {
+      filter.signal_1[idxa] = {x:freq[idxa], y:mag[idxa]}
     }
-
-    return [freq, mag, magMin, magMax];
+    console.log(filter.signal_1[100])
+    // var data: {x:number; y:number}[];
+    // data = filter.signal_1;
+    // return data;
 }
 
 function gainToDecibels(value: number) {
-    if (value == null) return 0
-    return 20 * (0.43429 * Math.log(value))
+  if (value == null) return 0
+  return 20 * (0.43429 * Math.log(value))
 }
 
 function decibelsToGain(value: number) {
-    return Math.exp(value / 8.6858)
+  return Math.exp(value / 8.6858)
 }
 
-
-function gen_signal(s:number,e:number,f:number,a:number,t:number){
+function gen_signal(s:number, e:number, f:number, a:number, t:number) {
   var sig = [];
   for(var i = s; i < e;i+= t){
     var x = i;
@@ -533,7 +330,15 @@ function gen_signal(s:number,e:number,f:number,a:number,t:number){
   return sig;
 }
 
-
 const width: number = 1000;
+
+
+
+// // Define Layout
+// let layout1 = {
+//   xaxis: {range: [0, 1], title: "Normalized frequency [pi x rad/sample]"},
+//   yaxis: {range: [magMin1, magMax1], title: "Magnitude [dB]"},  
+//   title: "FIR Filter (Gauss window)"
+// };
 
 </script>
