@@ -48,7 +48,7 @@
       :g_width = width
       :signal_1 = "filter.signal_1" 
       :g_height = "500"
-      :trig_draw = "filter.trig_draw_1" 
+      :trig_draw = "trig_1" 
       :o_x = "5" 
       :o_y = "5"
       :auto_scale = 'true'
@@ -96,7 +96,7 @@
       :g_width = width
       :signal_1 = "filter.signal_2"
       :g_height = "500"
-      :trig_draw = "filter.trig_draw_2"
+      :trig_draw = "trig_2"
       :o_x = "5"
       :o_y = "5"
       :auto_scale = 'true'
@@ -214,6 +214,8 @@ const WindowFunctions: FiltFunc[] = [
 
 const FilterOrder = ref<number>(1);
 const FilterGain = ref<number>(1);
+const trig_1 = ref<boolean>(false);
+const trig_2 = ref<boolean>(false);
 
 const filter: Filter = {
   label: "MojFiltr",
@@ -239,7 +241,7 @@ const UpdateFiltOrd = (value: number): void => {
   filter.winLen = value; 
   // trig1 = filter.trig_draw_1;
   FirFilter();
-  filter.trig_draw_1 = !filter.trig_draw_1;
+  trig_1.value = !trig_1.value;
   console.log(filter.trig_draw_1)
   // console.log(trig2 != filter.trig_draw_2)
 }
@@ -262,7 +264,7 @@ const changeSelectedWinFunc = (tip: WindowFunc): void => {
   // console.log(filter.winFunct);
   // trig1 = filter.trig_draw_1;
   FirFilter();
-  filter.trig_draw_1 = !filter.trig_draw_1;
+  trig_1.value = !trig_1.value;
   console.log(filter.trig_draw_1)
   // console.log(trig1 != filter.trig_draw_1)  
   // console.log(trig2 != filter.trig_draw_2)
@@ -351,7 +353,7 @@ const changeSelectedFilterType = (key: IIR_type): void => {
   filter.type_iir = key;
   // trig2 = filter.trig_draw_2;
   IirFilter();
-  filter.trig_draw_2 = !filter.trig_draw_2;
+  trig_2.value = !trig_2.value;
   console.log(filter.trig_draw_2)
 }
 
@@ -359,7 +361,7 @@ const UpdateFiltGain = (value: number): void => {
   filter.gain = value; 
   // trig1 = filter.trig_draw_1;
   IirFilter();
-  filter.trig_draw_2 = !filter.trig_draw_2;
+  trig_2.value = !trig_2.value;
   console.log(filter.gain)
   // console.log(trig2 != filter.trig_draw_2)
 }
