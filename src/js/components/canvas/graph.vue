@@ -1,5 +1,7 @@
 <template>
+    <div style="width={{ g_width }};max_width={{  g_width}};">
     <canvas onload="clear_canvas()" :id="title" :width="g_width" :height="g_height">adasd</canvas>
+    </div>
 </template>
 
 <script>
@@ -65,7 +67,7 @@
             },
             sg_1_color:{
                 type:String,
-                default:"#ffffff"
+                default:"#0abaf5"
             },
             sg_1_width:{
                 type:Number,
@@ -159,9 +161,18 @@
                     var dy = y_max-y_min;
                     var mw = dx+dx*0.1;
                     var mh = dy+dy*0.3;
-                    auto_scale(mw,mh);
+                    var ox = x_min+(dx/2);
+                    var oy = y_min+(dy/2);
+                    var cx = 5;
+                    var cy = (y_max)*(this.g_height)/mh + 15;
+                    
+                    
+                    
+                    auto_scale(mw,mh,cx,cy);
                     }
-                draw();
+
+                    draw();
+                
             }
         },
 
@@ -218,8 +229,9 @@
     var signal_step_x = 3;
     var signal_anim_x = 0;
 
-    function auto_scale(mw,mh){
+    function auto_scale(mw,mh,ox,oy){
         mdim = {w:mw,h:mh};
+        ccen = {w:ox,h:oy};
     }
 
     function setup(t,g_width,g_height,ox,oy,m_width,m_height,anim,loop){
@@ -270,34 +282,38 @@
         ctx.globalAlpha = 1;
         clear_canvas();
         draw_guide_lines();
-        if(signal_1_enable) {
-            ctx.strokeStyle = signal_1_color;
-            ctx.lineWidth = signal_1_width;
-            for(var i = signal_1_index; i < signal_1_canvas.length-1; i++){
-                ctx.beginPath();
-                ctx.moveTo(signal_1_canvas[i].x,signal_1_canvas[i].y);
-                ctx.lineTo(signal_1_canvas[i+1].x,signal_1_canvas[i+1].y);
-                ctx.stroke();
+        for(var o = 0; o < 3; o++){
+                if(signal_1_enable) {
+                    console.log(signal_1_color);
+                    ctx.strokeStyle = signal_1_color;
+                    ctx.lineWidth = signal_1_width;
+                    for(var i = signal_1_index; i < signal_1_canvas.length-1; i++){
+                        ctx.beginPath();
+                        ctx.moveTo(signal_1_canvas[i].x,signal_1_canvas[i].y);
+                        ctx.lineTo(signal_1_canvas[i+1].x,signal_1_canvas[i+1].y);
+                        ctx.stroke();
+                    }
+                }
+            
+            if(signal_2_enable){
+                ctx.strokeStyle = signal_2_color;
+                ctx.lineWidth = signal_2_width;
+                for(var i = signal_2_index; i < signal_2_canvas.length-1; i++){
+                    ctx.beginPath();
+                    ctx.moveTo(signal_2_canvas[i].x,signal_2_canvas[i].y);
+                    ctx.lineTo(signal_2_canvas[i+1].x,signal_2_canvas[i+1].y);
+                    ctx.stroke();
+                }
             }
-        }
-        if(signal_2_enable){
-            ctx.strokeStyle = signal_2_color;
-            ctx.lineWidth = signal_2_width;
-            for(var i = signal_2_index; i < signal_2_canvas.length-1; i++){
-                ctx.beginPath();
-                ctx.moveTo(signal_2_canvas[i].x,signal_2_canvas[i].y);
-                ctx.lineTo(signal_2_canvas[i+1].x,signal_2_canvas[i+1].y);
-                ctx.stroke();
-            }
-        }
-        if(signal_3_enable){
-            ctx.strokeStyle = signal_3_color;
-            ctx.lineWidth = signal_3_width;
-            for(var i = signal_3_index; i < signal_3_canvas.length-1; i++){
-                ctx.beginPath();
-                ctx.moveTo(signal_3_canvas[i].x,signal_3_canvas[i].y);
-                ctx.lineTo(signal_3_canvas[i+1].x,signal_3_canvas[i+1].y);
-                ctx.stroke();
+            if(signal_3_enable){
+                ctx.strokeStyle = signal_3_color;
+                ctx.lineWidth = signal_3_width;
+                for(var i = signal_3_index; i < signal_3_canvas.length-1; i++){
+                    ctx.beginPath();
+                    ctx.moveTo(signal_3_canvas[i].x,signal_3_canvas[i].y);
+                    ctx.lineTo(signal_3_canvas[i+1].x,signal_3_canvas[i+1].y);
+                    ctx.stroke();
+                }
             }
         }
         //$emit("draw_finish");
@@ -486,7 +502,7 @@
         }
 
         for(var i = step_x; i < num_unit_neg_w; i+=step_x){
-            draw_helper_v(-i,cdim,ccen,mdim);
+           draw_helper_v(-i,cdim,ccen,mdim);
             draw_helper_line_v(-i,cdim,ccen,mdim);
         }
         for(var i = step_x; i <= num_unit_pos_w; i+=step_x){
@@ -536,7 +552,7 @@
 
         ctx.beginPath();
         ctx.strokeStyle = "#BBBBBB";
-        ctx.lineWidth = 0.3;
+        ctx.lineWidth = 0.5;
         ctx.moveTo(canvas_point.x,0);
         ctx.lineTo(canvas_point.x,cdim.h);
         ctx.stroke();
@@ -549,7 +565,7 @@
 
         ctx.beginPath();
         ctx.strokeStyle = "#BBBBBB";
-        ctx.lineWidth = 0.3;
+        ctx.lineWidth = 0.5;
         ctx.moveTo(0,canvas_point.y);
         ctx.lineTo(cdim.w,canvas_point.y);
         ctx.stroke();
