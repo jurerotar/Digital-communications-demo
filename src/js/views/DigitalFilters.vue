@@ -57,27 +57,6 @@
     <app-section-heading>
       IIR filter
     </app-section-heading>
-    <!-- Range slider -->
-    <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
-      <label
-        :for="'filter-gain'"
-        class="text-xl transition-colors duration-300 dark:text-white"
-      >
-        Gain filtra:
-        <span class="font-medium">
-          {{ FilterGain }}
-        </span>
-      </label>
-      <input
-        :id="'filter-gain'"
-        v-model.number="FilterGain"
-        type="range"
-        min="0"
-        max="1"
-        step="0.1"
-        @change="UpdateFiltGain(FilterGain)"
-      >
-    </div>
     <app-section-heading>
       IIR tip
     </app-section-heading>
@@ -101,7 +80,67 @@
       :o_y = "5"
       :auto_scale = 'true'
     />
-  
+    <!-- Range slider -->
+    <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
+      <label
+        :for="'filter-gain'"
+        class="text-xl transition-colors duration-300 dark:text-white"
+      >
+        Ojačanje filtra [dB]:
+        <span class="font-medium">
+          {{ FilterGain }}
+        </span>
+      </label>
+      <input
+        :id="'filter-gain'"
+        v-model.number="FilterGain"
+        type="range"
+        min="-30"
+        max="30"
+        step="0.1"
+        @change="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
+      >
+    </div>
+    <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
+      <label
+        :for="'filter-cutoff'"
+        class="text-xl transition-colors duration-300 dark:text-white"
+      >
+        Mejna frekvenca:
+        <span class="font-medium">
+          {{ FilterCutoff }}
+        </span>
+      </label>
+      <input
+        :id="'filter-cutoff'"
+        v-model.number="FilterCutoff"
+        type="range"
+        min="0"
+        max="1"
+        step="0.01"
+        @change="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
+      >
+    </div>
+    <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
+      <label
+        :for="'filter-quality'"
+        class="text-xl transition-colors duration-300 dark:text-white"
+      >
+        Kvaliteta filtra:
+        <span class="font-medium">
+          {{ FilterQuality }}
+        </span>
+      </label>
+      <input
+        :id="'filter-quality'"
+        v-model.number="FilterQuality"
+        type="range"
+        min="0.01"
+        max="20"
+        step="0.01"
+        @change="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
+      >
+    </div>
   </app-main-container>
 </template>
 
@@ -214,6 +253,8 @@ const WindowFunctions: FiltFunc[] = [
 
 const FilterOrder = ref<number>(1);
 const FilterGain = ref<number>(1);
+const FilterCutoff = ref<number>(1);
+const FilterQuality = ref<number>(1);
 const trig_1 = ref<boolean>(false);
 const trig_2 = ref<boolean>(false);
 
@@ -261,13 +302,10 @@ const changeSelectedWinFunc = (tip: WindowFunc): void => {
   // Reset length to 1, since some lengths might be missing on certain shapes
   selectedWinFunct.value = tip;
   filter.winFunct = tip;
-  // console.log(filter.winFunct);
-  // trig1 = filter.trig_draw_1;
+
   FirFilter();
   trig_1.value = !trig_1.value;
-  console.log(filter.trig_draw_1)
-  // console.log(trig1 != filter.trig_draw_1)  
-  // console.log(trig2 != filter.trig_draw_2)
+  console.log(filter.trig_draw_1);
 }
 
 /*
@@ -357,13 +395,15 @@ const changeSelectedFilterType = (key: IIR_type): void => {
   console.log(filter.trig_draw_2)
 }
 
-const UpdateFiltGain = (value: number): void => {
-  filter.gain = value; 
-  // trig1 = filter.trig_draw_1;
+const UpdateFiltGain = (gain: number, cutoff: number, quality: number): void => {
+  filter.gain = gain;
+  filter.cutoff = cutoff; 
+  filter.quality = quality; 
   IirFilter();
   trig_2.value = !trig_2.value;
   console.log(filter.gain)
-  // console.log(trig2 != filter.trig_draw_2)
+  console.log(filter.cutoff)
+  console.log(filter.quality)
 }
 
 /*
