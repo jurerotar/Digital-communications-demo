@@ -184,6 +184,7 @@
             this.sg_3_color,this.sg_3_width);
             clear_canvas();
             draw_guide_lines();
+            this.$emit("loaded",this.title);
         },
 
         

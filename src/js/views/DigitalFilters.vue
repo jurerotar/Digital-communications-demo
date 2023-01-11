@@ -19,11 +19,7 @@
         Red filtra: <br>
       </app-section-heading>
         <app-paragraph>
-        <span style="font-size: 18px">
-          <font face="Arial">
             Dodaš tekst <br>
-          </font>
-        </span>
         </app-paragraph>
         <span class="font-semibold">
           {{ FilterOrder }}
@@ -42,12 +38,8 @@
     <app-section-heading>
       Okenska funkcija <br>
       <app-paragraph>
-        <span style="font-size: 18px">
-          <font face="Arial">
-            Dodaš tekst <br>
-          </font>
-        </span>
-        </app-paragraph>
+        Dodaš tekst <br>
+      </app-paragraph>
     </app-section-heading>
     <button-container>
       <app-button
@@ -71,6 +63,7 @@
       :o_x = "5" 
       :o_y = "5"
       :auto_scale = 'true'
+      @loaded="UpdateFiltOrd(FilterOrder)"
     />
 
     <app-section-heading>
@@ -79,11 +72,7 @@
     <app-section-heading>
       IIR tip <br>
       <app-paragraph>
-        <span style="font-size: 18px">
-          <font face="Arial">
-            Dodaš tekst <br>
-          </font>
-        </span>
+        Dodaš tekst <br>
       </app-paragraph>
     </app-section-heading>
     <button-container>
@@ -99,11 +88,7 @@
     <app-section-heading>
       Prenosna funkcija IIR filtra <br>
       <app-paragraph>
-        <span style="font-size: 18px">
-          <font face="Arial">
-            Dodaš tekst <br>
-          </font>
-        </span>
+        Dodaš tekst <br>
       </app-paragraph>
     </app-section-heading>
     <graph
@@ -115,6 +100,7 @@
       :o_x = "5"
       :o_y = "5"
       :auto_scale = 'true'
+      @loaded="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
     />
     <!-- Range slider -->
     <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
@@ -124,11 +110,7 @@
       >
         Ojačanje filtra [dB]: <br>
         <app-paragraph>
-        <span style="font-size: 18px">
-          <font face="Arial">
             Dodaš tekst <br>
-          </font>
-        </span>
         </app-paragraph>
         <span class="font-medium">
           {{ FilterGain }}
@@ -151,11 +133,7 @@
       >
         Mejna frekvenca [pi x rad/sample]: <br>
         <app-paragraph>
-        <span style="font-size: 18px">
-          <font face="Arial">
-            Dodaš tekst <br>
-          </font>
-        </span>
+          Dodaš tekst <br>
         </app-paragraph>
         <span class="font-medium">
           {{ FilterCutoff }}
@@ -178,11 +156,7 @@
       >
         Kvaliteta filtra: <br>
         <app-paragraph>
-        <span style="font-size: 18px">
-          <font face="Arial">
-            Dodaš tekst <br>
-          </font>
-        </span>
+          Dodaš tekst <br>
         </app-paragraph>
         <span class="font-medium">
           {{ FilterQuality }}
@@ -278,8 +252,8 @@ const IIRTypes: IIR_Types[] = [
 
 // Default pulse length options we give to the users
 const WindowFunctions: FiltFunc[] = [
-  {key: 'lanczos', label: "lanczos"},
-  {key: 'rectangular', label: "rectangular"},
+  {key: 'lanczos', label: "Lanczos"},
+  {key: 'rectangular', label: "Rectangular"},
   {key: 'triangular',  label: "triangular"},
   {key: 'bartlett',  label: "bartlett"},
   {key: 'bartlettHann', label: "bartlettHann"},
@@ -317,7 +291,7 @@ const filter: Filter = {
   signal_2: [{x:0, y:0}],
   winParam: 0.2,
   freqRes: 10000,
-  type_iir: "bandpass",
+  type_iir: "lowpass",
   types_iir: IIRTypes,
   gain: 1,
   cutoff: 0.2,
@@ -343,6 +317,10 @@ const UpdateFiltOrd = (value: number): void => {
 //   }
 //   console.log(filter.currType);
 // }
+
+const start = (): void =>{
+  console.log("HELLO WORLD");
+}
 
 const changeSelectedWinFunc = (tip: WindowFunc): void => {
   // Reset length to 1, since some lengths might be missing on certain shapes
