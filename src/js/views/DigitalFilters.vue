@@ -15,8 +15,9 @@
         :for="'filter-order'"
         class="text-xl transition-colors duration-300 dark:text-white"
       >
-        Red filtra:
-        <span class="font-medium">
+        Red filtra: <br>
+        Tukaj se dopiše razlaga <br>
+        <span class="font-semibold">
           {{ FilterOrder }}
         </span>
       </label>
@@ -24,14 +25,15 @@
         :id="'filter-order'"
         v-model.number="FilterOrder"
         type="range"
-        min="1"
+        min="4"
         max="32"
         step="1"
         @change="UpdateFiltOrd(FilterOrder)"
       >
     </div>
     <app-section-heading>
-      Okenska funkcija
+      Okenska funkcija <br>
+      Tukaj se dopiše razlaga <br>
     </app-section-heading>
     <button-container>
       <app-button
@@ -43,6 +45,9 @@
       {{ windov.label }}
     </app-button>
     </button-container>
+    <app-section-heading>
+      Prenosna funkcija FIR filtra
+    </app-section-heading>
     <graph 
       title = title1 
       :g_width = width
@@ -58,7 +63,8 @@
       IIR filter
     </app-section-heading>
     <app-section-heading>
-      IIR tip
+      IIR tip <br>
+
     </app-section-heading>
     <button-container>
       <app-button
@@ -70,6 +76,10 @@
         {{ windov.label }}
       </app-button>
     </button-container>
+    <app-section-heading>
+      Prenosna funkcija IIR filtra <br>
+
+    </app-section-heading>
     <graph
       title = title2 
       :g_width = width
@@ -86,7 +96,7 @@
         :for="'filter-gain'"
         class="text-xl transition-colors duration-300 dark:text-white"
       >
-        Ojačanje filtra [dB]:
+        Ojačanje filtra [dB]: <br>
         <span class="font-medium">
           {{ FilterGain }}
         </span>
@@ -97,7 +107,7 @@
         type="range"
         min="-30"
         max="30"
-        step="0.1"
+        step="1"
         @change="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
       >
     </div>
@@ -106,7 +116,8 @@
         :for="'filter-cutoff'"
         class="text-xl transition-colors duration-300 dark:text-white"
       >
-        Mejna frekvenca:
+        Mejna frekvenca [pi x rad/sample]: <br>
+
         <span class="font-medium">
           {{ FilterCutoff }}
         </span>
@@ -116,7 +127,7 @@
         v-model.number="FilterCutoff"
         type="range"
         min="0"
-        max="1"
+        max="0.99"
         step="0.01"
         @change="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
       >
@@ -126,7 +137,8 @@
         :for="'filter-quality'"
         class="text-xl transition-colors duration-300 dark:text-white"
       >
-        Kvaliteta filtra:
+        Kvaliteta filtra: <br>
+
         <span class="font-medium">
           {{ FilterQuality }}
         </span>
@@ -176,17 +188,12 @@ import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 import AppMainContainer from "@/js/components/common/AppMainContainer.vue";
 
 export interface Filter {
-  // filter label
   label: string;
-  //
   key?: FilterType;
-  // filter type
   currType?: FilterType;
   filterType?: FiltType[];
-  // window func
   winFunct?: WindowFunc;
   windovFunc?: FiltFunc[];
-  // order
   winLen: number;
 
   trig_draw_1: boolean;
@@ -195,24 +202,18 @@ export interface Filter {
   signal_2: {x:number, y:number}[];
 
   winParam: number;
-
   freqRes: number;
-
   type_iir: IIR_type;
   types_iir: IIR_Types[];
-
   gain: number;
-
   cutoff: number;
-
   quality: number;
 }
 
 var trig1: boolean = true;
 var trig2: boolean = true;
-const selectedWinFunct = ref<WindowFunc>('hamming');
-const selectedFilterType = ref<IIR_type>('bandpass');
-
+const selectedWinFunct = ref<WindowFunc>('lanczos');
+const selectedFilterType = ref<IIR_type>('lowpass');
 
 const FilterTypes: FiltType[] = [
   {label: 'FIR', key: 'FIR'}, 
@@ -251,10 +252,10 @@ const WindowFunctions: FiltFunc[] = [
   {key: 'tukey',  label: "tukey"}
 ];
 
-const FilterOrder = ref<number>(1);
-const FilterGain = ref<number>(1);
-const FilterCutoff = ref<number>(1);
-const FilterQuality = ref<number>(1);
+const FilterOrder = ref<number>(4);
+const FilterGain = ref<number>(0);
+const FilterCutoff = ref<number>(0.5);
+const FilterQuality = ref<number>(0.01);
 const trig_1 = ref<boolean>(false);
 const trig_2 = ref<boolean>(false);
 

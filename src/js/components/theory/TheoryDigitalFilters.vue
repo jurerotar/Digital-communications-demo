@@ -1,90 +1,77 @@
 <template>
   <div class="flex flex-col gap-4">
     <app-paragraph>
-      Teorija
-      bla bla bla
-      <!--Izvorni signal se pri prenosu skozi prenosni kanal popači - raztegne se po časovni osi.
-      V primeru ilustriranem na tej strani je ekvivalentni prenosni kanal modeliran kot idealni nizko pasovni filter z mejno frekvenco
-      <span class="font-semibold">f<sub>m</sub></span>,
-      ki je enaka vzorčevalni frekvenci: <span class="font-semibold">f<sub>m</sub> = f<sub>s</sub></span>
-      Sestavljen je iz sita za preoblikovanje enotskih impulzov, oddajnega sita, sistemske funkcije kanala ter sprejemnega sita.
-      <br>
-      Ekvivalentna sistemska funkcija kanala je tako:
-      <span
-        ref="transferFunctionRef"
-        class="katex-block"
-      />
-      in na prvem grafu opazimo, da se razteza čez več period vzorčenja <span class="font-semibold">t<sub>s</sub></span>. Vnaša tudi
-      zakasnitev
-      <span class="font-semibold">t<sub>s</sub></span>,
-      ki je določena kot čas, ob katerem ima <span class="font-semibold">h(t)</span> največjo vrednost.
-      <br>
-      Izvorni signal je vsota časovno zamaknjenih impulzov <span class="font-semibold">g(t)</span>, uteženimi s simboli
-      <span class="font-semibold">y[n]</span> ob časih <span class="font-semibold">t=nT<sub>s</sub></span>
-      <span
-        ref="inputSignalRef"
-        class="katex-block"
-      />
-      Tako je tudi prejeti signal vsota impulzov korigiranih s prenosno funkcijo <span class="font-semibold">h(t)</span>,
-      kar zapišemo z operacijo konvolucije
-      <span
-        ref="yhConvRef"
-        class="katex-block"
-      />
-      Ker se <span class="font-semibold">h(t)</span> razteza čez več period, to pomeni, da se tudi posamezni simbol razteza v čas, ko
-      vzorčimo
-      naslednji simbol.
-      Vrednost se prišteje naslednjemu vzorcu in spremeni njegovo vrednost. Nastane intersimbolna interferenca.
+      Digitalen filter je sistem, katerega lastnosti določajo osnovne matematične operacije in funkcije.
+      V praksi srečujemo dve osnovni implementaciji digitalnega filtra: filter s končnim odzivom (FIR) in filter z neskončnim
+      odzivom (IIR). Da bi razumeli delovanje in lastnosti teh filtrov, je potrebno razumeti z-transform.
     </app-paragraph>
+
     <app-section-heading>
-      Nyquistov kriterij v časovnem prostoru
+      Z-transform
     </app-section-heading>
     <app-paragraph>
-      Kljub temu, da <span class="font-semibold">h(t)</span> povzroči, da se simbol razširi čez več period vzorčenja, to ni problem, če je
-      vrednost
-      <span class="font-semibold">h(t)</span> enaka
-      <span class="font-semibold">0</span> za vse <span class="font-semibold">t=nT<sub>s</sub>, n</span>
-      <span class="font-semibold">&#8800;0</span>.
-      Če <span class="font-semibold">h(t)</span> izpolnjuje to zahtevo, pravimo, da izpoljuje
-      <span class="font-semibold">Nyquistov kriterij za prenos brez intersimbolne interference v časovnem prostoru</span>.
+      Z-transform je analiza, ki nam omogoča določiti frekvenčni spekter časovno diskretnih signalov.
+      Dvostranski spekter časovno diskretnega signala določa sledeča neskončna vrsta:
       <span
-        ref="h1NyquistRef"
+        ref="zTransformRef"
+        class="katex-block"
+      />
+      Ker digitalni filtri spadajo med linearne časovno invariabilne (LTI) sisteme vemo,
+      da frekvenčna transformacija impulznega odziva <span class="font-semibold">h(t)</span> danega sistema ustreza ravno prenosni funkciji danega sistema.
+      Predpostavimo sedaj, da je digitalni filter pravzaprav rekurziven časovno diskreten LTI sistem.
+      Potem lahko zapišemo diferenčno enačbo <span class="font-semibold">y(nT)</span> opazovanega sistema:
+      <span
+        ref="differenceEqRef"
+        class="katex-block"
+      />
+      kjer nabor koeficientov <span class="font-semibold">a<sub>k</sub></span> in <span class="font-semibold">b<sub>k</sub></span> 
+      predstavlja lastnosti, katere neposredno vplivajo na lastnosti prenosne funkcije digitalnega filtra.
+      Diferenčna enačba <span class="font-semibold">y(nT)</span>, ki določa izhodni signal filtra v časovnem prostoru, je enaka impulznemu odzivu
+      filtra <span class="font-semibold">h(nT)</span> v primeru, ko filter vzbujamo z Kronecker-delta impulzom.
+      Tako nam z-transformacija diferenčne enačbe <span class="font-semibold">y(nT)</span> da prenosno funkcijo <span class="font-semibold">H(z)</span> danega digitalnega filtra:
+      <span
+        ref="transferFunctRef"
         class="katex-block"
       />
     </app-paragraph>
+
     <app-section-heading>
-      Nyquistov kriterij v frekvenčnem prostoru
+      Bločni diagram
     </app-section-heading>
     <app-paragraph>
-      Zanima nas še, kako mora izgledati prenosna funkcija ekvivalentnega prenosnega kanala <span class="font-semibold">H(f)</span>.
-      Zgoraj zapisan izraz za <span class="font-semibold">h(t)</span> ne določa vrednosti
-      <span class="font-semibold">h(t)</span> za <span class="font-semibold">t</span> <span class="font-semibold">&#8800;</span>
-      <span class="font-semibold">nT<sub>s</sub></span>, zato ga zapišemo drugače:
+      Splošni bločni diagram zajema tako rekurziven (IIR) kot nerekurziven (FIR) sistem. Razlika je v tem, da so <span class="font-semibold">a<sub>k</sub></span> koeficienti
+      pri slednjemu enaki nič (razen <span class="font-semibold">a<sub>0</sub> = 1</span>), kar pomeni, da je trenutni izhod <span class="font-semibold">y(nT)</span> odvisen le od trenutnega in preteklih vzorcev
+      vhodnega časovno diskretnega signala. Medtem ko je IIR odvisen tudi od preteklih vzorcev na izhodu. Posledično je FIR filter
+      vedno stabilen in ima krajši čas ustaljevanja kot IIR, le-ta pa ni nujno stabilen.
+      
+      <div style="width: 75%">
+        <img style="margin-bottom:1cm;margin-top:1cm;padding-left:0.1cm;" src="src\js\components\images\IIR_block.jpg"/>
+      </div>
+    </app-paragraph>
+
+    <app-section-heading>
+      Finite Impulse Response (FIR)
+    </app-section-heading>
+    <app-paragraph>
+      Preprost FIR filter je filter, ki enakomerno povpreči <span class="font-semibold">N</span> število preteklih vzorcev.
+      Drugače rečeno, gre za povprečenje, kjer so uteži posameznih vzorcev določene z pravokotno okensko funkcijo.
+      Če vrednosti uteži določimo s katerokoli drugo okensko funkcijo, se temu primerno spremeni prenosna funkcija filtra.
+      Z različnimi okenskimi funkcijami dosegamo želen prehod iz prepustnega v zaporni pas ter višino konic v zapornem pasu.
+      Koeficiente <span class="font-semibold">b<sub>k</sub></span> določamo na sledeč način, kjer <span class="font-semibold">w<sub>k</sub></span> predstavlja vrednosti diskretne okenske funkcije:
       <span
-        ref="h2NyquistRef"
-        class="katex-block"
-      />,
-      kjer je <span class="font-semibold">v<sub>δ</sub>(t)</span> vzorčevalna funkcija (niz enotskih impulzov) s frekvenco
-      <span class="font-semibold">f<sub>v</sub> = f<sub>s</sub></span>,
-      katere Fourier transform poznamo. Izraz preuredimo in dobimo izraz za prekrito prenosno funkcijo:
-      <span
-        ref="h3NyquistRef"
+        ref="windowWeightsRef"
         class="katex-block"
       />
-      Če je pogoj izpolnjen, pravimo, da velja Nyquistov kriterij za prenos brez ISI v frekvenčnem prostoru:
-      <span class="font-semibold">
-        Če je prekrita prenosna funkcija ekvivalentnega prenosnega kanala konstantna, potem pri digitalnem prenosu ne bo
-        prišlo do intersimbolne interference.
-      </span>
     </app-paragraph>
+
     <app-section-heading>
-      Očesni diagram
+      Infinite Impulse Response (IIR)
     </app-section-heading>
     <app-paragraph>
-      Na očesnem diagramu vidimo 2 periodi prejetega signala pri čemer za proženje uporabimo frekvenco vzorčenja.
-      Na spodnjem zaslonu osciloskopa je proženje nastavljeno na vzorčno frekvenco izvornega signala,
-      zato se ob spreminjanju zakasnitve na kanalu <span class="font-semibold">t<sub>0</sub></span> spremeni pozicija mesta, kjer odčitavamo
-      signal (ilustrirano z zeleno črto).-->
+      IIR filter je nekoliko drugačen, saj določamo <span class="font-semibold">a<sub>k</sub></span> in <span class="font-semibold">b<sub>k</sub></span> koeficiente direktno iz prenosnih funkcij analognih filtrov.
+      Zato so prikazani le filtri 2. reda, saj se sistemska funkcija spreminja drastično s povečevanjem reda filtra. Medtem ko se pri FIR
+      filtru s povečevanjem reda spreminja sistemska funkcija v linearnem vzorcu.
+      Če želimo dosegati bolj strm prehod med prepustnim in zapornim pasom, vežemo več filtrov v kaskado, pri čemer se redi filtrov seštevajo.
     </app-paragraph>
   </div>
 </template>
@@ -94,35 +81,27 @@
   lang="ts"
 >
 import {ref, watchEffect} from "vue";
-import {transferFunction, inputSignal, yhConv, h1Nyquist, h2Nyquist, h3Nyquist} from "@/js/helpers/equations";
+import {zTransform, differenceEq, transferFunct, windowWeights} from "@/js/helpers/equations";
 import AppParagraph from "@/js/components/common/AppParagraph.vue";
 import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 
-const transferFunctionRef = ref<HTMLSpanElement>();
-const inputSignalRef = ref<HTMLSpanElement>();
-const yhConvRef = ref<HTMLSpanElement>();
-const h1NyquistRef = ref<HTMLSpanElement>();
-const h2NyquistRef = ref<HTMLSpanElement>();
-const h3NyquistRef = ref<HTMLSpanElement>();
+const zTransformRef = ref<HTMLSpanElement>();
+const differenceEqRef = ref<HTMLSpanElement>();
+const transferFunctRef = ref<HTMLSpanElement>();
+const windowWeightsRef = ref<HTMLSpanElement>();
 
 watchEffect(() => {
-  if (transferFunctionRef.value) {
-    window.katex.render(transferFunction, transferFunctionRef.value!);
+  if (zTransformRef.value) {
+    window.katex.render(zTransform, zTransformRef.value!);
   }
-  if (inputSignalRef.value) {
-    window.katex.render(inputSignal, inputSignalRef.value!);
+  if (differenceEqRef.value) {
+    window.katex.render(differenceEq, differenceEqRef.value!);
   }
-  if (yhConvRef.value) {
-    window.katex.render(yhConv, yhConvRef.value!);
+  if (transferFunctRef.value) {
+    window.katex.render(transferFunct, transferFunctRef.value!);
   }
-  if (h1NyquistRef.value) {
-    window.katex.render(h1Nyquist, h1NyquistRef.value!);
-  }
-  if (h2NyquistRef.value) {
-    window.katex.render(h2Nyquist, h2NyquistRef.value!);
-  }
-  if (h3NyquistRef.value) {
-    window.katex.render(h3Nyquist, h3NyquistRef.value!);
+  if (windowWeightsRef.value) {
+    window.katex.render(windowWeights, windowWeightsRef.value!);
   }
 });
 </script>
