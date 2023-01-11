@@ -15,8 +15,16 @@
         :for="'filter-order'"
         class="text-xl transition-colors duration-300 dark:text-white"
       >
+      <app-section-heading>
         Red filtra: <br>
-        Tukaj se dopiše razlaga <br>
+      </app-section-heading>
+        <app-paragraph>
+        <span style="font-size: 18px">
+          <font face="Arial">
+            Dodaš tekst <br>
+          </font>
+        </span>
+        </app-paragraph>
         <span class="font-semibold">
           {{ FilterOrder }}
         </span>
@@ -33,7 +41,13 @@
     </div>
     <app-section-heading>
       Okenska funkcija <br>
-      Tukaj se dopiše razlaga <br>
+      <app-paragraph>
+        <span style="font-size: 18px">
+          <font face="Arial">
+            Dodaš tekst <br>
+          </font>
+        </span>
+        </app-paragraph>
     </app-section-heading>
     <button-container>
       <app-button
@@ -64,7 +78,13 @@
     </app-section-heading>
     <app-section-heading>
       IIR tip <br>
-
+      <app-paragraph>
+        <span style="font-size: 18px">
+          <font face="Arial">
+            Dodaš tekst <br>
+          </font>
+        </span>
+      </app-paragraph>
     </app-section-heading>
     <button-container>
       <app-button
@@ -78,7 +98,13 @@
     </button-container>
     <app-section-heading>
       Prenosna funkcija IIR filtra <br>
-
+      <app-paragraph>
+        <span style="font-size: 18px">
+          <font face="Arial">
+            Dodaš tekst <br>
+          </font>
+        </span>
+      </app-paragraph>
     </app-section-heading>
     <graph
       title = title2 
@@ -97,6 +123,13 @@
         class="text-xl transition-colors duration-300 dark:text-white"
       >
         Ojačanje filtra [dB]: <br>
+        <app-paragraph>
+        <span style="font-size: 18px">
+          <font face="Arial">
+            Dodaš tekst <br>
+          </font>
+        </span>
+        </app-paragraph>
         <span class="font-medium">
           {{ FilterGain }}
         </span>
@@ -117,7 +150,13 @@
         class="text-xl transition-colors duration-300 dark:text-white"
       >
         Mejna frekvenca [pi x rad/sample]: <br>
-
+        <app-paragraph>
+        <span style="font-size: 18px">
+          <font face="Arial">
+            Dodaš tekst <br>
+          </font>
+        </span>
+        </app-paragraph>
         <span class="font-medium">
           {{ FilterCutoff }}
         </span>
@@ -138,7 +177,13 @@
         class="text-xl transition-colors duration-300 dark:text-white"
       >
         Kvaliteta filtra: <br>
-
+        <app-paragraph>
+        <span style="font-size: 18px">
+          <font face="Arial">
+            Dodaš tekst <br>
+          </font>
+        </span>
+        </app-paragraph>
         <span class="font-medium">
           {{ FilterQuality }}
         </span>
@@ -263,9 +308,9 @@ const filter: Filter = {
   label: "MojFiltr",
   currType: 'IIR',
   filterType: FilterTypes,
-  winFunct: "gaussian",
+  winFunct: "lanczos",
   windovFunc: WindowFunctions,
-  winLen: 3,
+  winLen: 4,
   trig_draw_1: true,
   trig_draw_2: true,
   signal_1: [{x:0, y:0}],
@@ -598,3 +643,14 @@ function decibelsToGain(value: number) {
 const width: number = 1000;
 
 </script>
+
+<style scoped>
+
+  ::v-deep app-paragraph {
+    color: grey;
+    font-size: 16px;
+    font-weight: lighter;
+    padding-left: 20px; /* This will add 20px of indentation to the first line of each paragraph */
+  }
+
+</style>
