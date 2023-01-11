@@ -9,19 +9,23 @@
     <app-section-heading>
       FIR filter
     </app-section-heading>
+
+    <app-section-heading>
+        Red filtra: <br>
+        <div>
+        <app-paragraph style="padding-left:0cm;">
+          Red FIR filtra določa dolžino okenske funkcije. Le-ta pride do izraza pri večji dolžini okna. <br>
+        </app-paragraph>
+      </div>
+    </app-section-heading>
+
     <!-- Range slider -->
     <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
       <label
-        :for="'filter-order'"
+        :for="'filter-gain'"
         class="text-xl transition-colors duration-300 dark:text-white"
       >
-      <app-section-heading>
-        Red filtra: <br>
-      </app-section-heading>
-        <app-paragraph>
-            Dodaš tekst <br>
-        </app-paragraph>
-        <span class="font-semibold">
+        <span class="font-medium">
           {{ FilterOrder }}
         </span>
       </label>
@@ -30,16 +34,18 @@
         v-model.number="FilterOrder"
         type="range"
         min="4"
-        max="32"
+        max="100"
         step="1"
         @change="UpdateFiltOrd(FilterOrder)"
       >
     </div>
     <app-section-heading>
       Okenska funkcija <br>
-      <app-paragraph>
-        Dodaš tekst <br>
-      </app-paragraph>
+      <div>
+        <app-paragraph style="padding-left:0cm;">
+          Okenska funkcija določa uteži filtra. Z naklonom zvončaste oblike okna prilagajamo prenosno funkcijo sita našim zahtevam. <br>
+        </app-paragraph>
+      </div>
     </app-section-heading>
     <button-container>
       <app-button
@@ -71,9 +77,11 @@
     </app-section-heading>
     <app-section-heading>
       IIR tip <br>
-      <app-paragraph>
-        Dodaš tekst <br>
-      </app-paragraph>
+      <div>
+        <app-paragraph style="padding-left:0cm;">
+          IIR filter posnema karakteristiko analognih filtrov. <br>
+        </app-paragraph>
+      </div>
     </app-section-heading>
     <button-container>
       <app-button
@@ -87,9 +95,6 @@
     </button-container>
     <app-section-heading>
       Prenosna funkcija IIR filtra <br>
-      <app-paragraph>
-        Dodaš tekst <br>
-      </app-paragraph>
     </app-section-heading>
     <graph
       title = title2 
@@ -102,16 +107,51 @@
       :auto_scale = 'true'
       @loaded="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
     />
+
+    <app-section-heading>
+      Mejna frekvenca [pi x rad/sample]: <br>
+    </app-section-heading>
+    <div>
+      <app-paragraph style="padding-left:0cm;">
+        Mejna frekvenca je podana kot normalizirana frekvenca glede na polovico Nyquistove frekvence in določa frekvenco, kjer se začne prehod med prepustnim in zapornim pasom. <br>
+      </app-paragraph>
+    </div>
+
     <!-- Range slider -->
+    <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
+      <label
+        :for="'filter-cutoff'"
+        class="text-xl transition-colors duration-300 dark:text-white"
+      >
+        <span class="font-medium">
+          {{ FilterCutoff }}
+        </span>
+      </label>
+      <input
+        :id="'filter-cutoff'"
+        v-model.number="FilterCutoff"
+        type="range"
+        min="0.01"
+        max="0.99"
+        step="0.01"
+        @change="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
+      >
+    </div>
+    
+    <!-- Range slider -->
+    <app-section-heading>
+      Ojačanje filtra [dB]: <br>
+    </app-section-heading>
+    <div>
+      <app-paragraph style="padding-left:0cm;">
+        Ojačenje vpliva na prepusntni (pozitivno ojačenje) ali zaporni (negativno ojačenje) pas in igra vlogo le pri tipih "Peak", "Low-shelf" in "High-shelf". <br>
+      </app-paragraph>
+    </div>
     <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
       <label
         :for="'filter-gain'"
         class="text-xl transition-colors duration-300 dark:text-white"
       >
-        Ojačanje filtra [dB]: <br>
-        <app-paragraph>
-            Dodaš tekst <br>
-        </app-paragraph>
         <span class="font-medium">
           {{ FilterGain }}
         </span>
@@ -126,38 +166,23 @@
         @change="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
       >
     </div>
-    <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
-      <label
-        :for="'filter-cutoff'"
-        class="text-xl transition-colors duration-300 dark:text-white"
-      >
-        Mejna frekvenca [pi x rad/sample]: <br>
-        <app-paragraph>
-          Dodaš tekst <br>
-        </app-paragraph>
-        <span class="font-medium">
-          {{ FilterCutoff }}
-        </span>
-      </label>
-      <input
-        :id="'filter-cutoff'"
-        v-model.number="FilterCutoff"
-        type="range"
-        min="0"
-        max="0.99"
-        step="0.01"
-        @change="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
-      >
+
+    <app-section-heading>
+      Kvaliteta filtra: <br>
+    </app-section-heading>
+    <div>
+      <app-paragraph style="padding-left:0cm;">
+        Kvaliteta določa prisotnost resonance, ki se nahaja na mejni frekvenci. <br>
+        Pri tipih "Low-pass", "High-pass" in "Band-pass" je navadno željena kvaliteta v okolici vrednosti 1, pri "Notch" in "Peak" tipu pa večanje kvalitete rezultira v ožjem prepusnem pasu. <br>
+      </app-paragraph>
     </div>
+    
+    <!-- Range slider -->
     <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
       <label
         :for="'filter-quality'"
         class="text-xl transition-colors duration-300 dark:text-white"
       >
-        Kvaliteta filtra: <br>
-        <app-paragraph>
-          Dodaš tekst <br>
-        </app-paragraph>
         <span class="font-medium">
           {{ FilterQuality }}
         </span>
@@ -246,29 +271,29 @@ const IIRTypes: IIR_Types[] = [
   {key: "notch",      label: "Notch"},
   {key: "one-pole-lp", label: "Enopolni LP"},
   {key: "peak",       label: "Peak"},
-  {key: "low-shelf",  label: "LowShelf"},
-  {key: "high-shelf", label: "HighShelf"},
+  {key: "low-shelf",  label: "Low shelf"},
+  {key: "high-shelf", label: "High shelf"},
 ];
 
 // Default pulse length options we give to the users
 const WindowFunctions: FiltFunc[] = [
   {key: 'lanczos', label: "Lanczos"},
   {key: 'rectangular', label: "Rectangular"},
-  {key: 'triangular',  label: "triangular"},
-  {key: 'bartlett',  label: "bartlett"},
-  {key: 'bartlettHann', label: "bartlettHann"},
-  {key: 'welch',  label: "welch"},
-  {key: 'hann', label: "hann"},
-  {key: 'hamming', label: "hamming"},
-  {key: 'blackman', label: "blackman"},
-  {key: 'nuttall', label: "nuttall"},
-  {key: 'blackmanHarris', label: "blackmanHarris"},
-  {key: 'blackmanNuttall', label: "blackmanNuttall"},
-  {key: 'exactBlackman', label: "exactBlackman"},
-  {key: 'flatTop', label: "flatTop"},
-  {key: 'cosine',  label: "cosine"},
-  {key: 'gaussian', label: "gaussian"},
-  {key: 'tukey',  label: "tukey"}
+  {key: 'triangular',  label: "Triangular"},
+  {key: 'bartlett',  label: "Bartlett"},
+  {key: 'bartlettHann', label: "Bartlett-Hann"},
+  {key: 'welch',  label: "Welch"},
+  {key: 'hann', label: "Hann"},
+  {key: 'hamming', label: "Hamming"},
+  {key: 'blackman', label: "Blackman"},
+  {key: 'nuttall', label: "Nuttall"},
+  {key: 'blackmanHarris', label: "Blackman harris"},
+  {key: 'blackmanNuttall', label: "Blackman nuttall"},
+  {key: 'exactBlackman', label: "Exact blackman"},
+  {key: 'flatTop', label: "Flat top"},
+  {key: 'cosine',  label: "Cosine"},
+  {key: 'gaussian', label: "Gaussian"},
+  {key: 'tukey',  label: "Tukey"}
 ];
 
 const FilterOrder = ref<number>(4);

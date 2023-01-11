@@ -96,6 +96,14 @@
             autoscale:{
                 type:Boolean,
                 default: true
+            },
+            X_label:{
+                type:String,
+                default:"Normalizirana frekvenca"
+            },
+            Y_label:{
+                type:String,
+                default:"Frekvenčni odziv FIR filtra[dB]"
             }
         },
         watch:{
@@ -121,7 +129,8 @@
 
         methods:{
             test() {
-                setup(this.title,this.g_width,this.g_height,this.o_x,this.o_y,this.m_width,this.m_height,this.animation,this.animation_loop);
+                setup(this.title,this.g_width,this.g_height,this.o_x,this.o_y,this.m_width,this.m_height,this.animation,this.animation_loop,
+                this.X_label,this.Y_label);
                 signal_1 = this.signal_1;
                 signal_2 = this.signal_2;
                 signal_3 = this.signal_3;
@@ -159,12 +168,12 @@
                     console.log("x_min:",x_max);
                     var dx = x_max-x_min;
                     var dy = y_max-y_min;
-                    var mw = dx+dx*0.1;
-                    var mh = dy+dy*0.3;
+                    var mw = dx+dx*0.2;
+                    var mh = dy+dy*0.4;
                     var ox = x_min+(dx/2);
                     var oy = y_min+(dy/2);
                     var cx = 5;
-                    var cy = (y_max)*(this.g_height)/mh + 15;
+                    var cy = (y_max)*(this.g_height)/mh + 40;
                     
                     
                     
@@ -177,7 +186,8 @@
         },
 
         mounted(){ 
-            setup(this.title,this.g_width,this.g_height,this.o_x,this.o_y,this.m_width,this.m_height,this.animation,this.animation_loop);
+            setup(this.title,this.g_width,this.g_height,this.o_x,this.o_y,this.m_width,this.m_height,this.animation,this.animation_loop,
+            this.X_label,this.Y_label);
             misc_setup(this.bg_color,this.guide_line_color,
             this.sg_1_color,this.sg_1_width,
             this.sg_2_color,this.sg_2_width,
@@ -200,6 +210,8 @@
     var ccen = {w:50,h:50};
     var mdim = {w:3,h:3};
     var title = "graph_1"
+    var x_lable = "NAAAAAAAAA";
+    var y_lable = "NA";
 
     var anim_timer;
 
@@ -235,13 +247,16 @@
         ccen = {w:ox,h:oy};
     }
 
-    function setup(t,g_width,g_height,ox,oy,m_width,m_height,anim,loop){
+    function setup(t,g_width,g_height,ox,oy,m_width,m_height,anim,loop,xl,yl){
         title = t;
         cdim = {w:g_width,h:g_height};
         ccen = {w:ox,h:oy};
         mdim = {w:m_width,h:m_height};
         animation = anim;
         animation_loop = loop;
+        x_lable = xl;
+        y_lable = yl;
+       
     }
 
     function draw(){
@@ -439,12 +454,16 @@
 	var num_unit_pos_h = (ccen.h)/unit_len_h;
     if(unit_len_h >= unit_len_max){
         step_y = 0.1;
+        
        // while(unit_len_h*step_y >= unit_len_max){
          //   step_y = step_y/10;
        // }
 
     }else if(unit_len_h < unit_len_min){
         step_y = 10;
+        if(unit_len_h*step_y < unit_len_min){
+            step_y = 20;
+        }
        // while(unit_len_h*step_y < unit_len_min){
        //     step_y = step_y*10;
        //}
@@ -496,7 +515,9 @@
         for(var i = step_y; i < num_unit_neg_h; i+=step_y){
             draw_helper_h(-i,cdim,ccen,mdim);
             draw_helper_line_h(-i,cdim,ccen,mdim);
+            
         }
+        draw_y_lable();
         for(var i = step_y; i <= num_unit_pos_h; i+=step_y){
             draw_helper_h(i,cdim,ccen,mdim);
             draw_helper_line_h(i,cdim,ccen,mdim);
@@ -510,6 +531,23 @@
             draw_helper_v(i,cdim,ccen,mdim);
             draw_helper_line_v(i,cdim,ccen,mdim);
         }
+        draw_x_lable();
+       
+        
+    }
+
+    function draw_y_lable(){
+        var ctx = get_canvas();
+        ctx.fillStyle = "#ffffff";
+	    ctx.font = "25px Arial";
+	    ctx.fillText(y_lable,50,cdim.h-30);
+    }
+
+    function draw_x_lable(){
+        var ctx = get_canvas();
+        ctx.fillStyle = "#ffffff";
+	    ctx.font = "25px Arial";
+	    ctx.fillText(x_lable,cdim.w-(x_lable.length)*12.5,ccen.h-5);
     }
 
     function draw_helper_line_h(y,cdim,ccen,mdim){
