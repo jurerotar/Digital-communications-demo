@@ -9,15 +9,20 @@
     <app-section-heading>
       FIR filter
     </app-section-heading>
-
+    <app-paragraph>
+      Predstavljena oblika FIR filtra je ena izmed možnih izvedb tega filtra.
+      V osnovi gre za operacijo povprečenja, kjer uteži vzorcev, ki jih povprečimo, določimo s pomočjo danih okenskih funkcij.
+      Pomembno je dejstvo, da dolžina okenske funkcije določa red filtra (in obratno).
+      Ob izbiranju različnih kombinacij okenskih funkcij in njihovih dolžin hitro ugotovimo, da je takšen filter vedno nizkoprepusten.
+      To pa ustreza naravi povprečenja, ki ga izvaja predstavljeni FIR filter.
+    </app-paragraph>
     <app-section-heading>
-        Red filtra: <br>
-        <div>
-        <app-paragraph style="padding-left:0cm;">
-          Red FIR filtra določa dolžino okenske funkcije. Le-ta pride do izraza pri večji dolžini okna. <br>
-        </app-paragraph>
-      </div>
+      Red filtra: <br>
     </app-section-heading>
+
+    <app-paragraph>
+      Red FIR filtra določa dolžino okenske funkcije. Le-ta pride do izraza pri večji dolžini okna. <br>
+    </app-paragraph>
 
     <!-- Range slider -->
     <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
@@ -41,12 +46,10 @@
     </div>
     <app-section-heading>
       Okenska funkcija <br>
-      <div>
-        <app-paragraph style="padding-left:0cm;">
-          Okenska funkcija določa uteži filtra. Z naklonom zvončaste oblike okna prilagajamo prenosno funkcijo sita našim zahtevam. <br>
-        </app-paragraph>
-      </div>
     </app-section-heading>
+    <app-paragraph style="padding-left:0cm;">
+      Okenska funkcija določa uteži filtra. Z naklonom zvončaste oblike okna prilagajamo prenosno funkcijo sita našim zahtevam. <br>
+    </app-paragraph>
     <button-container>
       <app-button
         v-for="windov in filter.windovFunc"
@@ -61,7 +64,7 @@
       Prenosna funkcija FIR filtra
     </app-section-heading>
     <graph 
-      title = title1 
+      title = "FIR"
       :g_width = width
       :signal_1 = "filter.signal_1" 
       :g_height = "500"
@@ -75,14 +78,21 @@
     <app-section-heading>
       IIR filter
     </app-section-heading>
+    <app-paragraph>
+      Podani tipi IIR filtra so znani analogni filtri ("Biquad"), ki jih izvedemo z digitalnim filtrom.
+      Sistemske funkcije posameznih tipov se med seboj razlikujejo in jih ne moremo podati v nekakšni splošni obliki,
+      kot je to izvedeno za FIR filter na osnovi povprečenja. Zato je tudi red predstavljenih IIR filtrov nespremenljiv (2. red).
+      Uteži takšnega IIR filtra določimo tako, da najprej določimo sistemsko funkcijo analogne filtra.
+      Koeficienti poleg s-členov analognega filtra predstavljajo uteži <span>a<sub>k</sub></span> in <span>b<sub>k</sub></span> digitalnega filtra.
+    </app-paragraph>
     <app-section-heading>
       IIR tip <br>
-      <div>
-        <app-paragraph style="padding-left:0cm;">
-          IIR filter posnema karakteristiko analognih filtrov. <br>
-        </app-paragraph>
-      </div>
     </app-section-heading>
+
+    <app-paragraph style="padding-left:0cm;">
+      IIR filter posnema karakteristiko analognih filtrov. <br>
+    </app-paragraph>
+
     <button-container>
       <app-button
         v-for="windov in filter.types_iir"
@@ -97,7 +107,7 @@
       Prenosna funkcija IIR filtra <br>
     </app-section-heading>
     <graph
-      title = title2 
+      title = "IIR"
       :g_width = width
       :signal_1 = "filter.signal_2"
       :g_height = "500"
@@ -173,7 +183,7 @@
     <div>
       <app-paragraph style="padding-left:0cm;">
         Kvaliteta določa prisotnost resonance, ki se nahaja na mejni frekvenci. <br>
-        Pri tipih "Low-pass", "High-pass" in "Band-pass" je navadno željena kvaliteta v okolici vrednosti 1, pri "Notch" in "Peak" tipu pa večanje kvalitete rezultira v ožjem prepusnem pasu. <br>
+        Pri tipih "Low-pass", "High-pass" in "Band-pass" je navadno željena kvaliteta magGain okolici vrednosti 1, pri "Notch" in "Peak" tipu pa večanje kvalitete rezultira magGain ožjem prepusnem pasu. <br>
       </app-paragraph>
     </div>
     
@@ -254,8 +264,6 @@ export interface Filter {
   quality: number;
 }
 
-var trig1: boolean = true;
-var trig2: boolean = true;
 const selectedWinFunct = ref<WindowFunc>('lanczos');
 const selectedFilterType = ref<IIR_type>('lowpass');
 
@@ -325,26 +333,8 @@ const filter: Filter = {
 
 const UpdateFiltOrd = (value: number): void => {
   filter.winLen = value; 
-  // trig1 = filter.trig_draw_1;
   FirFilter();
   trig_1.value = !trig_1.value;
-  console.log(filter.trig_draw_1)
-  // console.log(trig2 != filter.trig_draw_2)
-}
-
-// const setFilterType = (tip: FilterType ): void => {
-//   // Reset length to 1, since some lengths might be missing on certain shapes
-//   if (filter.currType == 'FIR') {
-//     FirFilter();
-//     filter.currType = tip;
-//   } else {
-  //     IirFilter();
-//   }
-//   console.log(filter.currType);
-// }
-
-const start = (): void =>{
-  console.log("HELLO WORLD");
 }
 
 const changeSelectedWinFunc = (tip: WindowFunc): void => {
@@ -354,94 +344,89 @@ const changeSelectedWinFunc = (tip: WindowFunc): void => {
 
   FirFilter();
   trig_1.value = !trig_1.value;
-  console.log(filter.trig_draw_1);
 }
 
 /*
 *   FIR filter - generates transfer function based on window type and order
 */
 function FirFilter() {
-    let bn = new Array(filter.winLen);
-    let wSum = 0;
+  const numCoeff = new Array(filter.winLen); //windov koeficients
+  let wSum = 0; // sum of coeficients
 
-    /* Generates window weights */
-    for (let idx = 0; idx < filter.winLen; idx++) {
-      switch (filter.winFunct) {
-        case "lanczos": bn[idx] = lanczos(idx, filter.winLen); break;
-        case "rectangular": bn[idx] = rectangular(idx, filter.winLen); break;
-        case "triangular": bn[idx] = triangular(idx, filter.winLen); break;
-        case "bartlett": bn[idx] = bartlett(idx, filter.winLen); break;
-        case "bartlettHann": bn[idx] = bartlettHann(idx, filter.winLen); break;
-        case "welch": bn[idx] = welch(idx, filter.winLen); break;
-        case "hann": bn[idx] = hann(idx, filter.winLen); break;
-        case "hamming": bn[idx] = hamming(idx, filter.winLen); break;
-        case "blackman": bn[idx] = blackman(idx, filter.winLen); break;
-        case "nuttall": bn[idx] = nuttall(idx, filter.winLen); break;
-        case "blackmanHarris": bn[idx] = blackmanHarris(idx, filter.winLen); break;
-        case "blackmanNuttall": bn[idx] = blackmanNuttall(idx, filter.winLen); break;
-        case "exactBlackman": bn[idx] = exactBlackman(idx, filter.winLen); break;
-        case "flatTop": bn[idx] = flatTop(idx, filter.winLen); break;
-        case "cosine": bn[idx] = cosine(idx, filter.winLen); break;
-        case "gaussian": bn[idx] = gaussian(idx, filter.winLen, filter.winParam); break;
-        case "tukey": bn[idx] = tukey(idx, filter.winLen, filter.winParam); break;
+  /* Generates window weights */
+  for (let idx = 0; idx < filter.winLen; idx++) {
+    switch (filter.winFunct) {
+      case "lanczos": numCoeff[idx] = lanczos(idx, filter.winLen); break;
+      case "rectangular": numCoeff[idx] = rectangular(idx, filter.winLen); break;
+      case "triangular": numCoeff[idx] = triangular(idx, filter.winLen); break;
+      case "bartlett": numCoeff[idx] = bartlett(idx, filter.winLen); break;
+      case "bartlettHann": numCoeff[idx] = bartlettHann(idx, filter.winLen); break;
+      case "welch": numCoeff[idx] = welch(idx, filter.winLen); break;
+      case "hann": numCoeff[idx] = hann(idx, filter.winLen); break;
+      case "hamming": numCoeff[idx] = hamming(idx, filter.winLen); break;
+      case "blackman": numCoeff[idx] = blackman(idx, filter.winLen); break;
+      case "nuttall": numCoeff[idx] = nuttall(idx, filter.winLen); break;
+      case "blackmanHarris": numCoeff[idx] = blackmanHarris(idx, filter.winLen); break;
+      case "blackmanNuttall": numCoeff[idx] = blackmanNuttall(idx, filter.winLen); break;
+      case "exactBlackman": numCoeff[idx] = exactBlackman(idx, filter.winLen); break;
+      case "flatTop": numCoeff[idx] = flatTop(idx, filter.winLen); break;
+      case "cosine": numCoeff[idx] = cosine(idx, filter.winLen); break;
+      case "gaussian": numCoeff[idx] = gaussian(idx, filter.winLen, filter.winParam); break;
+      case "tukey": numCoeff[idx] = tukey(idx, filter.winLen, filter.winParam); break;
+    }
+    wSum = wSum + numCoeff[idx];
+  }
+  
+  /* Divide each weight by total sum to get "b_n" coefficients ("a_n" are zero except 1st equals one) */
+  for (let idx = 0; idx < filter.winLen; idx++) {
+    numCoeff[idx] = numCoeff[idx] / wSum;
+  }
+
+  const freq: number[] = [filter.freqRes];
+  const mag: number[] = [filter.freqRes];
+  let magMin = 0, magMax = 0;
+
+  /* Generates frequency and magnitude arrays */
+  for (let idxa = 0; idxa < filter.freqRes; idxa++) { // describe idxa
+      freq[idxa] = idxa * (0.5 / (filter.freqRes + 1));
+      let temp = new Complex(numCoeff[0], 0); // komentarji
+      let ejw = new Complex(0, 0);
+      
+      /* numCoeff[0] + numCoeff[1]*exp(-jw) + numCoeff[2]*exp(-2jw) + ... + b[N]*exp(-Njw) */
+      for (let idxb = 1; idxb < filter.winLen; idxb++) {
+        temp = temp.add(ejw.fromPolar(numCoeff[idxb], -idxb * 2 * Math.PI * freq[idxa]));
       }
-      wSum = wSum + bn[idx];
-    }
-    
-    /* Divide each weight by total sum to get "b_n" coefficients ("a_n" are zero except 1st equals one) */
-    for (let idx = 0; idx < filter.winLen; idx++) {
-      bn[idx] = bn[idx] / wSum;
-    }
+      mag[idxa] = gainToDecibels(temp.abs());     // H(jw) = Y(jw) / X(jw)
+      freq[idxa] = freq[idxa] * 2;                // correct the scale
 
-    var freq: number[] = [filter.freqRes];
-    var mag: number[] = [filter.freqRes];
-    let magMin = 0, magMax = 0;
+      /* Due to notches, some values go towards -Ininity 
 
-    /* Generates frequency and magnitude arrays */
-    for (let idxa = 0; idxa < filter.freqRes; idxa++) {
-        freq[idxa] = idxa * (0.5 / (filter.freqRes + 1));
-        let temp = new Complex(bn[0], 0);
-        let ejw = new Complex(0, 0);
-        
-        /* bn[0] + bn[1]*exp(-jw) + bn[2]*exp(-2jw) + ... + b[N]*exp(-Njw) */
-        for (let idxb = 1; idxb < filter.winLen; idxb++) {
-            temp = temp.add(ejw.fromPolar(bn[idxb], -idxb * 2 * Math.PI * freq[idxa]));
-        }
-        mag[idxa] = gainToDecibels(temp.abs());     // H(jw) = Y(jw) / X(jw)
-        freq[idxa] = freq[idxa] * 2;                // correct the scale
+      */
+      if ((mag[idxa] == -Infinity) || (mag[idxa] <= -200)) {
+        mag[idxa] = -200;
+      }
 
-        /* Due to notches, some values go towards -Ininity */
-        if ((mag[idxa] == -Infinity) || (mag[idxa] <= -200)) {
-            mag[idxa] = -200;
-        }
+      /* Min/Max of magnitude */
+      if (idxa == 0) {
+        magMin = magMax = mag[idxa];
+      } else if (mag[idxa] < magMin) {
+        magMin = mag[idxa];
+      } else if (mag[idxa] > magMax) {
+        magMax = mag[idxa];
+      } else { }
+  }
 
-        /* Min/Max of magnitude */
-        if (idxa == 0) {
-            magMin = magMax = mag[idxa];
-        } else if (mag[idxa] < magMin) {
-            magMin = mag[idxa];
-        } else if (mag[idxa] > magMax) {
-            magMax = mag[idxa];
-        } else { }
-    }
-    // console.log(mag[idxa]);
-    for (let idxa = 0; idxa < filter.freqRes; idxa++) {
-      filter.signal_1[idxa] = {x:freq[idxa], y:mag[idxa]}
-    }
-    
-  console.log("Calculating Fir");
+  for (let idxa = 0; idxa < filter.freqRes; idxa++) {
+    filter.signal_1[idxa] = {x:freq[idxa], y:mag[idxa]}
+  }    
 }
   
-const title1: string = "FIR"
-const title2: string = "IIR"
 // Recalculate modulated values and update modulation key on change
 const changeSelectedFilterType = (key: IIR_type): void => {
   selectedFilterType.value = key;
   filter.type_iir = key;
-  // trig2 = filter.trig_draw_2;
   IirFilter();
   trig_2.value = !trig_2.value;
-  console.log(filter.trig_draw_2)
 }
 
 const UpdateFiltGain = (gain: number, cutoff: number, quality: number): void => {
@@ -450,130 +435,128 @@ const UpdateFiltGain = (gain: number, cutoff: number, quality: number): void => 
   filter.quality = quality; 
   IirFilter();
   trig_2.value = !trig_2.value;
-  console.log(filter.gain)
-  console.log(filter.cutoff)
-  console.log(filter.quality)
 }
 
 /*
 *   IIR filter - generates transfer function based on biquad type, cuttoff, quality, and gain
 */
 function IirFilter() {
-    let a0, a1, a2, b1, b2, norm;
-    let V = Math.pow(10, Math.abs(filter.gain) / 20);  // gain in linear units
-    let K = Math.tan(Math.PI * (filter.cutoff / 2));    // f_cutoff as normalized frequency
+  // denumerator coefficients are coefficients of transfer function's denumerator
+  // numerator coefficients are coefficients of transfer function's numerator 
+  let denumCoeff_0, denumCoeff_1, denumCoeff_2, numCoeff_1, numCoeff_2, norm;
+  const magGain = Math.pow(10, Math.abs(filter.gain) / 20);  // gain in linear units
+  const normFreq = Math.tan(Math.PI * (filter.cutoff / 2));    // f_cutoff as normalized frequency
 
-    /* Calculate window weights */
-    switch (filter.type_iir) {
-        case "one-pole-lp":
-            b1 = Math.exp(-2.0 * Math.PI * (filter.cutoff / 2));
-            a0 = 1.0 - b1;
-            b1 = -b1;
-            a1 = a2 = b2 = 0;
-            break;
+  switch (filter.type_iir) {
+      case "one-pole-lp":
+          numCoeff_1 = Math.exp(-2.0 * Math.PI * (filter.cutoff / 2));
+          denumCoeff_0 = 1.0 - numCoeff_1;
+          numCoeff_1 = -numCoeff_1;
+          denumCoeff_1 = denumCoeff_2 = numCoeff_2 = 0;
+          break;
 
-        case "one-pole-hp":
-            b1 = -Math.exp(-2.0 * Math.PI * (0.5 - filter.cutoff / 2));
-            a0 = 1.0 + b1;
-            b1 = -b1;
-            a1 = a2 = b2 = 0;
-            break;
+      case "one-pole-hp":
+          numCoeff_1 = -Math.exp(-2.0 * Math.PI * (0.5 - filter.cutoff / 2));
+          denumCoeff_0 = 1.0 + numCoeff_1;
+          numCoeff_1 = -numCoeff_1;
+          denumCoeff_1 = denumCoeff_2 = numCoeff_2 = 0;
+          break;
 
-        case "lowpass":
-            norm = 1 / (1 + K / filter.quality + K * K);
-            a0 = K * K * norm;
-            a1 = 2 * a0;
-            a2 = a0;
-            b1 = 2 * (K * K - 1) * norm;
-            b2 = (1 - K / filter.quality + K * K) * norm;
-            break;
+      case "lowpass":
+          norm = 1 / (1 + normFreq / filter.quality + normFreq * normFreq);
+          denumCoeff_0 = normFreq * normFreq * norm;
+          denumCoeff_1 = 2 * denumCoeff_0;
+          denumCoeff_2 = denumCoeff_0;
+          numCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
+          numCoeff_2 = (1 - normFreq / filter.quality + normFreq * normFreq) * norm;
+          break;
 
-        case "highpass":
-            norm = 1 / (1 + K / filter.quality + K * K);
-            a0 = 1 * norm;
-            a1 = -2 * a0;
-            a2 = a0;
-            b1 = 2 * (K * K - 1) * norm;
-            b2 = (1 - K / filter.quality + K * K) * norm;
-            break;
+      case "highpass":
+          norm = 1 / (1 + normFreq / filter.quality + normFreq * normFreq);
+          denumCoeff_0 = 1 * norm;
+          denumCoeff_1 = -2 * denumCoeff_0;
+          denumCoeff_2 = denumCoeff_0;
+          numCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
+          numCoeff_2 = (1 - normFreq / filter.quality + normFreq * normFreq) * norm;
+          break;
 
-        case "bandpass":
-            norm = 1 / (1 + K / filter.quality + K * K);
-            a0 = K / filter.quality * norm;
-            a1 = 0;
-            a2 = -a0;
-            b1 = 2 * (K * K - 1) * norm;
-            b2 = (1 - K / filter.quality + K * K) * norm;
-            break;
+      case "bandpass":
+          norm = 1 / (1 + normFreq / filter.quality + normFreq * normFreq);
+          denumCoeff_0 = normFreq / filter.quality * norm;
+          denumCoeff_1 = 0;
+          denumCoeff_2 = -denumCoeff_0;
+          numCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
+          numCoeff_2 = (1 - normFreq / filter.quality + normFreq * normFreq) * norm;
+          break;
 
-        case "notch":
-            norm = 1 / (1 + K / filter.quality + K * K);
-            a0 = (1 + K * K) * norm;
-            a1 = 2 * (K * K - 1) * norm;
-            a2 = a0;
-            b1 = a1;
-            b2 = (1 - K / filter.quality + K * K) * norm;
-            break;
+      case "notch":
+          norm = 1 / (1 + normFreq / filter.quality + normFreq * normFreq);
+          denumCoeff_0 = (1 + normFreq * normFreq) * norm;
+          denumCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
+          denumCoeff_2 = denumCoeff_0;
+          numCoeff_1 = denumCoeff_1;
+          numCoeff_2 = (1 - normFreq / filter.quality + normFreq * normFreq) * norm;
+          break;
 
-        case "peak":
-            /* Simplify for positive/negative gains */
-            if (filter.gain >= 0) {
-                norm = 1 / (1 + 1 / filter.quality * K + K * K);
-                a0 = (1 + V / filter.quality * K + K * K) * norm;
-                a1 = 2 * (K * K - 1) * norm;
-                a2 = (1 - V / filter.quality * K + K * K) * norm;
-                b1 = a1;
-                b2 = (1 - 1 / filter.quality * K + K * K) * norm;
-            } else {
-                norm = 1 / (1 + V / filter.quality * K + K * K);
-                a0 = (1 + 1 / filter.quality * K + K * K) * norm;
-                a1 = 2 * (K * K - 1) * norm;
-                a2 = (1 - 1 / filter.quality * K + K * K) * norm;
-                b1 = a1;
-                b2 = (1 - V / filter.quality * K + K * K) * norm;
-            }
-            break;
+      case "peak":
+          /* Simplify for positive/negative gains */
+          if (filter.gain >= 0) {
+              norm = 1 / (1 + 1 / filter.quality * normFreq + normFreq * normFreq);
+              denumCoeff_0 = (1 + magGain / filter.quality * normFreq + normFreq * normFreq) * norm;
+              denumCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
+              denumCoeff_2 = (1 - magGain / filter.quality * normFreq + normFreq * normFreq) * norm;
+              numCoeff_1 = denumCoeff_1;
+              numCoeff_2 = (1 - 1 / filter.quality * normFreq + normFreq * normFreq) * norm;
+          } else {
+              norm = 1 / (1 + magGain / filter.quality * normFreq + normFreq * normFreq);
+              denumCoeff_0 = (1 + 1 / filter.quality * normFreq + normFreq * normFreq) * norm;
+              denumCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
+              denumCoeff_2 = (1 - 1 / filter.quality * normFreq + normFreq * normFreq) * norm;
+              numCoeff_1 = denumCoeff_1;
+              numCoeff_2 = (1 - magGain / filter.quality * normFreq + normFreq * normFreq) * norm;
+          }
+          break;
 
-        case "low-shelf":
-            /* Simplify for positive/negative gains */
-            if (filter.gain >= 0) {
-                norm = 1 / (1 + Math.SQRT2 * K + K * K);
-                a0 = (1 + Math.sqrt(2 * V) * K + V * K * K) * norm;
-                a1 = 2 * (V * K * K - 1) * norm;
-                a2 = (1 - Math.sqrt(2 * V) * K + V * K * K) * norm;
-                b1 = 2 * (K * K - 1) * norm;
-                b2 = (1 - Math.SQRT2 * K + K * K) * norm;
-            } else {
-                norm = 1 / (1 + Math.sqrt(2 * V) * K + V * K * K);
-                a0 = (1 + Math.SQRT2 * K + K * K) * norm;
-                a1 = 2 * (K * K - 1) * norm;
-                a2 = (1 - Math.SQRT2 * K + K * K) * norm;
-                b1 = 2 * (V * K * K - 1) * norm;
-                b2 = (1 - Math.sqrt(2 * V) * K + V * K * K) * norm;
-            }
-            break;
-        case "high-shelf":
-            /* Simplify for positive/negative gains */
-            if (filter.gain >= 0) {
-                norm = 1 / (1 + Math.SQRT2 * K + K * K);
-                a0 = (V + Math.sqrt(2 * V) * K + K * K) * norm;
-                a1 = 2 * (K * K - V) * norm;
-                a2 = (V - Math.sqrt(2 * V) * K + K * K) * norm;
-                b1 = 2 * (K * K - 1) * norm;
-                b2 = (1 - Math.SQRT2 * K + K * K) * norm;
-            } else {
-                norm = 1 / (V + Math.sqrt(2 * V) * K + K * K);
-                a0 = (1 + Math.SQRT2 * K + K * K) * norm;
-                a1 = 2 * (K * K - 1) * norm;
-                a2 = (1 - Math.SQRT2 * K + K * K) * norm;
-                b1 = 2 * (K * K - V) * norm;
-                b2 = (V - Math.sqrt(2 * V) * K + K * K) * norm;
-            }
-            break;
-    }
+      case "low-shelf":
+          /* Simplify for positive/negative gains */
+          if (filter.gain >= 0) {
+              norm = 1 / (1 + Math.SQRT2 * normFreq + normFreq * normFreq);
+              denumCoeff_0 = (1 + Math.sqrt(2 * magGain) * normFreq + magGain * normFreq * normFreq) * norm;
+              denumCoeff_1 = 2 * (magGain * normFreq * normFreq - 1) * norm;
+              denumCoeff_2 = (1 - Math.sqrt(2 * magGain) * normFreq + magGain * normFreq * normFreq) * norm;
+              numCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
+              numCoeff_2 = (1 - Math.SQRT2 * normFreq + normFreq * normFreq) * norm;
+          } else {
+              norm = 1 / (1 + Math.sqrt(2 * magGain) * normFreq + magGain * normFreq * normFreq);
+              denumCoeff_0 = (1 + Math.SQRT2 * normFreq + normFreq * normFreq) * norm;
+              denumCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
+              denumCoeff_2 = (1 - Math.SQRT2 * normFreq + normFreq * normFreq) * norm;
+              numCoeff_1 = 2 * (magGain * normFreq * normFreq - 1) * norm;
+              numCoeff_2 = (1 - Math.sqrt(2 * magGain) * normFreq + magGain * normFreq * normFreq) * norm;
+          }
+          break;
+      case "high-shelf":
+          /* Simplify for positive/negative gains */
+          if (filter.gain >= 0) {
+              norm = 1 / (1 + Math.SQRT2 * normFreq + normFreq * normFreq);
+              denumCoeff_0 = (magGain + Math.sqrt(2 * magGain) * normFreq + normFreq * normFreq) * norm;
+              denumCoeff_1 = 2 * (normFreq * normFreq - magGain) * norm;
+              denumCoeff_2 = (magGain - Math.sqrt(2 * magGain) * normFreq + normFreq * normFreq) * norm;
+              numCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
+              numCoeff_2 = (1 - Math.SQRT2 * normFreq + normFreq * normFreq) * norm;
+          } else {
+              norm = 1 / (magGain + Math.sqrt(2 * magGain) * normFreq + normFreq * normFreq);
+              denumCoeff_0 = (1 + Math.SQRT2 * normFreq + normFreq * normFreq) * norm;
+              denumCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
+              denumCoeff_2 = (1 - Math.SQRT2 * normFreq + normFreq * normFreq) * norm;
+              numCoeff_1 = 2 * (normFreq * normFreq - magGain) * norm;
+              numCoeff_2 = (magGain - Math.sqrt(2 * magGain) * normFreq + normFreq * normFreq) * norm;
+          }
+          break;
+  }
 
-    let freq = Array(filter.freqRes);
-    let mag = Array(filter.freqRes);
+    const freq = Array(filter.freqRes);
+    const mag = Array(filter.freqRes);
     let yMin, yMax;
 
     /* Generates frequency and magnitude arrays */
@@ -581,8 +564,8 @@ function IirFilter() {
         freq[idx] = (idx / (filter.freqRes - 1)) * Math.PI;
 
         /* BiQuad filer transfer function of 2nd order */
-        let phi = Math.pow(Math.sin(freq[idx] / 2), 2);
-        mag[idx] = Math.log(Math.pow(a0 + a1 + a2, 2) - 4 * (a0 * a1 + 4 * a0 * a2 + a1 * a2) * phi + 16 * a0 * a2 * phi * phi) - Math.log(Math.pow(1 + b1 + b2, 2) - 4 * (b1 + 4 * b2 + b1 * b2) * phi + 16 * b2 * phi * phi);
+        const phi = Math.pow(Math.sin(freq[idx] / 2), 2);
+        mag[idx] = Math.log(Math.pow(denumCoeff_0 + denumCoeff_1 + denumCoeff_2, 2) - 4 * (denumCoeff_0 * denumCoeff_1 + 4 * denumCoeff_0 * denumCoeff_2 + denumCoeff_1 * denumCoeff_2) * phi + 16 * denumCoeff_0 * denumCoeff_2 * phi * phi) - Math.log(Math.pow(1 + numCoeff_1 + numCoeff_2, 2) - 4 * (numCoeff_1 + 4 * numCoeff_2 + numCoeff_1 * numCoeff_2) * phi + 16 * numCoeff_2 * phi * phi);
         mag[idx] = mag[idx] * 10 / Math.LN10;
 
         /* Due to notches, some values go towards -Ininity */
@@ -605,7 +588,6 @@ function IirFilter() {
       filter.signal_2[idxa] = {x:freq[idxa], y:mag[idxa]}
     }
 
-    console.log("Calculating Iir");
     let magMin, magMax;
 
     /* Adapt y-axis if magnitude values are less than some default values */
@@ -639,21 +621,6 @@ function gainToDecibels(value: number) {
   return 20 * (0.43429 * Math.log(value))
 }
 
-function decibelsToGain(value: number) {
-  return Math.exp(value / 8.6858)
-}
-
 const width: number = 1000;
 
 </script>
-
-<style scoped>
-
-  ::v-deep app-paragraph {
-    color: grey;
-    font-size: 16px;
-    font-weight: lighter;
-    padding-left: 20px; /* This will add 20px of indentation to the first line of each paragraph */
-  }
-
-</style>

@@ -309,28 +309,20 @@
                         ctx.lineTo(signal_1_canvas[i+1].x,signal_1_canvas[i+1].y);
                         ctx.stroke();
                     }
+                    var sig_mirror = [];
+                    var sig_mirror_canvas = [];
+                    for(var i = 0; i < signal_1.length; i++){
+                        sig_mirror.push({x:2-signal_1[signal_1.length-1-i].x,y:signal_1[signal_1.length-1-i].y});
+                        sig_mirror_canvas.push(math_to_canvas(sig_mirror[i]));
+                    }
+                    for(var i = signal_1_index; i < signal_1_canvas.length-1; i++){
+                        ctx.beginPath();
+                        ctx.moveTo(sig_mirror_canvas[i].x,sig_mirror_canvas[i].y);
+                        ctx.lineTo(sig_mirror_canvas[i+1].x,sig_mirror_canvas[i+1].y);
+                        ctx.stroke();
+                    }
                 }
             
-            if(signal_2_enable){
-                ctx.strokeStyle = signal_2_color;
-                ctx.lineWidth = signal_2_width;
-                for(var i = signal_2_index; i < signal_2_canvas.length-1; i++){
-                    ctx.beginPath();
-                    ctx.moveTo(signal_2_canvas[i].x,signal_2_canvas[i].y);
-                    ctx.lineTo(signal_2_canvas[i+1].x,signal_2_canvas[i+1].y);
-                    ctx.stroke();
-                }
-            }
-            if(signal_3_enable){
-                ctx.strokeStyle = signal_3_color;
-                ctx.lineWidth = signal_3_width;
-                for(var i = signal_3_index; i < signal_3_canvas.length-1; i++){
-                    ctx.beginPath();
-                    ctx.moveTo(signal_3_canvas[i].x,signal_3_canvas[i].y);
-                    ctx.lineTo(signal_3_canvas[i+1].x,signal_3_canvas[i+1].y);
-                    ctx.stroke();
-                }
-            }
         }
         //$emit("draw_finish");
     }
