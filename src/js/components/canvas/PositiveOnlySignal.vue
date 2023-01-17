@@ -188,4 +188,5 @@ export default {
     this.p5.removeCanvas();
   }
 }
+
 </script>

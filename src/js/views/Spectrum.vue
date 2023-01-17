@@ -29,7 +29,7 @@
         :active="pulseLength === length.key"
         @click="setPulseLength(length.key)"
       >
-        {{ length.label }} T
+        {{ length.label }}
       </app-button>
     </button-container>
     <full-signal

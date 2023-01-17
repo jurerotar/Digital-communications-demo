@@ -72,7 +72,7 @@
         :vertical-pool="[1, 0.5, -0.5, -1]"
         :horizontal-pool="horizontal_pool"
         :type="choosedFirstSignal"
-        :yAxisLabel="'x(t)'"
+        :y-axis-label="'x(t)'"
       />
       <full-signal
         :canvas-id="'second-signal'"
@@ -81,7 +81,7 @@
         :vertical-pool="[1, 0.5, -0.5, -1]"
         :horizontal-pool="horizontal_pool"
         :type="choosedSecondSignal"
-        :yAxisLabel="'y(t)'"
+        :y-axis-label="'y(t)'"
       />
       <app-paragraph class="text-xl">
         Rezultat korelacijske funkcije: {{ correlationResult }}
@@ -93,17 +93,17 @@
         :vertical-pool="[1, 0.5, -0.5, -1]"
         :horizontal-pool="horizontal_pool"
         :type="correlation.type"
-        :yAxisLabel="'x(t)y(t)'"
+        :y-axis-label="'x(t)y(t)'"
       />
       <full-signal
-          :canvas-id="'correlation-function-signal'"
-          :data="canvasInputCorrelationFunction"
-          :title="'Korelacijska Funkcija'"
-          :vertical-pool="[1, 0.5, -0.5, -1]"
-          :horizontal-pool="horizontal_pool"
-          :type="correlationFunction.type"
-          :yAxisLabel="'R(τ)'"
-          :xAxisLabel="'τ'"
+        :canvas-id="'correlation-function-signal'"
+        :data="canvasInputCorrelationFunction"
+        :title="'Korelacijska Funkcija'"
+        :vertical-pool="[1, 0.5, -0.5, -1]"
+        :horizontal-pool="horizontal_pool"
+        :type="correlationFunction.type"
+        :y-axis-label="'R(τ)'"
+        :x-axis-label="'τ'"
       />
     </template>
 
@@ -159,7 +159,7 @@
         :vertical-pool="[1, 0.5, -0.5, -1]"
         :horizontal-pool="horizontal_pool"
         :type="choosedFirstSignal"
-        :yAxisLabel="'x(t)'"
+        :y-axis-label="'x(t)'"
       />
       <full-signal
         :canvas-id="'second-signal'"
@@ -168,7 +168,7 @@
         :vertical-pool="[1, 0.5, -0.5, -1]"
         :horizontal-pool="horizontal_pool"
         :type="choosedSecondSignal"
-        :yAxisLabel="'y(t)'"
+        :y-axis-label="'y(t)'"
       />
       <app-paragraph class="text-xl">
         Rezultat korelacijske funkcije: {{ correlationResult }}
@@ -180,17 +180,17 @@
         :vertical-pool="[1, 0.5, -0.5, -1]"
         :horizontal-pool="horizontal_pool"
         :type="correlation.type"
-        :yAxisLabel="'x(t)y(t)'"
+        :y-axis-label="'x(t)y(t)'"
       />
       <full-signal
-          :canvas-id="'correlation-function-signal'"
-          :data="canvasInputCorrelationFunction"
-          :title="'Korelacijska Funkcija'"
-          :vertical-pool="[1, 0.5, -0.5, -1]"
-          :horizontal-pool="horizontal_pool"
-          :type="correlationFunction.type"
-          :yAxisLabel="'R(τ)'"
-          :xAxisLabel="'τ'"
+        :canvas-id="'correlation-function-signal'"
+        :data="canvasInputCorrelationFunction"
+        :title="'Korelacijska Funkcija'"
+        :vertical-pool="[1, 0.5, -0.5, -1]"
+        :horizontal-pool="horizontal_pool"
+        :type="correlationFunction.type"
+        :y-axis-label="'R(τ)'"
+        :x-axis-label="'τ'"
       />
     </template>
   </app-main-container>
