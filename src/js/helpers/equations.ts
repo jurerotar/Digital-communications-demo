@@ -10,8 +10,8 @@ export const signalToSpectrum = 'x(at) \\Leftrightarrow \\frac{1}{|a|}X(\\frac{f
 export const correlation = 'R_{xy}=\\overline{x(t)y(t)}={1\\over T}\\int_Tx(t)y(t)dt';
 export const correlationFunction = 'R_{xy}(τ)=\\overline{x(t)y(t + τ)}={1\\over T}\\int_Tx(t)y(t + τ)dt';
 
-// Intersymbol interference :
-export const transferFunction = 'h(t)=sinc(2πf_mm(t-t0))';
+// Inter-symbol interference :
+export const interSymbolInterferenceTransferFunction = 'h(t)=sinc(2πf_mm(t-t0))';
 export const inputSignal = 'y_{odd}(t)=\\sum_{n=-\\infty}^{\\infty}y[n]δ(t-nT_s)';
 export const yhConv = 'y_{spr}=y_{odd}(t)*h(t)';
 export const h1Nyquist = 'h(nT_s)=\\begin{cases}A & n=0 \\newline 0 & n \\neq 0\\end{cases}';
@@ -21,7 +21,8 @@ export const h3Nyquist = '\\sum_{k=-\\infty}^{\\infty} H(f+kf_s)=AT_s';
 // Digital filters
 export const zTransform = 'X(z)=\\sum_{n=-\\infty}^{\\infty}x(nT)\\cdot z^{-n}';
 export const differenceEq = 'y(nT)=\\sum_{k=1}^{N}b_k \\cdot x(nT - kT) - \\sum_{k=1}^{M}a_k \\cdot y(nT - kT)';
-export const transferFunct = 'H(z) = \\frac{Y(z)}{X(z)} = \\frac{\\sum_{k=0}^{M}a_k \\cdot z^{-k}}{1+\\sum_{k=1}^{N}b_k \\cdot z^{-k}} = \\frac{N(z)}{1+D(z)}';
+export const digitalFiltersTransferFunction = 'H(z) = \\frac{Y(z)}{X(z)} = \\frac{\\sum_{k=0}^{M}a_k ' +
+  '\\cdot z^{-k}}{1+\\sum_{k=1}^{N}b_k \\cdot z^{-k}} = \\frac{N(z)}{1+D(z)}';
 export const windowWeights = 'b_k = \\frac{w_k}{\\sum_{k=1}^{N}w_k}';
 
 

@@ -15,7 +15,7 @@
     <span class="font-semibold">Opomba: </span>{{ note }}
   </p>
   <canvas-container>
-    <div :id="canvasId" />
+    <div :id="canvasId"/>
   </canvas-container>
 </template>
 
@@ -67,24 +67,24 @@ export default {
       default: false
     },
     xTicks: {
-        type: Object,
-        required: false,
-        default: null
+      type: Object,
+      required: false,
+      default: null
     },
-    isInverted:{
-        type: Boolean,
-        required: false,
-        default: false
+    isInverted: {
+      type: Boolean,
+      required: false,
+      default: false
     },
-    absMax:{
-        type: Number,
-        required: false,
-        default: null
+    absMax: {
+      type: Number,
+      required: false,
+      default: null
     },
     speed: {
-        type: Number,
-        required: false,
-        default: 1
+      type: Number,
+      required: false,
+      default: 1
     },
   },
   data() {
@@ -99,13 +99,13 @@ export default {
   },
   computed: {
     normalizedData() {
-        const max = this.absMax !== null ? this.absMax : Math.max(...this.data.map(el => Math.abs(el)));
-        const data = [...this.data];
-        data.length = 600;
+      const max = this.absMax !== null ? this.absMax : Math.max(...this.data.map(el => Math.abs(el)));
+      const data = [...this.data];
+      data.length = 600;
 
-        const isInvertedModifier = this.isInverted ? -1 : 1;
+      const isInvertedModifier = this.isInverted ? -1 : 1;
 
-        return data.map(el => isInvertedModifier * el / max);
+      return data.map(el => isInvertedModifier * el / max);
     },
     isModulatedText() {
       return (this.isModulated) ? 'y(t)' : 'x(t)';
@@ -139,17 +139,17 @@ export default {
           }
 
           // Draw x ticks if supplied
-          if(this.xTicks !== null){
-              for(let i = 0; i < this.xTicks.pos.length; i++){
-                  this.$c.widerLine(p5,this.speed*this.xTicks.pos[i] + canvasPadding, this.offset.y - 5 + canvasPadding/2,this.speed*this.xTicks.pos[i] + canvasPadding, this.offset.y + 5 + canvasPadding/2);
-                  p5.strokeWeight(0.5);
-                  p5.line(this.speed*this.xTicks.pos[i] + canvasPadding, this.offset.y - canvasPadding*2,this.speed*this.xTicks.pos[i] + canvasPadding, this.offset.y + canvasPadding*3);
-                  p5.textAlign(p5.RIGHT,p5.TOP);
-                  p5.strokeWeight(0.25);
-                  p5.text(this.xTicks.text[i],this.speed*this.xTicks.pos[i] + canvasPadding, this.offset.y + 7 + canvasPadding/2);
-              }
+          if (this.xTicks !== null) {
+            for (let i = 0; i < this.xTicks.pos.length; i++) {
+              this.$c.widerLine(p5, this.speed * this.xTicks.pos[i] + canvasPadding, this.offset.y - 5 + canvasPadding / 2, this.speed * this.xTicks.pos[i] + canvasPadding, this.offset.y + 5 + canvasPadding / 2);
+              p5.strokeWeight(0.5);
+              p5.line(this.speed * this.xTicks.pos[i] + canvasPadding, this.offset.y - canvasPadding * 2, this.speed * this.xTicks.pos[i] + canvasPadding, this.offset.y + canvasPadding * 3);
+              p5.textAlign(p5.RIGHT, p5.TOP);
+              p5.strokeWeight(0.25);
+              p5.text(this.xTicks.text[i], this.speed * this.xTicks.pos[i] + canvasPadding, this.offset.y + 7 + canvasPadding / 2);
+            }
           }
-          p5.textAlign(p5.RIGHT,p5.CENTER);
+          p5.textAlign(p5.RIGHT, p5.CENTER);
           // Y axis label
           p5.text(this.isModulatedText, canvasPadding - 5, canvasPadding / 2);
           // X axis label
@@ -170,12 +170,12 @@ export default {
         if (this.isBinary) {
           let previousY = 1;
           this.normalizedData.forEach((y, x) => {
-            p5.vertex((previousY !== y) ? this.speed*x - 1 + canvasPadding : this.speed*x + canvasPadding, y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2);
+            p5.vertex((previousY !== y) ? this.speed * x - 1 + canvasPadding : this.speed * x + canvasPadding, y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2);
             previousY = y;
           });
         } else {
           this.normalizedData.forEach((y, x) => {
-            p5.vertex(this.speed*x + canvasPadding, y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2);
+            p5.vertex(this.speed * x + canvasPadding, y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2);
           });
         }
         p5.endShape();

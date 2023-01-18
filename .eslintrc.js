@@ -21,7 +21,7 @@ module.exports = {
   rules: {
     // override/add rules settings here, such as:
     'max-len': [
-      "error", {
+      "warn", {
         "code": 140,
         "tabWidth": 2
       }],

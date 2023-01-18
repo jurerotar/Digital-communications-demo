@@ -129,7 +129,6 @@ const routes: Route[] = [
       ]
     }
   },
-
   {
     path: "/digital-filters",
     name: "Digitalni filtri",
@@ -148,7 +147,6 @@ const routes: Route[] = [
       ]
     }
   },
-
 ];
 
 const router: Router = createRouter({

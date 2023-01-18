@@ -92,7 +92,7 @@
   lang="ts"
 >
 import {ref, watchEffect} from "vue";
-import {transferFunction, inputSignal, yhConv, h1Nyquist, h2Nyquist, h3Nyquist} from "@/js/helpers/equations";
+import {interSymbolInterferenceTransferFunction, inputSignal, yhConv, h1Nyquist, h2Nyquist, h3Nyquist} from "@/js/helpers/equations";
 import AppParagraph from "@/js/components/common/AppParagraph.vue";
 import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 
@@ -105,7 +105,7 @@ const h3NyquistRef = ref<HTMLSpanElement>();
 
 watchEffect(() => {
   if (transferFunctionRef.value) {
-    window.katex.render(transferFunction, transferFunctionRef.value!);
+    window.katex.render(interSymbolInterferenceTransferFunction, transferFunctionRef.value!);
   }
   if (inputSignalRef.value) {
     window.katex.render(inputSignal, inputSignalRef.value!);
