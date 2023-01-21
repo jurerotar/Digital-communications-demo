@@ -153,7 +153,7 @@ import {faPlay, faStop, faTrashAlt} from '@fortawesome/free-solid-svg-icons'
 
 library.add(faPlay, faStop, faTrashAlt);
 export default {
-  name: "ISI",
+  name: "IntersymbolInterferenceView",
   components: {
     AppMainContainer,
     TheoryIntersymbolInterference,
@@ -408,13 +408,13 @@ export default {
 
       // think of a better way to calculate maximum possible value, this method is heavy
       // worst case signal consists of pulses with maximum amplitude (3)
-      let worstCaseSignal = [...Array(this.signalLength).fill(0)].map((tf, t) => {
+      const worstCaseSignal = [...Array(this.signalLength).fill(0)].map((tf, t) => {
         return t % this.binarySymbolLength === (this.binarySymbolLength - 1) ? 3 : 0;
       });
-      let worstCaseConv = [];
+      const worstCaseConv = [];
       // calculate convolution of such signal
       for (let n = 0; n < this.signalLength; n++) {
-        let conv = [];
+        const conv = [];
         for (let m = 0; m <= (this.signalLength - n - 1); m++) {
           conv.push(this.transferFunction[m] * worstCaseSignal[m + n]);
         }

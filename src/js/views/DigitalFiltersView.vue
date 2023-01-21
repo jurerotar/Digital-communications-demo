@@ -4,7 +4,7 @@
       Digitalni filtri
     </app-main-heading>
     <app-collapsible>
-      <theory-digital-filters />
+      <theory-digital-filters/>
     </app-collapsible>
     <app-section-heading>
       FIR filter
@@ -441,7 +441,7 @@ function FirFilter() {
   for (let idxa = 0; idxa < filter.freqRes; idxa++) { // describe idxa
     freq[idxa] = idxa * (0.5 / (filter.freqRes + 1));
     let temp = new Complex(numCoeff[0], 0); // komentarji
-    let ejw = new Complex(0, 0);
+    const ejw = new Complex(0, 0);
 
     /* numCoeff[0] + numCoeff[1]*exp(-jw) + numCoeff[2]*exp(-2jw) + ... + b[N]*exp(-Njw) */
     for (let idxb = 1; idxb < filter.winLen; idxb++) {

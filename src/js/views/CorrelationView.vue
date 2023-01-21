@@ -4,7 +4,7 @@
       Korelacijska Funkcija
     </app-main-heading>
     <app-collapsible>
-      <theory-correlation />
+      <theory-correlation/>
     </app-collapsible>
     <app-section-heading>
       Izbira tipa signalov:
@@ -208,7 +208,7 @@ import AppButtonContainer from "@/js/components/common/buttons/AppButtonContaine
 import FullSignal from "@/js/components/canvas/FullSignal.vue";
 
 export default {
-  name: "Correlation",
+  name: "CorrelationView",
   components: {
     AppParagraph,
     AppMainContainer,
@@ -235,11 +235,11 @@ export default {
         }
       },
       correlationFunction: {
-          type: "correlationFunction",
-          drawingValues: () => {
-            this.calculateCorrelationFunction();
-            return this.correlationFunctionArray;
-          }         
+        type: "correlationFunction",
+        drawingValues: () => {
+          this.calculateCorrelationFunction();
+          return this.correlationFunctionArray;
+        }
       },
       signals: [
         {
@@ -359,95 +359,80 @@ export default {
       this.secondSignalArray = this.canvasInputSecond;
       this.correlationSignalArray = this.multiplyArrays(this.firstSignalArray, this.secondSignalArray, this.firstSignalArray.length);
     },
-    calculateCorrelationFunction(){
-            if(this.signalType === "Harmonični"){
-              if(this.signals[0].frequency === 1){
-                if(this.choosedSecondSignal === "sin"){
-                  for(let i=0; i<600; i++){
-                    this.correlationFunctionArray[i] = 0.5*Math.sin(Math.PI * i * 1 * 0.01);
-                  }
-                }
-                else{
-                  for(let i=0; i<600; i++){
-                    this.correlationFunctionArray[i] = 0.5*Math.cos(Math.PI * i * 1 * 0.01);
-                  }
-                }
-              }
-              else{
-                for(let i=0; i<600; i++){
-                  this.correlationFunctionArray[i] = 0;
-                }
-              }
+    calculateCorrelationFunction() {
+      if (this.signalType === "Harmonični") {
+        if (this.signals[0].frequency === 1) {
+          if (this.choosedSecondSignal === "sin") {
+            for (let i = 0; i < 600; i++) {
+              this.correlationFunctionArray[i] = 0.5 * Math.sin(Math.PI * i * 0.01);
             }
-            else{
-              if(this.choosedFirstSignal === "square" && this.choosedSecondSignal === "square"){
-                  for(let i=0; i<600; i++){
-                    let x=(i-300)/200;
-                    if(i<=100 || i>=500){
-                      this.correlationFunctionArray[i]=0;
-                    }
-                    else if(i>100 && i<=300){
-                      this.correlationFunctionArray[i]=-x-1;
-                    }
-                    else{
-                      this.correlationFunctionArray[i]=x-1;
-                    }
-                  }
-              }
-              else if(this.choosedFirstSignal === "square" && this.choosedSecondSignal === "sin"){
-                  const sign=1?this.choosedFirstSignal==="square":-1
-                  for(let i=0; i<600; i++){
-                    if(i<=100 || i>=500){
-                      this.correlationFunctionArray[i]=0;
-                    }
-                    else if(i>100 && i<=300){
-                      this.correlationFunctionArray[i]=0.08*Math.cos(Math.PI * i * 2 * 0.01)-0.08;
-                    }
-                    else{
-                      this.correlationFunctionArray[i]=-0.08*Math.cos(Math.PI * i * 2 * 0.01)+0.08;
-                    }
-                  }
-              }
-              else if(this.choosedFirstSignal === "sin" && this.choosedSecondSignal === "square"){
-                  for(let i=0; i<600; i++){
-                    if(i<=100 || i>=500){
-                      this.correlationFunctionArray[i]=0;
-                    }
-                    else if(i>100 && i<=300){
-                      this.correlationFunctionArray[i]=-0.08*Math.cos(Math.PI * i * 2 * 0.01)+0.08;
-                    }
-                    else{
-                      this.correlationFunctionArray[i]=0.08*Math.cos(Math.PI * i * 2 * 0.01)-0.08;
-                    }
-                  }
-              }
-              else if((this.choosedFirstSignal === "square" && this.choosedSecondSignal === "cos") || (this.choosedFirstSignal === "cos" && this.choosedSecondSignal === "square")){
-                for(let i=0; i<600; i++){
-                    if(i<=100 || i>=500){
-                      this.correlationFunctionArray[i]=0;
-                    }
-                    else{
-                      this.correlationFunctionArray[i]=0.32*Math.sin(Math.PI * i * 0.5 * 0.01)-0.32;
-                    }
-                  }
-              }
-              else{
-                const numberOfSamples = (this.signalType === "Harmonični") ? this.correlationSignalArray.length : 200;
-                const firstSignal = (this.signalType === "Harmonični") ? this.cutArray(this.signals[0].baseHarmonicSignal.drawingValues()) : this.cutArray(this.signals[1].signal.find(el => el.key === this.choosedFirstSignal).drawingValues());
-                let correlation;
-                let secondSignal;
-                let multipliedSignals;
-                let j = 0;
-                for(let tau = -1.5; tau <= 1.5; tau = tau + 1.5/300){
-                    secondSignal = (this.signalType === "Harmonični") ? this.cutArray(this.signals[0].signal.find(el => el.key === this.choosedSecondSignal).drawingValues(tau)) : this.cutArray(this.signals[1].signal.find(el => el.key === this.choosedSecondSignal).drawingValuesSecondSignal(tau));
-                    multipliedSignals = this.multiplyArrays(firstSignal, secondSignal, 600);
-                    correlation = multipliedSignals.reduce((prevVal, currVal) => prevVal + currVal)/numberOfSamples;
-                    this.correlationFunctionArray[j] = correlation;
-                    j++;
-                }
-              }
-            }            
+          } else {
+            for (let i = 0; i < 600; i++) {
+              this.correlationFunctionArray[i] = 0.5 * Math.cos(Math.PI * i * 0.01);
+            }
           }
+        } else {
+          for (let i = 0; i < 600; i++) {
+            this.correlationFunctionArray[i] = 0;
+          }
+        }
+      } else {
+        if (this.choosedFirstSignal === "square" && this.choosedSecondSignal === "square") {
+          for (let i = 0; i < 600; i++) {
+            const x = (i - 300) / 200;
+            if (i <= 100 || i >= 500) {
+              this.correlationFunctionArray[i] = 0;
+            } else if (i > 100 && i <= 300) {
+              this.correlationFunctionArray[i] = -x - 1;
+            } else {
+              this.correlationFunctionArray[i] = x - 1;
+            }
+          }
+        } else if (this.choosedFirstSignal === "square" && this.choosedSecondSignal === "sin") {
+          for (let i = 0; i < 600; i++) {
+            if (i <= 100 || i >= 500) {
+              this.correlationFunctionArray[i] = 0;
+            } else if (i > 100 && i <= 300) {
+              this.correlationFunctionArray[i] = 0.08 * Math.cos(Math.PI * i * 2 * 0.01) - 0.08;
+            } else {
+              this.correlationFunctionArray[i] = -0.08 * Math.cos(Math.PI * i * 2 * 0.01) + 0.08;
+            }
+          }
+        } else if (this.choosedFirstSignal === "sin" && this.choosedSecondSignal === "square") {
+          for (let i = 0; i < 600; i++) {
+            if (i <= 100 || i >= 500) {
+              this.correlationFunctionArray[i] = 0;
+            } else if (i > 100 && i <= 300) {
+              this.correlationFunctionArray[i] = -0.08 * Math.cos(Math.PI * i * 2 * 0.01) + 0.08;
+            } else {
+              this.correlationFunctionArray[i] = 0.08 * Math.cos(Math.PI * i * 2 * 0.01) - 0.08;
+            }
+          }
+        } else if ((this.choosedFirstSignal === "square" && this.choosedSecondSignal === "cos") || (this.choosedFirstSignal === "cos" && this.choosedSecondSignal === "square")) {
+          for (let i = 0; i < 600; i++) {
+            if (i <= 100 || i >= 500) {
+              this.correlationFunctionArray[i] = 0;
+            } else {
+              this.correlationFunctionArray[i] = 0.32 * Math.sin(Math.PI * i * 0.5 * 0.01) - 0.32;
+            }
+          }
+        } else {
+          const numberOfSamples = (this.signalType === "Harmonični") ? this.correlationSignalArray.length : 200;
+          const firstSignal = (this.signalType === "Harmonični") ? this.cutArray(this.signals[0].baseHarmonicSignal.drawingValues()) : this.cutArray(this.signals[1].signal.find(el => el.key === this.choosedFirstSignal).drawingValues());
+          let correlation;
+          let secondSignal;
+          let multipliedSignals;
+          let j = 0;
+          for (let tau = -1.5; tau <= 1.5; tau = tau + 1.5 / 300) {
+            secondSignal = (this.signalType === "Harmonični") ? this.cutArray(this.signals[0].signal.find(el => el.key === this.choosedSecondSignal).drawingValues(tau)) : this.cutArray(this.signals[1].signal.find(el => el.key === this.choosedSecondSignal).drawingValuesSecondSignal(tau));
+            multipliedSignals = this.multiplyArrays(firstSignal, secondSignal, 600);
+            correlation = multipliedSignals.reduce((prevVal, currVal) => prevVal + currVal) / numberOfSamples;
+            this.correlationFunctionArray[j] = correlation;
+            j++;
+          }
+        }
+      }
+    }
   }
 }
 </script>

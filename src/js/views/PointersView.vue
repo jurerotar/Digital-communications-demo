@@ -22,7 +22,7 @@ import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
 import AppCollapsible from "@/js/components/common/AppCollapsible.vue";
 
 export default {
-  name: "Pointers",
+  name: "PointersView",
   components: {AppMainContainer, AppCollapsible, AppMainHeading, TheoryPointer, CanvasContainer},
   data() {
     return {
