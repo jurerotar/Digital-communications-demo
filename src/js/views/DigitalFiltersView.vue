@@ -258,7 +258,6 @@ import {ref} from "vue";
 import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 import AppMainContainer from "@/js/components/common/AppMainContainer.vue";
 import AppParagraph from "@/js/components/common/AppParagraph.vue";
-import AppCanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 
 export interface Filter {
   label: string;

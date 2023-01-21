@@ -32,7 +32,7 @@
         {{ length.label }}
       </AppButton>
     </ButtonContainer>
-    <full-signal
+    <FullSignalGraph
       :canvas-id="'spectrum-original-signal'"
       :data="baseSignal"
       :title="'Impulz'"
@@ -40,7 +40,7 @@
       :horizontal-pool="pulse.horizontalPool"
       :type="pulse.key"
     />
-    <spectrum-canvas
+    <SpectrumGraph
       :canvas-id="'spectrum-signal-spectrum'"
       :data="transformedSignal"
       :title="'Spekter'"
@@ -49,8 +49,8 @@
       :description="pulse?.spectrumGraphTexts?.description"
       :note="pulse?.spectrumGraphTexts?.note"
     />
-    <logarithmic
-      :canvas-id="'spectrum-signal-logarithmic'"
+    <LogarithmicGraph
+      :canvas-id="'spectrum-signal-logarithmicGraph'"
       :data="transformedSignal"
       :title="'Spekter [dB]'"
       :type="pulse.key"
@@ -66,9 +66,9 @@
   lang="ts"
 >
 import TheorySpectrum from "@/js/components/theory/TheorySpectrum.vue";
-import SpectrumCanvas from "@/js/components/canvas/Spectrum.vue";
-import FullSignal from "@/js/components/canvas/FullSignal.vue";
-import Logarithmic from "@/js/components/canvas/LogarithmicGraph.vue";
+import SpectrumGraph from "@/js/components/canvas/SpectrumGraph.vue";
+import FullSignalGraph from "@/js/components/canvas/FullSignalGraph.vue";
+import LogarithmicGraph from "@/js/components/canvas/LogarithmicGraph.vue";
 import ButtonContainer from "@/js/components/common/buttons/AppButtonContainer.vue";
 import AppButton from "@/js/components/common/buttons/AppButton.vue";
 import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
@@ -92,7 +92,7 @@ export interface Pulse {
   pulseLengths: PulseLengthOption[];
   // Additional texts displayed along spectrum chart
   spectrumGraphTexts?: PulseGraphText;
-  // Additional texts displayed along logarithmic chart
+  // Additional texts displayed along logarithmicGraph chart
   logarithmGraphTexts?: PulseGraphText;
 }
 

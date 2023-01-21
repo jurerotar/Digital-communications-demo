@@ -26,7 +26,7 @@ import CanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 import {linearSpace} from "@/js/helpers/functions";
 
 export default {
-  name: "SpectrumCanvas",
+  name: "SpectrumGraph",
   components: {AppSectionHeading, CanvasContainer},
   props: {
     data: {

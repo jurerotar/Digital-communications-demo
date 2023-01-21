@@ -14,7 +14,7 @@ import CanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 import '@/js/types/types.ts';
 
 export default {
-  name: "SummedHarmonics",
+  name: "SummedHarmonicsGraph",
   components: {AppSectionHeading, CanvasContainer},
   props: {
     components: {

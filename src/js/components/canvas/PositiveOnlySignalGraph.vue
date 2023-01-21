@@ -26,7 +26,7 @@ import CanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 import '@/js/types/types.ts';
 
 export default {
-  name: "PositiveOnlySignal",
+  name: "PositiveOnlySignalGraph",
   components: {AppSectionHeading, CanvasContainer},
   props: {
     data: {

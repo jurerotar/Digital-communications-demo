@@ -4,10 +4,10 @@
       Kazalci
     </AppMainHeading>
     <AppCollapsible>
-      <theory-pointer />
+      <theory-pointer/>
     </AppCollapsible>
     <CanvasContainer>
-      <div :id="canvasId" />
+      <div :id="canvasId"/>
     </CanvasContainer>
   </AppMainContainer>
 </template>
@@ -23,7 +23,13 @@ import AppCollapsible from "@/js/components/common/AppCollapsible.vue";
 
 export default {
   name: "PointersView",
-  components: {AppMainContainer, AppCollapsible, AppMainHeading, TheoryPointer, CanvasContainer},
+  components: {
+    AppMainContainer,
+    AppCollapsible,
+    AppMainHeading,
+    TheoryPointer,
+    CanvasContainer
+  },
   data() {
     return {
       p5: null,

@@ -15,7 +15,7 @@ import CanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 import '@/js/types/types.ts';
 
 export default {
-  name: "FullSignal",
+  name: "TransferFunctionGraph",
   components: {AppSectionHeading, CanvasContainer},
   props: {
     data: {

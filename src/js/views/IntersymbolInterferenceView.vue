@@ -27,7 +27,7 @@
         >
       </div>
     </div>
-    <positive-only-signal
+    <PositiveOnlySignalGraph
       :data="transferFunction"
       :canvas-id="'transfer-function'"
       :title="'Ekvivalentni prenosni kanal'"
@@ -73,7 +73,7 @@
         </div>
       </div>
     </AppButtonContainer>
-    <level4-signal
+    <Level4SignalGraph
       :data="binaryLevel4Signal.values"
       :title="'4-nivojski bipolarni signal'"
       :description="''"
@@ -81,7 +81,7 @@
       :is-binary="true"
       :speed="speed"
     />
-    <positive-only-signal
+    <PositiveOnlySignalGraph
       :data="convolution"
       :canvas-id="'distorted-signal'"
       :title="'Popačen signal na izhodu prenosnega kanala'"
@@ -125,7 +125,7 @@
       />
       Počisti
     </AppButton>
-    <oscilloscope
+    <OscilloscopeGraph
       :data="dataISI"
       :canvas-id="'eye-diagram'"
       :name="'Očesni diagram'"
@@ -143,22 +143,29 @@ import AppButton from "@/js/components/common/buttons/AppButton.vue";
 import AppCollapsible from "@/js/components/common/AppCollapsible.vue";
 import TheoryIntersymbolInterference from "@/js/components/theory/TheoryIntersymbolInterference.vue";
 import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
-import Oscilloscope from "@/js/components/canvas/OscilloscopeGraph.vue";
-import Level4Signal from "@/js/components/canvas/Level4Signal.vue";
-import PositiveOnlySignal from "@/js/components/canvas/PositiveOnlySignal.vue";
+import OscilloscopeGraph from "@/js/components/canvas/OscilloscopeGraph.vue";
+import Level4SignalGraph from "@/js/components/canvas/Level4SignalGraph.vue";
+import PositiveOnlySignalGraph from "@/js/components/canvas/PositiveOnlySignalGraph.vue";
 import '@/js/types/types.ts';
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {faPlay, faStop, faTrashAlt} from '@fortawesome/free-solid-svg-icons'
 
 library.add(faPlay, faStop, faTrashAlt);
+
 export default {
   name: "IntersymbolInterferenceView",
   components: {
     AppMainContainer,
     TheoryIntersymbolInterference,
-    Oscilloscope, Level4Signal, PositiveOnlySignal, FontAwesomeIcon,
-    AppMainHeading, AppButtonContainer, AppButton, AppCollapsible
+    OscilloscopeGraph,
+    Level4SignalGraph,
+    PositiveOnlySignalGraph,
+    FontAwesomeIcon,
+    AppMainHeading,
+    AppButtonContainer,
+    AppButton,
+    AppCollapsible
   },
   data() {
     return {

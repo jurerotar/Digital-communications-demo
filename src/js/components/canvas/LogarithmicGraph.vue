@@ -26,7 +26,7 @@ import CanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 import '@/js/types/types.ts';
 
 export default {
-  name: "Logarithmic",
+  name: "LogarithmicGraph",
   components: {AppSectionHeading, CanvasContainer},
   props: {
     data: {
@@ -72,7 +72,7 @@ export default {
   },
   computed: {
     normalizedData() {
-      let data = [...this.data];
+      const data = [...this.data];
       data.length = 600;
       return data.map(el => -20 * Math.log(el / data[0]) + 50);
     },

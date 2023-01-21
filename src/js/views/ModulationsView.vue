@@ -35,7 +35,7 @@
       </AppButton>
     </AppButtonContainer>
     <!-- Sine/bipolar/unipolar signal carrying data -->
-    <positive-only-signal
+    <PositiveOnlySignalGraph
       v-if="dataSignalCanvasData.type !== 'binaryLevel4'"
       :data="dataSignalCanvasData.data.data"
       :canvas-id="'data-signal'"
@@ -45,7 +45,7 @@
       :is-binary="dataSignalCanvasData.data.isBinary"
     />
     <!-- 4 level signal carrying data -->
-    <level4-signal
+    <Level4SignalGraph
       v-if="dataSignalCanvasData.type === 'binaryLevel4'"
       :data="binaryLevel4SignalValues"
       :title="dataSignalCanvasData.data.title"
@@ -53,7 +53,7 @@
       :is-binary="true"
     />
     <!-- All modulations must have a carrier, so we always display this canvas -->
-    <positive-only-signal
+    <PositiveOnlySignalGraph
       :data="carrierSignalValues"
       :canvas-id="'carrier-signal'"
       :title="'Nosilec'"
@@ -61,7 +61,7 @@
       :description="'Nosilec je visokofrekvenčni signal, s katerim moduliramo podatkovni signal.'"
       :is-binary="false"
     />
-    <positive-only-signal
+    <PositiveOnlySignalGraph
       :data="modulatedSignalValues"
       :canvas-id="'modulated-signal'"
       :title="'Moduliran signal'"
@@ -83,8 +83,8 @@ import TheoryModulations from "@/js/components/theory/TheoryModulations.vue";
 import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
 import AppButton from "@/js/components/common/buttons/AppButton.vue";
 import AppButtonContainer from "@/js/components/common/buttons/AppButtonContainer.vue";
-import Level4Signal from "@/js/components/canvas/Level4Signal.vue";
-import PositiveOnlySignal from "@/js/components/canvas/PositiveOnlySignal.vue";
+import Level4SignalGraph from "@/js/components/canvas/Level4SignalGraph.vue";
+import PositiveOnlySignalGraph from "@/js/components/canvas/PositiveOnlySignalGraph.vue";
 import {binaryValues} from "@/js/helpers/functions";
 import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 import {

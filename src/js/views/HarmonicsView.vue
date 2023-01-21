@@ -27,8 +27,8 @@
         @change="updateComponents(components)"
       >
     </div>
-    <individual-harmonics :components="components" />
-    <summed-harmonics :components="components" />
+    <IndividualHarmonicsGraph :components="components" />
+    <SummedHarmonicsGraph :components="components" />
   </AppMainContainer>
 </template>
 
@@ -36,8 +36,8 @@
   setup
   lang="ts"
 >
-import IndividualHarmonics from "@/js/components/canvas/IndividualHarmonics.vue";
-import SummedHarmonics from "@/js/components/canvas/SummedHarmonics.vue";
+import IndividualHarmonicsGraph from "@/js/components/canvas/IndividualHarmonicsGraph.vue";
+import SummedHarmonicsGraph from "@/js/components/canvas/SummedHarmonicsGraph.vue";
 import TheoryHarmonics from "@/js/components/theory/TheoryHarmonics.vue";
 import AppCollapsible from "@/js/components/common/AppCollapsible.vue";
 import AppMainHeading from "@/js/components/common/AppMainHeading.vue";

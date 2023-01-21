@@ -65,7 +65,7 @@
           @change="updateTau(tau)"
         >
       </div>
-      <full-signal
+      <FullSignalGraph
         :canvas-id="'first-signal'"
         :data="canvasInputFirst"
         :title="'Prvi Signal'"
@@ -74,7 +74,7 @@
         :type="choosedFirstSignal"
         :y-axis-label="'x(t)'"
       />
-      <full-signal
+      <FullSignalGraph
         :canvas-id="'second-signal'"
         :data="canvasInputSecond"
         :title="'Drugi Signal'"
@@ -86,7 +86,7 @@
       <AppParagraph class="text-xl">
         Rezultat korelacijske funkcije: {{ correlationResult }}
       </AppParagraph>
-      <full-signal
+      <FullSignalGraph
         :canvas-id="'correlation-signal'"
         :data="canvasInputCorrelation"
         :title="'Zmnožek prvega in drugega signala'"
@@ -95,7 +95,7 @@
         :type="correlation.type"
         :y-axis-label="'x(t)y(t)'"
       />
-      <full-signal
+      <FullSignalGraph
         :canvas-id="'correlation-function-signal'"
         :data="canvasInputCorrelationFunction"
         :title="'Korelacijska Funkcija'"
@@ -152,7 +152,7 @@
           @change="updateTau(tau)"
         >
       </div>
-      <full-signal
+      <FullSignalGraph
         :canvas-id="'first-signal'"
         :data="canvasInputFirst"
         :title="'Prvi Signal'"
@@ -161,7 +161,7 @@
         :type="choosedFirstSignal"
         :y-axis-label="'x(t)'"
       />
-      <full-signal
+      <FullSignalGraph
         :canvas-id="'second-signal'"
         :data="canvasInputSecond"
         :title="'Drugi Signal'"
@@ -173,7 +173,7 @@
       <AppParagraph class="text-xl">
         Rezultat korelacijske funkcije: {{ correlationResult }}
       </AppParagraph>
-      <full-signal
+      <FullSignalGraph
         :canvas-id="'correlation-signal'"
         :data="canvasInputCorrelation"
         :title="'Zmnožek prvega in drugega signala'"
@@ -182,7 +182,7 @@
         :type="correlation.type"
         :y-axis-label="'x(t)y(t)'"
       />
-      <full-signal
+      <FullSignalGraph
         :canvas-id="'correlation-function-signal'"
         :data="canvasInputCorrelationFunction"
         :title="'Korelacijska Funkcija'"
@@ -205,14 +205,20 @@ import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 import TheoryCorrelation from '@/js/components/theory/TheoryCorrelation.vue';
 import AppButton from "@/js/components/common/buttons/AppButton.vue";
 import AppButtonContainer from "@/js/components/common/buttons/AppButtonContainer.vue";
-import FullSignal from "@/js/components/canvas/FullSignal.vue";
+import FullSignalGraph from "@/js/components/canvas/FullSignalGraph.vue";
 
 export default {
   name: "CorrelationView",
   components: {
     AppParagraph,
     AppMainContainer,
-    AppSectionHeading, AppMainHeading, AppCollapsible, TheoryCorrelation, AppButton, AppButtonContainer, FullSignal
+    AppSectionHeading,
+    AppMainHeading,
+    AppCollapsible,
+    TheoryCorrelation,
+    AppButton,
+    AppButtonContainer,
+    FullSignalGraph
   },
   data() {
     return {
