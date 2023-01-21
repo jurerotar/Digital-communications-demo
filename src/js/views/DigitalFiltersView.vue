@@ -1,28 +1,28 @@
 <template>
-  <app-main-container>
-    <app-main-heading>
+  <AppMainContainer>
+    <AppMainHeading>
       Digitalni filtri
-    </app-main-heading>
-    <app-collapsible>
+    </AppMainHeading>
+    <AppCollapsible>
       <theory-digital-filters/>
-    </app-collapsible>
-    <app-section-heading>
+    </AppCollapsible>
+    <AppSectionHeading>
       FIR filter
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       Predstavljena oblika FIR filtra je ena izmed možnih izvedb tega filtra.
       V osnovi gre za operacijo povprečenja, kjer uteži vzorcev, ki jih povprečimo, določimo s pomočjo danih okenskih funkcij.
       Pomembno je dejstvo, da dolžina okenske funkcije določa red filtra (in obratno).
       Ob izbiranju različnih kombinacij okenskih funkcij in njihovih dolžin hitro ugotovimo, da je takšen filter vedno nizkoprepusten.
       To pa ustreza naravi povprečenja, ki ga izvaja predstavljeni FIR filter.
-    </app-paragraph>
-    <app-section-heading>
+    </AppParagraph>
+    <AppSectionHeading>
       Red filtra:
-    </app-section-heading>
+    </AppSectionHeading>
 
-    <app-paragraph>
+    <AppParagraph>
       Red FIR filtra določa dolžino okenske funkcije. Le-ta pride do izraza pri večji dolžini okna.
-    </app-paragraph>
+    </AppParagraph>
 
     <!-- Range slider -->
     <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
@@ -44,26 +44,26 @@
         @change="UpdateFiltOrd(FilterOrder)"
       >
     </div>
-    <app-section-heading>
+    <AppSectionHeading>
       Okenska funkcija
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       Okenska funkcija določa uteži filtra. Z naklonom zvončaste oblike okna prilagajamo prenosno funkcijo sita našim zahtevam.
-    </app-paragraph>
-    <button-container>
-      <app-button
+    </AppParagraph>
+    <ButtonContainer>
+      <AppButton
         v-for="windov in filter.windovFunc"
         :key="windov.key"
         :active="selectedWindowFunction === windov.key"
         @click="changeSelectedWinFunc(windov.key)"
       >
         {{ windov.label }}
-      </app-button>
-    </button-container>
-    <app-section-heading>
+      </AppButton>
+    </ButtonContainer>
+    <AppSectionHeading>
       Prenosna funkcija FIR filtra
-    </app-section-heading>
-    <app-canvas-container>
+    </AppSectionHeading>
+    <app-CanvasContainer>
       <graph
         title="FIR"
         :g_width=800
@@ -75,35 +75,35 @@
         :auto_scale="true"
         @loaded="UpdateFiltOrd(FilterOrder)"
       />
-    </app-canvas-container>
+    </app-CanvasContainer>
 
-    <app-section-heading>
+    <AppSectionHeading>
       IIR filter
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       Podani tipi IIR filtra so znani analogni filtri ("Biquad"), ki jih izvedemo z digitalnim filtrom.
       Sistemske funkcije posameznih tipov se med seboj razlikujejo in jih ne moremo podati v nekakšni splošni obliki,
       kot je to izvedeno za FIR filter na osnovi povprečenja. Zato je tudi red predstavljenih IIR filtrov nespremenljiv (2. red).
       Uteži takšnega IIR filtra določimo tako, da najprej določimo sistemsko funkcijo analogne filtra.
       Koeficienti poleg s-členov analognega filtra predstavljajo uteži <span>a<sub>k</sub></span> in <span>b<sub>k</sub></span> digitalnega
       filtra.
-    </app-paragraph>
-    <app-section-heading>
+    </AppParagraph>
+    <AppSectionHeading>
       IIR tip
-    </app-section-heading>
+    </AppSectionHeading>
 
-    <app-paragraph>
+    <AppParagraph>
       IIR filter posnema karakteristiko analognih filtrov.
-    </app-paragraph>
+    </AppParagraph>
 
-    <app-section-heading>
+    <AppSectionHeading>
       Mejna frekvenca [pi x rad/sample]:
-    </app-section-heading>
+    </AppSectionHeading>
     <div>
-      <app-paragraph>
+      <AppParagraph>
         Mejna frekvenca je podana kot normalizirana frekvenca glede na polovico Nyquistove frekvence in določa frekvenco, kjer se začne
         prehod med prepustnim in zapornim pasom.
-      </app-paragraph>
+      </AppParagraph>
     </div>
 
     <!-- Range slider -->
@@ -128,14 +128,14 @@
     </div>
 
     <!-- Range slider -->
-    <app-section-heading>
+    <AppSectionHeading>
       Ojačanje filtra [dB]:
-    </app-section-heading>
+    </AppSectionHeading>
     <div>
-      <app-paragraph>
+      <AppParagraph>
         Ojačenje vpliva na prepusntni (pozitivno ojačenje) ali zaporni (negativno ojačenje) pas in igra vlogo le pri tipih "Peak",
         "Low-shelf" in "High-shelf".
-      </app-paragraph>
+      </AppParagraph>
     </div>
     <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
       <label
@@ -157,15 +157,15 @@
       >
     </div>
 
-    <app-section-heading>
+    <AppSectionHeading>
       Kvaliteta filtra:
-    </app-section-heading>
+    </AppSectionHeading>
     <div>
-      <app-paragraph>
+      <AppParagraph>
         Kvaliteta določa prisotnost resonance, ki se nahaja na mejni frekvenci.
         Pri tipih "Low-pass", "High-pass" in "Band-pass" je navadno željena kvaliteta magGain okolici vrednosti 1, pri "Notch" in "Peak"
         tipu pa večanje kvalitete rezultira magGain ožjem prepusnem pasu.
-      </app-paragraph>
+      </AppParagraph>
     </div>
 
     <!-- Range slider -->
@@ -189,20 +189,20 @@
       >
     </div>
 
-    <button-container>
-      <app-button
+    <ButtonContainer>
+      <AppButton
         v-for="windov in filter.types_iir"
         :key="windov.key"
         :active="selectedFilterType === windov.key"
         @click="changeSelectedFilterType(windov.key)"
       >
         {{ windov.label }}
-      </app-button>
-    </button-container>
-    <app-section-heading>
+      </AppButton>
+    </ButtonContainer>
+    <AppSectionHeading>
       Prenosna funkcija IIR filtra
-    </app-section-heading>
-    <app-canvas-container>
+    </AppSectionHeading>
+    <app-CanvasContainer>
       <graph
         title="IIR"
         :g_width=800
@@ -214,8 +214,8 @@
         :auto_scale="true"
         @loaded="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
       />
-    </app-canvas-container>
-  </app-main-container>
+    </app-CanvasContainer>
+  </AppMainContainer>
 </template>
 
 <script setup lang="ts">

@@ -1,36 +1,36 @@
 <template>
   <div class="lg:ml-72">
     <main class="p-4 container lg:mx-auto flex flex-col gap-4">
-      <app-main-heading>
+      <AppMainHeading>
         Digitalne komunikacije - demo
-      </app-main-heading>
+      </AppMainHeading>
       <div class="flex flex-col gap-2">
-        <app-paragraph>
+        <AppParagraph>
           Spletna stran je nastala kot projektna naloga pri predmetu Digitalne komunikacije. Nazorno prikazuje vizualne primere iz snovi,
           s katerimi se lahko poigrate in se na tak način dodatno seznanite s snovjo.
-        </app-paragraph>
-        <app-paragraph class="font-semibold">
+        </AppParagraph>
+        <AppParagraph class="font-semibold">
           Aplikacija trenutno prikazuje naslednja poglavja:
-        </app-paragraph>
+        </AppParagraph>
         <div class="my-1 mb-4 flex flex-col md:flex-row gap-2">
           <div
             v-for="link in links"
             :key="link.path"
           >
             <router-link :to="link.path">
-              <app-button>
+              <AppButton>
                 {{ link.label }}
-              </app-button>
+              </AppButton>
             </router-link>
           </div>
         </div>
-        <app-section-heading>
+        <AppSectionHeading>
           Dodatne povezave
-        </app-section-heading>
-        <app-paragraph>
+        </AppSectionHeading>
+        <AppParagraph>
           Na povezavi najdete učbenik prof. dr. Saše Tomažiča, ki ga lahko uporabite za boljše razumevanje
           prikazanih primerov.
-        </app-paragraph>
+        </AppParagraph>
       </div>
       <a
         href="http://www.fe.uni-lj.si/mma/Tomazic-DigitalneKomunikacije/2017112514040761/"
@@ -38,9 +38,9 @@
         target="_blank"
         class="w-fit-content"
       >
-        <app-button>
+        <AppButton>
           Učbenik
-        </app-button>
+        </AppButton>
       </a>
     </main>
     <open-source />

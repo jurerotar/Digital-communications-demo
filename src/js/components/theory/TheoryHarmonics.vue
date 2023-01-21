@@ -1,5 +1,5 @@
 <template>
-  <app-paragraph>
+  <AppParagraph>
     Animacija prikazuje vsoto ob prehodu po danem signalu, brez enosmerne komponente <span class="font-semibold">a0</span>
     oz. povprečne vrednosti tega signala, ki jo dobimo pri <span class="font-semibold">X(0)</span>.
     Da se le-te izognemo smo za izračun vzeli signal, ki gre med <span class="font-semibold">-1</span> in
@@ -13,7 +13,7 @@
     Ob dodajanju višjih komponent opazimo, da imamo majhen presežek, ki pa je, ne glede na število komponent, vedno enako visok.
     Pojav imenujemo <span class="font-semibold">Gibbsov efekt</span>. Gibbsovemu efektu se ne moremo izogniti, saj je pri idealnem
     pravokotnem signalu preskok neskončno hiter in bi potrebovali neskončno veliko frekvenco, da bi ga ujeli.
-  </app-paragraph>
+  </AppParagraph>
 </template>
 <script
   setup

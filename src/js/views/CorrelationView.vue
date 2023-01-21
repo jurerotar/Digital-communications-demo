@@ -1,52 +1,52 @@
 <template>
-  <app-main-container>
-    <app-main-heading>
+  <AppMainContainer>
+    <AppMainHeading>
       Korelacijska Funkcija
-    </app-main-heading>
-    <app-collapsible>
+    </AppMainHeading>
+    <AppCollapsible>
       <theory-correlation/>
-    </app-collapsible>
-    <app-section-heading>
+    </AppCollapsible>
+    <AppSectionHeading>
       Izbira tipa signalov:
-    </app-section-heading>
-    <app-button-container>
-      <app-button
+    </AppSectionHeading>
+    <AppButtonContainer>
+      <AppButton
         v-for="signal in signals"
         :key="signal.label"
         :active="signal.label===signalType"
         @click="changeSignalType(signal.label)"
       >
         {{ signal.label }}
-      </app-button>
-    </app-button-container>
+      </AppButton>
+    </AppButtonContainer>
 
     <template v-if="signalType==='Harmonični'">
-      <app-section-heading>
+      <AppSectionHeading>
         Izbira frekvence drugega signala:
-      </app-section-heading>
-      <app-button-container>
-        <app-button
+      </AppSectionHeading>
+      <AppButtonContainer>
+        <AppButton
           v-for="signal in signals[0].signal"
           :key="signal.key"
           :active="choosedSecondSignal === signal.key"
           @click="changeSignal(signal.key, 'harmonični')"
         >
           {{ signal.label }}
-        </app-button>
-      </app-button-container>
-      <app-section-heading>
+        </AppButton>
+      </AppButtonContainer>
+      <AppSectionHeading>
         Izbira frekvence drugega signala:
-      </app-section-heading>
-      <app-button-container>
-        <app-button
+      </AppSectionHeading>
+      <AppButtonContainer>
+        <AppButton
           v-for="frequency in signals[0].frequencyRange"
           :key="frequency"
           :active="signals[0].frequency === frequency"
           @click="changeFrequency(frequency)"
         >
           {{ frequency }}
-        </app-button>
-      </app-button-container>
+        </AppButton>
+      </AppButtonContainer>
       <!-- Slider -->
       <div class="inline-flex flex-col w-fit-content gap-4">
         <label
@@ -83,9 +83,9 @@
         :type="choosedSecondSignal"
         :y-axis-label="'y(t)'"
       />
-      <app-paragraph class="text-xl">
+      <AppParagraph class="text-xl">
         Rezultat korelacijske funkcije: {{ correlationResult }}
-      </app-paragraph>
+      </AppParagraph>
       <full-signal
         :canvas-id="'correlation-signal'"
         :data="canvasInputCorrelation"
@@ -108,32 +108,32 @@
     </template>
 
     <template v-if="signalType==='Impulzni'">
-      <app-section-heading>
+      <AppSectionHeading>
         Izbira prvega signala:
-      </app-section-heading>
-      <app-button-container>
-        <app-button
+      </AppSectionHeading>
+      <AppButtonContainer>
+        <AppButton
           v-for="signal in signals[1].signal"
           :key="signal.key"
           :class="{'bg-blue-600': choosedFirstSignal===signal.key}"
           @click="changeSignal(signal.key, 'impulzni', 1)"
         >
           {{ signal.label }}
-        </app-button>
-      </app-button-container>
-      <app-section-heading>
+        </AppButton>
+      </AppButtonContainer>
+      <AppSectionHeading>
         Izbira drugega signala:
-      </app-section-heading>
-      <app-button-container>
-        <app-button
+      </AppSectionHeading>
+      <AppButtonContainer>
+        <AppButton
           v-for="signal in signals[1].signal"
           :key="signal.key"
           :class="{'bg-blue-600': choosedSecondSignal===signal.key}"
           @click="changeSignal(signal.key, 'impulzni', 2)"
         >
           {{ signal.label }}
-        </app-button>
-      </app-button-container>
+        </AppButton>
+      </AppButtonContainer>
       <!-- Slider -->
       <div class="inline-flex flex-col w-fit-content gap-4">
         <label
@@ -170,9 +170,9 @@
         :type="choosedSecondSignal"
         :y-axis-label="'y(t)'"
       />
-      <app-paragraph class="text-xl">
+      <AppParagraph class="text-xl">
         Rezultat korelacijske funkcije: {{ correlationResult }}
-      </app-paragraph>
+      </AppParagraph>
       <full-signal
         :canvas-id="'correlation-signal'"
         :data="canvasInputCorrelation"
@@ -193,7 +193,7 @@
         :x-axis-label="'τ'"
       />
     </template>
-  </app-main-container>
+  </AppMainContainer>
 </template>
 
 <script>

@@ -1,39 +1,39 @@
 <template>
-  <app-main-container>
-    <app-main-heading>
+  <AppMainContainer>
+    <AppMainHeading>
       Modulacije
-    </app-main-heading>
-    <app-collapsible>
+    </AppMainHeading>
+    <AppCollapsible>
       <theory-modulations />
-    </app-collapsible>
-    <app-section-heading>
+    </AppCollapsible>
+    <AppSectionHeading>
       Analogne modulacije
-    </app-section-heading>
+    </AppSectionHeading>
     <!-- Analog modulations buttons -->
-    <app-button-container>
-      <app-button
+    <AppButtonContainer>
+      <AppButton
         v-for="modulation in analogModulations"
         :key="modulation.key"
         :active="selectedModulationKey === modulation.key"
         @click="changeSelectedModulationKey(modulation.key)"
       >
         {{ modulation.label }}
-      </app-button>
-    </app-button-container>
-    <app-section-heading>
+      </AppButton>
+    </AppButtonContainer>
+    <AppSectionHeading>
       Digitalne modulacije
-    </app-section-heading>
+    </AppSectionHeading>
     <!-- Digital modulations buttons -->
-    <app-button-container>
-      <app-button
+    <AppButtonContainer>
+      <AppButton
         v-for="modulation in digitalModulations"
         :key="modulation.key"
         :active="selectedModulationKey === modulation.key"
         @click="changeSelectedModulationKey(modulation.key)"
       >
         {{ modulation.label }}
-      </app-button>
-    </app-button-container>
+      </AppButton>
+    </AppButtonContainer>
     <!-- Sine/bipolar/unipolar signal carrying data -->
     <positive-only-signal
       v-if="dataSignalCanvasData.type !== 'binaryLevel4'"
@@ -70,7 +70,7 @@
       :description="selectedModulation.description"
       :is-binary="false"
     />
-  </app-main-container>
+  </AppMainContainer>
 </template>
 
 <script

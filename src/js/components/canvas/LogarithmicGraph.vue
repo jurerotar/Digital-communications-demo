@@ -1,7 +1,7 @@
 <template>
-  <app-section-heading>
+  <AppSectionHeading>
     {{ title }}
-  </app-section-heading>
+  </AppSectionHeading>
   <p
     v-if="description !== ''"
     class="my-1 transition-colors duration-300 dark:text-white"
@@ -14,9 +14,9 @@
   >
     <span class="font-semibold">Opomba: </span>{{ note }}
   </p>
-  <canvas-container>
+  <CanvasContainer>
     <div :id="canvasId" />
-  </canvas-container>
+  </CanvasContainer>
 </template>
 
 <script>

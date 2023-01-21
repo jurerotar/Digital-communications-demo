@@ -1,7 +1,7 @@
 <template>
-  <app-section-heading>
+  <AppSectionHeading>
     {{ title }}
-  </app-section-heading>
+  </AppSectionHeading>
   <p
     v-if="description !== ''"
     class="my-1 transition-colors duration-300 dark:text-white"
@@ -14,9 +14,9 @@
   >
     <span class="font-semibold">Opomba: </span>{{ note }}
   </p>
-  <canvas-container>
+  <CanvasContainer>
     <div :id="canvasId" />
-  </canvas-container>
+  </CanvasContainer>
 </template>
 
 <script>
@@ -72,7 +72,7 @@ export default {
   },
   computed: {
     normalizedData() {
-      let data = [...this.data];
+      const data = [...this.data];
       const max = Math.max(...data);
       data.length = 600;
       return data.map(el => -el / max);

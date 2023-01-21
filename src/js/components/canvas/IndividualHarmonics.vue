@@ -1,10 +1,10 @@
 <template>
-  <app-section-heading>
+  <AppSectionHeading>
     Prikaz posameznik komponent
-  </app-section-heading>
-  <canvas-container>
+  </AppSectionHeading>
+  <CanvasContainer>
     <div :id="canvasId" />
-  </canvas-container>
+  </CanvasContainer>
 </template>
 
 <script>

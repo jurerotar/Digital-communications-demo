@@ -1,11 +1,11 @@
 <template>
-  <app-main-container>
-    <app-main-heading>
+  <AppMainContainer>
+    <AppMainHeading>
       Intersimbolna interferenca
-    </app-main-heading>
-    <app-collapsible>
+    </AppMainHeading>
+    <AppCollapsible>
       <theory-intersymbol-interference />
-    </app-collapsible>
+    </AppCollapsible>
     <div class="inline-flex flex-col mb-2">
       <label
         :for="`fCut-multiplier`"
@@ -43,15 +43,15 @@
       :speed="speed"
     />
 
-    <app-button-container>
-      <app-button
+    <AppButtonContainer>
+      <AppButton
         v-for="sp in possibleSpeeds"
         :key="sp"
         :active="speed === sp"
         @click="changeSpeed(sp)"
       >
         {{ sp }}x
-      </app-button>
+      </AppButton>
       <div
         class="switcher__tab w-20 cursor-pointer flex flex-row relative bg-gray-200
           dark:bg-gray-700 p-1 rounded-3xl items-center justify-center h-8 transition-all duration-300 "
@@ -63,7 +63,7 @@
           :class="[isPlaying === state.key ? 'switcher__front' : 'switcher__back']"
           class="flex flex-row justify-center items-center w-full h-full absolute top-0 left-0 transition-transform duration-300"
         >
-          <font-awesome-icon
+          <FontAwesomeIcon
             :icon="state.icon"
             class="text-sm mr-1 text-gray-800 transition-colors duration-300 dark:text-white"
           />
@@ -72,7 +72,7 @@
           </p>
         </div>
       </div>
-    </app-button-container>
+    </AppButtonContainer>
     <level4-signal
       :data="binaryLevel4Signal.values"
       :title="'4-nivojski bipolarni signal'"
@@ -115,16 +115,16 @@
         >
       </div>
     </div>
-    <app-button
+    <AppButton
       class="w-fit-content"
       @click="clearOscilloscope()"
     >
-      <font-awesome-icon
+      <FontAwesomeIcon
         :icon="['fas', 'trash-alt']"
         class="text-sm mr-1"
       />
       Počisti
-    </app-button>
+    </AppButton>
     <oscilloscope
       :data="dataISI"
       :canvas-id="'eye-diagram'"
@@ -133,7 +133,7 @@
       :speed="speed"
       :ticks="isiTicks"
     />
-  </app-main-container>
+  </AppMainContainer>
 </template>
 
 <script>
@@ -143,7 +143,7 @@ import AppButton from "@/js/components/common/buttons/AppButton.vue";
 import AppCollapsible from "@/js/components/common/AppCollapsible.vue";
 import TheoryIntersymbolInterference from "@/js/components/theory/TheoryIntersymbolInterference.vue";
 import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
-import Oscilloscope from "@/js/components/canvas/Oscilloscope.vue";
+import Oscilloscope from "@/js/components/canvas/OscilloscopeGraph.vue";
 import Level4Signal from "@/js/components/canvas/Level4Signal.vue";
 import PositiveOnlySignal from "@/js/components/canvas/PositiveOnlySignal.vue";
 import '@/js/types/types.ts';

@@ -13,7 +13,7 @@
 
 export default {
   defineExpose: ["test"],
-  name: "vue_graph",
+  name: "VueGraph",
   props: {
     trig_draw: false,
     title: String,
@@ -113,7 +113,6 @@ export default {
 
   data() {
     return {
-      animation: false,
       cdim: {w: 500, h: 500},
       ccen: {w: 250, h: 250},
       mdim: {w: 5, h: 5},
@@ -171,12 +170,12 @@ export default {
             y_min = signal_1[i].y;
           }
         }
-        let dx = x_max - x_min;
-        let dy = y_max - y_min;
-        let mw = dx + dx * 0.2;
-        let mh = dy + dy * 0.4;
-        let cx = 5;
-        let cy = (y_max) * (this.g_height) / mh + 40;
+        const dx = x_max - x_min;
+        const dy = y_max - y_min;
+        const mw = dx + dx * 0.2;
+        const mh = dy + dy * 0.4;
+        const cx = 5;
+        const cy = (y_max) * (this.g_height) / mh + 40;
         auto_scale(mw, mh, cx, cy);
       }
 
@@ -221,7 +220,7 @@ let signal_3_enable = false;
 
 let signal_3_index = 0;
 
-let signal_step_x = 3;
+const signal_step_x = 3;
 let signal_anim_x = 0;
 
 function auto_scale(mw, mh, ox, oy) {
@@ -275,7 +274,7 @@ function draw() {
 }
 
 function draw_signals() {
-  let ctx = get_canvas();
+  const ctx = get_canvas();
   ctx.globalAlpha = 1;
   clear_canvas();
   draw_guide_lines();
@@ -289,8 +288,8 @@ function draw_signals() {
         ctx.lineTo(signal_1_canvas[i + 1].x, signal_1_canvas[i + 1].y);
         ctx.stroke();
       }
-      let sig_mirror = [];
-      let sig_mirror_canvas = [];
+      const sig_mirror = [];
+      const sig_mirror_canvas = [];
       for (let i = 0; i < signal_1.length; i++) {
         sig_mirror.push({x: 2 - signal_1[signal_1.length - 1 - i].x, y: signal_1[signal_1.length - 1 - i].y});
         sig_mirror_canvas.push(math_to_canvas(sig_mirror[i]));
@@ -318,8 +317,8 @@ function draw_anim_start() {
 }
 
 function draw_anim() {
-  let anim_limit = signal_anim_x + signal_step_x;
-  let ctx = get_canvas();
+  const anim_limit = signal_anim_x + signal_step_x;
+  const ctx = get_canvas();
 
   if (signal_1_enable) {
     ctx.strokeStyle = signal_1_color;
@@ -374,7 +373,7 @@ function draw_anim() {
 }
 
 function misc_setup(bgc, glc, sg1c, sg1w, sg2c, sg2w, sg3c, sg3w) {
-  let ctx = get_canvas(title);
+  const ctx = get_canvas(title);
   ctx.imageSmoothingEnable = false;
   bg_color = bgc;
   signal_1_color = sg1c;
@@ -386,12 +385,12 @@ function misc_setup(bgc, glc, sg1c, sg1w, sg2c, sg2w, sg3c, sg3w) {
 }
 
 function get_canvas() {
-  let c = document.getElementById(title);
+  const c = document.getElementById(title);
   return c.getContext("2d");
 }
 
 function clear_canvas() {
-  let ctx = get_canvas()
+  const ctx = get_canvas()
   ctx.globalAlpha = 1;
   ctx.fillStyle = bg_color;
   ctx.fillRect(0, 0, cdim.w, cdim.h);
@@ -402,26 +401,26 @@ function clear_canvas() {
 }
 
 function math_to_canvas(point) {
-  let x = ((point.x) / (mdim.w)) * cdim.w + ccen.w;
-  let y = ((-point.y) / (mdim.h)) * cdim.h + ccen.h;
+  const x = ((point.x) / (mdim.w)) * cdim.w + ccen.w;
+  const y = ((-point.y) / (mdim.h)) * cdim.h + ccen.h;
   return {x: x, y: y};
 }
 
 function draw_guide_lines() {
-  let ctx = get_canvas();
+  const ctx = get_canvas();
 
   //x_axis_setup
-  let unit_len_w = cdim.w / mdim.w;
-  let num_unit_neg_w = (ccen.w) / unit_len_w;
-  let num_unit_pos_w = (cdim.w - ccen.w) / unit_len_w;
-  let unit_len_max = 300;
-  let unit_len_min = 30;
+  const unit_len_w = cdim.w / mdim.w;
+  const num_unit_neg_w = (ccen.w) / unit_len_w;
+  const num_unit_pos_w = (cdim.w - ccen.w) / unit_len_w;
+  const unit_len_max = 300;
+  const unit_len_min = 30;
   let step_x = 1;
   let step_y = 1;
   //y_axis_setup
-  let unit_len_h = cdim.h / mdim.h;
-  let num_unit_neg_h = (cdim.h - ccen.h) / unit_len_h;
-  let num_unit_pos_h = (ccen.h) / unit_len_h;
+  const unit_len_h = cdim.h / mdim.h;
+  const num_unit_neg_h = (cdim.h - ccen.h) / unit_len_h;
+  const num_unit_pos_h = (ccen.h) / unit_len_h;
   if (unit_len_h >= unit_len_max) {
     step_y = 0.1;
   } else if (unit_len_h < unit_len_min) {
@@ -432,8 +431,8 @@ function draw_guide_lines() {
   }
 
   //draw x_axis
-  let x_axis_start = {x: -num_unit_neg_w, y: 0};
-  let x_axis_end = {x: num_unit_pos_w, y: 0};
+  const x_axis_start = {x: -num_unit_neg_w, y: 0};
+  const x_axis_end = {x: num_unit_pos_w, y: 0};
 
   let c_start = math_to_canvas(x_axis_start, cdim, ccen, mdim);
   let c_end = math_to_canvas(x_axis_end, cdim, ccen, mdim);
@@ -459,8 +458,8 @@ function draw_guide_lines() {
   ctx.stroke();
 
   //draw y_axis
-  let y_axis_start = {x: 0, y: num_unit_pos_h};
-  let y_axis_end = {x: 0, y: -num_unit_neg_h};
+  const y_axis_start = {x: 0, y: num_unit_pos_h};
+  const y_axis_end = {x: 0, y: -num_unit_neg_h};
 
   c_start = math_to_canvas(y_axis_start, cdim, ccen, mdim);
   c_end = math_to_canvas(y_axis_end, cdim, ccen, mdim);
@@ -495,23 +494,23 @@ function draw_guide_lines() {
 }
 
 function draw_y_lable() {
-  let ctx = get_canvas();
+  const ctx = get_canvas();
   ctx.fillStyle = "#ffffff";
   ctx.font = "25px Arial";
   ctx.fillText(y_lable, 50, cdim.h - 30);
 }
 
 function draw_x_lable() {
-  let ctx = get_canvas();
+  const ctx = get_canvas();
   ctx.fillStyle = "#ffffff";
   ctx.font = "25px Arial";
   ctx.fillText(x_lable, cdim.w - (x_lable.length) * 12.5, ccen.h - 5);
 }
 
 function draw_helper_line_h(y, cdim, ccen, mdim) {
-  let math_point = {x: 0, y: y};
-  let canvas_point = math_to_canvas(math_point, cdim, ccen, mdim);
-  let ctx = get_canvas();
+  const math_point = {x: 0, y: y};
+  const canvas_point = math_to_canvas(math_point, cdim, ccen, mdim);
+  const ctx = get_canvas();
 
   ctx.beginPath();
   ctx.strokeStyle = "#EDEDED";
@@ -519,16 +518,16 @@ function draw_helper_line_h(y, cdim, ccen, mdim) {
   ctx.moveTo(canvas_point.x - 5, canvas_point.y);
   ctx.lineTo(canvas_point.x + 5, canvas_point.y);
   ctx.stroke();
-  let i = fix_num_error(y);
+  const i = fix_num_error(y);
   ctx.fillStyle = "#ffffff";
   ctx.font = "15px Arial";
   ctx.fillText(i, canvas_point.x + 8, canvas_point.y);
 }
 
 function draw_helper_line_v(x, cdim, ccen, mdim) {
-  let math_point = {x: x, y: 0};
-  let canvas_point = math_to_canvas(math_point, cdim, ccen, mdim);
-  let ctx = get_canvas();
+  const math_point = {x: x, y: 0};
+  const canvas_point = math_to_canvas(math_point, cdim, ccen, mdim);
+  const ctx = get_canvas();
 
   ctx.beginPath();
   ctx.strokeStyle = "#EDEDED";
@@ -536,16 +535,16 @@ function draw_helper_line_v(x, cdim, ccen, mdim) {
   ctx.moveTo(canvas_point.x, canvas_point.y - 5);
   ctx.lineTo(canvas_point.x, canvas_point.y + 5);
   ctx.stroke();
-  let i = fix_num_error(x);
+  const i = fix_num_error(x);
   ctx.fillStyle = "#ffffff";
   ctx.font = "15px Arial";
   ctx.fillText(i, canvas_point.x, canvas_point.y + 16);
 }
 
 function draw_helper_v(x, cdim, ccen, mdim) {
-  let math_point = {x: x, y: 0};
-  let canvas_point = math_to_canvas(math_point, cdim, ccen, mdim);
-  let ctx = get_canvas();
+  const math_point = {x: x, y: 0};
+  const canvas_point = math_to_canvas(math_point, cdim, ccen, mdim);
+  const ctx = get_canvas();
 
   ctx.beginPath();
   ctx.strokeStyle = "#BBBBBB";
@@ -556,9 +555,9 @@ function draw_helper_v(x, cdim, ccen, mdim) {
 }
 
 function draw_helper_h(y, cdim, ccen, mdim) {
-  let math_point = {x: 0, y: y};
-  let canvas_point = math_to_canvas(math_point, cdim, ccen, mdim);
-  let ctx = get_canvas();
+  const math_point = {x: 0, y: y};
+  const canvas_point = math_to_canvas(math_point, cdim, ccen, mdim);
+  const ctx = get_canvas();
 
   ctx.beginPath();
   ctx.strokeStyle = "#BBBBBB";

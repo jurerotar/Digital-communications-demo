@@ -1,10 +1,10 @@
 <template>
-  <app-paragraph>
+  <AppParagraph>
     Modulacija je postopek, pri katerem z vhodnim modulacijskim signalom spreminjamo parametre pomožnega harmoničnega signala, ki ga
     imenujemo nosilec.
     Moduliramo lahko amplitudo, fazo ali frekvenco.
-  </app-paragraph>
-  <app-paragraph>
+  </AppParagraph>
+  <AppParagraph>
     <ul class="ml-4 transition-colors duration-300 dark:text-white">
       <li class="list-disc my-2">
         <span class="font-semibold">Amplitudna modulacija</span> je način prenašanja informacij na daljavo s spreminjanjem jakosti oz.
@@ -44,7 +44,7 @@
           spremembe frekvence nosilnega signala. Pri 4FSK uporabljamo 4 različne frekvence.</span>
       </li>
     </ul>
-  </app-paragraph>
+  </AppParagraph>
 </template>
 <script
   setup

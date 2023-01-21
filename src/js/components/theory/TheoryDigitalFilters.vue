@@ -1,15 +1,15 @@
 <template>
   <div class="flex flex-col gap-4">
-    <app-paragraph>
+    <AppParagraph>
       Digitalen filter je sistem, katerega lastnosti določajo osnovne matematične operacije in funkcije.
       V praksi srečujemo dve osnovni implementaciji digitalnega filtra: filter s končnim odzivom (FIR) in filter z neskončnim
       odzivom (IIR). Da bi razumeli delovanje in lastnosti teh filtrov, je potrebno razumeti z-transform.
-    </app-paragraph>
+    </AppParagraph>
 
-    <app-section-heading>
+    <AppSectionHeading>
       Z-transform
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       Z-transform je analiza, ki nam omogoča določiti frekvenčni spekter časovno diskretnih signalov.
       Dvostranski spekter časovno diskretnega signala določa sledeča neskončna vrsta:
       <span
@@ -37,12 +37,12 @@
         ref="transferFunctRef"
         class="katex-block"
       />
-    </app-paragraph>
+    </AppParagraph>
 
-    <app-section-heading>
+    <AppSectionHeading>
       Bločni diagram
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       Splošni bločni diagram zajema tako rekurziven (IIR) kot nerekurziven (FIR) sistem. Razlika je v tem, da so
       <span class="font-semibold">a<sub>k</sub></span> koeficienti
       pri slednjemu enaki nič (razen <span class="font-semibold">a<sub>0</sub> = 1</span>), kar pomeni, da je trenutni izhod
@@ -57,12 +57,12 @@
           alt="IIR blok"
         />
       </div>
-    </app-paragraph>
+    </AppParagraph>
 
-    <app-section-heading>
+    <AppSectionHeading>
       Finite Impulse Response (FIR)
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       Preprost FIR filter je filter, ki enakomerno povpreči <span class="font-semibold">N</span> število preteklih vzorcev.
       Drugače rečeno, gre za povprečenje, kjer so uteži posameznih vzorcev določene z pravokotno okensko funkcijo.
       Če vrednosti uteži določimo s katerokoli drugo okensko funkcijo, se temu primerno spremeni prenosna funkcija filtra.
@@ -74,19 +74,19 @@
         ref="windowWeightsRef"
         class="katex-block"
       />
-    </app-paragraph>
+    </AppParagraph>
 
-    <app-section-heading>
+    <AppSectionHeading>
       Infinite Impulse Response (IIR)
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       IIR filter je nekoliko drugačen, saj določamo <span class="font-semibold">a<sub>k</sub></span> in
       <span class="font-semibold">b<sub>k</sub></span> koeficiente direktno iz prenosnih funkcij analognih filtrov.
       Zato so prikazani le filtri 2. reda, saj se sistemska funkcija spreminja drastično s povečevanjem reda filtra. Medtem ko se pri FIR
       filtru s povečevanjem reda spreminja sistemska funkcija v linearnem vzorcu.
       Če želimo dosegati bolj strm prehod med prepustnim in zapornim pasom, vežemo več filtrov v kaskado, pri čemer se redi filtrov
       seštevajo.
-    </app-paragraph>
+    </AppParagraph>
   </div>
 </template>
 

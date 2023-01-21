@@ -5,7 +5,7 @@
       dark:bg-gray-700 rounded-md py-2 px-4 w-full font-semibold gap-4 w-fit-content"
       tabindex="0"
     >
-      <font-awesome-icon
+      <FontAwesomeIcon
         :icon="['fa', 'chevron-right']"
         class="details-icon inline-flex w-4 h-4"
         aria-hidden="true"

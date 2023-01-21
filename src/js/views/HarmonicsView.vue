@@ -1,11 +1,11 @@
 <template>
-  <app-main-container>
-    <app-main-heading>
+  <AppMainContainer>
+    <AppMainHeading>
       Harmoniki
-    </app-main-heading>
-    <app-collapsible>
+    </AppMainHeading>
+    <AppCollapsible>
       <theory-harmonics />
-    </app-collapsible>
+    </AppCollapsible>
     <!-- Range slider -->
     <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
       <label
@@ -29,7 +29,7 @@
     </div>
     <individual-harmonics :components="components" />
     <summed-harmonics :components="components" />
-  </app-main-container>
+  </AppMainContainer>
 </template>
 
 <script

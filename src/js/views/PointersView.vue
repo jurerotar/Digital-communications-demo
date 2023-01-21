@@ -1,15 +1,15 @@
 <template>
-  <app-main-container>
-    <app-main-heading>
+  <AppMainContainer>
+    <AppMainHeading>
       Kazalci
-    </app-main-heading>
-    <app-collapsible>
+    </AppMainHeading>
+    <AppCollapsible>
       <theory-pointer />
-    </app-collapsible>
-    <canvas-container>
+    </AppCollapsible>
+    <CanvasContainer>
       <div :id="canvasId" />
-    </canvas-container>
-  </app-main-container>
+    </CanvasContainer>
+  </AppMainContainer>
 </template>
 
 <script>

@@ -11,7 +11,7 @@
       :class="[scheme === colorScheme.key ? 'switcher__front' : 'switcher__back']"
       class="flex flex-row justify-center items-center w-full h-full absolute top-0 left-0 transition-transform duration-300"
     >
-      <font-awesome-icon
+      <FontAwesomeIcon
         :icon="colorScheme.icon"
         class="text-sm mr-1 text-gray-800 transition-colors duration-300 dark:text-white"
       />
