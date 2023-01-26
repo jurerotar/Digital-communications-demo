@@ -13,7 +13,7 @@
       Predstavljena oblika FIR filtra je ena izmed možnih izvedb tega filtra.
       V osnovi gre za operacijo povprečenja, kjer uteži vzorcev, ki jih povprečimo, določimo s pomočjo danih okenskih funkcij.
       Pomembno je dejstvo, da dolžina okenske funkcije določa red filtra (in obratno).
-      Ob izbiranju različnih kombinacij okenskih funkcij in njihovih dolžin hitro ugotovimo, da je takšen filter vedno nizkoprepusten.
+      Ob izbiranju različnih kombinacij okenskih funkcij in njihovih dolžin hitro ugotovimo, da je takšen filter vedno nizko-prepusten.
       To pa ustreza naravi povprečenja, ki ga izvaja predstavljeni FIR filter.
     </app-paragraph>
     <app-section-heading>
@@ -22,6 +22,8 @@
 
     <app-paragraph>
       Red FIR filtra določa dolžino okenske funkcije. Le-ta pride do izraza pri večji dolžini okna.
+      <br>
+      Mejno frekvenco takšnega FIR filtra spreminjamo posredno preko dolžino okenske funkcije, katera določa uteži filtra.
     </app-paragraph>
 
     <!-- Range slider -->
@@ -41,6 +43,7 @@
         min="4"
         max="100"
         step="1"
+        class="slider_active"
         @change="UpdateFiltOrd(FilterOrder)"
       >
     </div>
@@ -87,6 +90,8 @@
       Uteži takšnega IIR filtra določimo tako, da najprej določimo sistemsko funkcijo analogne filtra.
       Koeficienti poleg s-členov analognega filtra predstavljajo uteži <span>a<sub>k</sub></span> in <span>b<sub>k</sub></span> digitalnega
       filtra.
+      <br>
+      Poleg predstavljenih IIR filtrov obstajajo tudi drugačni. Ena izmed skupin IIR filtrov, kjer imajo posamezne topologije podobne lastnosti, zajema sledeče filtre: Butterworth, Chebyshev, Elliptic in Bessel.
     </app-paragraph>
     <app-section-heading>
       IIR tip
@@ -101,8 +106,7 @@
     </app-section-heading>
     <div>
       <app-paragraph>
-        Mejna frekvenca je podana kot normalizirana frekvenca glede na polovico Nyquistove frekvence in določa frekvenco, kjer se začne
-        prehod med prepustnim in zapornim pasom.
+        Podana je normirana mejna frekvenca, pri čemer vrednost 1 ustreza polovici vzorčevalne frekvence. Normirana mejna frekvenca določa prehod med prepusnim in zapornim pasom
       </app-paragraph>
     </div>
 
@@ -123,13 +127,14 @@
         min="0.01"
         max="0.99"
         step="0.01"
+        class="slider_active"
         @change="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
       >
     </div>
 
     <!-- Range slider -->
     <app-section-heading>
-      Ojačanje filtra [dB]:
+      Ojačenje filtra [dB]:
     </app-section-heading>
     <div>
       <app-paragraph>
@@ -153,6 +158,7 @@
         min="-30"
         max="30"
         step="1"
+        class="slider_active"
         @change="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
       >
     </div>
@@ -163,8 +169,8 @@
     <div>
       <app-paragraph>
         Kvaliteta določa prisotnost resonance, ki se nahaja na mejni frekvenci.
-        Pri tipih "Low-pass", "High-pass" in "Band-pass" je navadno željena kvaliteta magGain okolici vrednosti 1, pri "Notch" in "Peak"
-        tipu pa večanje kvalitete rezultira magGain ožjem prepusnem pasu.
+        Pri tipih "Low-pass", "High-pass" in "Band-pass" je navadno željena kvaliteta v okolici vrednosti 1, pri "Notch" in "Peak"
+        tipu pa večanje kvalitete rezultira v ožjem prepusnem pasu.
       </app-paragraph>
     </div>
 
@@ -185,6 +191,7 @@
         min="0.01"
         max="20"
         step="0.01"
+        class="slider_active"
         @change="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
       >
     </div>
@@ -219,6 +226,7 @@
 </template>
 
 <script setup lang="ts">
+
 import TheoryDigitalFilters from "@/js/components/theory/TheoryDigitalFilters.vue";
 import ButtonContainer from "@/js/components/common/buttons/AppButtonContainer.vue";
 import AppButton from "@/js/components/common/buttons/AppButton.vue";
@@ -494,12 +502,23 @@ function IirFilter() {
   const magGain = Math.pow(10, Math.abs(filter.gain) / 20);  // gain in linear units
   const normFreq = Math.tan(Math.PI * (filter.cutoff / 2));    // f_cutoff as normalized frequency
 
+  let slider_gain = document.getElementById("filter-gain");
+  let slider_fm = document.getElementById("filter-cutoff");
+  let slider_quality = document.getElementById("filter-quality");
+  
+  if(slider_gain == null)
+    console.log("NULL");
+
   switch (filter.type_iir) {
     case "one-pole-lp":
       numCoeff_1 = Math.exp(-2.0 * Math.PI * (filter.cutoff / 2));
       denumCoeff_0 = 1.0 - numCoeff_1;
       numCoeff_1 = -numCoeff_1;
       denumCoeff_1 = denumCoeff_2 = numCoeff_2 = 0;
+      slider_gain.setAttribute("class","slider_inactive");
+      slider_gain.disabled = true;
+      slider_quality.setAttribute("class","slider_active");
+      slider_quality.disabled = false;
       break;
 
     case "one-pole-hp":
@@ -507,6 +526,10 @@ function IirFilter() {
       denumCoeff_0 = 1.0 + numCoeff_1;
       numCoeff_1 = -numCoeff_1;
       denumCoeff_1 = denumCoeff_2 = numCoeff_2 = 0;
+      slider_gain.setAttribute("class","slider_inactive");
+      slider_gain.disabled = true;
+      slider_quality.setAttribute("class","slider_active");
+      slider_quality.disabled = false;
       break;
 
     case "lowpass":
@@ -516,6 +539,10 @@ function IirFilter() {
       denumCoeff_2 = denumCoeff_0;
       numCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
       numCoeff_2 = (1 - normFreq / filter.quality + normFreq * normFreq) * norm;
+      slider_gain.setAttribute("class","slider_inactive");
+      slider_gain.disabled = true;
+      slider_quality.setAttribute("class","slider_inactive");
+      slider_quality.disabled = true;
       break;
 
     case "highpass":
@@ -525,6 +552,10 @@ function IirFilter() {
       denumCoeff_2 = denumCoeff_0;
       numCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
       numCoeff_2 = (1 - normFreq / filter.quality + normFreq * normFreq) * norm;
+      slider_gain.setAttribute("class","slider_inactive");
+      slider_gain.disabled = true;
+      slider_quality.setAttribute("class","slider_inactive");
+      slider_quality.disabled = true;
       break;
 
     case "bandpass":
@@ -534,6 +565,10 @@ function IirFilter() {
       denumCoeff_2 = -denumCoeff_0;
       numCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
       numCoeff_2 = (1 - normFreq / filter.quality + normFreq * normFreq) * norm;
+      slider_gain.setAttribute("class","slider_inactive");
+      slider_gain.disabled = true;
+      slider_quality.setAttribute("class","slider_inactive");
+      slider_quality.disabled = true;
       break;
 
     case "notch":
@@ -543,6 +578,10 @@ function IirFilter() {
       denumCoeff_2 = denumCoeff_0;
       numCoeff_1 = denumCoeff_1;
       numCoeff_2 = (1 - normFreq / filter.quality + normFreq * normFreq) * norm;
+      slider_gain.setAttribute("class","slider_inactive");
+      slider_gain.disabled = true;
+      slider_quality.setAttribute("class","slider_active");
+      slider_quality.disabled = false;
       break;
 
     case "peak":
@@ -562,6 +601,10 @@ function IirFilter() {
         numCoeff_1 = denumCoeff_1;
         numCoeff_2 = (1 - magGain / filter.quality * normFreq + normFreq * normFreq) * norm;
       }
+      slider_gain.setAttribute("class","slider_active");
+      slider_gain.disabled = false;
+      slider_quality.setAttribute("class","slider_active");
+      slider_quality.disabled = false;
       break;
 
     case "low-shelf":
@@ -581,6 +624,10 @@ function IirFilter() {
         numCoeff_1 = 2 * (magGain * normFreq * normFreq - 1) * norm;
         numCoeff_2 = (1 - Math.sqrt(2 * magGain) * normFreq + magGain * normFreq * normFreq) * norm;
       }
+      slider_gain.setAttribute("class","slider_active");
+      slider_gain.disabled = false;
+      slider_quality.setAttribute("class","slider_active");
+      slider_quality.disabled = false;
       break;
     case "high-shelf":
       /* Simplify for positive/negative gains */
@@ -599,6 +646,10 @@ function IirFilter() {
         numCoeff_1 = 2 * (normFreq * normFreq - magGain) * norm;
         numCoeff_2 = (magGain - Math.sqrt(2 * magGain) * normFreq + normFreq * normFreq) * norm;
       }
+      slider_gain.setAttribute("class","slider_active");
+      slider_gain.disabled = false;
+      slider_quality.setAttribute("class","slider_active");
+      slider_quality.disabled = false;
       break;
   }
 
@@ -669,3 +720,50 @@ function gainToDecibels(value: number) {
 }
 
 </script>
+
+<style scoped>
+
+.slider_active {
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 300px; /* Full-width */
+  height: 10px; /* Specified height */
+  background: #ffffff; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+.slider_active::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #5cc3ff;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slider_inactive {
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 300px; /* Full-width */
+  height: 10px; /* Specified height */
+  background: #5c5c5c; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+.slider_inactive::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #444444;
+  border-radius: 50%;
+  cursor: pointer;
+}
+</style>
