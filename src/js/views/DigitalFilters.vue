@@ -159,6 +159,7 @@
         max="30"
         step="1"
         class="slider_active"
+        Y_lable="Magnituda[dB]"
         @change="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
       >
     </div>
@@ -219,6 +220,7 @@
         :o_x="5"
         :o_y="5"
         :auto_scale="true"
+        Y_lable="Magnituda[dB]"
         @loaded="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
       />
     </app-canvas-container>
@@ -300,35 +302,35 @@ const FilterTypes: FiltType[] = [
 ];
 
 const IIRTypes: IIR_Types[] = [
-  {key: "lowpass", label: "Lowpass"},
-  {key: "highpass", label: "Highpass"},
-  {key: "bandpass", label: "Bandpass"},
-  {key: "notch", label: "Notch"},
-  {key: "one-pole-lp", label: "Enopolni LP"},
-  {key: "peak", label: "Peak"},
-  {key: "low-shelf", label: "Low shelf"},
+  {key: "lowpass",    label: "Nizko-prepustno"},
+  {key: "highpass",   label: "Visoko-prepustno"},
+  {key: "bandpass",   label: "Pasovno-prepustno"},
+  {key: "one-pole-lp", label: "Enopolni nizko-prepustni"},
+  {key: "notch",      label: "Notch"},
+  {key: "peak",       label: "Peak"},
+  {key: "low-shelf",  label: "Low shelf"},
   {key: "high-shelf", label: "High shelf"},
 ];
 
 // Default pulse length options we give to the users
 const WindowFunctions: FiltFunc[] = [
-  {key: 'lanczos', label: "Lanczos"},
-  {key: 'rectangular', label: "Rectangular"},
-  {key: 'triangular', label: "Triangular"},
-  {key: 'bartlett', label: "Bartlett"},
-  {key: 'bartlettHann', label: "Bartlett-Hann"},
-  {key: 'welch', label: "Welch"},
+  {key: 'rectangular', label: "Pravokotno"},
+  {key: 'triangular',  label: "Trikotno"},
+  {key: 'cosine',  label: "Kosinusno"},
+  {key: 'gaussian', label: "Gaussovo"},
   {key: 'hann', label: "Hann"},
   {key: 'hamming', label: "Hamming"},
   {key: 'blackman', label: "Blackman"},
+  {key: 'lanczos', label: "Lanczos"},
+  {key: 'bartlett',  label: "Bartlett"},
+  {key: 'bartlettHann', label: "Bartlett-Hann"},
+  {key: 'welch',  label: "Welch"},
   {key: 'nuttall', label: "Nuttall"},
-  {key: 'blackmanHarris', label: "Blackman harris"},
-  {key: 'blackmanNuttall', label: "Blackman nuttall"},
-  {key: 'exactBlackman', label: "Exact blackman"},
-  {key: 'flatTop', label: "Flat top"},
-  {key: 'cosine', label: "Cosine"},
-  {key: 'gaussian', label: "Gaussian"},
-  {key: 'tukey', label: "Tukey"}
+  {key: 'blackmanHarris', label: "Blackman-Harris"},
+  {key: 'blackmanNuttall', label: "Blackman-Nuttall"},
+  {key: 'exactBlackman', label: "Blackman"},
+  {key: 'flatTop', label: "Flat-top"},
+  {key: 'tukey',  label: "Tukey"}
 ];
 
 const FilterOrder = ref<number>(4);
@@ -506,7 +508,7 @@ function IirFilter() {
   let slider_fm = document.getElementById("filter-cutoff");
   let slider_quality = document.getElementById("filter-quality");
   
-  if(slider_gain == null)
+  if (slider_gain == null)
     console.log("NULL");
 
   switch (filter.type_iir) {
@@ -517,8 +519,8 @@ function IirFilter() {
       denumCoeff_1 = denumCoeff_2 = numCoeff_2 = 0;
       slider_gain.setAttribute("class","slider_inactive");
       slider_gain.disabled = true;
-      slider_quality.setAttribute("class","slider_active");
-      slider_quality.disabled = false;
+      slider_quality.setAttribute("class","slider_inactive");
+      slider_quality.disabled = true;
       break;
 
     case "one-pole-hp":
@@ -626,8 +628,8 @@ function IirFilter() {
       }
       slider_gain.setAttribute("class","slider_active");
       slider_gain.disabled = false;
-      slider_quality.setAttribute("class","slider_active");
-      slider_quality.disabled = false;
+      slider_quality.setAttribute("class","slider_inactive");
+      slider_quality.disabled = true;
       break;
     case "high-shelf":
       /* Simplify for positive/negative gains */
@@ -648,8 +650,8 @@ function IirFilter() {
       }
       slider_gain.setAttribute("class","slider_active");
       slider_gain.disabled = false;
-      slider_quality.setAttribute("class","slider_active");
-      slider_quality.disabled = false;
+      slider_quality.setAttribute("class","slider_inactive");
+      slider_quality.disabled = true;
       break;
   }
 
