@@ -104,6 +104,14 @@
             Y_label:{
                 type:String,
                 default:"Magnituda[dB]"
+            },
+            Y_label_pos:{
+                type:Number,
+                default: 10
+            },
+            Mirror:{
+                type:Boolean,
+                default: true
             }
         },
         watch:{
@@ -130,7 +138,7 @@
         methods:{
             test() {
                 setup(this.title,this.g_width,this.g_height,this.o_x,this.o_y,this.m_width,this.m_height,this.animation,this.animation_loop,
-                this.X_label,this.Y_label);
+                this.X_label,this.Y_label,this.Mirror,this.Y_label_pos);
                 signal_1 = this.signal_1;
                 signal_2 = this.signal_2;
                 signal_3 = this.signal_3;
@@ -188,7 +196,7 @@
   
         mounted(){ 
             setup(this.title,this.g_width,this.g_height,this.o_x,this.o_y,this.m_width,this.m_height,this.animation,this.animation_loop,
-            this.X_label,this.Y_label);
+            this.X_label,this.Y_label,this.Mirror);
             misc_setup(this.bg_color,this.guide_line_color,
             this.sg_1_color,this.sg_1_width,
             this.sg_2_color,this.sg_2_width,
@@ -213,9 +221,10 @@
     var title = "graph_1"
     var x_lable = "NAAAAAAAAA";
     var y_lable = "NA";
+    var y_lable_pos = 0;
   
     var anim_timer;
-  
+    var mirror = false;
     var signal_1 = [];
     var signal_1_canvas = [];
     var signal_1_color = "#ffffff";
@@ -252,7 +261,8 @@
         ccen = {w:ox,h:oy};
     }
   
-    function setup(t,g_width,g_height,ox,oy,m_width,m_height,anim,loop,xl,yl){
+    function setup(t,g_width,g_height,ox,oy,m_width,m_height,anim,loop,xl,yl,m,ylp){
+        mirror = m;
         title = t;
         cdim = {w:g_width,h:g_height};
         ccen = {w:ox,h:oy};
@@ -261,6 +271,7 @@
         animation_loop = loop;
         x_lable = xl;
         y_lable = yl;
+        y_lable_pos = ylp;
        
     }
   
@@ -303,6 +314,7 @@
         ctx.globalAlpha = 1;
         clear_canvas();
         draw_guide_lines();
+        console.log(mirror);
         for(var o = 0; o < 3; o++){
                 if(signal_1_enable) {
                     console.log(signal_1_color);
@@ -314,17 +326,19 @@
                         ctx.lineTo(signal_1_canvas[i+1].x,signal_1_canvas[i+1].y);
                         ctx.stroke();
                     }
-                    var sig_mirror = [];
-                    var sig_mirror_canvas = [];
-                    for(var i = 0; i < signal_1.length; i++){
-                        sig_mirror.push({x:2-signal_1[signal_1.length-1-i].x,y:signal_1[signal_1.length-1-i].y});
-                        sig_mirror_canvas.push(math_to_canvas(sig_mirror[i]));
-                    }
-                    for(var i = signal_1_index; i < signal_1_canvas.length-1; i++){
-                        ctx.beginPath();
-                        ctx.moveTo(sig_mirror_canvas[i].x,sig_mirror_canvas[i].y);
-                        ctx.lineTo(sig_mirror_canvas[i+1].x,sig_mirror_canvas[i+1].y);
-                        ctx.stroke();
+                    if(mirror){
+                        var sig_mirror = [];
+                        var sig_mirror_canvas = [];
+                        for(var i = 0; i < signal_1.length; i++){
+                            sig_mirror.push({x:2-signal_1[signal_1.length-1-i].x,y:signal_1[signal_1.length-1-i].y});
+                            sig_mirror_canvas.push(math_to_canvas(sig_mirror[i]));
+                        }
+                        for(var i = signal_1_index; i < signal_1_canvas.length-1; i++){
+                            ctx.beginPath();
+                            ctx.moveTo(sig_mirror_canvas[i].x,sig_mirror_canvas[i].y);
+                            ctx.lineTo(sig_mirror_canvas[i+1].x,sig_mirror_canvas[i+1].y);
+                            ctx.stroke();
+                        }
                     }
                 }
             
@@ -441,7 +455,7 @@
   var unit_len_w = cdim.w/mdim.w;
   var num_unit_neg_w = (ccen.w)/unit_len_w;
   var num_unit_pos_w = (cdim.w-ccen.w)/unit_len_w;
-    var unit_len_max = 300;
+    var unit_len_max = 240;
     var unit_len_min = 30;
     var step_x = 1;
     var step_y = 1;
@@ -537,7 +551,7 @@
         var ctx = get_canvas();
         ctx.fillStyle = "#ffffff";
       ctx.font = "25px Arial";
-      ctx.fillText(y_lable,75,cdim.h-10);
+      ctx.fillText(y_lable,75,cdim.h-y_lable_pos);
     }
   
     function draw_x_lable(){

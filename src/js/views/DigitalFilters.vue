@@ -65,9 +65,9 @@
     </button-container>
     <div style="display: flex;">
       <app-section-heading>
-        Prenosna funkcija povprečevalnega filtra
+        Prenosna funkcija povprečevalnega filtra         
       </app-section-heading>
-      <app-section-heading style="margin-left: 100px;">
+      <app-section-heading style="margin-left: 200px;">
         Okenska funkcija
       </app-section-heading>
     </div>
@@ -95,6 +95,10 @@
           :o_x="5"
           :o_y="5"
           :auto_scale="true"
+          :Mirror="false"
+          X_label="Vzorci[N]                "
+          Y_label="Amplituda"
+          :Y_label_pos="320"
           @loaded="UpdateFiltOrd(FilterOrder)"
         />
       </app-canvas-container>
@@ -338,7 +342,7 @@ const WindowFunctions: FiltFunc[] = [
   {key: 'rectangular', label: "Pravokotno"},
   {key: 'triangular',  label: "Trikotno"},
   {key: 'cosine',  label: "Kosinusno"},
-  {key: 'gaussian', label: "Gaussovo"},
+  //{key: 'gaussian', label: "Gaussovo"},
   {key: 'hann', label: "Hann"},
   {key: 'hamming', label: "Hamming"},
   {key: 'blackman', label: "Blackman"},
@@ -464,11 +468,26 @@ function FirFilter() {
   }
 
   /* Divide each weight by total sum to get "b_n" coefficients ("a_n" are zero except 1st equals one) */
-  for (let idx = 0; idx < filter.winLen; idx++) {
-    filter.signal_3[idx] = {x: idx, y: numCoeff[idx]};  // Copy window function plot data into "filter" object
-    numCoeff[idx] = numCoeff[idx] / wSum;
+  while(filter.signal_3.length > 0){
+    filter.signal_3.pop();
+  }
+  if(filter.winFunct == "rectangular"){
+    console.log("rect");
+    filter.signal_3.push({x: 0, y: 0});
+    for (let idx = 0; idx < filter.winLen; idx++) {
+      filter.signal_3.push({x: idx, y: numCoeff[idx]});  // Copy window function plot data into "filter" object
+      numCoeff[idx] = numCoeff[idx] / wSum;
+    }
+    filter.signal_3.push({x: filter.winLen-1, y: 0});
+  }else{
+    for (let idx = 0; idx < filter.winLen; idx++) {
+      filter.signal_3[idx] = {x: idx, y: numCoeff[idx]};  // Copy window function plot data into "filter" object
+      numCoeff[idx] = numCoeff[idx] / wSum;
+    }
   }
 
+  
+  
   const freq: number[] = [filter.freqRes];
   const mag: number[] = [filter.freqRes];
   let magMin = 0, magMax = 0;
