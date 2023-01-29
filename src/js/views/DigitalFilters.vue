@@ -7,7 +7,7 @@
       <theory-digital-filters />
     </app-collapsible>
     <app-section-heading>
-      FIR filter
+      Povprečevalnik (FIR)
     </app-section-heading>
     <app-paragraph>
       Predstavljena oblika FIR filtra je ena izmed možnih izvedb tega filtra.
@@ -63,25 +63,45 @@
         {{ windov.label }}
       </app-button>
     </button-container>
-    <app-section-heading>
-      Prenosna funkcija FIR filtra
-    </app-section-heading>
-    <app-canvas-container>
-      <graph
-        title="FIR"
-        :g_width=800
-        :signal_1="filter.signal_1"
-        :g_height="350"
-        :trig_draw="trig_1"
-        :o_x="5"
-        :o_y="5"
-        :auto_scale="true"
-        @loaded="UpdateFiltOrd(FilterOrder)"
-      />
-    </app-canvas-container>
+    <div style="display: flex;">
+      <app-section-heading>
+        Prenosna funkcija povprečevalnega filtra
+      </app-section-heading>
+      <app-section-heading style="margin-left: 100px;">
+        Okenska funkcija
+      </app-section-heading>
+    </div>
+    <div style="display: flex;">
+      <app-canvas-container>
+        <graph
+          title="FIR"
+          :g_width=600
+          :signal_1="filter.signal_1"
+          :g_height="350"
+          :trig_draw="trig_1"
+          :o_x="5"
+          :o_y="5"
+          :auto_scale="true"
+          @loaded="UpdateFiltOrd(FilterOrder)"
+        />
+      </app-canvas-container>
+      <app-canvas-container style="margin-left: 100px;">
+        <graph
+          title="Okenska funkcija"
+          :g_width=600
+          :signal_1="filter.signal_3"
+          :g_height="350"
+          :trig_draw="trig_1"
+          :o_x="5"
+          :o_y="5"
+          :auto_scale="true"
+          @loaded="UpdateFiltOrd(FilterOrder)"
+        />
+      </app-canvas-container>
+    </div>
 
     <app-section-heading>
-      IIR filter
+      Biquad (IIR)
     </app-section-heading>
     <app-paragraph>
       Podani tipi IIR filtra so znani analogni filtri ("Biquad"), ki jih izvedemo z digitalnim filtrom.
@@ -93,20 +113,13 @@
       <br>
       Poleg predstavljenih IIR filtrov obstajajo tudi drugačni. Ena izmed skupin IIR filtrov, kjer imajo posamezne topologije podobne lastnosti, zajema sledeče filtre: Butterworth, Chebyshev, Elliptic in Bessel.
     </app-paragraph>
-    <app-section-heading>
-      IIR tip
-    </app-section-heading>
-
-    <app-paragraph>
-      IIR filter posnema karakteristiko analognih filtrov.
-    </app-paragraph>
 
     <app-section-heading>
       Mejna frekvenca [pi x rad/sample]:
     </app-section-heading>
     <div>
       <app-paragraph>
-        Podana je normirana mejna frekvenca, pri čemer vrednost 1 ustreza polovici vzorčevalne frekvence. Normirana mejna frekvenca določa prehod med prepusnim in zapornim pasom
+        Podana je normirana mejna frekvenca, pri čemer vrednost 1 ustreza polovici vzorčevalne frekvence. Normirana mejna frekvenca določa prehod med prepusnim in zapornim pasom.
       </app-paragraph>
     </div>
 
@@ -159,7 +172,7 @@
         max="30"
         step="1"
         class="slider_active"
-        Y_lable="Magnituda[dB]"
+        Y_lable="Magnituda [dB]"
         @change="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
       >
     </div>
@@ -169,9 +182,7 @@
     </app-section-heading>
     <div>
       <app-paragraph>
-        Kvaliteta določa prisotnost resonance, ki se nahaja na mejni frekvenci.
-        Pri tipih "Low-pass", "High-pass" in "Band-pass" je navadno željena kvaliteta v okolici vrednosti 1, pri "Notch" in "Peak"
-        tipu pa večanje kvalitete rezultira v ožjem prepusnem pasu.
+        Kvaliteta določa lastnost resonance, ki se nahaja na mejni frekvenci pri tipih "Notch" in "Peak".
       </app-paragraph>
     </div>
 
@@ -197,6 +208,14 @@
       >
     </div>
 
+    <app-section-heading>
+      Tip filtra
+    </app-section-heading>
+
+    <app-paragraph>
+      Podani tipi Biquad filtrov posnemajo karakteristiko znanih analognih filtrov.
+    </app-paragraph>
+
     <button-container>
       <app-button
         v-for="windov in filter.types_iir"
@@ -208,7 +227,7 @@
       </app-button>
     </button-container>
     <app-section-heading>
-      Prenosna funkcija IIR filtra
+      Prenosna funkcija Biquad filtra
     </app-section-heading>
     <app-canvas-container>
       <graph
@@ -220,7 +239,7 @@
         :o_x="5"
         :o_y="5"
         :auto_scale="true"
-        Y_lable="Magnituda[dB]"
+        Y_lable="Magnituda [dB]"
         @loaded="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
       />
     </app-canvas-container>
@@ -259,9 +278,9 @@ import {
   blackmanNuttall,
   exactBlackman,
   flatTop,
-  cosine,
-  gaussian,
-  tukey
+  cosine
+  //gaussian,
+  //tukey
 } from 'window-function';
 
 import {ref} from "vue";
@@ -283,6 +302,7 @@ export interface Filter {
   trig_draw_2: boolean;
   signal_1: { x: number, y: number }[];
   signal_2: { x: number, y: number }[];
+  signal_3: { x: number, y: number }[];
 
   winParam: number;
   freqRes: number;
@@ -293,7 +313,7 @@ export interface Filter {
   quality: number;
 }
 
-const selectedWindowFunction = ref<WindowFunc>('lanczos');
+const selectedWindowFunction = ref<WindowFunc>('rectangular');
 const selectedFilterType = ref<IIR_type>('lowpass');
 
 const FilterTypes: FiltType[] = [
@@ -302,14 +322,15 @@ const FilterTypes: FiltType[] = [
 ];
 
 const IIRTypes: IIR_Types[] = [
-  {key: "lowpass",    label: "Nizko-prepustno"},
-  {key: "highpass",   label: "Visoko-prepustno"},
-  {key: "bandpass",   label: "Pasovno-prepustno"},
+  {key: "lowpass",     label: "Nizko-prepustno"},
+  {key: "highpass",    label: "Visoko-prepustno"},
+  {key: "bandpass",    label: "Pasovno-prepustno"},
   {key: "one-pole-lp", label: "Enopolni nizko-prepustni"},
-  {key: "notch",      label: "Notch"},
-  {key: "peak",       label: "Peak"},
-  {key: "low-shelf",  label: "Low shelf"},
-  {key: "high-shelf", label: "High shelf"},
+  {key: "one-pole-hp", label: "Enopolni visoko-prepustni"},
+  {key: "notch",       label: "Notch"},
+  {key: "peak",        label: "Peak"},
+  {key: "low-shelf",   label: "Low shelf"},
+  {key: "high-shelf",  label: "High shelf"},
 ];
 
 // Default pulse length options we give to the users
@@ -329,14 +350,14 @@ const WindowFunctions: FiltFunc[] = [
   {key: 'blackmanHarris', label: "Blackman-Harris"},
   {key: 'blackmanNuttall', label: "Blackman-Nuttall"},
   {key: 'exactBlackman', label: "Blackman"},
-  {key: 'flatTop', label: "Flat-top"},
-  {key: 'tukey',  label: "Tukey"}
+  //{key: 'flatTop', label: "Flat-top"},
+  //{key: 'tukey',  label: "Tukey"}
 ];
 
 const FilterOrder = ref<number>(4);
 const FilterGain = ref<number>(0);
 const FilterCutoff = ref<number>(0.5);
-const FilterQuality = ref<number>(0.01);
+const FilterQuality = ref<number>(1);
 const trig_1 = ref<boolean>(false);
 const trig_2 = ref<boolean>(false);
 
@@ -344,20 +365,21 @@ const filter: Filter = {
   label: "MojFiltr",
   currType: 'IIR',
   filterType: FilterTypes,
-  winFunct: "lanczos",
+  winFunct: "rectangular",
   windovFunc: WindowFunctions,
   winLen: 4,
   trig_draw_1: true,
   trig_draw_2: true,
   signal_1: [{x: 0, y: 0}],
   signal_2: [{x: 0, y: 0}],
-  winParam: 0.2,
+  signal_3: [{x: 0, y: 0}],
+  //winParam: 0.2,
   freqRes: 10000,
   type_iir: "lowpass",
   types_iir: IIRTypes,
   gain: 1,
   cutoff: 0.2,
-  quality: 10,
+  quality: 1,
 };
 
 const UpdateFiltOrd = (value: number): void => {
@@ -377,7 +399,7 @@ const changeSelectedWinFunc = (tip: WindowFunc): void => {
 
 // FIR filter - generates transfer function based on window type and order
 function FirFilter() {
-  const numCoeff = new Array(filter.winLen); //windov koeficients
+  const numCoeff = new Array(filter.winLen); //window coefficients
   let wSum = 0; // sum of coeficients
 
   /* Generates window weights */
@@ -428,18 +450,22 @@ function FirFilter() {
       case "cosine":
         numCoeff[idx] = cosine(idx, filter.winLen);
         break;
+      /* The following windows omitted since adjusting additional parameter is required */
+      /*
       case "gaussian":
         numCoeff[idx] = gaussian(idx, filter.winLen, filter.winParam);
         break;
       case "tukey":
         numCoeff[idx] = tukey(idx, filter.winLen, filter.winParam);
         break;
+      */
     }
     wSum = wSum + numCoeff[idx];
   }
 
   /* Divide each weight by total sum to get "b_n" coefficients ("a_n" are zero except 1st equals one) */
   for (let idx = 0; idx < filter.winLen; idx++) {
+    filter.signal_3[idx] = {x: idx, y: numCoeff[idx]};  // Copy window function plot data into "filter" object
     numCoeff[idx] = numCoeff[idx] / wSum;
   }
 
@@ -475,8 +501,9 @@ function FirFilter() {
     }
   }
 
-  for (let idxa = 0; idxa < filter.freqRes; idxa++) {
-    filter.signal_1[idxa] = {x: freq[idxa], y: mag[idxa]}
+  /* Copy transfer function plot data into "filter" object */
+  for (let idx = 0; idx < filter.freqRes; idx++) {
+    filter.signal_1[idx] = {x: freq[idx], y: mag[idx]}
   }
 }
 
@@ -505,7 +532,7 @@ function IirFilter() {
   const normFreq = Math.tan(Math.PI * (filter.cutoff / 2));    // f_cutoff as normalized frequency
 
   let slider_gain = document.getElementById("filter-gain");
-  let slider_fm = document.getElementById("filter-cutoff");
+  //let slider_fm = document.getElementById("filter-cutoff");
   let slider_quality = document.getElementById("filter-quality");
   
   if (slider_gain == null)
@@ -530,11 +557,12 @@ function IirFilter() {
       denumCoeff_1 = denumCoeff_2 = numCoeff_2 = 0;
       slider_gain.setAttribute("class","slider_inactive");
       slider_gain.disabled = true;
-      slider_quality.setAttribute("class","slider_active");
-      slider_quality.disabled = false;
+      slider_quality.setAttribute("class","slider_inactive");
+      slider_quality.disabled = true;
       break;
 
     case "lowpass":
+      filter.quality = 1; // Default setting - values above 1 cause undesired resonance
       norm = 1 / (1 + normFreq / filter.quality + normFreq * normFreq);
       denumCoeff_0 = normFreq * normFreq * norm;
       denumCoeff_1 = 2 * denumCoeff_0;
@@ -548,6 +576,7 @@ function IirFilter() {
       break;
 
     case "highpass":
+      filter.quality = 1; // Default setting - values above 1 cause undesired resonance
       norm = 1 / (1 + normFreq / filter.quality + normFreq * normFreq);
       denumCoeff_0 = norm;
       denumCoeff_1 = -2 * denumCoeff_0;
@@ -561,6 +590,7 @@ function IirFilter() {
       break;
 
     case "bandpass":
+      filter.quality = 1; // Default setting - values above 1 cause undesired resonance
       norm = 1 / (1 + normFreq / filter.quality + normFreq * normFreq);
       denumCoeff_0 = normFreq / filter.quality * norm;
       denumCoeff_1 = 0;
@@ -684,8 +714,9 @@ function IirFilter() {
     freq[idx] = idx / (filter.freqRes - 1);
   }
 
-  for (let idxa = 0; idxa < filter.freqRes; idxa++) {
-    filter.signal_2[idxa] = {x: freq[idxa], y: mag[idxa]}
+  /* Copy transfer function plot data into "filter" object */
+  for (let idx = 0; idx < filter.freqRes; idx++) {
+    filter.signal_2[idx] = {x: freq[idx], y: mag[idx]}
   }
 
   let magMin, magMax;
