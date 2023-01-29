@@ -4,45 +4,17 @@
       Intersimbolna interferenca
     </AppMainHeading>
     <AppCollapsible>
-      <theory-intersymbol-interference />
+      <theory-intersymbol-interference/>
     </AppCollapsible>
-    <div class="inline-flex flex-col mb-2">
-      <label
-        :for="`fCut-multiplier`"
-        class="text-xl transition-colors duration-300 dark:text-white"
-      >
-        Mejna frekvenca kanala (NP filter):<span class="font-semibold"> f<sub>m</sub></span>=
-        <span class="font-medium">{{ Number(transferFunctionParams.fCutMulti).toFixed(2) }}</span>
-        <span class="font-semibold"> f<sub>s</sub></span>
-      </label>
-      <div class="slider_container">
-        <input
-          :id="`fCut-multiplier`"
-          v-model.number="transferFunctionParams.fCutMulti"
-          type="range"
-          class="slider"
-          min="0.1"
-          max="2"
-          step="0.05"
-        >
-      </div>
-    </div>
-    <PositiveOnlySignalGraph
-      :data="transferFunction"
-      :canvas-id="'transfer-function'"
-      :title="'Ekvivalentni prenosni kanal'"
-      :vertical-pool="[1, 0.5, -0.5, -1]"
-      :description="''"
-      :note="''"
-      :is-binary="false"
-      :x-ticks="{
-        'text':transferFunctionParams.tickNames,
-        'pos':transferFunctionParams.ticks
-      }"
-      :is-inverted="true"
-      :speed="speed"
+
+    <AppAnimationPauseButton
+      :state="isPlaying ? 'playing' : 'paused'"
+      @click="togglePlay()"
     />
 
+    <AppSectionHeading>
+      Hitrost animacije
+    </AppSectionHeading>
     <AppButtonContainer>
       <AppButton
         v-for="sp in possibleSpeeds"
@@ -52,35 +24,48 @@
       >
         {{ sp }}x
       </AppButton>
-      <div
-        class="switcher__tab w-20 cursor-pointer flex flex-row relative bg-gray-200
-          dark:bg-gray-700 p-1 rounded-3xl items-center justify-center h-8 transition-all duration-300 "
-        @click="togglePlay()"
-      >
-        <div
-          v-for="state in states"
-          :key="state.key"
-          :class="[isPlaying === state.key ? 'switcher__front' : 'switcher__back']"
-          class="flex flex-row justify-center items-center w-full h-full absolute top-0 left-0 transition-transform duration-300"
-        >
-          <FontAwesomeIcon
-            :icon="state.icon"
-            class="text-sm mr-1 text-gray-800 transition-colors duration-300 dark:text-white"
-          />
-          <p class="text-sm text-gray-800 dark:text-white transition-colors duration-300 select-none font-medium">
-            {{ state.label }}
-          </p>
-        </div>
-      </div>
     </AppButtonContainer>
+
+    <PositiveOnlySignalGraph
+      :data="transferFunction"
+      :canvas-id="'transfer-function'"
+      :title="'Ekvivalentni prenosni kanal'"
+      :vertical-pool="[1, 0.5, -0.5, -1]"
+      :is-binary="false"
+      :x-ticks="{
+        'text':transferFunctionParams.tickNames,
+        'pos':transferFunctionParams.ticks
+      }"
+      :is-inverted="true"
+      :speed="speed"
+    >
+      <div class="inline-flex flex-col gap-2">
+        <label
+          :for="'fCut-multiplier'"
+          class="text-xl transition-colors duration-300 dark:text-white"
+        >
+          Mejna frekvenca kanala (NP filter):<span class="font-semibold"> f<sub>m</sub></span>=
+          <span class="font-medium">{{ Number(transferFunctionParams.fCutMulti).toFixed(2) }}</span>
+          <span class="font-semibold"> f<sub>s</sub></span>
+        </label>
+        <input
+          :id="'fCut-multiplier'"
+          v-model.number="transferFunctionParams.fCutMulti"
+          type="range"
+          class="max-w-[300px]"
+          min="0.1"
+          max="2"
+          step="0.05"
+        >
+      </div>
+    </PositiveOnlySignalGraph>
     <Level4SignalGraph
       :data="binaryLevel4Signal.values"
       :title="'4-nivojski bipolarni signal'"
-      :description="''"
-      :note="''"
       :is-binary="true"
       :speed="speed"
     />
+
     <PositiveOnlySignalGraph
       :data="convolution"
       :canvas-id="'distorted-signal'"
@@ -88,43 +73,14 @@
       :vertical-pool="[3, 1.5, -1.5, -3]"
       :description="'Signal na izhodu je konvolucija med vhodnim signalom in prenosno funkcijo kanala'"
       :is-binary="false"
-      :x-ticks="{'text':['ts','ts','ts','ts','ts'],'pos':tsTicks}"
+      :x-ticks="{
+        text: ['ts','ts','ts','ts','ts'],
+        pos: tsTicks
+      }"
       :is-inverted="false"
       :abs-max="transferFunctionParams.maxConvValue"
       :speed="speed"
     />
-
-    <div class="inline-flex flex-col mb-2">
-      <label
-        :for="`fCut-multiplier`"
-        class="text-xl transition-colors duration-300 dark:text-white"
-      >
-        Mejna frekvenca kanala (NP filter):<span class="font-semibold"> f<sub>m</sub></span>=
-        <span class="font-medium">{{ Number(transferFunctionParams.fCutMulti).toFixed(2) }}</span>
-        <span class="font-semibold"> f<sub>s</sub></span>
-      </label>
-      <div class="slider_container">
-        <input
-          :id="`fCut-multiplier`"
-          v-model.number="transferFunctionParams.fCutMulti"
-          type="range"
-          class="slider"
-          min="0.1"
-          max="2"
-          step="0.05"
-        >
-      </div>
-    </div>
-    <AppButton
-      class="w-fit-content"
-      @click="clearOscilloscope()"
-    >
-      <FontAwesomeIcon
-        :icon="['fas', 'trash-alt']"
-        class="text-sm mr-1"
-      />
-      Počisti
-    </AppButton>
     <OscilloscopeGraph
       :data="dataISI"
       :canvas-id="'eye-diagram'"
@@ -132,7 +88,18 @@
       :symbol-length="binarySymbolLength"
       :speed="speed"
       :ticks="isiTicks"
-    />
+    >
+      <AppButton
+        class="w-fit-content gap-2"
+        variant="danger"
+        @click="clearOscilloscope()"
+      >
+        <FontAwesomeIcon :icon="['fas', 'trash-alt']"/>
+        <span>
+          Počisti
+        </span>
+      </AppButton>
+    </OscilloscopeGraph>
   </AppMainContainer>
 </template>
 
@@ -143,19 +110,22 @@ import AppButton from "@/js/components/common/buttons/AppButton.vue";
 import AppCollapsible from "@/js/components/common/AppCollapsible.vue";
 import TheoryIntersymbolInterference from "@/js/components/theory/TheoryIntersymbolInterference.vue";
 import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
+import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 import OscilloscopeGraph from "@/js/components/canvas/OscilloscopeGraph.vue";
 import Level4SignalGraph from "@/js/components/canvas/Level4SignalGraph.vue";
 import PositiveOnlySignalGraph from "@/js/components/canvas/PositiveOnlySignalGraph.vue";
 import '@/js/types/types.ts';
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {faPlay, faStop, faTrashAlt} from '@fortawesome/free-solid-svg-icons'
+import {faTrashAlt} from '@fortawesome/free-solid-svg-icons'
+import AppAnimationPauseButton from "@/js/components/common/buttons/AppAnimationPauseButton.vue";
 
-library.add(faPlay, faStop, faTrashAlt);
+library.add(faTrashAlt);
 
 export default {
   name: "IntersymbolInterferenceView",
   components: {
+    AppAnimationPauseButton,
     AppMainContainer,
     TheoryIntersymbolInterference,
     OscilloscopeGraph,
@@ -165,7 +135,8 @@ export default {
     AppMainHeading,
     AppButtonContainer,
     AppButton,
-    AppCollapsible
+    AppCollapsible,
+    AppSectionHeading
   },
   data() {
     return {
@@ -309,13 +280,6 @@ export default {
   },
   methods: {
     /**
-     * Changes selected property
-     * @param {string} key
-     */
-    changeSelected(key) {
-      this.selected = key;
-    },
-    /**
      * Returns binary values periodically from
      * @returns {number}
      */
@@ -396,7 +360,7 @@ export default {
      */
     updateTransferFunctionParams() {
       this.transferFunctionParams.fCut = 1 / this.binarySymbolLength;  //
-        this.transferFunctionParams.tOffset = 1.5 / (this.transferFunctionParams.fCut * this.transferFunctionParams.fCutMulti);
+      this.transferFunctionParams.tOffset = 1.5 / (this.transferFunctionParams.fCut * this.transferFunctionParams.fCutMulti);
       this.recalculateTicks(false)
       this.updateTransferFunction();
     },
@@ -429,8 +393,6 @@ export default {
       }
       // experimentally determined that value at this index will give the correct value to pass to plot elements
       this.transferFunctionParams.maxConvValue = worstCaseConv[Math.round(this.signalLength - 1 - this.transferFunctionParams.tOffset)];
-
-      //this.transferFunctionParams.maxConvValue = this.transferFunction.map(tf => tf*3).reduce((a,b)=>a+b); // for square signal
     },
     togglePlay() {
       this.isPlaying = !this.isPlaying;
@@ -441,28 +403,3 @@ export default {
   },
 }
 </script>
-
-<style>
-.switcher__tab {
-  -webkit-tap-highlight-color: transparent;
-}
-
-.switcher__front {
-  transform: rotateX(0);
-  opacity: 1;
-}
-
-.switcher__back {
-  opacity: 0;
-  transform: rotateX(-180deg);
-  backface-visibility: hidden;
-}
-
-.slider_container {
-  width: 450px
-}
-
-.slider {
-  width: 100%
-}
-</style>

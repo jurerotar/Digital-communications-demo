@@ -2,6 +2,7 @@
   <AppSectionHeading>
     {{ name }}
   </AppSectionHeading>
+  <slot />
   <CanvasContainer>
     <div :id="canvasId" />
   </CanvasContainer>

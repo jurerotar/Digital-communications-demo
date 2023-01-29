@@ -2,6 +2,7 @@
   <AppSectionHeading>
     {{ title }}
   </AppSectionHeading>
+  <slot />
   <p
     v-if="description !== ''"
     class="my-1 transition-colors duration-300 dark:text-white"

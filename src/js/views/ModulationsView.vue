@@ -3,9 +3,16 @@
     <AppMainHeading>
       Modulacije
     </AppMainHeading>
+
     <AppCollapsible>
       <theory-modulations />
     </AppCollapsible>
+
+    <AppAnimationPauseButton
+      :state="isPlaying ? 'playing' : 'paused'"
+      @click="toggleIsPlaying()"
+    />
+
     <AppSectionHeading>
       Analogne modulacije
     </AppSectionHeading>
@@ -96,11 +103,18 @@ import {
   ModulationToDataArrayMap
 } from "@/js/types/modulations";
 import AppMainContainer from "@/js/components/common/AppMainContainer.vue";
+import AppAnimationPauseButton from "@/js/components/common/buttons/AppAnimationPauseButton.vue";
 
 // We'll be increasing the time by this amount
 const timeDifference = 0.005;
 // Amount in pixels
 const binarySignalWidth = 120;
+
+const isPlaying = ref<boolean>(true);
+
+const toggleIsPlaying = () => {
+  isPlaying.value = !isPlaying.value;
+}
 
 const carrierValueGenerator = (time: number): number => Math.sin(time * 15 * Math.PI);
 const sineModulationValueGenerator = (time: number): number => Math.sin(time * Math.PI);
@@ -333,6 +347,9 @@ onMounted(() => {
   let time = 600 * 0.005;
   // Create interval to push new signal values to arrays
   intervalId = window.setInterval(() => {
+    if(!isPlaying.value) {
+      return;
+    }
 
     // Loop through arrays and remove last values if lengths are too big
     // Remove last element first, so we don't change array size

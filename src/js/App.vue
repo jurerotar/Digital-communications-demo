@@ -1,10 +1,13 @@
 <template>
-  <keep-alive>
-    <sidebar-layout />
-  </keep-alive>
+  <KeepAlive>
+    <SidebarLayout/>
+  </KeepAlive>
 </template>
 
-<script setup lang = "ts">
+<script
+  setup
+  lang="ts"
+>
 import SidebarLayout from "@/js/layouts/SidebarLayout.vue";
 import {attachResizeHandlers, scheme} from "@/js/helpers/functions";
 
