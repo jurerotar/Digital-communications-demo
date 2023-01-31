@@ -165,9 +165,9 @@
         :for="'filter-gain'"
         class="text-xl transition-colors duration-300 dark:text-white"
       >
-        <span class="font-medium">
-          {{ FilterGain }}
-        </span>
+      <span class="font-medium">
+        {{ FilterGain }}
+      </span>
       </label>
       <input
         :id="'filter-gain'"
