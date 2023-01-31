@@ -81,7 +81,6 @@
           :trig_draw="trig_1"
           :o_x="5"
           :o_y="5"
-          :auto_scale="true"
           @loaded="UpdateFiltOrd(FilterOrder)"
         />
       </AppCanvasContainer>
@@ -94,7 +93,6 @@
           :trig_draw="trig_1"
           :o_x="5"
           :o_y="5"
-          :autoscale="true"
           :Mirror="false"
           X_label="Vzorci[N]                "
           Y_label="Amplituda"
@@ -179,7 +177,7 @@
         max="30"
         step="1"
         class="slider_active"
-        Y_lable="Magnituda [dB]"
+        y-label="Magnituda [dB]"
         @change="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
       >
     </div>
@@ -245,8 +243,7 @@
         :trig_draw="trig_2"
         :o_x="5"
         :o_y="5"
-        :auto_scale="true"
-        Y_lable="Magnituda [dB]"
+        y-label="Magnituda [dB]"
         @loaded="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
       />
     </AppCanvasContainer>
@@ -264,7 +261,7 @@ import ButtonContainer from "@/js/components/common/buttons/AppButtonContainer.v
 import AppButton from "@/js/components/common/buttons/AppButton.vue";
 import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
 import AppCollapsible from "@/js/components/common/AppCollapsible.vue";
-import Graph from "@/js/components/canvas/graph.vue";
+import Graph from "@/js/components/canvas/DigitalFiltersGraph.vue";
 import {
   FilterType,
   WindowFunc,
