@@ -115,7 +115,8 @@
       Koeficienti poleg s-členov analognega filtra predstavljajo uteži <span>a<sub>k</sub></span> in <span>b<sub>k</sub></span> digitalnega
       filtra.
       <br>
-      Poleg predstavljenih IIR filtrov obstajajo tudi drugačni. Ena izmed skupin IIR filtrov, kjer imajo posamezne topologije podobne lastnosti, zajema sledeče filtre: Butterworth, Chebyshev, Elliptic in Bessel.
+      Poleg predstavljenih IIR filtrov obstajajo tudi drugačni. Ena izmed skupin IIR filtrov, kjer imajo posamezne topologije podobne
+      lastnosti, zajema sledeče filtre: Butterworth, Chebyshev, Elliptic in Bessel.
     </AppParagraph>
 
     <AppSectionHeading>
@@ -123,7 +124,8 @@
     </AppSectionHeading>
     <div>
       <AppParagraph>
-        Podana je normirana mejna frekvenca, pri čemer vrednost 1 ustreza polovici vzorčevalne frekvence. Normirana mejna frekvenca določa prehod med prepusnim in zapornim pasom.
+        Podana je normirana mejna frekvenca, pri čemer vrednost 1 ustreza polovici vzorčevalne frekvence. Normirana mejna frekvenca določa
+        prehod med prepusnim in zapornim pasom.
 
       </AppParagraph>
     </div>
@@ -234,10 +236,10 @@
     <AppSectionHeading>
       Prenosna funkcija Biquad filtra
     </AppSectionHeading>
-    <app-CanvasContainer>
+    <AppCanvasContainer>
       <graph
         title="IIR"
-        :g_width=800
+        :g_width="800"
         :signal_1="filter.signal_2"
         :g_height="350"
         :trig_draw="trig_2"
@@ -247,11 +249,16 @@
         Y_lable="Magnituda [dB]"
         @loaded="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
       />
-    </app-CanvasContainer>
+    </AppCanvasContainer>
   </AppMainContainer>
 </template>
 
 <script setup lang="ts">
+import {ref} from "vue";
+import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
+import AppMainContainer from "@/js/components/common/AppMainContainer.vue";
+import AppParagraph from "@/js/components/common/AppParagraph.vue";
+import AppCanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 import TheoryDigitalFilters from "@/js/components/theory/TheoryDigitalFilters.vue";
 import ButtonContainer from "@/js/components/common/buttons/AppButtonContainer.vue";
 import AppButton from "@/js/components/common/buttons/AppButton.vue";
@@ -284,11 +291,6 @@ import {
   flatTop,
   cosine
 } from 'window-function';
-
-import {ref} from "vue";
-import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
-import AppMainContainer from "@/js/components/common/AppMainContainer.vue";
-import AppParagraph from "@/js/components/common/AppParagraph.vue";
 
 export interface Filter {
   label: string;
@@ -323,29 +325,29 @@ const FilterTypes: FiltType[] = [
 ];
 
 const IIRTypes: IIR_Types[] = [
-  {key: "lowpass",     label: "Nizko-prepustno"},
-  {key: "highpass",    label: "Visoko-prepustno"},
-  {key: "bandpass",    label: "Pasovno-prepustno"},
+  {key: "lowpass", label: "Nizko-prepustno"},
+  {key: "highpass", label: "Visoko-prepustno"},
+  {key: "bandpass", label: "Pasovno-prepustno"},
   {key: "one-pole-lp", label: "Enopolni nizko-prepustni"},
   {key: "one-pole-hp", label: "Enopolni visoko-prepustni"},
-  {key: "notch",       label: "Notch"},
-  {key: "peak",        label: "Peak"},
-  {key: "low-shelf",   label: "Low shelf"},
-  {key: "high-shelf",  label: "High shelf"},
+  {key: "notch", label: "Notch"},
+  {key: "peak", label: "Peak"},
+  {key: "low-shelf", label: "Low shelf"},
+  {key: "high-shelf", label: "High shelf"},
 ];
 
 // Default pulse length options we give to the users
 const WindowFunctions: FiltFunc[] = [
   {key: 'rectangular', label: "Pravokotno"},
-  {key: 'triangular',  label: "Trikotno"},
-  {key: 'cosine',  label: "Kosinusno"},
+  {key: 'triangular', label: "Trikotno"},
+  {key: 'cosine', label: "Kosinusno"},
   {key: 'hann', label: "Hann"},
   {key: 'hamming', label: "Hamming"},
   {key: 'blackman', label: "Blackman"},
   {key: 'lanczos', label: "Lanczos"},
-  {key: 'bartlett',  label: "Bartlett"},
+  {key: 'bartlett', label: "Bartlett"},
   {key: 'bartlettHann', label: "Bartlett-Hann"},
-  {key: 'welch',  label: "Welch"},
+  {key: 'welch', label: "Welch"},
   {key: 'nuttall', label: "Nuttall"},
   {key: 'blackmanHarris', label: "Blackman-Harris"},
   {key: 'blackmanNuttall', label: "Blackman-Nuttall"},
@@ -453,18 +455,17 @@ function FirFilter() {
   }
 
   /* Divide each weight by total sum to get "b_n" coefficients ("a_n" are zero except 1st equals one) */
-  while(filter.signal_3.length > 0){
+  while (filter.signal_3.length > 0) {
     filter.signal_3.pop();
   }
-  if(filter.winFunct == "rectangular"){
-    console.log("rect");
+  if (filter.winFunct == "rectangular") {
     filter.signal_3.push({x: 0, y: 0});
     for (let idx = 0; idx < filter.winLen; idx++) {
       filter.signal_3.push({x: idx, y: numCoeff[idx]});  // Copy window function plot data into "filter" object
       numCoeff[idx] = numCoeff[idx] / wSum;
     }
-    filter.signal_3.push({x: filter.winLen-1, y: 0});
-  }else{
+    filter.signal_3.push({x: filter.winLen - 1, y: 0});
+  } else {
     for (let idx = 0; idx < filter.winLen; idx++) {
       filter.signal_3[idx] = {x: idx, y: numCoeff[idx]};  // Copy window function plot data into "filter" object
       numCoeff[idx] = numCoeff[idx] / wSum;
@@ -542,9 +543,9 @@ function IirFilter() {
       denumCoeff_0 = 1.0 - numCoeff_1;
       numCoeff_1 = -numCoeff_1;
       denumCoeff_1 = denumCoeff_2 = numCoeff_2 = 0;
-      slider_gain.setAttribute("class","slider_inactive");
+      slider_gain.setAttribute("class", "slider_inactive");
       slider_gain.disabled = true;
-      slider_quality.setAttribute("class","slider_inactive");
+      slider_quality.setAttribute("class", "slider_inactive");
       slider_quality.disabled = true;
       break;
 
@@ -553,9 +554,9 @@ function IirFilter() {
       denumCoeff_0 = 1.0 + numCoeff_1;
       numCoeff_1 = -numCoeff_1;
       denumCoeff_1 = denumCoeff_2 = numCoeff_2 = 0;
-      slider_gain.setAttribute("class","slider_inactive");
+      slider_gain.setAttribute("class", "slider_inactive");
       slider_gain.disabled = true;
-      slider_quality.setAttribute("class","slider_inactive");
+      slider_quality.setAttribute("class", "slider_inactive");
       slider_quality.disabled = true;
       break;
 
@@ -567,9 +568,9 @@ function IirFilter() {
       denumCoeff_2 = denumCoeff_0;
       numCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
       numCoeff_2 = (1 - normFreq / filter.quality + normFreq * normFreq) * norm;
-      slider_gain.setAttribute("class","slider_inactive");
+      slider_gain.setAttribute("class", "slider_inactive");
       slider_gain.disabled = true;
-      slider_quality.setAttribute("class","slider_inactive");
+      slider_quality.setAttribute("class", "slider_inactive");
       slider_quality.disabled = true;
       break;
 
@@ -581,9 +582,9 @@ function IirFilter() {
       denumCoeff_2 = denumCoeff_0;
       numCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
       numCoeff_2 = (1 - normFreq / filter.quality + normFreq * normFreq) * norm;
-      slider_gain.setAttribute("class","slider_inactive");
+      slider_gain.setAttribute("class", "slider_inactive");
       slider_gain.disabled = true;
-      slider_quality.setAttribute("class","slider_inactive");
+      slider_quality.setAttribute("class", "slider_inactive");
       slider_quality.disabled = true;
       break;
 
@@ -595,9 +596,9 @@ function IirFilter() {
       denumCoeff_2 = -denumCoeff_0;
       numCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
       numCoeff_2 = (1 - normFreq / filter.quality + normFreq * normFreq) * norm;
-      slider_gain.setAttribute("class","slider_inactive");
+      slider_gain.setAttribute("class", "slider_inactive");
       slider_gain.disabled = true;
-      slider_quality.setAttribute("class","slider_inactive");
+      slider_quality.setAttribute("class", "slider_inactive");
       slider_quality.disabled = true;
       break;
 
@@ -608,9 +609,9 @@ function IirFilter() {
       denumCoeff_2 = denumCoeff_0;
       numCoeff_1 = denumCoeff_1;
       numCoeff_2 = (1 - normFreq / filter.quality + normFreq * normFreq) * norm;
-      slider_gain.setAttribute("class","slider_inactive");
+      slider_gain.setAttribute("class", "slider_inactive");
       slider_gain.disabled = true;
-      slider_quality.setAttribute("class","slider_active");
+      slider_quality.setAttribute("class", "slider_active");
       slider_quality.disabled = false;
       break;
 
@@ -631,9 +632,9 @@ function IirFilter() {
         numCoeff_1 = denumCoeff_1;
         numCoeff_2 = (1 - magGain / filter.quality * normFreq + normFreq * normFreq) * norm;
       }
-      slider_gain.setAttribute("class","slider_active");
+      slider_gain.setAttribute("class", "slider_active");
       slider_gain.disabled = false;
-      slider_quality.setAttribute("class","slider_active");
+      slider_quality.setAttribute("class", "slider_active");
       slider_quality.disabled = false;
       break;
 
@@ -654,9 +655,9 @@ function IirFilter() {
         numCoeff_1 = 2 * (magGain * normFreq * normFreq - 1) * norm;
         numCoeff_2 = (1 - Math.sqrt(2 * magGain) * normFreq + magGain * normFreq * normFreq) * norm;
       }
-      slider_gain.setAttribute("class","slider_active");
+      slider_gain.setAttribute("class", "slider_active");
       slider_gain.disabled = false;
-      slider_quality.setAttribute("class","slider_inactive");
+      slider_quality.setAttribute("class", "slider_inactive");
       slider_quality.disabled = true;
       break;
     case "high-shelf":
@@ -676,9 +677,9 @@ function IirFilter() {
         numCoeff_1 = 2 * (normFreq * normFreq - magGain) * norm;
         numCoeff_2 = (magGain - Math.sqrt(2 * magGain) * normFreq + normFreq * normFreq) * norm;
       }
-      slider_gain.setAttribute("class","slider_active");
+      slider_gain.setAttribute("class", "slider_active");
       slider_gain.disabled = false;
-      slider_quality.setAttribute("class","slider_inactive");
+      slider_quality.setAttribute("class", "slider_inactive");
       slider_quality.disabled = true;
       break;
   }
@@ -755,7 +756,7 @@ function gainToDecibels(value: number) {
 <style scoped>
 
 .slider_active {
-  -webkit-appearance: none;  /* Override default CSS styles */
+  -webkit-appearance: none; /* Override default CSS styles */
   appearance: none;
   width: 300px; /* Full-width */
   height: 10px; /* Specified height */
@@ -777,7 +778,7 @@ function gainToDecibels(value: number) {
 }
 
 .slider_inactive {
-  -webkit-appearance: none;  /* Override default CSS styles */
+  -webkit-appearance: none; /* Override default CSS styles */
   appearance: none;
   width: 300px; /* Full-width */
   height: 10px; /* Specified height */

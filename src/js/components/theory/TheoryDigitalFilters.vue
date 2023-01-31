@@ -58,7 +58,7 @@
         />
       </div>
       <div style="margin-top:-0.5cm">
-      (Vir slike: L. Gačnik, Koncepti digitalnih filtrov za merjenje napetosti celic avtomobilskih baterij, diplomsko delo, FE – Fakulteta za elektrotehniko, Ljubljana, 2022)
+        (Vir slike: L. Gačnik, Koncepti digitalnih filtrov za merjenje napetosti celic avtomobilskih baterij, diplomsko delo, FE – Fakulteta za elektrotehniko, Ljubljana, 2022)
       </div>
     </AppParagraph>
 
