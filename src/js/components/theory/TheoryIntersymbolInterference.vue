@@ -3,52 +3,89 @@
     <AppParagraph>
       Izvorni signal se pri prenosu skozi prenosni kanal popači - raztegne se po časovni osi.
       V primeru ilustriranem na tej strani je ekvivalentni prenosni kanal modeliran kot idealni nizko pasovni filter z mejno frekvenco
-      <span class="font-semibold">f<sub>m</sub></span>,
-      ki je enaka vzorčevalni frekvenci: <span class="font-semibold">f<sub>m</sub> = f<sub>s</sub></span>
+      <KatexEquation inline>
+        {{ 'f_m' }}
+      </KatexEquation>
+      , ki je enaka vzorčevalni frekvenci:
+      <KatexEquation inline>
+        {{ 'f_m=f_s' }}
+      </KatexEquation>
       Sestavljen je iz sita za preoblikovanje enotskih impulzov, oddajnega sita, sistemske funkcije kanala ter sprejemnega sita.
       <br>
       Ekvivalentna sistemska funkcija kanala je tako:
-      <span
-        ref="transferFunctionRef"
-        class="katex-block"
-      />
-      in na prvem grafu opazimo, da se razteza čez več period vzorčenja <span class="font-semibold">t<sub>s</sub></span>. Vnaša tudi
-      zakasnitev
-      <span class="font-semibold">t<sub>s</sub></span>,
-      ki je določena kot čas, ob katerem ima <span class="font-semibold">h(t)</span> največjo vrednost.
-      <br>
-      Izvorni signal je vsota časovno zamaknjenih impulzov <span class="font-semibold">g(t)</span>, uteženimi s simboli
-      <span class="font-semibold">y[n]</span> ob časih <span class="font-semibold">t=nT<sub>s</sub></span>
-      <span
-        ref="inputSignalRef"
-        class="katex-block"
-      />
-      Tako je tudi prejeti signal vsota impulzov korigiranih s prenosno funkcijo <span class="font-semibold">h(t)</span>,
-      kar zapišemo z operacijo konvolucije
-      <span
-        ref="yhConvRef"
-        class="katex-block"
-      />
-      Ker se <span class="font-semibold">h(t)</span> razteza čez več period, to pomeni, da se tudi posamezni simbol razteza v čas, ko
-      vzorčimo
-      naslednji simbol.
+      <KatexEquation>
+        {{ 'h(t)=sinc(2πf_mm(t-t_0))' }}
+      </KatexEquation>
+      in na prvem grafu opazimo, da se razteza čez več period vzorčenja
+      <KatexEquation inline>
+        {{ 't_s' }}
+      </KatexEquation>. Vnaša tudi zakasnitev
+      <KatexEquation inline>
+        {{ 't_s' }}
+      </KatexEquation>
+      , ki je določena kot čas, ob katerem ima
+      <KatexEquation inline>
+        {{ 'h(t)' }}
+      </KatexEquation>
+      največjo vrednost.<br>
+      Izvorni signal je vsota časovno zamaknjenih impulzov
+      <KatexEquation inline>
+        {{ 'g(t)' }}
+      </KatexEquation>
+      , uteženimi s simboli
+      <KatexEquation inline>
+        {{ 'y[n]' }}
+      </KatexEquation>
+      ob časih
+      <KatexEquation inline>
+        {{ 't=nT_s' }}
+      </KatexEquation>.
+      <KatexEquation>
+        {{ inputSignal }}
+      </KatexEquation>
+      Tako je tudi prejeti signal vsota impulzov korigiranih s prenosno funkcijo
+      <KatexEquation inline>
+        {{ 'h(t)' }}
+      </KatexEquation>
+      , kar zapišemo z operacijo konvolucije
+      <KatexEquation>
+        {{ yhConv }}
+      </KatexEquation>
+      Ker se
+      <KatexEquation inline>
+        {{ 'h(t)' }}
+      </KatexEquation>
+      razteza čez več period, to pomeni, da se tudi posamezni simbol razteza v čas, ko vzorčimo naslednji simbol.
       Vrednost se prišteje naslednjemu vzorcu in spremeni njegovo vrednost. Nastane intersimbolna interferenca.
     </AppParagraph>
     <AppSectionHeading>
       Nyquistov kriterij v časovnem prostoru
     </AppSectionHeading>
     <AppParagraph>
-      Kljub temu, da <span class="font-semibold">h(t)</span> povzroči, da se simbol razširi čez več period vzorčenja, to ni problem, če je
-      vrednost
-      <span class="font-semibold">h(t)</span> enaka
-      <span class="font-semibold">0</span> za vse <span class="font-semibold">t=nT<sub>s</sub>, n</span>
-      <span class="font-semibold">&#8800;0</span>.
+      Kljub temu, da
+      <KatexEquation inline>
+        {{ 'h(t)' }}
+      </KatexEquation>
+      povzroči, da se simbol razširi čez več period vzorčenja, to ni problem, če je vrednost
+      <KatexEquation inline>
+        {{ 'h(t)' }}
+      </KatexEquation>
+      enaka
+      <KatexEquation inline>
+        {{ '0' }}
+      </KatexEquation>
+      za vse
+      <KatexEquation inline>
+        {{ 't=nT_s' }}
+      </KatexEquation>,
+      <KatexEquation inline>
+        {{ 'n \\neq 0' }}
+      </KatexEquation>
       Če <span class="font-semibold">h(t)</span> izpolnjuje to zahtevo, pravimo, da izpoljuje
       <span class="font-semibold">Nyquistov kriterij za prenos brez intersimbolne interference v časovnem prostoru</span>.
-      <span
-        ref="h1NyquistRef"
-        class="katex-block"
-      />
+      <KatexEquation>
+        {{ h1Nyquist }}
+      </KatexEquation>
     </AppParagraph>
     <AppSectionHeading>
       Nyquistov kriterij v frekvenčnem prostoru
@@ -57,18 +94,25 @@
       Zanima nas še, kako mora izgledati prenosna funkcija ekvivalentnega prenosnega kanala <span class="font-semibold">H(f)</span>.
       Zgoraj zapisan izraz za <span class="font-semibold">h(t)</span> ne določa vrednosti
       <span class="font-semibold">h(t)</span> za <span class="font-semibold">t</span> <span class="font-semibold">&#8800;</span>
-      <span class="font-semibold">nT<sub>s</sub></span>, zato ga zapišemo drugače:
-      <span
-        ref="h2NyquistRef"
-        class="katex-block"
-      />,
-      kjer je <span class="font-semibold">v<sub>δ</sub>(t)</span> vzorčevalna funkcija (niz enotskih impulzov) s frekvenco
-      <span class="font-semibold">f<sub>v</sub> = f<sub>s</sub></span>,
-      katere Fourier transform poznamo. Izraz preuredimo in dobimo izraz za prekrito prenosno funkcijo:
-      <span
-        ref="h3NyquistRef"
-        class="katex-block"
-      />
+      <KatexEquation inline>
+        {{ 'nT_s' }}
+      </KatexEquation>
+      , zato ga zapišemo drugače:
+      <KatexEquation>
+        {{ h2Nyquist }}
+      </KatexEquation>,
+      kjer je
+      <KatexEquation inline>
+        {{ 'v_δ(t)' }}
+      </KatexEquation>
+      vzorčevalna funkcija (niz enotskih impulzov) s frekvenco
+      <KatexEquation inline>
+        {{ 'f_v=f_s' }}
+      </KatexEquation>
+      , katere Fourier transform poznamo. Izraz preuredimo in dobimo izraz za prekrito prenosno funkcijo:
+      <KatexEquation>
+        {{ h3Nyquist }}
+      </KatexEquation>
       Če je pogoj izpolnjen, pravimo, da velja Nyquistov kriterij za prenos brez ISI v frekvenčnem prostoru:
       <span class="font-semibold">
         Če je prekrita prenosna funkcija ekvivalentnega prenosnega kanala konstantna, potem pri digitalnem prenosu ne bo
@@ -81,8 +125,11 @@
     <AppParagraph>
       Na očesnem diagramu vidimo 2 periodi prejetega signala pri čemer za proženje uporabimo frekvenco vzorčenja.
       Na spodnjem zaslonu osciloskopa je proženje nastavljeno na vzorčno frekvenco izvornega signala,
-      zato se ob spreminjanju zakasnitve na kanalu <span class="font-semibold">t<sub>0</sub></span> spremeni pozicija mesta, kjer odčitavamo
-      signal (ilustrirano z zeleno črto).
+      zato se ob spreminjanju zakasnitve na kanalu
+      <KatexEquation inline>
+        {{ 't_0' }}
+      </KatexEquation>
+      spremeni pozicija mesta, kjer odčitavamo signal (ilustrirano z zeleno črto).
     </AppParagraph>
   </div>
 </template>
@@ -91,36 +138,8 @@
   setup
   lang="ts"
 >
-import {ref, watchEffect} from "vue";
 import {interSymbolInterferenceTransferFunction, inputSignal, yhConv, h1Nyquist, h2Nyquist, h3Nyquist} from "@/js/helpers/equations";
 import AppParagraph from "@/js/components/common/AppParagraph.vue";
 import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
-
-const transferFunctionRef = ref<HTMLSpanElement>();
-const inputSignalRef = ref<HTMLSpanElement>();
-const yhConvRef = ref<HTMLSpanElement>();
-const h1NyquistRef = ref<HTMLSpanElement>();
-const h2NyquistRef = ref<HTMLSpanElement>();
-const h3NyquistRef = ref<HTMLSpanElement>();
-
-watchEffect(() => {
-  if (transferFunctionRef.value) {
-    window.katex.render(interSymbolInterferenceTransferFunction, transferFunctionRef.value!);
-  }
-  if (inputSignalRef.value) {
-    window.katex.render(inputSignal, inputSignalRef.value!);
-  }
-  if (yhConvRef.value) {
-    window.katex.render(yhConv, yhConvRef.value!);
-  }
-  if (h1NyquistRef.value) {
-    window.katex.render(h1Nyquist, h1NyquistRef.value!);
-  }
-  if (h2NyquistRef.value) {
-    window.katex.render(h2Nyquist, h2NyquistRef.value!);
-  }
-  if (h3NyquistRef.value) {
-    window.katex.render(h3Nyquist, h3NyquistRef.value!);
-  }
-});
+import KatexEquation from "@/js/components/common/KatexEquation.vue";
 </script>

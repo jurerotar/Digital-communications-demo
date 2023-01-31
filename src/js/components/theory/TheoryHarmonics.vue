@@ -1,9 +1,14 @@
 <template>
   <AppParagraph>
-    Animacija prikazuje vsoto ob prehodu po danem signalu, brez enosmerne komponente <span class="font-semibold">a0</span>
-    oz. povprečne vrednosti tega signala, ki jo dobimo pri <span class="font-semibold">X(0)</span>.
-    Da se le-te izognemo smo za izračun vzeli signal, ki gre med <span class="font-semibold">-1</span> in
-    <span class="font-semibold">+1</span>.
+    Animacija prikazuje vsoto ob prehodu po danem signalu, brez enosmerne komponente
+    <KatexEquation inline>
+      {{ 'a_0' }}
+    </KatexEquation>
+    oz. povprečne vrednosti tega signala, ki jo dobimo pri
+    <KatexEquation inline>
+      {{ 'X(0)' }}
+    </KatexEquation>.
+    Da se le-te izognemo smo za izračun vzeli signal, ki gre med -1 in 1.
     Pri večanju števil harmonskih komponent, se približujemo pravokotnemu periodičnemu signalu.
     <br>
     <br>Opazimo, da se moder in zelen kazalec pri vsaki komponenti vrtita v nasprotno smer, njuna vsota pa je <span class="font-semibold">
@@ -20,4 +25,5 @@
   lang="ts"
 >
 import AppParagraph from "@/js/components/common/AppParagraph.vue";
+import KatexEquation from "@/js/components/common/KatexEquation.vue";
 </script>

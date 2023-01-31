@@ -12,19 +12,17 @@
     <AppParagraph>
       Z-transform je analiza, ki nam omogoča določiti frekvenčni spekter časovno diskretnih signalov.
       Dvostranski spekter časovno diskretnega signala določa sledeča neskončna vrsta:
-      <span
-        ref="zTransformRef"
-        class="katex-block"
-      />
+      <KatexEquation>
+        {{ zTransform }}
+      </KatexEquation>
       Ker digitalni filtri spadajo med linearne časovno invariabilne (LTI) sisteme vemo,
       da frekvenčna transformacija impulznega odziva <span class="font-semibold">h(t)</span> danega sistema ustreza ravno prenosni funkciji
       danega sistema.
       Predpostavimo sedaj, da je digitalni filter pravzaprav rekurziven časovno diskreten LTI sistem.
       Potem lahko zapišemo diferenčno enačbo <span class="font-semibold">y(nT)</span> opazovanega sistema:
-      <span
-        ref="differenceEqRef"
-        class="katex-block"
-      />
+      <KatexEquation>
+        {{ differenceEq }}
+      </KatexEquation>
       kjer nabor koeficientov <span class="font-semibold">a<sub>k</sub></span> in <span class="font-semibold">b<sub>k</sub></span>
       predstavlja lastnosti, katere neposredno vplivajo na lastnosti prenosne funkcije digitalnega filtra.
       Diferenčna enačba <span class="font-semibold">y(nT)</span>, ki določa izhodni signal filtra v časovnem prostoru, je enaka impulznemu
@@ -33,10 +31,9 @@
       Tako nam z-transformacija diferenčne enačbe <span class="font-semibold">y(nT)</span>
       da prenosno funkcijo <span class="font-semibold">H(z)</span>
       danega digitalnega filtra:
-      <span
-        ref="transferFunctRef"
-        class="katex-block"
-      />
+      <KatexEquation>
+        {{ digitalFiltersTransferFunction }}
+      </KatexEquation>
     </AppParagraph>
 
     <AppSectionHeading>
@@ -50,13 +47,11 @@
       vhodnega časovno diskretnega signala. Medtem ko je IIR odvisen tudi od preteklih vzorcev na izhodu. Posledično je FIR filter
       vedno stabilen in ima krajši čas ustaljevanja kot IIR, le-ta pa ni nujno stabilen.
 
-      <div style="width: 75%">
-        <img
-          style="margin-bottom:1cm;margin-top:1cm;padding-left:0.1cm;"
-          src="/images/theory/digital-filters/IIR_block.jpg"
-          alt="IIR blok"
-        />
-      </div>
+      <img
+        class="my-2"
+        src="/images/theory/digital-filters/IIR_block.jpg"
+        alt="IIR blok"
+      >
     </AppParagraph>
 
     <AppSectionHeading>
@@ -70,10 +65,9 @@
       Koeficiente <span class="font-semibold">b<sub>k</sub></span> določamo na sledeč način, kjer
       <span class="font-semibold">w<sub>k</sub></span>
       predstavlja vrednosti diskretne okenske funkcije:
-      <span
-        ref="windowWeightsRef"
-        class="katex-block"
-      />
+      <KatexEquation>
+        {{ windowWeights }}
+      </KatexEquation>
     </AppParagraph>
 
     <AppSectionHeading>
@@ -94,28 +88,8 @@
   setup
   lang="ts"
 >
-import {ref, watchEffect} from "vue";
 import {zTransform, differenceEq, digitalFiltersTransferFunction, windowWeights} from "@/js/helpers/equations";
 import AppParagraph from "@/js/components/common/AppParagraph.vue";
 import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
-
-const zTransformRef = ref<HTMLSpanElement>();
-const differenceEqRef = ref<HTMLSpanElement>();
-const transferFunctionRef = ref<HTMLSpanElement>();
-const windowWeightsRef = ref<HTMLSpanElement>();
-
-watchEffect(() => {
-  if (zTransformRef.value) {
-    window.katex.render(zTransform, zTransformRef.value!);
-  }
-  if (differenceEqRef.value) {
-    window.katex.render(differenceEq, differenceEqRef.value!);
-  }
-  if (transferFunctionRef.value) {
-    window.katex.render(digitalFiltersTransferFunction, transferFunctionRef.value!);
-  }
-  if (windowWeightsRef.value) {
-    window.katex.render(windowWeights, windowWeightsRef.value!);
-  }
-});
+import KatexEquation from "@/js/components/common/KatexEquation.vue";
 </script>
