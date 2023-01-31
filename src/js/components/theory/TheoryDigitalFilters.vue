@@ -1,15 +1,15 @@
 <template>
   <div class="flex flex-col gap-4">
-    <app-paragraph>
+    <AppParagraph>
       Digitalen filter je sistem, katerega lastnosti določajo osnovne matematične operacije in funkcije.
       V praksi srečujemo dve osnovni implementaciji digitalnega filtra: filter s končnim odzivom (FIR) in filter z neskončnim
       odzivom (IIR). Pri dobremu razumevanju delovanja in lastnosti teh filtrov si pomagamo z z-transformacijo.
-    </app-paragraph>
+    </AppParagraph>
 
-    <app-section-heading>
+    <AppSectionHeading>
       Z-transform
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       Z-transform je analiza, ki nam omogoča določiti frekvenčni spekter časovno diskretnih signalov.
       Dvostranski spekter časovno diskretnega signala določa sledeča neskončna vrsta:
       <span
@@ -37,12 +37,12 @@
         ref="transferFunctRef"
         class="katex-block"
       />
-    </app-paragraph>
+    </AppParagraph>
 
-    <app-section-heading>
+    <AppSectionHeading>
       Bločni diagram
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       Splošni bločni diagram zajema tako rekurziven kot nerekurziven sistem. Razlika je v tem, da so
       <span class="font-semibold">a<sub>k</sub></span> koeficienti
       pri slednjemu enaki nič (razen <span class="font-semibold">a<sub>0</sub> = 1</span>), kar pomeni, da je trenutni izhod
@@ -53,19 +53,19 @@
       <div style="width: 75%">
         <img
           style="margin-bottom:1cm;margin-top:1cm;padding-left:0.1cm;"
-          src="@/js/components/images/IIR_block.jpg"
+          src="/images/theory/digital-filters/IIR_block.jpg"
           alt="IIR blok"
         />
       </div>
       <div style="margin-top:-0.5cm">
       (Vir slike: L. Gačnik, Koncepti digitalnih filtrov za merjenje napetosti celic avtomobilskih baterij, diplomsko delo, FE – Fakulteta za elektrotehniko, Ljubljana, 2022)
       </div>
-    </app-paragraph>
+    </AppParagraph>
 
-    <app-section-heading>
+    <AppSectionHeading>
       Finite Impulse Response (FIR)
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       Preprost filter, ki enakomerno povpreči <span class="font-semibold">N+1</span> število preteklih vzorcev, je eden izmed morebitnih FIR filtrov.
       Drugače rečeno, gre za povprečenje, kjer so uteži posameznih vzorcev določene s pravokotno okensko funkcijo.
       Če vrednosti uteži določimo s katerokoli drugo okensko funkcijo, se temu primerno spremeni prenosna funkcija filtra.
@@ -87,12 +87,12 @@
         class="katex-block"
       />
       Medtem ko pasovno-prepustni in pasovno-zaporni filter dobimo s kaskado nizko-prepustnega in visoko-prepustnega filtra.
-    </app-paragraph>
+    </AppParagraph>
 
-    <app-section-heading>
+    <AppSectionHeading>
       Infinite Impulse Response (IIR)
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       IIR filter je nekoliko drugačen, saj določamo <span class="font-semibold">a<sub>k</sub></span> in
       <span class="font-semibold">b<sub>k</sub></span> koeficiente direktno iz prenosnih funkcij analognih filtrov.
       Zato so prikazani le filtri 2. reda, saj se sistemska funkcija spreminja drastično s povečevanjem reda filtra. Medtem ko se pri FIR
@@ -103,7 +103,7 @@
       V nadaljevanju je možen prikaz prenosne funkcije kateregakoli izmed osnovnih Biquad filtrov. Ker gre za analogna sita, ki jih IIR filter posnema, najprej določimo sistemsko funkcijo <span class="font-semibold">H(s)</span>.
       Na osnovi vrednosti ničel in polov sistemske funkcije določimo koeficiente <span class="font-semibold">a<sub>k</sub></span> in <span class="font-semibold">b<sub>k</sub></span>.
       Več o sistemskih funkcijah predstavljenih Biquad filtrov si lahko ogledate na <a href="https://wiki.analog.com/resources/tools-software/sigmastudio/toolbox/Filters/GeneralEq2ndorder" style="color:rgb(50 150 246);text-decoration: underline;" target="_blank">tej povezavi.</a>
-    </app-paragraph>
+    </AppParagraph>
   </div>
 </template>
 

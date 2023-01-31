@@ -1,15 +1,15 @@
 <template>
-  <app-main-container>
-    <app-main-heading>
+  <AppMainContainer>
+    <AppMainHeading>
       Kazalci
-    </app-main-heading>
-    <app-collapsible>
-      <theory-pointer />
-    </app-collapsible>
-    <canvas-container>
-      <div :id="canvasId" />
-    </canvas-container>
-  </app-main-container>
+    </AppMainHeading>
+    <AppCollapsible>
+      <theory-pointer/>
+    </AppCollapsible>
+    <CanvasContainer>
+      <div :id="canvasId"/>
+    </CanvasContainer>
+  </AppMainContainer>
 </template>
 
 <script>
@@ -22,8 +22,14 @@ import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
 import AppCollapsible from "@/js/components/common/AppCollapsible.vue";
 
 export default {
-  name: "Pointers",
-  components: {AppMainContainer, AppCollapsible, AppMainHeading, TheoryPointer, CanvasContainer},
+  name: "PointersView",
+  components: {
+    AppMainContainer,
+    AppCollapsible,
+    AppMainHeading,
+    TheoryPointer,
+    CanvasContainer
+  },
   data() {
     return {
       p5: null,

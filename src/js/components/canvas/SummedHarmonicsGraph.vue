@@ -1,10 +1,10 @@
 <template>
-  <app-section-heading>
+  <AppSectionHeading>
     Prikaz seštetega signala
-  </app-section-heading>
-  <canvas-container>
+  </AppSectionHeading>
+  <CanvasContainer>
     <div :id="canvasId" />
-  </canvas-container>
+  </CanvasContainer>
 </template>
 
 <script>
@@ -14,7 +14,7 @@ import CanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 import '@/js/types/types.ts';
 
 export default {
-  name: "SummedHarmonics",
+  name: "SummedHarmonicsGraph",
   components: {AppSectionHeading, CanvasContainer},
   props: {
     components: {

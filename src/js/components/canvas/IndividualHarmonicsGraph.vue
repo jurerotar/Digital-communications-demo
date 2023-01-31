@@ -1,10 +1,10 @@
 <template>
-  <app-section-heading>
+  <AppSectionHeading>
     Prikaz posameznik komponent
-  </app-section-heading>
-  <canvas-container>
+  </AppSectionHeading>
+  <CanvasContainer>
     <div :id="canvasId" />
-  </canvas-container>
+  </CanvasContainer>
 </template>
 
 <script>
@@ -14,7 +14,7 @@ import CanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 import '@/js/types/types.ts';
 
 export default {
-  name: "IndividualHarmonics",
+  name: "IndividualHarmonicsGraph",
   components: {AppSectionHeading, CanvasContainer},
   props: {
     components: {

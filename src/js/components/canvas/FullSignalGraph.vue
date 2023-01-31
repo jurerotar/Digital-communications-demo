@@ -1,10 +1,10 @@
 <template>
-  <app-section-heading>
+  <AppSectionHeading>
     {{ title }}
-  </app-section-heading>
-  <canvas-container>
+  </AppSectionHeading>
+  <CanvasContainer>
     <div :id="canvasId" />
-  </canvas-container>
+  </CanvasContainer>
 </template>
 
 
@@ -15,7 +15,7 @@ import CanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 import '@/js/types/types.ts';
 
 export default {
-  name: "FullSignal",
+  name: "FullSignalGraph",
   components: {AppSectionHeading, CanvasContainer},
   props: {
     data: {

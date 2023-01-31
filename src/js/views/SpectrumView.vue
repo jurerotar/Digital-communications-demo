@@ -1,38 +1,38 @@
 <template>
-  <app-main-container>
-    <app-main-heading>
+  <AppMainContainer>
+    <AppMainHeading>
       Spekter
-    </app-main-heading>
-    <app-collapsible>
+    </AppMainHeading>
+    <AppCollapsible>
       <theory-spectrum />
-    </app-collapsible>
-    <app-section-heading>
+    </AppCollapsible>
+    <AppSectionHeading>
       Oblika impulza
-    </app-section-heading>
-    <button-container>
-      <app-button
+    </AppSectionHeading>
+    <ButtonContainer>
+      <AppButton
         v-for="shape in pulses"
         :key="shape.key"
         :active="pulse.key === shape.key"
         @click="setPulseShape(shape.key)"
       >
         {{ shape.label }}
-      </app-button>
-    </button-container>
-    <app-section-heading>
+      </AppButton>
+    </ButtonContainer>
+    <AppSectionHeading>
       Dolžina impulza
-    </app-section-heading>
-    <button-container>
-      <app-button
+    </AppSectionHeading>
+    <ButtonContainer>
+      <AppButton
         v-for="length in pulse.pulseLengths"
         :key="length.key"
         :active="pulseLength === length.key"
         @click="setPulseLength(length.key)"
       >
         {{ length.label }}
-      </app-button>
-    </button-container>
-    <full-signal
+      </AppButton>
+    </ButtonContainer>
+    <FullSignalGraph
       :canvas-id="'spectrum-original-signal'"
       :data="baseSignal"
       :title="'Impulz'"
@@ -40,7 +40,7 @@
       :horizontal-pool="pulse.horizontalPool"
       :type="pulse.key"
     />
-    <spectrum-canvas
+    <SpectrumGraph
       :canvas-id="'spectrum-signal-spectrum'"
       :data="transformedSignal"
       :title="'Spekter'"
@@ -49,8 +49,8 @@
       :description="pulse?.spectrumGraphTexts?.description"
       :note="pulse?.spectrumGraphTexts?.note"
     />
-    <logarithmic
-      :canvas-id="'spectrum-signal-logarithmic'"
+    <LogarithmicGraph
+      :canvas-id="'spectrum-signal-logarithmicGraph'"
       :data="transformedSignal"
       :title="'Spekter [dB]'"
       :type="pulse.key"
@@ -58,7 +58,7 @@
       :description="pulse?.logarithmGraphTexts?.description"
       :note="pulse?.logarithmGraphTexts?.note"
     />
-  </app-main-container>
+  </AppMainContainer>
 </template>
 
 <script
@@ -66,9 +66,9 @@
   lang="ts"
 >
 import TheorySpectrum from "@/js/components/theory/TheorySpectrum.vue";
-import SpectrumCanvas from "@/js/components/canvas/Spectrum.vue";
-import FullSignal from "@/js/components/canvas/FullSignal.vue";
-import Logarithmic from "@/js/components/canvas/Logarithmic.vue";
+import SpectrumGraph from "@/js/components/canvas/SpectrumGraph.vue";
+import FullSignalGraph from "@/js/components/canvas/FullSignalGraph.vue";
+import LogarithmicGraph from "@/js/components/canvas/LogarithmicGraph.vue";
 import ButtonContainer from "@/js/components/common/buttons/AppButtonContainer.vue";
 import AppButton from "@/js/components/common/buttons/AppButton.vue";
 import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
@@ -92,7 +92,7 @@ export interface Pulse {
   pulseLengths: PulseLengthOption[];
   // Additional texts displayed along spectrum chart
   spectrumGraphTexts?: PulseGraphText;
-  // Additional texts displayed along logarithmic chart
+  // Additional texts displayed along logarithmicGraph chart
   logarithmGraphTexts?: PulseGraphText;
 }
 

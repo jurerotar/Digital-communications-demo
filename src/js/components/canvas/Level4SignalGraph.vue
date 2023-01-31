@@ -1,7 +1,8 @@
 <template>
-  <app-section-heading>
+  <AppSectionHeading>
     {{ title }}
-  </app-section-heading>
+  </AppSectionHeading>
+  <slot />
   <p
     v-if="description !== ''"
     class="my-1 transition-colors duration-300 dark:text-white"
@@ -14,9 +15,9 @@
   >
     <span class="font-semibold">Opomba:</span>{{ note }}
   </p>
-  <canvas-container>
+  <CanvasContainer>
     <div id="4-level-binary" />
-  </canvas-container>
+  </CanvasContainer>
 </template>
 
 <script>
@@ -26,7 +27,7 @@ import CanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 import '@/js/types/types.ts';
 
 export default {
-  name: "PositiveOnlySignal",
+  name: "Level4SignalGraph",
   components: {AppSectionHeading, CanvasContainer},
   props: {
     data: {

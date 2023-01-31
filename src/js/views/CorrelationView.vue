@@ -1,52 +1,52 @@
 <template>
-  <app-main-container>
-    <app-main-heading>
+  <AppMainContainer>
+    <AppMainHeading>
       Korelacijska Funkcija
-    </app-main-heading>
-    <app-collapsible>
-      <theory-correlation />
-    </app-collapsible>
-    <app-section-heading>
+    </AppMainHeading>
+    <AppCollapsible>
+      <theory-correlation/>
+    </AppCollapsible>
+    <AppSectionHeading>
       Izbira tipa signalov:
-    </app-section-heading>
-    <app-button-container>
-      <app-button
+    </AppSectionHeading>
+    <AppButtonContainer>
+      <AppButton
         v-for="signal in signals"
         :key="signal.label"
         :active="signal.label===signalType"
         @click="changeSignalType(signal.label)"
       >
         {{ signal.label }}
-      </app-button>
-    </app-button-container>
+      </AppButton>
+    </AppButtonContainer>
 
     <template v-if="signalType==='Harmonični'">
-      <app-section-heading>
+      <AppSectionHeading>
         Izbira frekvence drugega signala:
-      </app-section-heading>
-      <app-button-container>
-        <app-button
+      </AppSectionHeading>
+      <AppButtonContainer>
+        <AppButton
           v-for="signal in signals[0].signal"
           :key="signal.key"
           :active="choosedSecondSignal === signal.key"
           @click="changeSignal(signal.key, 'harmonični')"
         >
           {{ signal.label }}
-        </app-button>
-      </app-button-container>
-      <app-section-heading>
+        </AppButton>
+      </AppButtonContainer>
+      <AppSectionHeading>
         Izbira frekvence drugega signala:
-      </app-section-heading>
-      <app-button-container>
-        <app-button
+      </AppSectionHeading>
+      <AppButtonContainer>
+        <AppButton
           v-for="frequency in signals[0].frequencyRange"
           :key="frequency"
           :active="signals[0].frequency === frequency"
           @click="changeFrequency(frequency)"
         >
           {{ frequency }}
-        </app-button>
-      </app-button-container>
+        </AppButton>
+      </AppButtonContainer>
       <!-- Slider -->
       <div class="inline-flex flex-col w-fit-content gap-4">
         <label
@@ -65,7 +65,7 @@
           @change="updateTau(tau)"
         >
       </div>
-      <full-signal
+      <FullSignalGraph
         :canvas-id="'first-signal'"
         :data="canvasInputFirst"
         :title="'Prvi Signal'"
@@ -74,7 +74,7 @@
         :type="choosedFirstSignal"
         :y-axis-label="'x(t)'"
       />
-      <full-signal
+      <FullSignalGraph
         :canvas-id="'second-signal'"
         :data="canvasInputSecond"
         :title="'Drugi Signal'"
@@ -83,10 +83,10 @@
         :type="choosedSecondSignal"
         :y-axis-label="'y(t)'"
       />
-      <app-paragraph class="text-xl">
+      <AppParagraph class="text-xl">
         Rezultat korelacijske funkcije: {{ correlationResult }}
-      </app-paragraph>
-      <full-signal
+      </AppParagraph>
+      <FullSignalGraph
         :canvas-id="'correlation-signal'"
         :data="canvasInputCorrelation"
         :title="'Zmnožek prvega in drugega signala'"
@@ -95,7 +95,7 @@
         :type="correlation.type"
         :y-axis-label="'x(t)y(t)'"
       />
-      <full-signal
+      <FullSignalGraph
         :canvas-id="'correlation-function-signal'"
         :data="canvasInputCorrelationFunction"
         :title="'Korelacijska Funkcija'"
@@ -108,32 +108,32 @@
     </template>
 
     <template v-if="signalType==='Impulzni'">
-      <app-section-heading>
+      <AppSectionHeading>
         Izbira prvega signala:
-      </app-section-heading>
-      <app-button-container>
-        <app-button
+      </AppSectionHeading>
+      <AppButtonContainer>
+        <AppButton
           v-for="signal in signals[1].signal"
           :key="signal.key"
           :class="{'bg-blue-600': choosedFirstSignal===signal.key}"
           @click="changeSignal(signal.key, 'impulzni', 1)"
         >
           {{ signal.label }}
-        </app-button>
-      </app-button-container>
-      <app-section-heading>
+        </AppButton>
+      </AppButtonContainer>
+      <AppSectionHeading>
         Izbira drugega signala:
-      </app-section-heading>
-      <app-button-container>
-        <app-button
+      </AppSectionHeading>
+      <AppButtonContainer>
+        <AppButton
           v-for="signal in signals[1].signal"
           :key="signal.key"
           :class="{'bg-blue-600': choosedSecondSignal===signal.key}"
           @click="changeSignal(signal.key, 'impulzni', 2)"
         >
           {{ signal.label }}
-        </app-button>
-      </app-button-container>
+        </AppButton>
+      </AppButtonContainer>
       <!-- Slider -->
       <div class="inline-flex flex-col w-fit-content gap-4">
         <label
@@ -152,7 +152,7 @@
           @change="updateTau(tau)"
         >
       </div>
-      <full-signal
+      <FullSignalGraph
         :canvas-id="'first-signal'"
         :data="canvasInputFirst"
         :title="'Prvi Signal'"
@@ -161,7 +161,7 @@
         :type="choosedFirstSignal"
         :y-axis-label="'x(t)'"
       />
-      <full-signal
+      <FullSignalGraph
         :canvas-id="'second-signal'"
         :data="canvasInputSecond"
         :title="'Drugi Signal'"
@@ -170,10 +170,10 @@
         :type="choosedSecondSignal"
         :y-axis-label="'y(t)'"
       />
-      <app-paragraph class="text-xl">
+      <AppParagraph class="text-xl">
         Rezultat korelacijske funkcije: {{ correlationResult }}
-      </app-paragraph>
-      <full-signal
+      </AppParagraph>
+      <FullSignalGraph
         :canvas-id="'correlation-signal'"
         :data="canvasInputCorrelation"
         :title="'Zmnožek prvega in drugega signala'"
@@ -182,7 +182,7 @@
         :type="correlation.type"
         :y-axis-label="'x(t)y(t)'"
       />
-      <full-signal
+      <FullSignalGraph
         :canvas-id="'correlation-function-signal'"
         :data="canvasInputCorrelationFunction"
         :title="'Korelacijska Funkcija'"
@@ -193,7 +193,7 @@
         :x-axis-label="'τ'"
       />
     </template>
-  </app-main-container>
+  </AppMainContainer>
 </template>
 
 <script>
@@ -205,14 +205,20 @@ import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 import TheoryCorrelation from '@/js/components/theory/TheoryCorrelation.vue';
 import AppButton from "@/js/components/common/buttons/AppButton.vue";
 import AppButtonContainer from "@/js/components/common/buttons/AppButtonContainer.vue";
-import FullSignal from "@/js/components/canvas/FullSignal.vue";
+import FullSignalGraph from "@/js/components/canvas/FullSignalGraph.vue";
 
 export default {
-  name: "Correlation",
+  name: "CorrelationView",
   components: {
     AppParagraph,
     AppMainContainer,
-    AppSectionHeading, AppMainHeading, AppCollapsible, TheoryCorrelation, AppButton, AppButtonContainer, FullSignal
+    AppSectionHeading,
+    AppMainHeading,
+    AppCollapsible,
+    TheoryCorrelation,
+    AppButton,
+    AppButtonContainer,
+    FullSignalGraph
   },
   data() {
     return {
@@ -235,11 +241,11 @@ export default {
         }
       },
       correlationFunction: {
-          type: "correlationFunction",
-          drawingValues: () => {
-            this.calculateCorrelationFunction();
-            return this.correlationFunctionArray;
-          }         
+        type: "correlationFunction",
+        drawingValues: () => {
+          this.calculateCorrelationFunction();
+          return this.correlationFunctionArray;
+        }
       },
       signals: [
         {
@@ -359,95 +365,80 @@ export default {
       this.secondSignalArray = this.canvasInputSecond;
       this.correlationSignalArray = this.multiplyArrays(this.firstSignalArray, this.secondSignalArray, this.firstSignalArray.length);
     },
-    calculateCorrelationFunction(){
-            if(this.signalType === "Harmonični"){
-              if(this.signals[0].frequency === 1){
-                if(this.choosedSecondSignal === "sin"){
-                  for(let i=0; i<600; i++){
-                    this.correlationFunctionArray[i] = 0.5*Math.sin(Math.PI * i * 1 * 0.01);
-                  }
-                }
-                else{
-                  for(let i=0; i<600; i++){
-                    this.correlationFunctionArray[i] = 0.5*Math.cos(Math.PI * i * 1 * 0.01);
-                  }
-                }
-              }
-              else{
-                for(let i=0; i<600; i++){
-                  this.correlationFunctionArray[i] = 0;
-                }
-              }
+    calculateCorrelationFunction() {
+      if (this.signalType === "Harmonični") {
+        if (this.signals[0].frequency === 1) {
+          if (this.choosedSecondSignal === "sin") {
+            for (let i = 0; i < 600; i++) {
+              this.correlationFunctionArray[i] = 0.5 * Math.sin(Math.PI * i * 0.01);
             }
-            else{
-              if(this.choosedFirstSignal === "square" && this.choosedSecondSignal === "square"){
-                  for(let i=0; i<600; i++){
-                    let x=(i-300)/200;
-                    if(i<=100 || i>=500){
-                      this.correlationFunctionArray[i]=0;
-                    }
-                    else if(i>100 && i<=300){
-                      this.correlationFunctionArray[i]=-x-1;
-                    }
-                    else{
-                      this.correlationFunctionArray[i]=x-1;
-                    }
-                  }
-              }
-              else if(this.choosedFirstSignal === "square" && this.choosedSecondSignal === "sin"){
-                  const sign=1?this.choosedFirstSignal==="square":-1
-                  for(let i=0; i<600; i++){
-                    if(i<=100 || i>=500){
-                      this.correlationFunctionArray[i]=0;
-                    }
-                    else if(i>100 && i<=300){
-                      this.correlationFunctionArray[i]=0.08*Math.cos(Math.PI * i * 2 * 0.01)-0.08;
-                    }
-                    else{
-                      this.correlationFunctionArray[i]=-0.08*Math.cos(Math.PI * i * 2 * 0.01)+0.08;
-                    }
-                  }
-              }
-              else if(this.choosedFirstSignal === "sin" && this.choosedSecondSignal === "square"){
-                  for(let i=0; i<600; i++){
-                    if(i<=100 || i>=500){
-                      this.correlationFunctionArray[i]=0;
-                    }
-                    else if(i>100 && i<=300){
-                      this.correlationFunctionArray[i]=-0.08*Math.cos(Math.PI * i * 2 * 0.01)+0.08;
-                    }
-                    else{
-                      this.correlationFunctionArray[i]=0.08*Math.cos(Math.PI * i * 2 * 0.01)-0.08;
-                    }
-                  }
-              }
-              else if((this.choosedFirstSignal === "square" && this.choosedSecondSignal === "cos") || (this.choosedFirstSignal === "cos" && this.choosedSecondSignal === "square")){
-                for(let i=0; i<600; i++){
-                    if(i<=100 || i>=500){
-                      this.correlationFunctionArray[i]=0;
-                    }
-                    else{
-                      this.correlationFunctionArray[i]=0.32*Math.sin(Math.PI * i * 0.5 * 0.01)-0.32;
-                    }
-                  }
-              }
-              else{
-                const numberOfSamples = (this.signalType === "Harmonični") ? this.correlationSignalArray.length : 200;
-                const firstSignal = (this.signalType === "Harmonični") ? this.cutArray(this.signals[0].baseHarmonicSignal.drawingValues()) : this.cutArray(this.signals[1].signal.find(el => el.key === this.choosedFirstSignal).drawingValues());
-                let correlation;
-                let secondSignal;
-                let multipliedSignals;
-                let j = 0;
-                for(let tau = -1.5; tau <= 1.5; tau = tau + 1.5/300){
-                    secondSignal = (this.signalType === "Harmonični") ? this.cutArray(this.signals[0].signal.find(el => el.key === this.choosedSecondSignal).drawingValues(tau)) : this.cutArray(this.signals[1].signal.find(el => el.key === this.choosedSecondSignal).drawingValuesSecondSignal(tau));
-                    multipliedSignals = this.multiplyArrays(firstSignal, secondSignal, 600);
-                    correlation = multipliedSignals.reduce((prevVal, currVal) => prevVal + currVal)/numberOfSamples;
-                    this.correlationFunctionArray[j] = correlation;
-                    j++;
-                }
-              }
-            }            
+          } else {
+            for (let i = 0; i < 600; i++) {
+              this.correlationFunctionArray[i] = 0.5 * Math.cos(Math.PI * i * 0.01);
+            }
           }
+        } else {
+          for (let i = 0; i < 600; i++) {
+            this.correlationFunctionArray[i] = 0;
+          }
+        }
+      } else {
+        if (this.choosedFirstSignal === "square" && this.choosedSecondSignal === "square") {
+          for (let i = 0; i < 600; i++) {
+            const x = (i - 300) / 200;
+            if (i <= 100 || i >= 500) {
+              this.correlationFunctionArray[i] = 0;
+            } else if (i > 100 && i <= 300) {
+              this.correlationFunctionArray[i] = -x - 1;
+            } else {
+              this.correlationFunctionArray[i] = x - 1;
+            }
+          }
+        } else if (this.choosedFirstSignal === "square" && this.choosedSecondSignal === "sin") {
+          for (let i = 0; i < 600; i++) {
+            if (i <= 100 || i >= 500) {
+              this.correlationFunctionArray[i] = 0;
+            } else if (i > 100 && i <= 300) {
+              this.correlationFunctionArray[i] = 0.08 * Math.cos(Math.PI * i * 2 * 0.01) - 0.08;
+            } else {
+              this.correlationFunctionArray[i] = -0.08 * Math.cos(Math.PI * i * 2 * 0.01) + 0.08;
+            }
+          }
+        } else if (this.choosedFirstSignal === "sin" && this.choosedSecondSignal === "square") {
+          for (let i = 0; i < 600; i++) {
+            if (i <= 100 || i >= 500) {
+              this.correlationFunctionArray[i] = 0;
+            } else if (i > 100 && i <= 300) {
+              this.correlationFunctionArray[i] = -0.08 * Math.cos(Math.PI * i * 2 * 0.01) + 0.08;
+            } else {
+              this.correlationFunctionArray[i] = 0.08 * Math.cos(Math.PI * i * 2 * 0.01) - 0.08;
+            }
+          }
+        } else if ((this.choosedFirstSignal === "square" && this.choosedSecondSignal === "cos") || (this.choosedFirstSignal === "cos" && this.choosedSecondSignal === "square")) {
+          for (let i = 0; i < 600; i++) {
+            if (i <= 100 || i >= 500) {
+              this.correlationFunctionArray[i] = 0;
+            } else {
+              this.correlationFunctionArray[i] = 0.32 * Math.sin(Math.PI * i * 0.5 * 0.01) - 0.32;
+            }
+          }
+        } else {
+          const numberOfSamples = (this.signalType === "Harmonični") ? this.correlationSignalArray.length : 200;
+          const firstSignal = (this.signalType === "Harmonični") ? this.cutArray(this.signals[0].baseHarmonicSignal.drawingValues()) : this.cutArray(this.signals[1].signal.find(el => el.key === this.choosedFirstSignal).drawingValues());
+          let correlation;
+          let secondSignal;
+          let multipliedSignals;
+          let j = 0;
+          for (let tau = -1.5; tau <= 1.5; tau = tau + 1.5 / 300) {
+            secondSignal = (this.signalType === "Harmonični") ? this.cutArray(this.signals[0].signal.find(el => el.key === this.choosedSecondSignal).drawingValues(tau)) : this.cutArray(this.signals[1].signal.find(el => el.key === this.choosedSecondSignal).drawingValuesSecondSignal(tau));
+            multipliedSignals = this.multiplyArrays(firstSignal, secondSignal, 600);
+            correlation = multipliedSignals.reduce((prevVal, currVal) => prevVal + currVal) / numberOfSamples;
+            this.correlationFunctionArray[j] = correlation;
+            j++;
+          }
+        }
+      }
+    }
   }
 }
 </script>

@@ -2,23 +2,23 @@
   <section class="bg-gray-100 dark:bg-gray-700 transition-colors duration-300 overflow-hidden pt-4 lg:pt-0">
     <div class="container p-4 mx-auto grid grid-cols-1 md:grid-cols-2">
       <div class="flex flex-col w-full lg:my-20 gap-4">
-        <app-circle-icon>
-          <font-awesome-icon
+        <AppCircleIcon>
+          <FontAwesomeIcon
             :icon="['fas', 'code-branch']"
             class="text-3xl"
           />
-        </app-circle-icon>
-        <app-section-heading>
+        </AppCircleIcon>
+        <AppSectionHeading>
           Sodeluj pri projektu
-        </app-section-heading>
-        <app-paragraph class="text-lg">
+        </AppSectionHeading>
+        <AppParagraph class="text-lg">
           Celotna izvorna kode aplikacije je objavljena na GitHubu, do repozitorija pa pridete z klikom na spodnjo povezavo. Koda je
           licencirana z MIT odprto-kodno licenco, torej jo lahko poljubno spreminjate, dodajate ali dopolnjujete. K sodelovanju pri
           dopolnjevanju in izpopolnjevanju te spletne aplikacije ste vabljeni vsi.
-        </app-paragraph>
-        <app-paragraph class="text-lg font-medium">
+        </AppParagraph>
+        <AppParagraph class="text-lg font-medium">
           Poglej projekt na GitHubu
-        </app-paragraph>
+        </AppParagraph>
         <a
           rel="noopener"
           href="https://github.com/jurerotar/digital-communications-demo"
@@ -32,7 +32,7 @@
       </div>
 
       <div class="w-full mt-32 relative">
-        <font-awesome-icon
+        <FontAwesomeIcon
           :icon="['fab', 'github']"
           class="opn-src-icon dark:text-gray-800 text-gray-300 absolute left-auto opacity-40 lg:opacity-80  transition-colors duration-300"
         />

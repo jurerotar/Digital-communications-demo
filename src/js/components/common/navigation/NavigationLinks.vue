@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col items-start lg:mt-10 gap-2 w-full">
-    <router-link
+    <RouterLink
       v-for="route in routes"
       :key="route.name"
       :to="route.path"
@@ -10,14 +10,14 @@
       tabindex="0"
       @click="linkClick()"
     >
-      <font-awesome-icon
+      <FontAwesomeIcon
         :icon="route.icon"
         :fixed-width="true"
       />
       {{ route.label }}
-    </router-link>
-    <scheme-switcher v-if="!isLgUp" />
-    <app-github-icon v-if="!isLgUp" />
+    </RouterLink>
+    <SchemeSwitcher v-if="!isLgUp" />
+    <AppGithubIcon v-if="!isLgUp" />
   </div>
 </template>
 

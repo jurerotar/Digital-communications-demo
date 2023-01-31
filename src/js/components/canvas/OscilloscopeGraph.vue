@@ -1,10 +1,11 @@
 <template>
-  <app-section-heading>
+  <AppSectionHeading>
     {{ name }}
-  </app-section-heading>
-  <canvas-container>
+  </AppSectionHeading>
+  <slot />
+  <CanvasContainer>
     <div :id="canvasId" />
-  </canvas-container>
+  </CanvasContainer>
 </template>
 
 
@@ -15,7 +16,7 @@ import CanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 import '@/js/types/types.ts';
 
 export default {
-  name: "Oscilloscope",
+  name: "OscilloscopeGraph",
   components: {AppSectionHeading, CanvasContainer},
 
   props: {

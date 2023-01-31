@@ -4,7 +4,7 @@
     rel="noopener"
     tabindex="0"
   >
-    <font-awesome-icon
+    <FontAwesomeIcon
       :icon="['fab', 'github']"
       class="text-3xl dark:text-white transition-colors duration-300"
     />

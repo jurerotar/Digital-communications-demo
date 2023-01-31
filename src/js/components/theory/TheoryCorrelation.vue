@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col gap-4">
-    <app-section-heading>
+    <AppSectionHeading>
       Korelacija
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       Včasih želimo signale med seboj primerjati. Kot merilo podobnosti med
       dvema signaloma lahko uporabimo njuno korelacijo.
       Korelacija signalov <span class="font-semibold">x(t)</span>
@@ -18,11 +18,11 @@
       skalar, to je število, in ne signal, kot pri običajnem produktu dveh signalov. Kadar je korelacija
       enaka 0, pravimo, da sta signala ortogonalna (si nista prav nič podobna), po analogiji z vektorji,
       kjer pravimo, da sta dva vektorja ortogonalna, kadar je njun skalarni produkt enak 0.
-    </app-paragraph>
-    <app-section-heading>
+    </AppParagraph>
+    <AppSectionHeading>
       Korelacijska funkcija
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       Če naredimo korelacijo med prvim signalom <span class="font-semibold">x(t)</span> in za
       <span class="font-semibold">τ</span> časovno
       zamaknjenim drugim signalom <span class="font-semibold">y(t + τ)</span>,
@@ -36,7 +36,7 @@
       Korelacijska funkcija ima največjo vrednost pri tistem zamiku <span class="font-semibold">τ</span>, pri katerem sta si signala med
       seboj najbolj podobna. Kadar je korelacijska funkcija dveh signalov enaka 0 pri vsakem zamiku
       <span class="font-semibold">τ</span>, pravimo, da sta signala med seboj nekorelirana.
-    </app-paragraph>
+    </AppParagraph>
   </div>
 </template>
 

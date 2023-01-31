@@ -1,30 +1,30 @@
 <template>
-  <app-main-container>
-    <app-main-heading>
+  <AppMainContainer>
+    <AppMainHeading>
       Digitalni filtri
-    </app-main-heading>
-    <app-collapsible>
-      <theory-digital-filters />
-    </app-collapsible>
-    <app-section-heading>
+    </AppMainHeading>
+    <AppCollapsible>
+      <theory-digital-filters/>
+    </AppCollapsible>
+    <AppSectionHeading>
       Povprečevalnik (FIR)
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       Predstavljena oblika FIR filtra je ena izmed možnih izvedb tega filtra.
       V osnovi gre za operacijo povprečenja, kjer uteži vzorcev, ki jih povprečimo, določimo s pomočjo danih okenskih funkcij.
       Pomembno je dejstvo, da dolžina okenske funkcije določa red filtra (in obratno).
       Ob izbiranju različnih kombinacij okenskih funkcij in njihovih dolžin hitro ugotovimo, da je takšen filter vedno nizko-prepusten.
       To pa ustreza naravi povprečenja, ki ga izvaja predstavljeni FIR filter.
-    </app-paragraph>
-    <app-section-heading>
+    </AppParagraph>
+    <AppSectionHeading>
       Red filtra:
-    </app-section-heading>
+    </AppSectionHeading>
 
-    <app-paragraph>
+    <AppParagraph>
       Red FIR filtra določa dolžino okenske funkcije. Le-ta pride do izraza pri večji dolžini okna.
       <br>
       Mejno frekvenco takšnega FIR filtra spreminjamo posredno preko dolžino okenske funkcije, katera določa uteži filtra.
-    </app-paragraph>
+    </AppParagraph>
 
     <!-- Range slider -->
     <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
@@ -47,32 +47,32 @@
         @change="UpdateFiltOrd(FilterOrder)"
       >
     </div>
-    <app-section-heading>
+    <AppSectionHeading>
       Okenska funkcija
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       Okenska funkcija določa uteži filtra. Z naklonom zvončaste oblike okna prilagajamo prenosno funkcijo sita našim zahtevam.
-    </app-paragraph>
-    <button-container>
-      <app-button
+    </AppParagraph>
+    <ButtonContainer>
+      <AppButton
         v-for="windov in filter.windovFunc"
         :key="windov.key"
         :active="selectedWindowFunction === windov.key"
         @click="changeSelectedWinFunc(windov.key)"
       >
         {{ windov.label }}
-      </app-button>
-    </button-container>
+      </AppButton>
+    </ButtonContainer>
     <div style="display: flex;">
-      <app-section-heading>
-        Prenosna funkcija povprečevalnega filtra         
-      </app-section-heading>
-      <app-section-heading style="margin-left: 200px;">
+      <AppSectionHeading>
+        Prenosna funkcija povprečevalnega filtra
+      </AppSectionHeading>
+      <AppSectionHeading style="margin-left: 200px;">
         Okenska funkcija
-      </app-section-heading>
+      </AppSectionHeading>
     </div>
     <div style="display: flex;">
-      <app-canvas-container>
+      <AppCanvasContainer>
         <graph
           title="FIR"
           :g_width=600
@@ -84,8 +84,8 @@
           :auto_scale="true"
           @loaded="UpdateFiltOrd(FilterOrder)"
         />
-      </app-canvas-container>
-      <app-canvas-container style="margin-left: 100px;">
+      </AppCanvasContainer>
+      <AppCanvasContainer style="margin-left: 100px;">
         <graph
           title="Okenska funkcija"
           :g_width=600
@@ -101,13 +101,13 @@
           :Y_label_pos="320"
           @loaded="UpdateFiltOrd(FilterOrder)"
         />
-      </app-canvas-container>
+      </AppCanvasContainer>
     </div>
 
-    <app-section-heading>
+    <AppSectionHeading>
       Biquad (IIR)
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       Podani tipi IIR filtra so znani analogni filtri ("Biquad"), ki jih izvedemo z digitalnim filtrom.
       Sistemske funkcije posameznih tipov se med seboj razlikujejo in jih ne moremo podati v nekakšni splošni obliki,
       kot je to izvedeno za FIR filter na osnovi povprečenja. Zato je tudi red predstavljenih IIR filtrov nespremenljiv (2. red).
@@ -116,15 +116,16 @@
       filtra.
       <br>
       Poleg predstavljenih IIR filtrov obstajajo tudi drugačni. Ena izmed skupin IIR filtrov, kjer imajo posamezne topologije podobne lastnosti, zajema sledeče filtre: Butterworth, Chebyshev, Elliptic in Bessel.
-    </app-paragraph>
+    </AppParagraph>
 
-    <app-section-heading>
+    <AppSectionHeading>
       Mejna frekvenca [pi x rad/sample]:
-    </app-section-heading>
+    </AppSectionHeading>
     <div>
-      <app-paragraph>
+      <AppParagraph>
         Podana je normirana mejna frekvenca, pri čemer vrednost 1 ustreza polovici vzorčevalne frekvence. Normirana mejna frekvenca določa prehod med prepusnim in zapornim pasom.
-      </app-paragraph>
+
+      </AppParagraph>
     </div>
 
     <!-- Range slider -->
@@ -150,14 +151,14 @@
     </div>
 
     <!-- Range slider -->
-    <app-section-heading>
+    <AppSectionHeading>
       Ojačenje filtra [dB]:
-    </app-section-heading>
+    </AppSectionHeading>
     <div>
-      <app-paragraph>
+      <AppParagraph>
         Ojačenje vpliva na prepusntni (pozitivno ojačenje) ali zaporni (negativno ojačenje) pas in igra vlogo le pri tipih "Peak",
         "Low-shelf" in "High-shelf".
-      </app-paragraph>
+      </AppParagraph>
     </div>
     <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
       <label
@@ -181,13 +182,13 @@
       >
     </div>
 
-    <app-section-heading>
+    <AppSectionHeading>
       Kvaliteta filtra:
-    </app-section-heading>
+    </AppSectionHeading>
     <div>
-      <app-paragraph>
+      <AppParagraph>
         Kvaliteta določa lastnost resonance, ki se nahaja na mejni frekvenci pri tipih "Notch" in "Peak".
-      </app-paragraph>
+      </AppParagraph>
     </div>
 
     <!-- Range slider -->
@@ -212,28 +213,28 @@
       >
     </div>
 
-    <app-section-heading>
+    <AppSectionHeading>
       Tip filtra
-    </app-section-heading>
+    </AppSectionHeading>
 
-    <app-paragraph>
+    <AppParagraph>
       Podani tipi Biquad filtrov posnemajo karakteristiko znanih analognih filtrov.
-    </app-paragraph>
+    </AppParagraph>
 
-    <button-container>
-      <app-button
+    <ButtonContainer>
+      <AppButton
         v-for="windov in filter.types_iir"
         :key="windov.key"
         :active="selectedFilterType === windov.key"
         @click="changeSelectedFilterType(windov.key)"
       >
         {{ windov.label }}
-      </app-button>
-    </button-container>
-    <app-section-heading>
+      </AppButton>
+    </ButtonContainer>
+    <AppSectionHeading>
       Prenosna funkcija Biquad filtra
-    </app-section-heading>
-    <app-canvas-container>
+    </AppSectionHeading>
+    <app-CanvasContainer>
       <graph
         title="IIR"
         :g_width=800
@@ -246,12 +247,11 @@
         Y_lable="Magnituda [dB]"
         @loaded="UpdateFiltGain(FilterGain, FilterCutoff, FilterQuality)"
       />
-    </app-canvas-container>
-  </app-main-container>
+    </app-CanvasContainer>
+  </AppMainContainer>
 </template>
 
 <script setup lang="ts">
-
 import TheoryDigitalFilters from "@/js/components/theory/TheoryDigitalFilters.vue";
 import ButtonContainer from "@/js/components/common/buttons/AppButtonContainer.vue";
 import AppButton from "@/js/components/common/buttons/AppButton.vue";
@@ -283,15 +283,12 @@ import {
   exactBlackman,
   flatTop,
   cosine
-  //gaussian,
-  //tukey
 } from 'window-function';
 
 import {ref} from "vue";
 import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 import AppMainContainer from "@/js/components/common/AppMainContainer.vue";
 import AppParagraph from "@/js/components/common/AppParagraph.vue";
-import AppCanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 
 export interface Filter {
   label: string;
@@ -342,7 +339,6 @@ const WindowFunctions: FiltFunc[] = [
   {key: 'rectangular', label: "Pravokotno"},
   {key: 'triangular',  label: "Trikotno"},
   {key: 'cosine',  label: "Kosinusno"},
-  //{key: 'gaussian', label: "Gaussovo"},
   {key: 'hann', label: "Hann"},
   {key: 'hamming', label: "Hamming"},
   {key: 'blackman', label: "Blackman"},
@@ -354,8 +350,6 @@ const WindowFunctions: FiltFunc[] = [
   {key: 'blackmanHarris', label: "Blackman-Harris"},
   {key: 'blackmanNuttall', label: "Blackman-Nuttall"},
   {key: 'exactBlackman', label: "Blackman"},
-  //{key: 'flatTop', label: "Flat-top"},
-  //{key: 'tukey',  label: "Tukey"}
 ];
 
 const FilterOrder = ref<number>(4);
@@ -454,15 +448,6 @@ function FirFilter() {
       case "cosine":
         numCoeff[idx] = cosine(idx, filter.winLen);
         break;
-      /* The following windows omitted since adjusting additional parameter is required */
-      /*
-      case "gaussian":
-        numCoeff[idx] = gaussian(idx, filter.winLen, filter.winParam);
-        break;
-      case "tukey":
-        numCoeff[idx] = tukey(idx, filter.winLen, filter.winParam);
-        break;
-      */
     }
     wSum = wSum + numCoeff[idx];
   }
@@ -486,8 +471,6 @@ function FirFilter() {
     }
   }
 
-  
-  
   const freq: number[] = [filter.freqRes];
   const mag: number[] = [filter.freqRes];
   let magMin = 0, magMax = 0;
@@ -496,7 +479,7 @@ function FirFilter() {
   for (let idxa = 0; idxa < filter.freqRes; idxa++) { // describe idxa
     freq[idxa] = idxa * (0.5 / (filter.freqRes + 1));
     let temp = new Complex(numCoeff[0], 0); // komentarji
-    let ejw = new Complex(0, 0);
+    const ejw = new Complex(0, 0);
 
     /* numCoeff[0] + numCoeff[1]*exp(-jw) + numCoeff[2]*exp(-2jw) + ... + b[N]*exp(-Njw) */
     for (let idxb = 1; idxb < filter.winLen; idxb++) {
@@ -551,11 +534,7 @@ function IirFilter() {
   const normFreq = Math.tan(Math.PI * (filter.cutoff / 2));    // f_cutoff as normalized frequency
 
   let slider_gain = document.getElementById("filter-gain");
-  //let slider_fm = document.getElementById("filter-cutoff");
   let slider_quality = document.getElementById("filter-quality");
-  
-  if (slider_gain == null)
-    console.log("NULL");
 
   switch (filter.type_iir) {
     case "one-pole-lp":

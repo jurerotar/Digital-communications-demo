@@ -1,41 +1,48 @@
 <template>
-  <app-main-container>
-    <app-main-heading>
+  <AppMainContainer>
+    <AppMainHeading>
       Modulacije
-    </app-main-heading>
-    <app-collapsible>
+    </AppMainHeading>
+
+    <AppCollapsible>
       <theory-modulations />
-    </app-collapsible>
-    <app-section-heading>
+    </AppCollapsible>
+
+    <AppAnimationPauseButton
+      :state="isPlaying ? 'playing' : 'paused'"
+      @click="toggleIsPlaying()"
+    />
+
+    <AppSectionHeading>
       Analogne modulacije
-    </app-section-heading>
+    </AppSectionHeading>
     <!-- Analog modulations buttons -->
-    <app-button-container>
-      <app-button
+    <AppButtonContainer>
+      <AppButton
         v-for="modulation in analogModulations"
         :key="modulation.key"
         :active="selectedModulationKey === modulation.key"
         @click="changeSelectedModulationKey(modulation.key)"
       >
         {{ modulation.label }}
-      </app-button>
-    </app-button-container>
-    <app-section-heading>
+      </AppButton>
+    </AppButtonContainer>
+    <AppSectionHeading>
       Digitalne modulacije
-    </app-section-heading>
+    </AppSectionHeading>
     <!-- Digital modulations buttons -->
-    <app-button-container>
-      <app-button
+    <AppButtonContainer>
+      <AppButton
         v-for="modulation in digitalModulations"
         :key="modulation.key"
         :active="selectedModulationKey === modulation.key"
         @click="changeSelectedModulationKey(modulation.key)"
       >
         {{ modulation.label }}
-      </app-button>
-    </app-button-container>
+      </AppButton>
+    </AppButtonContainer>
     <!-- Sine/bipolar/unipolar signal carrying data -->
-    <positive-only-signal
+    <PositiveOnlySignalGraph
       v-if="dataSignalCanvasData.type !== 'binaryLevel4'"
       :data="dataSignalCanvasData.data.data"
       :canvas-id="'data-signal'"
@@ -45,7 +52,7 @@
       :is-binary="dataSignalCanvasData.data.isBinary"
     />
     <!-- 4 level signal carrying data -->
-    <level4-signal
+    <Level4SignalGraph
       v-if="dataSignalCanvasData.type === 'binaryLevel4'"
       :data="binaryLevel4SignalValues"
       :title="dataSignalCanvasData.data.title"
@@ -53,7 +60,7 @@
       :is-binary="true"
     />
     <!-- All modulations must have a carrier, so we always display this canvas -->
-    <positive-only-signal
+    <PositiveOnlySignalGraph
       :data="carrierSignalValues"
       :canvas-id="'carrier-signal'"
       :title="'Nosilec'"
@@ -61,7 +68,7 @@
       :description="'Nosilec je visokofrekvenčni signal, s katerim moduliramo podatkovni signal.'"
       :is-binary="false"
     />
-    <positive-only-signal
+    <PositiveOnlySignalGraph
       :data="modulatedSignalValues"
       :canvas-id="'modulated-signal'"
       :title="'Moduliran signal'"
@@ -70,7 +77,7 @@
       :description="selectedModulation.description"
       :is-binary="false"
     />
-  </app-main-container>
+  </AppMainContainer>
 </template>
 
 <script
@@ -83,8 +90,8 @@ import TheoryModulations from "@/js/components/theory/TheoryModulations.vue";
 import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
 import AppButton from "@/js/components/common/buttons/AppButton.vue";
 import AppButtonContainer from "@/js/components/common/buttons/AppButtonContainer.vue";
-import Level4Signal from "@/js/components/canvas/Level4Signal.vue";
-import PositiveOnlySignal from "@/js/components/canvas/PositiveOnlySignal.vue";
+import Level4SignalGraph from "@/js/components/canvas/Level4SignalGraph.vue";
+import PositiveOnlySignalGraph from "@/js/components/canvas/PositiveOnlySignalGraph.vue";
 import {binaryValues} from "@/js/helpers/functions";
 import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 import {
@@ -96,11 +103,18 @@ import {
   ModulationToDataArrayMap
 } from "@/js/types/modulations";
 import AppMainContainer from "@/js/components/common/AppMainContainer.vue";
+import AppAnimationPauseButton from "@/js/components/common/buttons/AppAnimationPauseButton.vue";
 
 // We'll be increasing the time by this amount
 const timeDifference = 0.005;
 // Amount in pixels
 const binarySignalWidth = 120;
+
+const isPlaying = ref<boolean>(true);
+
+const toggleIsPlaying = () => {
+  isPlaying.value = !isPlaying.value;
+}
 
 const carrierValueGenerator = (time: number): number => Math.sin(time * 15 * Math.PI);
 const sineModulationValueGenerator = (time: number): number => Math.sin(time * Math.PI);
@@ -333,6 +347,9 @@ onMounted(() => {
   let time = 600 * 0.005;
   // Create interval to push new signal values to arrays
   intervalId = window.setInterval(() => {
+    if(!isPlaying.value) {
+      return;
+    }
 
     // Loop through arrays and remove last values if lengths are too big
     // Remove last element first, so we don't change array size

@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col gap-4">
-    <app-paragraph>
+    <AppParagraph>
       Izvorni signal se pri prenosu skozi prenosni kanal popači - raztegne se po časovni osi.
       V primeru ilustriranem na tej strani je ekvivalentni prenosni kanal modeliran kot idealni nizko pasovni filter z mejno frekvenco
       <span class="font-semibold">f<sub>m</sub></span>,
@@ -33,11 +33,11 @@
       vzorčimo
       naslednji simbol.
       Vrednost se prišteje naslednjemu vzorcu in spremeni njegovo vrednost. Nastane intersimbolna interferenca.
-    </app-paragraph>
-    <app-section-heading>
+    </AppParagraph>
+    <AppSectionHeading>
       Nyquistov kriterij v časovnem prostoru
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       Kljub temu, da <span class="font-semibold">h(t)</span> povzroči, da se simbol razširi čez več period vzorčenja, to ni problem, če je
       vrednost
       <span class="font-semibold">h(t)</span> enaka
@@ -49,11 +49,11 @@
         ref="h1NyquistRef"
         class="katex-block"
       />
-    </app-paragraph>
-    <app-section-heading>
+    </AppParagraph>
+    <AppSectionHeading>
       Nyquistov kriterij v frekvenčnem prostoru
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       Zanima nas še, kako mora izgledati prenosna funkcija ekvivalentnega prenosnega kanala <span class="font-semibold">H(f)</span>.
       Zgoraj zapisan izraz za <span class="font-semibold">h(t)</span> ne določa vrednosti
       <span class="font-semibold">h(t)</span> za <span class="font-semibold">t</span> <span class="font-semibold">&#8800;</span>
@@ -74,16 +74,16 @@
         Če je prekrita prenosna funkcija ekvivalentnega prenosnega kanala konstantna, potem pri digitalnem prenosu ne bo
         prišlo do intersimbolne interference.
       </span>
-    </app-paragraph>
-    <app-section-heading>
+    </AppParagraph>
+    <AppSectionHeading>
       Očesni diagram
-    </app-section-heading>
-    <app-paragraph>
+    </AppSectionHeading>
+    <AppParagraph>
       Na očesnem diagramu vidimo 2 periodi prejetega signala pri čemer za proženje uporabimo frekvenco vzorčenja.
       Na spodnjem zaslonu osciloskopa je proženje nastavljeno na vzorčno frekvenco izvornega signala,
       zato se ob spreminjanju zakasnitve na kanalu <span class="font-semibold">t<sub>0</sub></span> spremeni pozicija mesta, kjer odčitavamo
       signal (ilustrirano z zeleno črto).
-    </app-paragraph>
+    </AppParagraph>
   </div>
 </template>
 

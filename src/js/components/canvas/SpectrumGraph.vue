@@ -1,7 +1,7 @@
 <template>
-  <app-section-heading>
+  <AppSectionHeading>
     {{ title }}
-  </app-section-heading>
+  </AppSectionHeading>
   <p
     v-if="description !== ''"
     class="my-1 transition-colors duration-300 dark:text-white"
@@ -14,19 +14,19 @@
   >
     <span class="font-semibold">Opomba: </span>{{ note }}
   </p>
-  <canvas-container>
+  <CanvasContainer>
     <div :id="canvasId" />
-  </canvas-container>
+  </CanvasContainer>
 </template>
 
 <script>
 import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 import P5 from 'p5';
 import CanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
-import '@/js/types/types.ts';
+import {linearSpace} from "@/js/helpers/functions";
 
 export default {
-  name: "Logarithmic",
+  name: "SpectrumGraph",
   components: {AppSectionHeading, CanvasContainer},
   props: {
     data: {
@@ -72,9 +72,10 @@ export default {
   },
   computed: {
     normalizedData() {
-      let data = [...this.data];
+      const data = [...this.data];
+      const max = Math.max(...data);
       data.length = 600;
-      return data.map(el => -20 * Math.log(el / data[0]) + 50);
+      return data.map(el => -el / max);
     },
   },
   mounted() {
@@ -85,18 +86,18 @@ export default {
         const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
         p5.background(this.$c.background());
 
+        // Draw scale and texts
         this.$c.temporaryState(p5, () => {
           const color = this.$c.scale();
           p5.stroke(color);
           p5.strokeWeight(1);
-          // Top-bottom line
           this.$c.widerLine(p5, canvasPadding, canvasPadding, canvasPadding, canvasDimensions.y - canvasPadding);
+          const yAxisLabels = linearSpace(this.pulseLength, 0, 5);
 
-          const yAxisLabels = [0, -20, -40, -60, -80];
           for (let i = 0; i <= 20; i++) {
             // Make each fifth line labeled and wider
             if (i % 5 === 0) {
-              p5.text(Math.trunc(yAxisLabels[Math.trunc(i / 5)]), canvasPadding - 40, canvasPadding + i * 10 + 3);
+              p5.text(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4), canvasPadding - 40, canvasPadding + i * 10 + 3);
               this.$c.widerLine(p5, canvasPadding - 5, canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10);
               continue;
             }
@@ -105,30 +106,31 @@ export default {
           for (let i = 0; i <= 60; i++) {
             // Make each fifth line labeled and wider
             if (i % 5 === 0) {
-              p5.text(`${i / 10}`.substring(0, 3), canvasPadding + i * 10 - 3, 30);
-              this.$c.widerLine(p5, canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10, canvasPadding - 5);
+              p5.text(`${i / 10}`.substring(0, 3), canvasPadding + i * 10 - 3, canvasDimensions.y - 30);
+              this.$c.widerLine(p5, canvasPadding + i * 10, canvasDimensions.y - canvasPadding + 5, canvasPadding + i * 10, canvasDimensions.y - canvasPadding - 5);
               continue;
             }
-            p5.line(canvasPadding + i * 10, canvasPadding + 5, canvasPadding + i * 10, canvasPadding - 5);
+            p5.line(canvasPadding + i * 10, canvasDimensions.y - canvasPadding + 5, canvasPadding + i * 10, canvasDimensions.y - canvasPadding - 5);
           }
           // Y axis label
-          p5.text('|X(f)/X(0)| [dB]', canvasPadding - 15, canvasPadding / 2 - 15);
+          p5.text('|X(f)|', canvasPadding - 15, canvasPadding / 2);
           // X axis label
-          p5.text('f', canvasDimensions.x - 30, canvasPadding);
+          p5.text('f', canvasDimensions.x - 30, canvasDimensions.y - canvasPadding);
 
           p5.strokeWeight(2);
-          this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasPadding), p5.createVector(canvasDimensions.x - canvasPadding, canvasPadding), color, 7, 0);
-          //y-axis arrow
+          this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y - canvasPadding), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y - canvasPadding), color, 7, 0);
           p5.fill(color);
-          p5.triangle(50, 260, 46, 250, 54, 250);
-        })
+          p5.triangle(50, 40, 46, 50, 54, 50);
 
+        });
+
+        p5.strokeWeight(2);
         p5.noFill();
         p5.stroke(this.$c.colors[0]);
-        p5.strokeWeight(2);
+
         // Draw the shape
         p5.beginShape();
-        this.normalizedData.forEach((y, x) => p5.vertex(x + canvasPadding, y));
+        this.normalizedData.forEach((y, x) => p5.vertex(x + canvasPadding, canvasDimensions.y - canvasPadding + y * 200));
         p5.endShape();
       }
       p5.removeCanvas = () => p5.remove();
