@@ -147,6 +147,7 @@
                 var y_min = 10000000;
                 var y_max = -10000000;
                 if(this.autoscale){
+                    console.log(this.title);
                     for(var i = 0; i < signal_1.length;i++){
                         if(signal_1[i].x <= x_min){
                             x_min = signal_1[i].x;
@@ -185,9 +186,15 @@
                     if(mh != 0){
                         cy=(y_max)*(this.g_height)/mh + 40;
                     }
+
+                    if(cy >= this.g_height){
+                        mh += (cy +20- this.g_height)/this.g_height;
+                        cy = this.g_height-20;
+                        
+                    }
   
                     auto_scale(mw,mh,cx,cy);
-                    }
+                }
   
                     draw();
                 
@@ -463,6 +470,7 @@
   var unit_len_h = cdim.h/mdim.h;
   var num_unit_neg_h = (cdim.h-ccen.h)/unit_len_h;
   var num_unit_pos_h = (ccen.h)/unit_len_h;
+  
     if (unit_len_h >= unit_len_max) {
         step_y = 0.1;
         
@@ -480,6 +488,7 @@
        //}
      
     }
+
     
     
   //draw x_axis
@@ -626,7 +635,7 @@
             return i.toFixed(1);
         }
   
-        if(Math.abs(i) >= 1){
+        if(Math.abs(i) >= 1.3){
             return i.toFixed(0);
         }
   

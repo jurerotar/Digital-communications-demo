@@ -94,7 +94,7 @@
           :trig_draw="trig_1"
           :o_x="5"
           :o_y="5"
-          :auto_scale="true"
+          :autoscale="true"
           :Mirror="false"
           X_label="Vzorci[N]                "
           Y_label="Amplituda"
