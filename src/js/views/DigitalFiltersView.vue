@@ -241,7 +241,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, watchEffect} from "vue";
+import {computed, ref} from "vue";
 import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 import AppMainContainer from "@/js/components/common/AppMainContainer.vue";
 import AppParagraph from "@/js/components/common/AppParagraph.vue";
@@ -479,8 +479,8 @@ const calculateIIRCoefficients = (selectedIIRFilterType: IIRFilter): number[] =>
   // Denumerator coefficients are coefficients of transfer function's denumerator
   // Numerator coefficients are coefficients of transfer function's numerator
   let denumCoeff_0, denumCoeff_1, denumCoeff_2, numCoeff_1, numCoeff_2, norm;
-  const magGain = Math.pow(10, Math.abs(IIRFilterGain.value) / 20);  // gain in linear units
-  const normFreq = Math.tan(Math.PI * (IIRFilterCutoff.value / 2));    // f_cutoff as normalized frequency
+  const magGain = Math.pow(10, Math.abs(IIRFilterGain.value) / 20); // gain in linear units
+  const normFreq = Math.tan(Math.PI * (IIRFilterCutoff.value / 2)); // f_cutoff as normalized frequency
 
   switch (selectedIIRFilterType) {
     case "one-pole-lp":
@@ -591,9 +591,8 @@ const calculateIIRCoefficients = (selectedIIRFilterType: IIRFilter): number[] =>
 // IIR filter - generates transfer function based on biquad type, cutoff, quality, and gain
 const IIRFilterTransferFunctionSignalValues = computed<Coordinates[]>(() => {
   const [denumCoeff_0, denumCoeff_1, denumCoeff_2, numCoeff_1, numCoeff_2] = calculateIIRCoefficients(selectedIIRFilterType.value)
-  const freq = [RESOLUTION];
-  const mag = [RESOLUTION];
-  let yMin, yMax;
+  const freq: number[] = new Array(RESOLUTION);
+  const mag: number[] = new Array(RESOLUTION);
 
   /* Generates frequency and magnitude arrays */
   for (let idx = 0; idx < RESOLUTION; idx++) {
@@ -616,42 +615,7 @@ const IIRFilterTransferFunctionSignalValues = computed<Coordinates[]>(() => {
       mag[idx] = -200;
     }
 
-    /* Min/Max of magnitude */
-    if (idx == 0) {
-      yMin = yMax = mag[idx];
-    } else if (mag[idx] < yMin) {
-      yMin = mag[idx];
-    } else if (mag[idx] > yMax) {
-      yMax = mag[idx];
-    }
     freq[idx] = idx / (RESOLUTION - 1);
-  }
-
-  let magMin, magMax;
-
-  /* Adapt y-axis if magnitude values are less than some default values */
-  switch (selectedIIRFilterType.value) {
-    default:
-    case "lowpass" || "highpass" || "bandpass" || "notch":
-      magMin = -100;
-      magMax = 0;
-      if (yMax > magMax) {
-        magMax = yMax;
-      }
-      break;
-    case "peak" || "lowShelf" || "highShelf":
-      magMin = -10;
-      magMax = 10;
-      if (yMax > magMax) {
-        magMax = yMax;
-      } else if (yMin < magMin) {
-        magMin = yMin;
-      }
-      break;
-    case "one-pole-lp" || "one-pole-hp":
-      magMin = -40;
-      magMax = 0;
-      break;
   }
 
   return freq.map((el, index) => ({
@@ -659,15 +623,6 @@ const IIRFilterTransferFunctionSignalValues = computed<Coordinates[]>(() => {
     y: mag[index]
   }));
 });
-
-
-// watchEffect(() => {
-//   console.log({isFilterQualitySliderEnabled:isFilterQualitySliderEnabled.value})
-//   console.log({isFilterGainSliderEnabled:isFilterGainSliderEnabled.value})
-//   console.log({FIRFilterWindowFunctionSignalValues:FIRFilterWindowFunctionSignalValues.value})
-//   console.log({FIRFilterTransferFunctionSignalValues:FIRFilterTransferFunctionSignalValues.value})
-//   console.log({IIRFilterTransferFunctionSignalValues:IIRFilterTransferFunctionSignalValues.value})
-// });
 
 </script>
 
