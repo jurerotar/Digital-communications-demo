@@ -6,7 +6,6 @@ import App from '@/js/App.vue';
 import '@/js/helpers/prototypes/array';
 import '@/js/helpers/prototypes/math';
 import '@/css/index.css';
-import '@/css/katex@0.16.4.min.css';
 
 const app = createApp(App)
   .use(router)
