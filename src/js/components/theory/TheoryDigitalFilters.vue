@@ -53,7 +53,7 @@
       <div style="width: 75%">
         <img
           style="margin-bottom:1cm;margin-top:1cm;padding-left:0.1cm;"
-          src="/images/theory/digital-filters/IIR_block.jpg"
+          src="/images/theory/digital-filters/IIR_block.jpeg"
           alt="IIR blok"
         />
       </div>
