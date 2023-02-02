@@ -72,28 +72,24 @@
       </AppSectionHeading>
     </div>
     <div style="display: flex;">
-      <AppCanvasContainer>
-        <graph
-          title="FIR"
+      <AppCanvasContainer style="margin-left: 10px;">
+        <test
           :data="FIRFilterTransferFunctionSignalValues"
-          :graphWidth="600"
-          :graphHeight="350"
-          :originX="5"
-          :originY="5"
+          :mirror="true"
+          y-axis-label="Magnituda[dB]"
+          x-axis-label="Normalizirana frekvenca"
+          title="FIR"
+          canvas-id="cID"
         />
       </AppCanvasContainer>
       <AppCanvasContainer style="margin-left: 100px;">
-        <graph
-          title="Okenska funkcija"
+        <test
           :data="FIRFilterWindowFunctionSignalValues"
-          :graphWidth="600"
-          :graphHeight="350"
-          :originX="5"
-          :originY="5"
-          xLabel="Vzorci[N]"
-          yLabel="Amplituda"
-          :yLabelPos="320"
           :mirror="false"
+          y-axis-label="Amplituda"
+          x-axis-label="Vzorci[N]"
+          title="testniGraf"
+          canvas-id="cid"
         />
       </AppCanvasContainer>
     </div>
@@ -169,7 +165,7 @@
         min="-30"
         max="30"
         step="1"
-        class="slider_active"
+        :class="sliderrStyleActiveGain"
         :disabled="!isFilterGainSliderEnabled"
         Y_lable="Magnituda [dB]"
         @change="updateIIRFilterGain(IIRFilterGain)"
@@ -199,7 +195,7 @@
         min="0.01"
         max="20"
         step="0.01"
-        class="slider_active"
+        :class="sliderrStyleActiveQuality"
         :disabled="!isFilterQualitySliderEnabled"
         @change="updateIIRFilterQuality(IIRFilterQuality)"
       >
@@ -226,15 +222,14 @@
     <AppSectionHeading>
       Prenosna funkcija Biquad filtra
     </AppSectionHeading>
-    <AppCanvasContainer>
-      <graph
-        title="IIR"
+    <AppCanvasContainer style="margin-left: 10px;">
+      <test
         :data="IIRFilterTransferFunctionSignalValues"
-        :graphWidth="800"
-        :graphHeight="350"
-        :originX="5"
-        :originY="5"
-        Y_lable="Magnituda [dB]"
+        :mirror="true"
+        y-axis-label="Magnituda[dB]"
+        x-axis-label="Normalizirana frekvenca"
+        title="IRR"
+        canvas-id="cIR"
       />
     </AppCanvasContainer>
   </AppMainContainer>
@@ -251,9 +246,11 @@ import ButtonContainer from "@/js/components/common/buttons/AppButtonContainer.v
 import AppButton from "@/js/components/common/buttons/AppButton.vue";
 import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
 import AppCollapsible from "@/js/components/common/AppCollapsible.vue";
-import Graph from "@/js/components/canvas/DigitalFiltersGraph.vue";
+// import Graph from "@/js/components/canvas/DigitalFiltersGraph.vue";
 import {FIRFilter, IIRFilter} from "@/js/types/Filters";
 import Complex from 'Complex';
+import test from "@/js/components/canvas/DigitalFiltersGraph.vue";
+
 import {
   bartlett,
   bartlettHann,
@@ -279,7 +276,7 @@ type AvailableFilter<T> = {
 }
 
 // Graph points to show
-const RESOLUTION = 10000;
+const RESOLUTION = 1000;
 
 const gainToDecibels = (value: number): number => {
   if (value == null) {
@@ -473,6 +470,22 @@ const isFilterGainSliderEnabled = computed<boolean>(() => {
 const isFilterQualitySliderEnabled = computed<boolean>(() => {
   const IIRFilterTypesWhereSliderIsEnabled: IIRFilter[] = ['peak', 'notch'];
   return IIRFilterTypesWhereSliderIsEnabled.includes(selectedIIRFilterType.value);
+});
+
+const sliderrStyleActiveGain = computed<string>(() => {
+  if(isFilterGainSliderEnabled.value){
+    return "slider_active";
+  }else{
+    return "slider_inactive";
+  }
+});
+
+const sliderrStyleActiveQuality = computed<string>(() => {
+  if(isFilterQualitySliderEnabled.value){
+    return "slider_active";
+  }else{
+    return "slider_inactive";
+  }
 });
 
 const calculateIIRCoefficients = (selectedIIRFilterType: IIRFilter): number[] => {
