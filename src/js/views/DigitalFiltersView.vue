@@ -4,7 +4,7 @@
       Digitalni filtri
     </AppMainHeading>
     <AppCollapsible>
-      <theory-digital-filters />
+      <theory-digital-filters/>
     </AppCollapsible>
     <AppSectionHeading>
       Povprečevalnik (FIR)
@@ -73,7 +73,7 @@
     </div>
     <div style="display: flex;">
       <AppCanvasContainer style="margin-left: 10px;">
-        <test
+        <DigitalFiltersGraph
           :data="FIRFilterTransferFunctionSignalValues"
           :mirror="true"
           y-axis-label="Magnituda[dB]"
@@ -83,7 +83,7 @@
         />
       </AppCanvasContainer>
       <AppCanvasContainer style="margin-left: 100px;">
-        <test
+        <DigitalFiltersGraph
           :data="FIRFilterWindowFunctionSignalValues"
           :mirror="false"
           y-axis-label="Amplituda"
@@ -114,7 +114,7 @@
     </AppSectionHeading>
     <div>
       <AppParagraph>
-        Podana je normirana mejna frekvenca, pri čemer vrednost 1 ustreza polovici vzorčevalne frekvence. 
+        Podana je normirana mejna frekvenca, pri čemer vrednost 1 ustreza polovici vzorčevalne frekvence.
         Normirana mejna frekvenca določa prehod med prepusnim in zapornim pasom.
       </AppParagraph>
     </div>
@@ -223,7 +223,7 @@
       Prenosna funkcija Biquad filtra
     </AppSectionHeading>
     <AppCanvasContainer style="margin-left: 10px;">
-      <test
+      <DigitalFiltersGraph
         :data="IIRFilterTransferFunctionSignalValues"
         :mirror="true"
         y-axis-label="Magnituda[dB]"
@@ -236,7 +236,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from "vue";
+import {computed, ref, watchEffect} from "vue";
 import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 import AppMainContainer from "@/js/components/common/AppMainContainer.vue";
 import AppParagraph from "@/js/components/common/AppParagraph.vue";
@@ -249,7 +249,6 @@ import AppCollapsible from "@/js/components/common/AppCollapsible.vue";
 // import Graph from "@/js/components/canvas/DigitalFiltersGraph.vue";
 import {FIRFilter, IIRFilter} from "@/js/types/Filters";
 import Complex from 'Complex';
-import test from "@/js/components/canvas/DigitalFiltersGraph.vue";
 
 import {
   bartlett,
@@ -269,10 +268,16 @@ import {
   welch
 } from 'window-function';
 import {Coordinates} from "@/js/types/types";
+import DigitalFiltersGraph from "@/js/components/canvas/DigitalFiltersGraph.vue";
 
 type AvailableFilter<T> = {
   key: T;
   label: string;
+}
+
+type WindowWeightCalculationReturn = {
+  windowWeightCoefficients: number[],
+  sumOfWindowWeightCoefficients: number;
 }
 
 // Graph points to show
@@ -285,7 +290,7 @@ const gainToDecibels = (value: number): number => {
   return 20 * (0.43429 * Math.log(value));
 }
 
-const calculateWindowWeights = (selectedFIRFilterType: FIRFilter, FIRFilterOrder: number): number[] => {
+const calculateWindowWeights = (selectedFIRFilterType: FIRFilter, FIRFilterOrder: number): WindowWeightCalculationReturn => {
   const windowWeightCoefficients = new Array(FIRFilterOrder);
   for (let idx = 0; idx < FIRFilterOrder; idx++) {
     switch (selectedFIRFilterType) {
@@ -336,7 +341,15 @@ const calculateWindowWeights = (selectedFIRFilterType: FIRFilter, FIRFilterOrder
         break;
     }
   }
-  return windowWeightCoefficients;
+
+  const sumOfWindowWeightCoefficients = windowWeightCoefficients.reduce((currentElement: number, accumulator: number) => {
+    return currentElement + accumulator;
+  }, 0);
+
+  return {
+    windowWeightCoefficients,
+    sumOfWindowWeightCoefficients
+  };
 }
 
 // FIR
@@ -346,15 +359,15 @@ const availableFIRFilters: AvailableFilter<FIRFilter>[] = [
   {key: 'cosine', label: "Kosinusno"},
   {key: 'hann', label: "Hann"},
   {key: 'hamming', label: "Hamming"},
-  {key: 'blackman', label: "Blackman"},
   {key: 'lanczos', label: "Lanczos"},
   {key: 'bartlett', label: "Bartlett"},
   {key: 'bartlettHann', label: "Bartlett-Hann"},
   {key: 'welch', label: "Welch"},
   {key: 'nuttall', label: "Nuttall"},
+  {key: 'blackman', label: "Blackman"},
   {key: 'blackmanHarris', label: "Blackman-Harris"},
   {key: 'blackmanNuttall', label: "Blackman-Nuttall"},
-  {key: 'exactBlackman', label: "Blackman"},
+  {key: 'exactBlackman', label: "Exact Blackman"},
 ];
 
 const selectedFIRFilterType = ref<FIRFilter>('rectangular');
@@ -370,7 +383,7 @@ const updateFIRFilterOrder = (order: number): void => {
 }
 
 const FIRFilterWindowFunctionSignalValues = computed<Coordinates[]>(() => {
-  const windowWeightCoefficients = calculateWindowWeights(selectedFIRFilterType.value, FIRFilterOrder.value);
+  const {windowWeightCoefficients} = calculateWindowWeights(selectedFIRFilterType.value, FIRFilterOrder.value);
 
   const xValues = [...new Array(FIRFilterOrder.value).keys()];
 
@@ -380,7 +393,7 @@ const FIRFilterWindowFunctionSignalValues = computed<Coordinates[]>(() => {
   }));
 
   // Push values to start and end if selected type is rectangular
-  if(selectedFIRFilterType.value === 'rectangular') {
+  if (selectedFIRFilterType.value === 'rectangular') {
     return [{x: 0, y: 0}, ...chartValues, {x: FIRFilterOrder.value - 1, y: 0}];
   }
 
@@ -388,7 +401,12 @@ const FIRFilterWindowFunctionSignalValues = computed<Coordinates[]>(() => {
 });
 
 const FIRFilterTransferFunctionSignalValues = computed<Coordinates[]>(() => {
-  const windowWeightCoefficients = calculateWindowWeights(selectedFIRFilterType.value, FIRFilterOrder.value);
+  const {
+    windowWeightCoefficients,
+    sumOfWindowWeightCoefficients
+  } = calculateWindowWeights(selectedFIRFilterType.value, FIRFilterOrder.value);
+
+  const dividedWindowWeightCoefficients = windowWeightCoefficients.map((el: number) => el / sumOfWindowWeightCoefficients);
 
   // x-axis values
   const frequencies: number[] = new Array(RESOLUTION);
@@ -400,11 +418,11 @@ const FIRFilterTransferFunctionSignalValues = computed<Coordinates[]>(() => {
   /* Generates frequency and magnitude arrays */
   for (let idxa = 0; idxa < RESOLUTION; idxa++) {
     frequencies[idxa] = idxa * (0.5 / (RESOLUTION + 1));
-    let temp = new Complex(windowWeightCoefficients[0], 0);
+    let temp = new Complex(dividedWindowWeightCoefficients[0], 0);
 
-    /* windowWeightCoefficients[0] + windowWeightCoefficients[1]*exp(-jw) + windowWeightCoefficients[2]*exp(-2jw) + ... + b[N]*exp(-Njw) */
+    /* dividedWindowWeightCoefficients[0] + dividedWindowWeightCoefficients[1]*exp(-jw) + dividedWindowWeightCoefficients[2]*exp(-2jw) + ... + b[N]*exp(-Njw) */
     for (let idxb = 1; idxb < FIRFilterOrder.value; idxb++) {
-      temp = temp.add(ejw.fromPolar(windowWeightCoefficients[idxb], -idxb * 2 * Math.PI * frequencies[idxa]));
+      temp = temp.add(ejw.fromPolar(dividedWindowWeightCoefficients[idxb], -idxb * 2 * Math.PI * frequencies[idxa]));
     }
 
     // H(jw) = Y(jw) / X(jw)
@@ -422,6 +440,10 @@ const FIRFilterTransferFunctionSignalValues = computed<Coordinates[]>(() => {
     x: el,
     y: magnitudes[index]
   }));
+});
+
+watchEffect(() => {
+  console.log(FIRFilterWindowFunctionSignalValues.value);
 });
 
 
@@ -473,17 +495,17 @@ const isFilterQualitySliderEnabled = computed<boolean>(() => {
 });
 
 const sliderrStyleActiveGain = computed<string>(() => {
-  if(isFilterGainSliderEnabled.value){
+  if (isFilterGainSliderEnabled.value) {
     return "slider_active";
-  }else{
+  } else {
     return "slider_inactive";
   }
 });
 
 const sliderrStyleActiveQuality = computed<string>(() => {
-  if(isFilterQualitySliderEnabled.value){
+  if (isFilterQualitySliderEnabled.value) {
     return "slider_active";
-  }else{
+  } else {
     return "slider_inactive";
   }
 });
@@ -613,13 +635,13 @@ const IIRFilterTransferFunctionSignalValues = computed<Coordinates[]>(() => {
 
     /* BiQuad filer transfer function of 2nd order */
     const phi = Math.pow(Math.sin(freq[idx] / 2), 2);
-    mag[idx] = 
-        Math.log(Math.pow(denumCoeff_0 + denumCoeff_1 + denumCoeff_2, 2) - 4 * 
-                (denumCoeff_0 * denumCoeff_1 + 4 * denumCoeff_0 * denumCoeff_2 + denumCoeff_1 * denumCoeff_2) * 
-                phi + 16 * denumCoeff_0 * denumCoeff_2 * phi * phi) -
-        Math.log(Math.pow(1 + numCoeff_1 + numCoeff_2, 2) - 4 * 
-                (numCoeff_1 + 4 * numCoeff_2 + numCoeff_1 * numCoeff_2) * 
-                phi + 16 * numCoeff_2 * phi * phi);
+    mag[idx] =
+      Math.log(Math.pow(denumCoeff_0 + denumCoeff_1 + denumCoeff_2, 2) - 4 *
+        (denumCoeff_0 * denumCoeff_1 + 4 * denumCoeff_0 * denumCoeff_2 + denumCoeff_1 * denumCoeff_2) *
+        phi + 16 * denumCoeff_0 * denumCoeff_2 * phi * phi) -
+      Math.log(Math.pow(1 + numCoeff_1 + numCoeff_2, 2) - 4 *
+        (numCoeff_1 + 4 * numCoeff_2 + numCoeff_1 * numCoeff_2) *
+        phi + 16 * numCoeff_2 * phi * phi);
 
     mag[idx] = mag[idx] * 10 / Math.LN10;
 
