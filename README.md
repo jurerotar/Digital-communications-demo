@@ -1,6 +1,12 @@
-![GitHub](https://img.shields.io/github/license/jurerotar/digital-communications-demo)
+# Digital communications demo application
 
-# Digital communications demo
+![GitHub](https://img.shields.io/github/license/jurerotar/digital-communications-demo)
+![Netlify](https://img.shields.io/netlify/2fc7b331-c930-4ffd-9d78-81d193375bd0?label=netlify%20build&logo=Netlify)
+![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/jurerotar/Digital-communications-demo)
+![GitHub repo size](https://img.shields.io/github/repo-size/jurerotar/Digital-communications-demo)
+![GitHub contributors](https://img.shields.io/github/contributors/jurerotar/Digital-communications-demo)
+![Contributions](https://img.shields.io/badge/contributions-welcome-brightgreen)
+![Repository views](https://img.shields.io/endpoint?color=brightgreen&label=views&url=https%3A%2F%2Fhits.dwyl.com%2Fjurerotar%2Fdigital-communication-demo.json)
 
 Digital communication demo project aims to provide students with explanations and visualizations of common occurrences in digital communications like signal modulations, signal spectrum,...
 
