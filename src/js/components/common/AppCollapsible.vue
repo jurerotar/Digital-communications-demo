@@ -2,7 +2,7 @@
   <details :open="props.opened">
     <summary
       class="flex whitespace-nowrap justify-start flex-row items-center dark:text-white cursor-pointer transition-colors bg-zinc-200
-      dark:bg-gray-700 rounded-md py-2 px-4 w-full font-semibold gap-4 w-fit-content"
+      dark:bg-gray-700 rounded-md py-2 px-4 font-semibold gap-4 w-fit-content"
       tabindex="0"
     >
       <FontAwesomeIcon

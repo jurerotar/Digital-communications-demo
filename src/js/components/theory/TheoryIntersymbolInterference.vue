@@ -19,7 +19,8 @@
       in na prvem grafu opazimo, da se razteza čez več period vzorčenja
       <KatexEquation inline>
         {{ 't_s' }}
-      </KatexEquation>. Vnaša tudi zakasnitev
+      </KatexEquation>
+      . Vnaša tudi zakasnitev
       <KatexEquation inline>
         {{ 't_s' }}
       </KatexEquation>
@@ -39,9 +40,10 @@
       ob časih
       <KatexEquation inline>
         {{ 't=nT_s' }}
-      </KatexEquation>.
+      </KatexEquation>
+      .
       <KatexEquation>
-        {{ inputSignal }}
+        {{ 'y_{odd}(t)=\\sum_{n=-\\infty}^{\\infty}y[n]δ(t-nT_s)' }}
       </KatexEquation>
       Tako je tudi prejeti signal vsota impulzov korigiranih s prenosno funkcijo
       <KatexEquation inline>
@@ -49,7 +51,7 @@
       </KatexEquation>
       , kar zapišemo z operacijo konvolucije
       <KatexEquation>
-        {{ yhConv }}
+        {{ 'y_{spr}=y_{odd}(t)*h(t)' }}
       </KatexEquation>
       Ker se
       <KatexEquation inline>
@@ -77,30 +79,46 @@
       za vse
       <KatexEquation inline>
         {{ 't=nT_s' }}
-      </KatexEquation>,
+      </KatexEquation>
+      ,
       <KatexEquation inline>
         {{ 'n \\neq 0' }}
       </KatexEquation>
-      Če <span class="font-semibold">h(t)</span> izpolnjuje to zahtevo, pravimo, da izpoljuje
+      Če
+      <KatexEquation inline>
+        {{ 'h(t)' }}
+      </KatexEquation>
+      izpolnjuje to zahtevo, pravimo, da izpoljuje
       <span class="font-semibold">Nyquistov kriterij za prenos brez intersimbolne interference v časovnem prostoru</span>.
       <KatexEquation>
-        {{ h1Nyquist }}
+        {{ 'h(nT_s)=\\begin{cases}A & n=0 \\newline 0 & n \\neq 0\\end{cases}' }}
       </KatexEquation>
     </AppParagraph>
     <AppSectionHeading>
       Nyquistov kriterij v frekvenčnem prostoru
     </AppSectionHeading>
     <AppParagraph>
-      Zanima nas še, kako mora izgledati prenosna funkcija ekvivalentnega prenosnega kanala <span class="font-semibold">H(f)</span>.
-      Zgoraj zapisan izraz za <span class="font-semibold">h(t)</span> ne določa vrednosti
-      <span class="font-semibold">h(t)</span> za <span class="font-semibold">t</span> <span class="font-semibold">&#8800;</span>
+      Zanima nas še, kako mora izgledati prenosna funkcija ekvivalentnega prenosnega kanala
       <KatexEquation inline>
-        {{ 'nT_s' }}
+        {{ 'H(f)' }}
+      </KatexEquation>
+      . Zgoraj zapisan izraz za
+      <KatexEquation inline>
+        {{ 'h(t)' }}
+      </KatexEquation>
+      ne določa vrednosti
+      <KatexEquation inline>
+        {{ 'h(t)' }}
+      </KatexEquation>
+      za
+      <KatexEquation inline>
+        {{ 't \\neq nT_s' }}
       </KatexEquation>
       , zato ga zapišemo drugače:
       <KatexEquation>
-        {{ h2Nyquist }}
-      </KatexEquation>,
+        {{ 'h(t)*v_δ(t)=Aδ(t)' }}
+      </KatexEquation>
+      ,
       kjer je
       <KatexEquation inline>
         {{ 'v_δ(t)' }}
@@ -111,7 +129,7 @@
       </KatexEquation>
       , katere Fourier transform poznamo. Izraz preuredimo in dobimo izraz za prekrito prenosno funkcijo:
       <KatexEquation>
-        {{ h3Nyquist }}
+        {{ '\\sum_{k=-\\infty}^{\\infty} H(f+kf_s)=AT_s' }}
       </KatexEquation>
       Če je pogoj izpolnjen, pravimo, da velja Nyquistov kriterij za prenos brez ISI v frekvenčnem prostoru:
       <span class="font-semibold">
@@ -138,7 +156,6 @@
   setup
   lang="ts"
 >
-import {interSymbolInterferenceTransferFunction, inputSignal, yhConv, h1Nyquist, h2Nyquist, h3Nyquist} from "@/js/helpers/equations";
 import AppParagraph from "@/js/components/common/AppParagraph.vue";
 import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 import KatexEquation from "@/js/components/common/KatexEquation.vue";

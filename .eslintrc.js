@@ -38,6 +38,7 @@ module.exports = {
       "multiline": "below"
     }],
     "vue/no-spaces-around-equal-signs-in-attribute": ['warn'],
-    '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/no-non-null-assertion': ['off'],
+    '@typescript-eslint/no-inferrable-types': ['off']
   }
 }
