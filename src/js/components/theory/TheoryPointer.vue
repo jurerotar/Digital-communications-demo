@@ -5,8 +5,15 @@
     (horizontalna) os.
     <br><br>
     Sinus in kosinus sta matematični funkciji, ki opisujeta gladko ponavljajočo oscilacijo po krožnici.
-    V spodnjem primeru se ti ponavljata na intervalu <span class="font-semibold">2π</span>, za kar po krožnici potrebujemo narediti 360
-    stopinj ali <span class="font-semibold">2π</span> radianov.
+    V spodnjem primeru se ti ponavljata na intervalu
+    <KatexEquation inline>
+      {{ '2π' }}
+    </KatexEquation>
+    , za kar po krožnici potrebujemo narediti 360 stopinj ali
+    <KatexEquation inline>
+      {{ '2π' }}
+    </KatexEquation>
+    radianov.
     <br><br>
     V animaciji prikazujemo eno periodo sinusnega signala, eno periodo kosinusnega signala in kazalec, ki predstavlja vsoto kvadratov teh
     dveh signalov.
@@ -18,4 +25,5 @@
   lang="ts"
 >
 import AppParagraph from "@/js/components/common/AppParagraph.vue";
+import KatexEquation from "@/js/components/common/KatexEquation.vue";
 </script>

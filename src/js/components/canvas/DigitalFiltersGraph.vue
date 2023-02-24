@@ -1,26 +1,20 @@
 <template>
-  <AppSectionHeading/>
   <CanvasContainer>
     <div :id="canvasId"/>
   </CanvasContainer>
 </template>
 
 <script>
-import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 import P5 from 'p5';
 import CanvasContainer from "@/js/components/common/AppCanvasContainer.vue";
 import '@/js/types/types.ts';
 
 export default {
   name: "DigitalFiltersGraph",
-  components: {AppSectionHeading, CanvasContainer},
+  components: {CanvasContainer},
   props: {
     data: {
       type: Array,
-      required: true
-    },
-    title: {
-      type: String,
       required: true
     },
     canvasId: {

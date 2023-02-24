@@ -17,7 +17,7 @@
       To pa ustreza naravi povprečenja, ki ga izvaja predstavljeni FIR filter.
     </AppParagraph>
     <AppSectionHeading>
-      Red filtra:
+      Red filtra
     </AppSectionHeading>
 
     <AppParagraph>
@@ -25,28 +25,14 @@
       <br>
       Mejno frekvenco takšnega FIR filtra spreminjamo posredno preko dolžino okenske funkcije, katera določa uteži filtra.
     </AppParagraph>
-
-    <!-- Range slider -->
-    <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
-      <label
-        :for="'filter-gain'"
-        class="text-xl transition-colors duration-300 dark:text-white"
-      >
-        <span class="font-medium">
-          {{ FIRFilterOrder }}
-        </span>
-      </label>
-      <input
-        :id="'filter-order'"
-        v-model.number="FIRFilterOrder"
-        type="range"
-        min="4"
-        max="100"
-        step="1"
-        class="slider_active"
-        @change="updateFIRFilterOrder(FIRFilterOrder)"
-      >
-    </div>
+    <AppSlider
+      id="filter-order"
+      v-model.number="FIRFilterOrder"
+      :label="`Red: ${FIRFilterOrder.toString()}`"
+      :min="4"
+      :max="100"
+      :step="1"
+    />
     <AppSectionHeading>
       Okenska funkcija
     </AppSectionHeading>
@@ -63,35 +49,35 @@
         {{ currentFIRFilter.label }}
       </AppButton>
     </ButtonContainer>
-    <div style="display: flex;">
-      <AppSectionHeading>
-        Prenosna funkcija povprečevalnega filtra
-      </AppSectionHeading>
-      <AppSectionHeading style="margin-left: 200px;">
-        Okenska funkcija
-      </AppSectionHeading>
-    </div>
-    <div style="display: flex;">
-      <AppCanvasContainer style="margin-left: 10px;">
-        <DigitalFiltersGraph
-          :data="FIRFilterTransferFunctionSignalValues"
-          :mirror="true"
-          y-axis-label="Magnituda[dB]"
-          x-axis-label="Normalizirana frekvenca"
-          title="FIR"
-          canvas-id="cID"
-        />
-      </AppCanvasContainer>
-      <AppCanvasContainer style="margin-left: 100px;">
-        <DigitalFiltersGraph
-          :data="FIRFilterWindowFunctionSignalValues"
-          :mirror="false"
-          y-axis-label="Amplituda"
-          x-axis-label="Vzorci[N]"
-          title="testniGraf"
-          canvas-id="cid"
-        />
-      </AppCanvasContainer>
+    <div class="flex flex-col lg:flex-row gap-8">
+      <div class="flex flex-col flex-1 gap-4">
+        <AppSectionHeading>
+          Prenosna funkcija povprečevalnega filtra
+        </AppSectionHeading>
+        <AppCanvasContainer>
+          <DigitalFiltersGraph
+            :data="FIRFilterTransferFunctionSignalValues"
+            :mirror="true"
+            y-axis-label="Magnituda[dB]"
+            x-axis-label="Normalizirana frekvenca"
+            canvas-id="cID"
+          />
+        </AppCanvasContainer>
+      </div>
+      <div class="flex flex-col flex-1 gap-4">
+        <AppSectionHeading>
+          Okenska funkcija
+        </AppSectionHeading>
+        <AppCanvasContainer>
+          <DigitalFiltersGraph
+            :data="FIRFilterWindowFunctionSignalValues"
+            :mirror="false"
+            y-axis-label="Amplituda"
+            x-axis-label="Vzorci[N]"
+            canvas-id="cid"
+          />
+        </AppCanvasContainer>
+      </div>
     </div>
 
     <AppSectionHeading>
@@ -102,104 +88,71 @@
       Sistemske funkcije posameznih tipov se med seboj razlikujejo in jih ne moremo podati v nekakšni splošni obliki,
       kot je to izvedeno za FIR filter na osnovi povprečenja. Zato je tudi red predstavljenih IIR filtrov nespremenljiv (2. red).
       Uteži takšnega IIR filtra določimo tako, da najprej določimo sistemsko funkcijo analogne filtra.
-      Koeficienti poleg s-členov analognega filtra predstavljajo uteži <span>a<sub>k</sub></span> in <span>b<sub>k</sub></span> digitalnega
-      filtra.
+      Koeficienti poleg s-členov analognega filtra predstavljajo uteži
+      <KatexEquation inline>
+        {{ 'a_k' }}
+      </KatexEquation>
+      in
+      <KatexEquation inline>
+        {{ 'b_k' }}
+      </KatexEquation>
+      digitalnega filtra.
       <br>
       Poleg predstavljenih IIR filtrov obstajajo tudi drugačni. Ena izmed skupin IIR filtrov, kjer imajo posamezne topologije podobne
       lastnosti, zajema sledeče filtre: Butterworth, Chebyshev, Elliptic in Bessel.
     </AppParagraph>
 
     <AppSectionHeading>
-      Mejna frekvenca [pi x rad/sample]:
+      Mejna frekvenca [pi x rad/sample]
     </AppSectionHeading>
-    <div>
-      <AppParagraph>
-        Podana je normirana mejna frekvenca, pri čemer vrednost 1 ustreza polovici vzorčevalne frekvence.
-        Normirana mejna frekvenca določa prehod med prepusnim in zapornim pasom.
-      </AppParagraph>
-    </div>
+    <AppParagraph>
+      Podana je normirana mejna frekvenca, pri čemer vrednost 1 ustreza polovici vzorčevalne frekvence.
+      Normirana mejna frekvenca določa prehod med prepusnim in zapornim pasom.
+    </AppParagraph>
 
-    <!-- Range slider &ndash;&gt;-->
-    <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
-      <label
-        :for="'filter-cutoff'"
-        class="text-xl transition-colors duration-300 dark:text-white"
-      >
-        <span class="font-medium">
-          {{ IIRFilterCutoff }}
-        </span>
-      </label>
-      <input
-        :id="'filter-cutoff'"
-        v-model.number="IIRFilterCutoff"
-        type="range"
-        min="0.01"
-        max="0.99"
-        step="0.01"
-        class="slider_active"
-        @change="updateIIRFilterCutoff(IIRFilterCutoff)"
-      >
-    </div>
+    <AppSlider
+      id="filter-cutoff"
+      v-model.number="IIRFilterCutoff"
+      :label="`Mejna frekvenca: ${IIRFilterCutoff.toString()}`"
+      :min="0.01"
+      :max="0.99"
+      :step="0.01"
+    />
+
     <AppSectionHeading>
-      Ojačenje filtra [dB]:
+      Ojačenje filtra [dB]
     </AppSectionHeading>
-    <div>
-      <AppParagraph>
-        Ojačenje vpliva na prepustni (pozitivno ojačenje) ali zaporni (negativno ojačenje) pas in igra vlogo le pri tipih "Peak",
-        "Low-shelf" in "High-shelf".
-      </AppParagraph>
-    </div>
-    <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
-      <label
-        :for="'filter-gain'"
-        class="text-xl transition-colors duration-300 dark:text-white"
-      >
-        <span class="font-medium">
-          {{ IIRFilterGain }}
-        </span>
-      </label>
-      <input
-        :id="'filter-gain'"
-        v-model.number="IIRFilterGain"
-        type="range"
-        min="-30"
-        max="30"
-        step="1"
-        :class="sliderrStyleActiveGain"
-        :disabled="!isFilterGainSliderEnabled"
-        Y_lable="Magnituda [dB]"
-        @change="updateIIRFilterGain(IIRFilterGain)"
-      >
-    </div>
+    <AppParagraph>
+      Ojačenje vpliva na prepustni (pozitivno ojačenje) ali zaporni (negativno ojačenje) pas in igra vlogo le pri tipih "Peak",
+      "Low-shelf" in "High-shelf".
+    </AppParagraph>
+
+    <AppSlider
+      id="filter-gain"
+      v-model.number="IIRFilterGain"
+      :label="`Ojačenje filtra: ${IIRFilterGain.toString()}`"
+      :min="-30"
+      :max="30"
+      :step="1"
+      :disabled="!isFilterGainSliderEnabled"
+    />
+
     <AppSectionHeading>
-      Kvaliteta filtra:
+      Kvaliteta filtra
     </AppSectionHeading>
-    <div>
-      <AppParagraph>
-        Kvaliteta določa lastnost resonance, ki se nahaja na mejni frekvenci pri tipih "Notch" in "Peak".
-      </AppParagraph>
-    </div>
-    <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
-      <label
-        :for="'filter-quality'"
-        class="text-xl transition-colors duration-300 dark:text-white"
-      >
-        <span class="font-medium">
-          {{ IIRFilterQuality }}
-        </span>
-      </label>
-      <input
-        :id="'filter-quality'"
-        v-model.number="IIRFilterQuality"
-        type="range"
-        min="0.01"
-        max="20"
-        step="0.01"
-        :class="sliderrStyleActiveQuality"
-        :disabled="!isFilterQualitySliderEnabled"
-        @change="updateIIRFilterQuality(IIRFilterQuality)"
-      >
-    </div>
+    <AppParagraph>
+      Kvaliteta določa lastnost resonance, ki se nahaja na mejni frekvenci pri tipih "Notch" in "Peak".
+    </AppParagraph>
+
+    <AppSlider
+      id="filter-quality"
+      v-model.number="IIRFilterQuality"
+      :label="`Kvaliteta filtra: ${Math.round(IIRFilterQuality).toString()}`"
+      :min="0.1"
+      :max="20.1"
+      :step="0.1"
+      :disabled="!isFilterQualitySliderEnabled"
+    />
 
     <AppSectionHeading>
       Tip filtra
@@ -222,13 +175,12 @@
     <AppSectionHeading>
       Prenosna funkcija Biquad filtra
     </AppSectionHeading>
-    <AppCanvasContainer style="margin-left: 10px;">
+    <AppCanvasContainer>
       <DigitalFiltersGraph
         :data="IIRFilterTransferFunctionSignalValues"
         :mirror="true"
         y-axis-label="Magnituda[dB]"
         x-axis-label="Normalizirana frekvenca"
-        title="IRR"
         canvas-id="cIR"
       />
     </AppCanvasContainer>
@@ -236,7 +188,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, watchEffect} from "vue";
+import {computed, ref, watch} from "vue";
 import AppSectionHeading from "@/js/components/common/AppSectionHeading.vue";
 import AppMainContainer from "@/js/components/common/AppMainContainer.vue";
 import AppParagraph from "@/js/components/common/AppParagraph.vue";
@@ -246,10 +198,11 @@ import ButtonContainer from "@/js/components/common/buttons/AppButtonContainer.v
 import AppButton from "@/js/components/common/buttons/AppButton.vue";
 import AppMainHeading from "@/js/components/common/AppMainHeading.vue";
 import AppCollapsible from "@/js/components/common/AppCollapsible.vue";
-// import Graph from "@/js/components/canvas/DigitalFiltersGraph.vue";
+import DigitalFiltersGraph from "@/js/components/canvas/DigitalFiltersGraph.vue";
+import KatexEquation from "@/js/components/common/KatexEquation.vue";
+import AppSlider from "@/js/components/common/AppSlider.vue";
 import {FIRFilter, IIRFilter} from "@/js/types/Filters";
 import Complex from 'Complex';
-
 import {
   bartlett,
   bartlettHann,
@@ -268,7 +221,6 @@ import {
   welch
 } from 'window-function';
 import {Coordinates} from "@/js/types/types";
-import DigitalFiltersGraph from "@/js/components/canvas/DigitalFiltersGraph.vue";
 
 type AvailableFilter<T> = {
   key: T;
@@ -378,10 +330,6 @@ const selectFIRFilterType = (key: FIRFilter): void => {
 
 const FIRFilterOrder = ref<number>(4);
 
-const updateFIRFilterOrder = (order: number): void => {
-  FIRFilterOrder.value = order;
-}
-
 const FIRFilterWindowFunctionSignalValues = computed<Coordinates[]>(() => {
   const {windowWeightCoefficients} = calculateWindowWeights(selectedFIRFilterType.value, FIRFilterOrder.value);
 
@@ -442,11 +390,6 @@ const FIRFilterTransferFunctionSignalValues = computed<Coordinates[]>(() => {
   }));
 });
 
-watchEffect(() => {
-  console.log(FIRFilterWindowFunctionSignalValues.value);
-});
-
-
 // IIR
 const availableIIRFilters: AvailableFilter<IIRFilter>[] = [
   {key: "lowpass", label: "Nizko-prepustno"},
@@ -460,29 +403,23 @@ const availableIIRFilters: AvailableFilter<IIRFilter>[] = [
   {key: "high-shelf", label: "High shelf"},
 ];
 
+const IIR_FILTER_GAIN_DEFAULT_VALUE: number = 0.5;
+const IIR_FILTER_QUALITY_DEFAULT_VALUE: number = 1;
+
 const selectedIIRFilterType = ref<IIRFilter>('lowpass');
 
 const selectIIRFilterType = (key: IIRFilter): void => {
   selectedIIRFilterType.value = key;
 }
 
-const IIRFilterGain = ref<number>(0);
-
-const updateIIRFilterGain = (value: number) => {
-  IIRFilterGain.value = value;
-}
-
 const IIRFilterCutoff = ref<number>(0.5);
+const IIRFilterGain = ref<number>(IIR_FILTER_GAIN_DEFAULT_VALUE);
+const IIRFilterQuality = ref<number>(IIR_FILTER_QUALITY_DEFAULT_VALUE);
 
-const updateIIRFilterCutoff = (cutOff: number) => {
-  IIRFilterCutoff.value = cutOff;
-}
-
-const IIRFilterQuality = ref<number>(1);
-
-const updateIIRFilterQuality = (quality: number) => {
-  IIRFilterQuality.value = quality;
-}
+watch(selectedIIRFilterType, () => {
+  IIRFilterGain.value = IIR_FILTER_GAIN_DEFAULT_VALUE;
+  IIRFilterQuality.value = IIR_FILTER_QUALITY_DEFAULT_VALUE;
+});
 
 const isFilterGainSliderEnabled = computed<boolean>(() => {
   const IIRFilterTypesWhereSliderIsEnabled: IIRFilter[] = ['peak', 'low-shelf', 'high-shelf'];
@@ -492,22 +429,6 @@ const isFilterGainSliderEnabled = computed<boolean>(() => {
 const isFilterQualitySliderEnabled = computed<boolean>(() => {
   const IIRFilterTypesWhereSliderIsEnabled: IIRFilter[] = ['peak', 'notch'];
   return IIRFilterTypesWhereSliderIsEnabled.includes(selectedIIRFilterType.value);
-});
-
-const sliderrStyleActiveGain = computed<string>(() => {
-  if (isFilterGainSliderEnabled.value) {
-    return "slider_active";
-  } else {
-    return "slider_inactive";
-  }
-});
-
-const sliderrStyleActiveQuality = computed<string>(() => {
-  if (isFilterQualitySliderEnabled.value) {
-    return "slider_active";
-  } else {
-    return "slider_inactive";
-  }
 });
 
 const calculateIIRCoefficients = (selectedIIRFilterType: IIRFilter): number[] => {
@@ -660,50 +581,3 @@ const IIRFilterTransferFunctionSignalValues = computed<Coordinates[]>(() => {
 });
 
 </script>
-
-<style scoped>
-
-.slider_active {
-  -webkit-appearance: none; /* Override default CSS styles */
-  appearance: none;
-  width: 300px; /* Full-width */
-  height: 10px; /* Specified height */
-  background: #ffffff; /* Grey background */
-  outline: none; /* Remove outline */
-  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
-  transition: opacity .2s;
-}
-
-.slider_active::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  background: #5cc3ff;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.slider_inactive {
-  -webkit-appearance: none; /* Override default CSS styles */
-  appearance: none;
-  width: 300px; /* Full-width */
-  height: 10px; /* Specified height */
-  background: #5c5c5c; /* Grey background */
-  outline: none; /* Remove outline */
-  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
-  transition: opacity .2s;
-}
-
-.slider_inactive::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  background: #444444;
-  border-radius: 50%;
-  cursor: pointer;
-}
-</style>
