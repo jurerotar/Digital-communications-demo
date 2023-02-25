@@ -19,7 +19,15 @@ export default defineConfig({
   },
   resolve: {
     alias: [
-      {find: '@', replacement: path.resolve('src')},
+      {find: '@styles', replacement: path.resolve('./src/styles')},
+      {find: '@views', replacement: path.resolve('./src/views')},
+      {find: '@components', replacement: path.resolve('./src/components')},
+      {find: '@helpers', replacement: path.resolve('./src/helpers')},
+      {find: '@layouts', replacement: path.resolve('./src/layouts')},
+      {find: '@routes', replacement: path.resolve('./src/routes')},
+      {find: '@stores', replacement: path.resolve('./src/stores')},
+      {find: '@interfaces', replacement: path.resolve('./src/interfaces')},
+      {find: '@prototypes', replacement: path.resolve('./src/prototypes')},
     ]
   },
   plugins: [
@@ -37,6 +45,7 @@ export default defineConfig({
       '@fortawesome/free-solid-svg-icons',
       '@fortawesome/free-regular-svg-icons',
       '@fortawesome/vue-fontawesome',
+      'katex'
     ],
   }
 });

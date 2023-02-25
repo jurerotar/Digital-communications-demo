@@ -18,25 +18,47 @@
     "isolatedModules": false,
     "useDefineForClassFields": true,
     "resolveJsonModule": true,
-    "baseUrl": ".",
+    "skipLibCheck": true,
+    "noEmit": true,
+    "baseUrl": "./src",
     "lib": [
       "esnext",
       "dom"
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
+      "@styles/*": [
+        "styles/*"
+      ],
+      "@views/*": [
+        "views/*"
+      ],
+      "@components/*": [
+        "components/*"
+      ],
+      "@helpers/*": [
+        "helpers/*"
+      ],
+      "@layouts/*": [
+        "layouts/*"
+      ],
+      "@routes/*": [
+        "routes/*"
+      ],
+      "@stores/*": [
+        "stores/*"
+      ],
+      "@interfaces/*": [
+        "interfaces/*"
+      ],
+      "@prototypes/*": [
+        "prototypes/*"
       ]
     },
     "types": [
       "vite/client"
     ]
   },
-  "include": [
-    "src/js"
-  ],
   "exclude": [
     "node_modules",
-    "src/assets"
   ]
 }
