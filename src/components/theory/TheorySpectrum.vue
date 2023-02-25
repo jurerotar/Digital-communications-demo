@@ -2,7 +2,7 @@
   <AppParagraph>
     Frekvenčni spekter energijskih signalov izračunamo s pomočjo Fourierjeve transformacije:
     <KatexEquation>
-      {{ 'X(f) = \\int_{-\\infty}^{\\infty}{x(t)e^{-j pi f t}dt}' }}
+      {{ 'X(f) = \\int_{-\\infty}^{\\infty}{x(t)e^{-j \\pi f t}dt}' }}
     </KatexEquation>
     Spekter signala pri frekvenci
     <KatexEquation inline>
