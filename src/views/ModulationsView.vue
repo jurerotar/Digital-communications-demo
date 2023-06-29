@@ -92,7 +92,7 @@ import AppButton from "@components/common/buttons/AppButton.vue";
 import AppButtonContainer from "@components/common/buttons/AppButtonContainer.vue";
 import Level4SignalGraph from "@components/canvas/Level4SignalGraph.vue";
 import PositiveOnlySignalGraph from "@components/canvas/PositiveOnlySignalGraph.vue";
-import {binaryValues} from "@helpers/functions";
+import {binaryValues} from "@helpers/math";
 import AppSectionHeading from "@components/common/AppSectionHeading.vue";
 import {
   Modulation,
@@ -101,7 +101,7 @@ import {
   DataSignalCanvasOptions,
   ModulationAmplitudeModifier,
   ModulationToDataArrayMap
-} from "@types/modulations";
+} from "@interfaces/modulations";
 import AppMainContainer from "@components/common/AppMainContainer.vue";
 import AppAnimationPauseButton from "@components/common/buttons/AppAnimationPauseButton.vue";
 

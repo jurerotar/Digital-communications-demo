@@ -17,7 +17,7 @@ import AppMainContainer from "@components/common/AppMainContainer.vue";
 import P5 from 'p5';
 import CanvasContainer from "@components/common/AppCanvasContainer.vue";
 import TheoryPointer from "@components/theory/TheoryPointer.vue";
-import {linearSpace} from "@helpers/functions";
+import {linearSpace} from "@helpers/math";
 import AppMainHeading from "@components/common/AppMainHeading.vue";
 import AppCollapsible from "@components/common/AppCollapsible.vue";
 

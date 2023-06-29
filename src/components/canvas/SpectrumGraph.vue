@@ -23,7 +23,7 @@
 import AppSectionHeading from "@components/common/AppSectionHeading.vue";
 import P5 from 'p5';
 import CanvasContainer from "@components/common/AppCanvasContainer.vue";
-import {linearSpace} from "@helpers/functions";
+import {linearSpace} from "@helpers/math";
 
 export default {
   name: "SpectrumGraph",

@@ -2,15 +2,6 @@ import {useStore} from "vuex";
 import {State} from "@stores/store";
 import {onMounted, onUnmounted} from 'vue';
 
-export const linearSpace = (startValue: number, stopValue: number, cardinality: number): number[] => {
-  const arr: number[] = [];
-  const step: number = (stopValue - startValue) / (cardinality - 1);
-  for (let i = 0; i < cardinality; i++) {
-    arr.push(startValue + (step * i));
-  }
-  return arr;
-}
-
 export const getCookie = (name: string): string | null => {
   return document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || null;
 }
@@ -42,16 +33,3 @@ export const appFullTitle = (title: string): string => {
   return `${title} - ${appName}`;
 }
 
-export const binaryValues = (pool: number[], changeOn: number): () => number => {
-  let counter = 0;
-  let currentlyReturnsAtIndex = 0;
-  const poolLength: number = pool.length;
-  return (): number => {
-    counter ++;
-    if(counter >= changeOn) {
-      counter = 0;
-      currentlyReturnsAtIndex = (currentlyReturnsAtIndex === poolLength - 1) ? 0 : currentlyReturnsAtIndex + 1;
-    }
-    return pool[currentlyReturnsAtIndex];
-  }
-}

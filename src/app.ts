@@ -3,8 +3,6 @@ import {router} from '@routes/routes';
 import {store} from "@stores/store";
 import canvas from "@helpers/canvas.js";
 import '@styles/index.css';
-import '@prototypes/array';
-import '@prototypes/math';
 import App from './App.vue';
 
 const app = createApp(App)

@@ -77,6 +77,7 @@ import FFT from "fft.js";
 import {computed, ref} from "vue";
 import AppSectionHeading from "@components/common/AppSectionHeading.vue";
 import AppMainContainer from "@components/common/AppMainContainer.vue";
+import {unitBox} from "@helpers/math";
 
 export interface Pulse {
   key: PulseShape;
@@ -131,10 +132,10 @@ const pulses: Pulse[] = [
     label: 'Kosinusni',
     key: 'cos',
     drawingValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return (-Math.cos(Math.PI * t * frequency * 0.01) - 1) * Math.unitBox(t * frequency * 0.01 / 2, [-0.5, 0.5]);
+      return (-Math.cos(Math.PI * t * frequency * 0.01) - 1) * unitBox(t * frequency * 0.01 / 2, [-0.5, 0.5]);
     }),
     spectrumValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return (-Math.cos(Math.PI * t * frequency * 0.05) - 1) * Math.unitBox(t * frequency * 0.05 / 2, [-0.5, 0.5]);
+      return (-Math.cos(Math.PI * t * frequency * 0.05) - 1) * unitBox(t * frequency * 0.05 / 2, [-0.5, 0.5]);
     }),
     horizontalPool: [-3, -2.5, -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5, 3],
     // Remove length of 4, add length of 3
@@ -150,10 +151,10 @@ const pulses: Pulse[] = [
     label: 'Kvadratni',
     key: 'square',
     drawingValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return -Math.unitBox(t * frequency * 0.01, [-0.5, 0.5]);
+      return -unitBox(t * frequency * 0.01, [-0.5, 0.5]);
     }),
     spectrumValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return -Math.unitBox(t * frequency * 0.05, [-0.5, 0.5]);
+      return -unitBox(t * frequency * 0.05, [-0.5, 0.5]);
     }),
     pulseLengths: defaultPulseLengthOptions,
     logarithmGraphTexts: {
@@ -165,10 +166,10 @@ const pulses: Pulse[] = [
     label: 'Gauss',
     key: 'gauss',
     drawingValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return Math.E ** (-2 * (t * 0.0165 * frequency) ** 2) * -Math.unitBox(t * frequency * 0.0005, [-0.5, 0.5]);
+      return Math.E ** (-2 * (t * 0.0165 * frequency) ** 2) * -unitBox(t * frequency * 0.0005, [-0.5, 0.5]);
     }),
     spectrumValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return Math.E ** (-2 * (t * 0.028 * frequency) ** 2) * -Math.unitBox(t * frequency * 0.0005, [-0.5, 0.5]);
+      return Math.E ** (-2 * (t * 0.028 * frequency) ** 2) * -unitBox(t * frequency * 0.0005, [-0.5, 0.5]);
     }),
     // Remove length of 4, add length of 3
     pulseLengths: defaultPulseLengthOptions
@@ -183,10 +184,10 @@ const pulses: Pulse[] = [
     label: 'Sinc',
     key: 'sinc',
     drawingValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return t === 0 ? -1 : -Math.sin(t * frequency * 0.062) / (t * frequency * 0.062) * Math.unitBox(t * frequency * 0.0033, [-0.5, 0.5]);
+      return t === 0 ? -1 : -Math.sin(t * frequency * 0.062) / (t * frequency * 0.062) * unitBox(t * frequency * 0.0033, [-0.5, 0.5]);
     }),
     spectrumValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return t === 0 ? -1 : -Math.sin(t * frequency * 0.152) / (t * frequency * 0.152) * Math.unitBox(t * frequency * 0.008, [-0.5, 0.5]);
+      return t === 0 ? -1 : -Math.sin(t * frequency * 0.152) / (t * frequency * 0.152) * unitBox(t * frequency * 0.008, [-0.5, 0.5]);
     }),
     pulseLengths: defaultPulseLengthOptions,
     logarithmGraphTexts: {
