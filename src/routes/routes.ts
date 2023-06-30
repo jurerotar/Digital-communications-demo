@@ -12,7 +12,7 @@ const routes: Route[] = [
     path: "/",
     name: "Home",
     label: 'Domov',
-    component: () => import("@views/HomeView.vue"),
+    component: () => import("@app/home/HomeView.vue"),
     icon: faHome,
     meta: {
       title: "Domov",
@@ -26,7 +26,7 @@ const routes: Route[] = [
     path: "/spectrum",
     name: "Spectrum",
     label: 'Spekter',
-    component: () => import("@views/SpectrumView.vue"),
+    component: () => import("@app/spectrum/SpectrumView.vue"),
     icon: faWaveSquare,
     meta: {
       title: "Spekter",
@@ -40,7 +40,7 @@ const routes: Route[] = [
     path: "/modulations",
     name: "Modulations",
     label: 'Modulacije',
-    component: () => import("@views/ModulationsView.vue"),
+    component: () => import("@app/modulations/ModulationsView.vue"),
     icon: faSignal,
     meta: {
       title: "Modulacije",
@@ -54,7 +54,7 @@ const routes: Route[] = [
     path: "/harmonics",
     name: "Harmonics",
     label: 'Harmoniki',
-    component: () => import("@views/HarmonicsView.vue"),
+    component: () => import("@app/harmonics/HarmonicsView.vue"),
     icon: faWater,
     meta: {
       title: "Harmoniki",
@@ -68,7 +68,7 @@ const routes: Route[] = [
     path: "/pointers",
     name: "Pointers",
     label: 'Kazalci',
-    component: () => import("@views/PointersView.vue"),
+    component: () => import("@app/pointers/PointersView.vue"),
     icon: faLongArrowAltUp,
     meta: {
       title: "Kazalci",
@@ -82,7 +82,7 @@ const routes: Route[] = [
     path: "/correlation",
     name: "Correlation",
     label: 'Korelacija',
-    component: () => import("@views/CorrelationView.vue"),
+    component: () => import("@app/correlation/CorrelationView.vue"),
     icon: faEquals,
     meta: {
       title: "Korelacija",
@@ -96,7 +96,7 @@ const routes: Route[] = [
     path: "/intersymbol-interference",
     name: "Intersymbol interference",
     label: 'Intersimbolna interferenca',
-    component: () => import("@views/IntersymbolInterferenceView.vue"),
+    component: () => import("@app/inter-symbol-interference/IntersymbolInterferenceView.vue"),
     icon: faEye,
     meta: {
       title: "Intersimbolna interferenca",
@@ -110,7 +110,7 @@ const routes: Route[] = [
     path: "/digital-filters",
     name: "Digitalni filtri",
     label: 'Digitalni filtri',
-    component: () => import("@views/DigitalFiltersView.vue"),
+    component: () => import("@app/digital-filters/DigitalFiltersView.vue"),
     icon: faFilter,
     meta: {
       title: "Digitalni filtri",

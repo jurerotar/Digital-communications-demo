@@ -4,7 +4,7 @@
       Kazalci
     </AppMainHeading>
     <AppCollapsible>
-      <theory-pointer/>
+      <PointersTheory/>
     </AppCollapsible>
     <CanvasContainer>
       <div :id="canvasContainerId"/>
@@ -15,7 +15,6 @@
 <script setup lang="ts">
 import AppMainContainer from "@components/common/AppMainContainer.vue";
 import CanvasContainer from "@components/common/AppCanvasContainer.vue";
-import TheoryPointer from "@components/theory/TheoryPointer.vue";
 import AppMainHeading from "@components/common/AppMainHeading.vue";
 import AppCollapsible from "@components/common/AppCollapsible.vue";
 import {computed, onBeforeUnmount, onMounted, ref} from "vue";
@@ -23,7 +22,8 @@ import {p5Extended} from "@helpers/p5/p5-extended";
 import {State} from "@stores/store";
 import {Scheme} from "@interfaces/common";
 import {useStore} from "vuex";
-import {useCircularFunctionsValues} from "@composables/use-circular-functions-values";
+import PointersTheory from "./components/PointersTheory.vue";
+import {useCircularFunctionsValues} from "./composables/use-circular-functions-values";
 
 const canvasContainerId = 'canvas-pointers';
 
@@ -47,7 +47,7 @@ const marks = [
   {text: 'Φ', x: 160, y: 800,},
 ];
 
-const { sineValues, cosineValues } = useCircularFunctionsValues();
+const {sineValues, cosineValues} = useCircularFunctionsValues();
 
 onMounted(() => {
   // Will loop between 0-360
@@ -140,7 +140,7 @@ onMounted(() => {
       });
 
       degree++;
-      if(degree === sineValues.length - 1) {
+      if (degree === sineValues.length - 1) {
         degree = 0;
       }
     }

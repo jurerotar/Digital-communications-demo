@@ -5,7 +5,7 @@
     tabindex="0"
   >
     <FontAwesomeIcon
-      :icon="['fab', 'github']"
+      :icon="faGithub"
       class="text-3xl dark:text-white transition-colors duration-300"
     />
   </a>
@@ -13,7 +13,5 @@
 
 <script setup lang="ts">
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {library} from "@fortawesome/fontawesome-svg-core";
 import {faGithub} from "@fortawesome/free-brands-svg-icons";
-library.add(faGithub);
 </script>

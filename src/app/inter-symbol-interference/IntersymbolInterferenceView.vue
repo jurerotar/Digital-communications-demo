@@ -4,7 +4,7 @@
       Intersimbolna interferenca
     </AppMainHeading>
     <AppCollapsible>
-      <theory-intersymbol-interference />
+      <IntersymbolInterferenceTheory />
     </AppCollapsible>
 
     <AppAnimationPauseButton
@@ -94,7 +94,7 @@
         variant="danger"
         @click="clearOscilloscope()"
       >
-        <FontAwesomeIcon :icon="['fas', 'trash-alt']" />
+        <FontAwesomeIcon :icon="faTrashAlt" />
         <span>
           Počisti
         </span>
@@ -108,26 +108,23 @@ import AppMainContainer from "@components/common/AppMainContainer.vue";
 import AppButtonContainer from "@components/common/buttons/AppButtonContainer.vue";
 import AppButton from "@components/common/buttons/AppButton.vue";
 import AppCollapsible from "@components/common/AppCollapsible.vue";
-import TheoryIntersymbolInterference from "@components/theory/TheoryIntersymbolInterference.vue";
 import AppMainHeading from "@components/common/AppMainHeading.vue";
 import AppSectionHeading from "@components/common/AppSectionHeading.vue";
-import OscilloscopeGraph from "@components/canvas/OscilloscopeGraph.vue";
 import Level4SignalGraph from "@components/canvas/Level4SignalGraph.vue";
 import PositiveOnlySignalGraph from "@components/canvas/PositiveOnlySignalGraph.vue";
 import '@interfaces/common.ts';
-import {library} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {faTrashAlt} from '@fortawesome/free-solid-svg-icons'
 import AppAnimationPauseButton from "@components/common/buttons/AppAnimationPauseButton.vue";
-
-library.add(faTrashAlt);
+import IntersymbolInterferenceTheory from "./components/IntersymbolInterferenceTheory.vue";
+import OscilloscopeGraph from "./components/OscilloscopeGraph.vue";
 
 export default {
   name: "IntersymbolInterferenceView",
   components: {
     AppAnimationPauseButton,
     AppMainContainer,
-    TheoryIntersymbolInterference,
+    IntersymbolInterferenceTheory,
     OscilloscopeGraph,
     Level4SignalGraph,
     PositiveOnlySignalGraph,
@@ -279,6 +276,9 @@ export default {
     }, 30);
   },
   methods: {
+    faTrashAlt() {
+      return faTrashAlt
+    },
     /**
      * Returns binary values periodically from
      * @returns {number}

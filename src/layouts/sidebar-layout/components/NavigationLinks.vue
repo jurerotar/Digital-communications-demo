@@ -27,13 +27,13 @@
 >
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {routes} from '@routes/routes';
-import SchemeSwitcher from "@components/common/navigation/SchemeSwitcher.vue";
-import AppGithubIcon from "@components/common/icons/AppGithubIcon.vue";
 import {useStore} from "vuex";
 import {State} from "@stores/store";
 import {computed, onUpdated} from "vue";
 import {useRoute} from "vue-router";
 import {useWindowSize} from "@composables/use-window-size";
+import SchemeSwitcher from "./SchemeSwitcher.vue";
+import AppGithubIcon from "./GithubIcon.vue";
 
 const store = useStore<State>();
 const {isLgUp, width} = useWindowSize();

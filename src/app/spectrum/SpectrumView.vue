@@ -4,7 +4,7 @@
       Spekter
     </AppMainHeading>
     <AppCollapsible>
-      <theory-spectrum/>
+      <SpectrumTheory/>
     </AppCollapsible>
     <AppSectionHeading>
       Oblika impulza
@@ -65,8 +65,6 @@
   setup
   lang="ts"
 >
-import TheorySpectrum from "@components/theory/TheorySpectrum.vue";
-import SpectrumGraph from "@components/canvas/SpectrumGraph.vue";
 import FullSignalGraph from "@components/canvas/FullSignalGraph.vue";
 import LogarithmicGraph from "@components/canvas/LogarithmicGraph.vue";
 import ButtonContainer from "@components/common/buttons/AppButtonContainer.vue";
@@ -79,6 +77,8 @@ import AppMainContainer from "@components/common/AppMainContainer.vue";
 import {PulseLength, PulseShape} from "@interfaces/spectrum";
 import {useShapedSignal} from "@composables/use-shaped-signal";
 import {useFft} from "@composables/use-fft";
+import SpectrumTheory from "./components/SpectrumTheory.vue";
+import SpectrumGraph from "./components/SpectrumGraph.vue";
 
 export interface Pulse {
   key: PulseShape;

@@ -43,7 +43,7 @@
         </AppButton>
       </a>
     </main>
-    <open-source />
+    <OpenSource />
   </div>
 </template>
 
@@ -51,13 +51,13 @@
   setup
   lang="ts"
 >
-import OpenSource from "@components/common/sections/OpenSource.vue";
 import AppMainHeading from "@components/common/AppMainHeading.vue";
 import AppSectionHeading from "@components/common/AppSectionHeading.vue";
 import {routes} from "@routes/routes";
 import {Route} from "@routes/routes.types";
 import AppButton from "@components/common/buttons/AppButton.vue";
 import AppParagraph from "@components/common/AppParagraph.vue";
+import OpenSource from "./components/OpenSource.vue";
 
 // Display links to all pages except 'home'
 const links: Route[] = routes.filter((route: Route) => route.name !== 'Home');

@@ -2,12 +2,12 @@
   <section class="bg-gray-100 dark:bg-gray-700 transition-colors duration-300 overflow-hidden pt-4 lg:pt-0">
     <div class="container p-4 mx-auto grid grid-cols-1 md:grid-cols-2">
       <div class="flex flex-col w-full lg:my-20 gap-4">
-        <AppCircleIcon>
+        <CircleIcon>
           <FontAwesomeIcon
-            :icon="['fas', 'code-branch']"
+            :icon="faCodeBranch"
             class="text-3xl"
           />
-        </AppCircleIcon>
+        </CircleIcon>
         <AppSectionHeading>
           Sodeluj pri projektu
         </AppSectionHeading>
@@ -33,7 +33,7 @@
 
       <div class="w-full mt-32 relative">
         <FontAwesomeIcon
-          :icon="['fab', 'github']"
+          :icon="faGithub"
           class="opn-src-icon dark:text-gray-800 text-gray-300 absolute left-auto opacity-40 lg:opacity-80  transition-colors duration-300"
         />
       </div>
@@ -46,14 +46,11 @@
   lang="ts"
 >
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {library} from "@fortawesome/fontawesome-svg-core";
 import {faGithub} from "@fortawesome/free-brands-svg-icons";
 import {faCodeBranch} from "@fortawesome/free-solid-svg-icons";
 import AppSectionHeading from "@components/common/AppSectionHeading.vue";
 import AppParagraph from "@components/common/AppParagraph.vue";
-import AppCircleIcon from "@components/common/icons/AppCircleIcon.vue";
-
-library.add(faGithub, faCodeBranch);
+import CircleIcon from "./CircleIcon.vue";
 </script>
 
 <style scoped>

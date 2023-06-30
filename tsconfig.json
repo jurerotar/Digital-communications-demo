@@ -29,8 +29,8 @@
       "@styles/*": [
         "styles/*"
       ],
-      "@views/*": [
-        "views/*"
+      "@app/*": [
+        "app/*"
       ],
       "@components/*": [
         "components/*"

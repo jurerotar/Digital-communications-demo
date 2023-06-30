@@ -4,7 +4,7 @@
       Harmoniki
     </AppMainHeading>
     <AppCollapsible>
-      <theory-harmonics />
+      <HarmonicsTheory />
     </AppCollapsible>
     <AppSlider
       id="harmonic-components"
@@ -23,14 +23,14 @@
   setup
   lang="ts"
 >
-import IndividualHarmonicsGraph from "@components/canvas/IndividualHarmonicsGraph.vue";
-import SummedHarmonicsGraph from "@components/canvas/SummedHarmonicsGraph.vue";
-import TheoryHarmonics from "@components/theory/TheoryHarmonics.vue";
 import AppCollapsible from "@components/common/AppCollapsible.vue";
 import AppMainHeading from "@components/common/AppMainHeading.vue";
 import {ref} from "vue";
 import AppMainContainer from "@components/common/AppMainContainer.vue";
 import AppSlider from "@components/common/AppSlider.vue";
+import HarmonicsTheory from "./components/HarmonicsTheory.vue";
+import IndividualHarmonicsGraph from "./components/IndividualHarmonicsGraph.vue";
+import SummedHarmonicsGraph from "./components/SummedHarmonicsGraph.vue";
 
 const components = ref<number>(1);
 </script>

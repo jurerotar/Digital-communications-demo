@@ -3,7 +3,7 @@
     <!-- Scheme switcher -->
     <SchemeSwitcher v-if="isLgUp" />
     <!-- GitHub link -->
-    <AppGithubIcon v-if="isLgUp" />
+    <GithubIcon v-if="isLgUp" />
   </div>
 </template>
 
@@ -11,8 +11,8 @@
   setup
   lang="ts"
 >
-import SchemeSwitcher from "@components/common/navigation/SchemeSwitcher.vue";
-import AppGithubIcon from "@components/common/icons/AppGithubIcon.vue";
+import SchemeSwitcher from "./SchemeSwitcher.vue";
+import GithubIcon from "./GithubIcon.vue";
 import {useWindowSize} from "@composables/use-window-size";
 
 const {isLgUp} = useWindowSize();

@@ -4,7 +4,7 @@
       Korelacijska Funkcija
     </AppMainHeading>
     <AppCollapsible>
-      <theory-correlation />
+      <CorrelationTheory />
     </AppCollapsible>
     <AppSectionHeading>
       Izbira tipa signalov:
@@ -202,10 +202,10 @@ import AppMainContainer from "@components/common/AppMainContainer.vue";
 import AppMainHeading from "@components/common/AppMainHeading.vue";
 import AppParagraph from "@components/common/AppParagraph.vue";
 import AppSectionHeading from "@components/common/AppSectionHeading.vue";
-import TheoryCorrelation from '@components/theory/TheoryCorrelation.vue';
 import AppButton from "@components/common/buttons/AppButton.vue";
 import AppButtonContainer from "@components/common/buttons/AppButtonContainer.vue";
 import FullSignalGraph from "@components/canvas/FullSignalGraph.vue";
+import CorrelationTheory from "./components/CorrelationTheory.vue";
 
 export default {
   name: "CorrelationView",
@@ -215,7 +215,7 @@ export default {
     AppSectionHeading,
     AppMainHeading,
     AppCollapsible,
-    TheoryCorrelation,
+    CorrelationTheory,
     AppButton,
     AppButtonContainer,
     FullSignalGraph

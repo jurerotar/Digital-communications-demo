@@ -5,7 +5,7 @@
     </AppMainHeading>
 
     <AppCollapsible>
-      <theory-modulations/>
+      <ModulationsTheory/>
     </AppCollapsible>
 
     <AppAnimationPauseButton
@@ -86,7 +86,6 @@
 >
 import {computed, onBeforeUnmount, onMounted, ref} from 'vue';
 import AppCollapsible from "@components/common/AppCollapsible.vue";
-import TheoryModulations from "@components/theory/TheoryModulations.vue";
 import AppMainHeading from "@components/common/AppMainHeading.vue";
 import AppButton from "@components/common/buttons/AppButton.vue";
 import AppButtonContainer from "@components/common/buttons/AppButtonContainer.vue";
@@ -105,6 +104,7 @@ import {
 import AppMainContainer from "@components/common/AppMainContainer.vue";
 import AppAnimationPauseButton from "@components/common/buttons/AppAnimationPauseButton.vue";
 import {useAnimationToggle} from "@composables/use-animation-toggle";
+import ModulationsTheory from "./components/ModulationsTheory.vue";
 
 // We'll be increasing the time by this amount
 const timeDifference = 0.005;

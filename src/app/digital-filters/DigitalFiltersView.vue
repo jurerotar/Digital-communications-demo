@@ -4,7 +4,7 @@
       Digitalni filtri
     </AppMainHeading>
     <AppCollapsible>
-      <theory-digital-filters />
+      <DigitalFiltersTheory />
     </AppCollapsible>
     <AppSectionHeading>
       Povprečevalnik (FIR)
@@ -193,12 +193,10 @@ import AppSectionHeading from "@components/common/AppSectionHeading.vue";
 import AppMainContainer from "@components/common/AppMainContainer.vue";
 import AppParagraph from "@components/common/AppParagraph.vue";
 import AppCanvasContainer from "@components/common/AppCanvasContainer.vue";
-import TheoryDigitalFilters from "@components/theory/TheoryDigitalFilters.vue";
 import ButtonContainer from "@components/common/buttons/AppButtonContainer.vue";
 import AppButton from "@components/common/buttons/AppButton.vue";
 import AppMainHeading from "@components/common/AppMainHeading.vue";
 import AppCollapsible from "@components/common/AppCollapsible.vue";
-import DigitalFiltersGraph from "@components/canvas/DigitalFiltersGraph.vue";
 import KatexEquation from "@components/common/KatexEquation.vue";
 import AppSlider from "@components/common/AppSlider.vue";
 import {FIRFilter, IIRFilter} from "@interfaces//digital-filters";
@@ -221,6 +219,8 @@ import {
   welch
 } from 'window-function';
 import {Coordinates} from "@interfaces/common";
+import DigitalFiltersTheory from "./components/DigitalFiltersTheory.vue";
+import DigitalFiltersGraph from "./components/DigitalFiltersGraph.vue";
 
 type AvailableFilter<T> = {
   key: T;

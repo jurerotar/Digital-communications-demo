@@ -27,14 +27,14 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {useStore} from "vuex";
 import {State} from "@stores/store";
 import {computed} from "vue";
-import {library} from "@fortawesome/fontawesome-svg-core";
 import {faMoon, faSun} from "@fortawesome/free-regular-svg-icons";
-library.add(faMoon, faSun);
+import {IconDefinition} from "@fortawesome/free-brands-svg-icons";
+import {Scheme as ColorScheme} from "@interfaces/common";
 
 export interface Scheme {
-  key: string;
+  key: ColorScheme;
   label: string;
-  icon: string[];
+  icon: IconDefinition;
 }
 
 const store = useStore<State>();
@@ -44,12 +44,12 @@ const schemes: Scheme[] = [
   {
     key: 'light',
     label: 'Light',
-    icon: ['far', 'sun']
+    icon: faSun
   },
   {
     key: 'dark',
     label: 'Dark',
-    icon: ['far', 'moon']
+    icon: faMoon
   },
 ];
 

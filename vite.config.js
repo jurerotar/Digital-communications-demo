@@ -20,7 +20,7 @@ export default defineConfig({
   resolve: {
     alias: [
       {find: '@styles', replacement: path.resolve('./src/styles')},
-      {find: '@views', replacement: path.resolve('./src/views')},
+      {find: '@app', replacement: path.resolve('./src/app')},
       {find: '@components', replacement: path.resolve('./src/components')},
       {find: '@helpers', replacement: path.resolve('./src/helpers')},
       {find: '@layouts', replacement: path.resolve('./src/layouts')},
