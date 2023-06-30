@@ -151,10 +151,10 @@ onMounted(() => {
       y: 800,
     },
     animationFrameRate: 60
-  })
+  });
 });
 
 onBeforeUnmount(() => {
   p5ExtendedRef.value!.remove();
-})
+});
 </script>

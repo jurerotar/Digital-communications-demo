@@ -5,12 +5,12 @@
     </AppMainHeading>
 
     <AppCollapsible>
-      <theory-modulations />
+      <theory-modulations/>
     </AppCollapsible>
 
     <AppAnimationPauseButton
-      :state="isPlaying ? 'playing' : 'paused'"
-      @click="toggleIsPlaying()"
+      :state="isAnimationPlaying ? 'playing' : 'paused'"
+      @click="toggleIsAnimationPlaying()"
     />
 
     <AppSectionHeading>
@@ -95,26 +95,23 @@ import PositiveOnlySignalGraph from "@components/canvas/PositiveOnlySignalGraph.
 import {binaryValues} from "@helpers/math";
 import AppSectionHeading from "@components/common/AppSectionHeading.vue";
 import {
-  Modulation,
-  ModulationKey,
   DataSignalCanvas,
   DataSignalCanvasOptions,
+  Modulation,
   ModulationAmplitudeModifier,
+  ModulationKey,
   ModulationToDataArrayMap
 } from "@interfaces/modulations";
 import AppMainContainer from "@components/common/AppMainContainer.vue";
 import AppAnimationPauseButton from "@components/common/buttons/AppAnimationPauseButton.vue";
+import {useAnimationToggle} from "@composables/use-animation-toggle";
 
 // We'll be increasing the time by this amount
 const timeDifference = 0.005;
 // Amount in pixels
-const binarySignalWidth = 120;
+const binarySignalWidth = 150;
 
-const isPlaying = ref<boolean>(true);
-
-const toggleIsPlaying = () => {
-  isPlaying.value = !isPlaying.value;
-}
+const {isAnimationPlaying, toggleIsAnimationPlaying} = useAnimationToggle();
 
 const carrierValueGenerator = (time: number): number => Math.sin(time * 15 * Math.PI);
 const sineModulationValueGenerator = (time: number): number => Math.sin(time * Math.PI);
@@ -269,7 +266,6 @@ const binaryLevel4SignalValues = ref<number[]>([
   Array(binarySignalWidth).fill(1),
   Array(binarySignalWidth).fill(-1),
   Array(binarySignalWidth).fill(-3),
-  Array(binarySignalWidth).fill(3)
 ].flat());
 
 // Calculates next modulated value based on currently selected key
@@ -347,7 +343,7 @@ onMounted(() => {
   let time = 600 * 0.005;
   // Create interval to push new signal values to arrays
   intervalId = window.setInterval(() => {
-    if(!isPlaying.value) {
+    if (!isAnimationPlaying.value) {
       return;
     }
 
