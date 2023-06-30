@@ -4,247 +4,157 @@
       Kazalci
     </AppMainHeading>
     <AppCollapsible>
-      <theory-pointer />
+      <theory-pointer/>
     </AppCollapsible>
     <CanvasContainer>
-      <div :id="canvasId" />
+      <div :id="canvasContainerId"/>
     </CanvasContainer>
   </AppMainContainer>
 </template>
 
-<script>
+<script setup lang="ts">
 import AppMainContainer from "@components/common/AppMainContainer.vue";
-import P5 from 'p5';
 import CanvasContainer from "@components/common/AppCanvasContainer.vue";
 import TheoryPointer from "@components/theory/TheoryPointer.vue";
-import {linearSpace} from "@helpers/math";
 import AppMainHeading from "@components/common/AppMainHeading.vue";
 import AppCollapsible from "@components/common/AppCollapsible.vue";
+import {computed, onBeforeUnmount, onMounted, ref} from "vue";
+import {p5Extended} from "@helpers/p5-extended";
+import {State} from "@stores/store";
+import {Scheme} from "@interfaces/common";
+import {useStore} from "vuex";
+import {useCircularFunctionsValues} from "@composables/use-circular-functions-values";
 
-export default {
-  name: "PointersView",
-  components: {
-    AppMainContainer,
-    AppCollapsible,
-    AppMainHeading,
-    TheoryPointer,
-    CanvasContainer
-  },
-  data() {
-    return {
-      p5: null,
-      canvasId: 'canvas-pointers',
-      context: null,
-      /**
-       * @type {Coordinates}
-       */
-      offset: {
-        x: 150,
-        y: 150
-      },
-      /**
-       * @type {Coordinates}
-       */
-      dimensions: {
-        x: 800,
-        y: 800
-      },
-      /**
-       * @type {Text[]}
-       */
-      texts: [
-        {
-          text: 'Im',
-          x: 115,
-          y: 15,
-        },
-        {
-          text: 'Re',
-          x: 315,
-          y: 140,
-        },
-        {
-          text: 'j',
-          x: 160,
-          y: 15,
-        },
-        {
-          text: '1',
-          x: 295,
-          y: 170,
-        },
-        {
-          text: '- j',
-          x: 155,
-          y: 300,
-        },
-        {
-          text: '-1',
-          x: 5,
-          y: 170,
-        },
-        {
-          text: '360\xB0',
-          x: 660,
-          y: 170,
-        },
-        {
-          text: '0\xB0',
-          x: 430,
-          y: 170,
-        },
-        {
-          text: '0\xB0',
-          x: 155,
-          y: 480,
-        },
-        {
-          text: '360\xB0',
-          x: 155,
-          y: 650,
-        },
-        {
-          text: 'Φ',
-          x: 720,
-          y: 170,
-        },
-        {
-          text: 'Φ',
-          x: 155,
-          y: 700,
-        },
+const canvasContainerId = 'canvas-pointers';
 
-      ]
-    }
-  },
-  mounted() {
-    // Returns array of sine and cosine wave points
-    const sineValues = linearSpace(0, 2 * Math.PI, 200).map(el => Math.sin(el));
-    const cosineValues = linearSpace(0, 2 * Math.PI, 200).map(el => Math.cos(el));
-    let time = 0;
-    let cosHorizontal = 0;
-    let sinHorizontal = 0;
-    // Initiate new P5 instance and create canvas
-    this.p5 = new P5((p5) => {
-      p5.setup = () => {
-        p5.createCanvas(this.dimensions.x, this.dimensions.y);
-        p5.frameRate(30);
-      }
+const p5ExtendedRef = ref<p5Extended | null>(null);
 
-      p5.draw = () => {
-        const color = this.$c.scale();
-        const canvasPadding = this.$c.canvasPadding;
-        const radius = 100 * (4 / Math.PI);
-        // Add context to allow custom canvas transformations
-        this.context = document.querySelector(`#${this.canvasId} canvas`).getContext('2d');
-        p5.background(this.$c.background());
+const store = useStore<State>();
+const scheme = computed<Scheme>(() => store.state.appState.scheme);
 
-        p5.fill(0);
-        p5.strokeWeight(1);
+const marks = [
+  {text: 'Im', x: 115, y: 15,},
+  {text: 'Re', x: 315, y: 140,},
+  {text: 'j', x: 160, y: 15,},
+  {text: '1', x: 295, y: 170,},
+  {text: '- j', x: 155, y: 300,},
+  {text: '-1', x: 5, y: 170,},
+  {text: '360\xB0', x: 750, y: 130,},
+  {text: '0\xB0', x: 380, y: 170,},
+  {text: '0\xB0', x: 160, y: 415,},
+  {text: '360\xB0', x: 160, y: 770,},
+  {text: 'Φ', x: 790, y: 170,},
+  {text: 'Φ', x: 160, y: 800,},
+];
 
-        this.$c.temporaryState(p5, () => {
-          p5.stroke(color);
-          p5.fill(color);
-          p5.triangle(150, -1, 145, 11, 155, 11);
-          p5.triangle(801, 150, 790, 145, 790, 155);
-          p5.triangle(150, 800, 145, 790, 155, 790);
-          p5.triangle(330, 150, 320, 145, 320, 155);
+const { sineValues, cosineValues } = useCircularFunctionsValues();
+
+onMounted(() => {
+  // Will loop between 0-360
+  let degree = 0;
+
+  p5ExtendedRef.value = new p5Extended((p5) => {
+    const radius = 100 * (4 / Math.PI);
+    const centerOffset = 150;
+
+    p5.draw = () => {
+      const shapeColor = p5.getShapeColor(scheme.value);
+      const backgroundColor = p5.getBackgroundColor(scheme.value);
+      const canvasPadding = p5.canvasPadding;
+      // Calculates the coordinates x and y(points on the circle)
+      const x = radius * cosineValues[degree];
+      const y = -radius * sineValues[degree];
+
+      p5.background(backgroundColor);
+      p5.stroke(shapeColor);
+      p5.noFill();
+
+      // Marks
+      p5.drawWith({textSize: 14, strokeWeight: 0.5}, () => {
+        p5.fill(shapeColor)
+        marks.forEach(el => p5.text(el.text, el.x, el.y));
+      });
+
+      // Axis
+      p5.drawWith({strokeWeight: 2}, () => {
+        p5.line(0, centerOffset, p5.dimensions.x, centerOffset);
+        p5.line(centerOffset, 0, centerOffset, p5.dimensions.y);
+      });
+
+      // Hide part of the axis
+      p5.drawWith({strokeWeight: 5, stroke: backgroundColor}, () => {
+        p5.line(centerOffset * 2 + 31, centerOffset, centerOffset * 2 + 70, centerOffset);
+        p5.line(centerOffset, centerOffset * 2 + 31, centerOffset, centerOffset * 2 + 70);
+      });
+
+      // Axis arrows
+      p5.temporaryState(() => {
+        p5.fill(shapeColor);
+        p5.triangle(150, -1, 145, 11, 155, 11);
+        p5.triangle(801, 150, 790, 145, 790, 155);
+        p5.triangle(150, 800, 145, 790, 155, 790);
+        p5.triangle(330, 150, 320, 145, 320, 155);
+      });
+
+      p5.drawDashed(() => {
+        p5.line(277, 0, 277, p5.dimensions.y);
+        p5.line(0, 277, p5.dimensions.x, 277);
+        p5.line(23, 0, 23, p5.dimensions.y);
+        p5.line(0, 23, p5.dimensions.x, 23);
+      });
+
+      p5.drawWith({strokeWeight: 3}, () => {
+        // Circle
+        p5.drawWith({stroke: p5.colors[1]}, () => {
+          p5.translate(centerOffset, centerOffset);
+          // Draw a pointer from middle to radius. The 0.95 multiplier is to make sure arrow fits
+          p5.arrowLine(p5.createVector(0, 0), p5.createVector(x * 0.95, y * 0.95));
+          p5.ellipse(0, 0, radius * 2);
         });
-
-        this.$c.temporaryState(p5, () => {
-          p5.stroke(color);
-          p5.strokeWeight(0.5);
-          p5.textSize(14);
-          p5.fill(color)
-          this.texts.forEach(el => p5.text(el.text, el.x, el.y));
-          this.$c.drawAxis(p5, this.offset, this.dimensions);
-        });
-
-
-        this.$c.temporaryState(p5, () => {
-          p5.stroke(color);
-          p5.strokeWeight(5);
-          p5.stroke(this.$c.background());
-          p5.line(this.offset.x * 2 + 31, this.offset.y, this.offset.x * 2 + 70, this.offset.y);
-          p5.line(this.offset.x, this.offset.y * 2 + 31, this.offset.x, this.offset.y * 2 + 70);
-        })
-
-        this.$c.drawDashed(this.context, () => {
-          p5.stroke(color);
-          p5.line(277, 0, 277, this.dimensions.y);
-          p5.line(0, 277, this.dimensions.x, 277);
-          p5.line(23, 0, 23, this.dimensions.y);
-          p5.line(0, 23, this.dimensions.x, 23);
-        });
-
-        // Moves the middle of the circle
-        p5.translate(150, 150);
-        p5.strokeWeight(3);
-
-        // Calculates the coordinates x and y(points on the circle)
-        const x = radius * Math.cos(Math.PI * time);
-        const y = -radius * Math.sin(Math.PI * time);
-
-        p5.stroke(this.$c.colors[1]);
-        p5.noFill();
-
-        // Initializes the circle at the starting point
-        p5.ellipse(0, 0, radius * 2);
-
-        // Draws a pointer
-        this.$c.drawArrow1(p5, p5.createVector(0, 0), p5.createVector(x, y));
-
-        p5.stroke(this.$c.colors[0]);
 
         // Draws a sine wave with elements and indexes from linearSpace function and moves it
-        p5.translate(200, 0);
-        p5.beginShape();
-        sineValues.forEach((el, index) => p5.vertex(index + 2 * canvasPadding, -el * radius));
-        p5.endShape();
-
-        // Calculates vertical components
-        const sinVertical = -Math.sin(Math.PI * time) * radius;
-
-        // Moves horizontal component until it hits 200
-        sinHorizontal++;
-        // Defines the length of sine wave(one period is the same as cardinality in linearSpace function)
-        sinHorizontal %= 200;
-
-        p5.ellipse(sinHorizontal + canvasPadding * 2, sinVertical, 15, 15);
-
-        this.$c.drawDashed(this.context, () => {
-          // Connect current x,y coordinates to sine graph
-          p5.line(x - 200, y, sinHorizontal + canvasPadding * 2, sinVertical);
+        p5.drawWith({stroke: p5.colors[0]}, () => {
+          p5.translate(centerOffset + 150, centerOffset);
+          p5.beginShape();
+          sineValues.forEach((el, index) => p5.vertex(index + 2 * canvasPadding, -el * radius));
+          p5.endShape();
+          p5.ellipse(degree + canvasPadding * 2, y, 15, 15);
+          p5.drawDashed(() => {
+            // Connect current x,y coordinates to sine graph
+            p5.line(x - 150, y, degree + canvasPadding * 2, y);
+          });
         });
 
-        p5.stroke(this.$c.colors[2]);
         // Draws a cosine wave with elements and index form lineSpace function and moves it
-        p5.translate(-200, 200);
-        p5.beginShape();
-        cosineValues.forEach((el, index) => p5.vertex(el * radius, index + 2 * canvasPadding));
-        p5.endShape();
-
-        // Calculates vertical components
-        const cosVertical = Math.cos(Math.PI * time) * (radius);
-        // Moves horizontal component till it hits 200
-        cosHorizontal++;
-        // Defines the length of cosine wave(one period is the same as cardinality in lineSpace function
-        cosHorizontal %= 200;
-
-        p5.ellipse(cosVertical, cosHorizontal + 2 * canvasPadding, 15, 15);
-
-        this.$c.drawDashed(this.context, () => {
+        p5.drawWith({stroke: p5.colors[2]}, () => {
+          p5.translate(centerOffset, centerOffset + 150);
+          p5.beginShape();
+          cosineValues.forEach((el, index) => p5.vertex(el * radius, index + 2 * canvasPadding));
+          p5.endShape();
+          p5.ellipse(x, degree + 2 * canvasPadding, 15, 15);
           // Connect current x,y coordinates to cosine graph
-          p5.line(x, y - 200, cosVertical, cosHorizontal + canvasPadding * 2);
+          p5.drawDashed(() => {
+            p5.line(x, y - 150, x, degree + canvasPadding * 2);
+          });
         });
+      });
 
-        time += 0.01;
-      };
-      p5.removeCanvas = () => p5.remove();
-    }, this.canvasId);
-  },
-  unmounted() {
-    this.p5.removeCanvas();
-  }
-}
+      degree++;
+      if(degree === sineValues.length - 1) {
+        degree = 0;
+      }
+    }
+  }, {
+    containerId: canvasContainerId,
+    canvasDimensions: {
+      x: 800,
+      y: 800,
+    },
+    animationFrameRate: 60
+  })
+});
+
+onBeforeUnmount(() => {
+  p5ExtendedRef.value!.remove();
+})
 </script>

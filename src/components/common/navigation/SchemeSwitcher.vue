@@ -38,7 +38,7 @@ export interface Scheme {
 }
 
 const store = useStore<State>();
-const scheme = computed<string>(() => store.state.appState.scheme);
+const scheme = computed<Scheme>(() => store.state.appState.scheme);
 
 const schemes: Scheme[] = [
   {

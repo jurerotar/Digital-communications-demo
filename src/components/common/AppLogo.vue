@@ -55,9 +55,10 @@
 import {computed} from 'vue';
 import {State} from "@stores/store";
 import {useStore} from "vuex";
+import {Scheme} from "@interfaces/common";
 
 const store = useStore<State>();
-const scheme = computed<string>(() => store.state.appState.scheme);
+const scheme = computed<Scheme>(() => store.state.appState.scheme);
 const color = computed<string>(() => (scheme.value === 'dark') ? '#ffffff' : '#010101');
 </script>
 <style>

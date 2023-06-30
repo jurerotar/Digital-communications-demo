@@ -6,7 +6,6 @@ export const useFft = (signalRef: MaybeRef<number[]>) => {
 
   watchEffect(() => {
     const signal = toValue<number[]>(signalRef);
-    console.log(signalRef);
     const signalSize = signal.length;
     const fft: FFT = new FFT(signalSize);
     const out: number[] = fft.createComplexArray();
