@@ -5,7 +5,7 @@
       :key="route.name"
       :to="route.path"
       class="flex text-lg justify-start items-center gap-4 font-medium transition-colors duration-300 text-zinc-900 dark:text-white w-full
-      p-2 rounded-lg hover:dark:bg-gray-800 hover:bg-gray-200 w-full"
+      p-2 rounded-lg hover:dark:bg-gray-800 hover:bg-gray-200"
       :class="{'dark:bg-gray-800 bg-gray-200': currentRoute === route.path}"
       tabindex="0"
       @click="linkClick()"
@@ -31,25 +31,22 @@ import SchemeSwitcher from "@components/common/navigation/SchemeSwitcher.vue";
 import AppGithubIcon from "@components/common/icons/AppGithubIcon.vue";
 import {useStore} from "vuex";
 import {State} from "@stores/store";
-import {computed} from "vue";
-import {library} from "@fortawesome/fontawesome-svg-core";
-import {faWaveSquare, faWater, faLongArrowAltUp, faHome, faSignal, faEquals, faEye, faFilter} from "@fortawesome/free-solid-svg-icons";
+import {computed, onUpdated} from "vue";
 import {useRoute} from "vue-router";
-library.add(faWaveSquare, faLongArrowAltUp, faHome, faWater, faSignal, faEye, faEquals, faFilter);
+import {useWindowSize} from "@composables/use-window-size";
 
 const store = useStore<State>();
-const isLgUp = computed<boolean>(() => store.getters['deviceProperties/isLgUp']);
+const {isLgUp, width} = useWindowSize();
+const routeObject = useRoute();
+
+onUpdated(() => {
+  console.log(width);
+});
+
+const currentRoute = computed<string>(() => routeObject.path);
 
 const linkClick = (): void => {
   store.commit('appState/setMobileSidebarExtended', false);
 }
 
-const routeObject = useRoute();
-const currentRoute = computed<string>(() => routeObject.path);
 </script>
-
-<style>
-.svg-inline--fa.fa-up-long.fa-fw {
-  transform: rotate(45deg);
-}
-</style>

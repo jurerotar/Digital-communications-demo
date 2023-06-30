@@ -15,7 +15,7 @@
       class="w-full h-4 bg-blue-100"
       type="range"
       :disabled="disabled"
-      @input="$emit('update:modelValue', $event.target.value)"
+      @input="emit('update:modelValue', $event.target.value)"
     >
   </div>
 </template>
@@ -34,7 +34,7 @@ export interface AppSliderProps {
   disabled?: boolean;
 }
 
-defineEmits([
+const emit = defineEmits([
   'update:modelValue'
 ]);
 

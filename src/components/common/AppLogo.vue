@@ -1,5 +1,5 @@
 <template>
-  <router-link
+  <RouterLink
     tabindex="0"
     class="flex h-full lg:h-auto lg:w-full justify-start lg:justify-center py-2 lg:px-12"
     :to="'/'"
@@ -13,8 +13,7 @@
       xml:space="preserve"
     >
       <path
-        class="logo-path"
-        :fill="color"
+        class="logo-path dark:fill-white fill-[#010101]"
         d="M0 108.4V93.7h13.9V14.6H0V0h45.7v14.6H31.8v93.8z"
       />
       <path
@@ -25,8 +24,7 @@
          0-7.5-.4-11.1-1.4-3-.8-5.8-2.1-8.2-4a17.7 17.7 0 01-6.8-14.7z"
       />
       <path
-        class="logo-path"
-        :fill="color"
+        class="logo-path dark:fill-white fill-[#010101]"
         d="M118.4 58.8V37.3a55.4 55.4 0 0114.3-4.4c2.6-.5 5.2-.9 7.9-1.2 2.7-.2 5.3-.4 8-.4 4.3-.1 8.6.4 12.8 1.4 3.7.9 7.2 2.5 10.3 4.8 3
         2.3 5.5 5.3 7 8.8 1.8 4.2 2.6 8.8 2.5 13.4v35h10.9v13.7H164V59.6c.1-2.5-.4-5-1.3-7.3a12 12 0
         00-3.4-4.7c-1.5-1.2-3.2-2-5.1-2.5-2.1-.5-4.3-.8-6.6-.8-1.2 0-2.4 0-3.6.2l-3.6.4c-1.2.1-2.3.4-3.5.6l-3.5.8v12.3h-15z"
@@ -36,8 +34,7 @@
         d="M217.7 0h45.7v14.6h-45.7z"
       />
       <path
-        class="logo-path"
-        :fill="color"
+        class="logo-path dark:fill-white fill-[#010101]"
         d="M217.7 108.4V93.7h13.9V23.8h17.9v69.9h13.9v14.7zM330.2 84.6v-70h-24.4v17.2H290V0h58v84.6zM312.3 93.7h53.8v14.6h-53.8z"
       />
       <path
@@ -45,22 +42,8 @@
         d="M372.5 31.8V14.6H358V0h30.4v31.8z"
       />
     </svg>
-  </router-link>
+  </RouterLink>
 </template>
-
-<script
-  setup
-  lang="ts"
->
-import {computed} from 'vue';
-import {State} from "@stores/store";
-import {useStore} from "vuex";
-import {Scheme} from "@interfaces/common";
-
-const store = useStore<State>();
-const scheme = computed<Scheme>(() => store.state.appState.scheme);
-const color = computed<string>(() => (scheme.value === 'dark') ? '#ffffff' : '#010101');
-</script>
 <style>
 .logo-path {
   transition: fill 0.3s;

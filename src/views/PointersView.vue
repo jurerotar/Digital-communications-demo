@@ -19,7 +19,7 @@ import TheoryPointer from "@components/theory/TheoryPointer.vue";
 import AppMainHeading from "@components/common/AppMainHeading.vue";
 import AppCollapsible from "@components/common/AppCollapsible.vue";
 import {computed, onBeforeUnmount, onMounted, ref} from "vue";
-import {p5Extended} from "@helpers/p5-extended";
+import {p5Extended} from "@helpers/p5/p5-extended";
 import {State} from "@stores/store";
 import {Scheme} from "@interfaces/common";
 import {useStore} from "vuex";

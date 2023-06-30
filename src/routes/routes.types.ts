@@ -1,9 +1,10 @@
 import {RouteMeta, RouteRecordRaw} from "vue-router";
+import {IconDefinition} from "@fortawesome/free-brands-svg-icons";
 
 export type Route = RouteRecordRaw &  {
   name: string;
   label: string;
-  icon: string[];
+  icon: IconDefinition;
   meta: CustomRouteMeta
 }
 

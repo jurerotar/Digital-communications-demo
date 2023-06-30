@@ -4,9 +4,9 @@
     class="dark:bg-gray-900 transition-colors duration-300 relative flex flex-row justify-between lg:justify-end items-center top-0left-0
     h-16 w-full lg:max-w-[calc(100%-18rem)] lg:ml-72 bg-gray-100 px-4 py-2 shadow-md"
   >
-    <app-logo v-if="!isLgUp" />
-    <top-navigation-links v-if="isLgUp" />
-    <hamburger-menu v-if="!isLgUp" />
+    <AppLogo v-if="!isLgUp" />
+    <TopNavigationLinks v-if="isLgUp" />
+    <HamburgerMenu v-if="!isLgUp" />
   </nav>
   <!-- Sidebar navigation -->
   <nav
@@ -14,11 +14,11 @@
      max-w-[16rem] lg:max-w-[18rem] transform lg:-translate-x-0 bg-white z-30"
     :class="[mobileSidebarExtended ? 'translate-x-0' : '-translate-x-full']"
   >
-    <app-logo v-if="isLgUp" />
-    <navigation-links />
+    <AppLogo v-if="isLgUp" />
+    <NavigationLinks />
   </nav>
 
-  <router-view />
+  <RouterView />
 </template>
 
 <script
@@ -32,8 +32,9 @@ import NavigationLinks from "@components/common/navigation/NavigationLinks.vue";
 import TopNavigationLinks from "@components/common/navigation/TopNavigationLinks.vue";
 import {useStore} from "vuex";
 import {State} from "@stores/store";
+import {useWindowSize} from "@composables/use-window-size";
 
 const store = useStore<State>();
 const mobileSidebarExtended = computed<boolean>(() => store.state.appState.mobileSidebarExtended);
-const isLgUp = computed<string>(() => store.getters['deviceProperties/isLgUp']);
+const {isLgUp} = useWindowSize();
 </script>

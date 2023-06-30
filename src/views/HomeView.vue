@@ -17,11 +17,11 @@
             v-for="link in links"
             :key="link.path"
           >
-            <router-link :to="link.path">
+            <RouterLink :to="link.path">
               <AppButton>
                 {{ link.label }}
               </AppButton>
-            </router-link>
+            </RouterLink>
           </div>
         </div>
         <AppSectionHeading>

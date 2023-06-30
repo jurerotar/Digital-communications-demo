@@ -1,6 +1,11 @@
 import {createRouter, createWebHistory, Router} from "vue-router";
 import {MetaObject, Route} from "@routes/routes.types";
-import {appFullTitle} from "@helpers/functions";
+import {faWaveSquare, faWater, faLongArrowAltUp, faHome, faSignal, faEquals, faEye, faFilter} from "@fortawesome/free-solid-svg-icons";
+
+export const appFullTitle = (title: string): string => {
+  const appName = "Digitalne komunikacije";
+  return `${title} - ${appName}`;
+}
 
 const routes: Route[] = [
   {
@@ -8,7 +13,7 @@ const routes: Route[] = [
     name: "Home",
     label: 'Domov',
     component: () => import("@views/HomeView.vue"),
-    icon: ['fas', 'home'],
+    icon: faHome,
     meta: {
       title: "Domov",
       properties: [
@@ -22,7 +27,7 @@ const routes: Route[] = [
     name: "Spectrum",
     label: 'Spekter',
     component: () => import("@views/SpectrumView.vue"),
-    icon: ['fas', 'wave-square'],
+    icon: faWaveSquare,
     meta: {
       title: "Spekter",
       properties: [
@@ -36,7 +41,7 @@ const routes: Route[] = [
     name: "Modulations",
     label: 'Modulacije',
     component: () => import("@views/ModulationsView.vue"),
-    icon: ['fas', 'signal'],
+    icon: faSignal,
     meta: {
       title: "Modulacije",
       properties: [
@@ -50,7 +55,7 @@ const routes: Route[] = [
     name: "Harmonics",
     label: 'Harmoniki',
     component: () => import("@views/HarmonicsView.vue"),
-    icon: ['fas', 'water'],
+    icon: faWater,
     meta: {
       title: "Harmoniki",
       properties: [
@@ -64,7 +69,7 @@ const routes: Route[] = [
     name: "Pointers",
     label: 'Kazalci',
     component: () => import("@views/PointersView.vue"),
-    icon: ['fas', 'long-arrow-alt-up'],
+    icon: faLongArrowAltUp,
     meta: {
       title: "Kazalci",
       properties: [
@@ -78,7 +83,7 @@ const routes: Route[] = [
     name: "Correlation",
     label: 'Korelacija',
     component: () => import("@views/CorrelationView.vue"),
-    icon: ['fas', 'equals'],
+    icon: faEquals,
     meta: {
       title: "Korelacija",
       properties: [
@@ -92,7 +97,7 @@ const routes: Route[] = [
     name: "Intersymbol interference",
     label: 'Intersimbolna interferenca',
     component: () => import("@views/IntersymbolInterferenceView.vue"),
-    icon: ['fas', 'eye'],
+    icon: faEye,
     meta: {
       title: "Intersimbolna interferenca",
       properties: [
@@ -106,7 +111,7 @@ const routes: Route[] = [
     name: "Digitalni filtri",
     label: 'Digitalni filtri',
     component: () => import("@views/DigitalFiltersView.vue"),
-    icon: ['fas', 'filter'],
+    icon: faFilter,
     meta: {
       title: "Digitalni filtri",
       properties: [

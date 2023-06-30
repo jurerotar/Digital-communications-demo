@@ -6,27 +6,14 @@
     <AppCollapsible>
       <theory-harmonics />
     </AppCollapsible>
-    <!-- Range slider -->
-    <div class="inline-flex flex-col mb-2 w-fit-content gap-2">
-      <label
-        :for="'harmonic-components'"
-        class="text-xl transition-colors duration-300 dark:text-white"
-      >
-        Število komponent:
-        <span class="font-medium">
-          {{ components }}
-        </span>
-      </label>
-      <input
-        :id="'harmonic-components'"
-        v-model.number="components"
-        type="range"
-        min="1"
-        max="10"
-        step="1"
-        @change="updateComponents(components)"
-      >
-    </div>
+    <AppSlider
+      id="harmonic-components"
+      v-model="components"
+      :label="`Število komponent: ${components}`"
+      :min="1"
+      :max="10"
+      :step="1"
+    />
     <IndividualHarmonicsGraph :components="components" />
     <SummedHarmonicsGraph :components="components" />
   </AppMainContainer>
@@ -43,9 +30,7 @@ import AppCollapsible from "@components/common/AppCollapsible.vue";
 import AppMainHeading from "@components/common/AppMainHeading.vue";
 import {ref} from "vue";
 import AppMainContainer from "@components/common/AppMainContainer.vue";
+import AppSlider from "@components/common/AppSlider.vue";
 
 const components = ref<number>(1);
-const updateComponents = (value: number): void => {
-  components.value = value;
-}
 </script>
