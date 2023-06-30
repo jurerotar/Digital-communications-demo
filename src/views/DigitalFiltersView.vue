@@ -201,7 +201,7 @@ import AppCollapsible from "@components/common/AppCollapsible.vue";
 import DigitalFiltersGraph from "@components/canvas/DigitalFiltersGraph.vue";
 import KatexEquation from "@components/common/KatexEquation.vue";
 import AppSlider from "@components/common/AppSlider.vue";
-import {FIRFilter, IIRFilter} from "@types/digital-filters";
+import {FIRFilter, IIRFilter} from "@interfaces//digital-filters";
 import Complex from 'Complex';
 import {
   bartlett,

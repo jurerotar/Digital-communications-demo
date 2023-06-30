@@ -1,11 +1,8 @@
-import {_RouteLocationBase, RouteMeta} from "vue-router";
+import {RouteMeta, RouteRecordRaw} from "vue-router";
 
-export type Route = Partial<_RouteLocationBase> & {
-  path: string;
+export type Route = RouteRecordRaw &  {
   name: string;
   label: string;
-  // TODO: Type this
-  component: () => any;
   icon: string[];
   meta: CustomRouteMeta
 }

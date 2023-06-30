@@ -4,7 +4,7 @@
       Spekter
     </AppMainHeading>
     <AppCollapsible>
-      <theory-spectrum />
+      <theory-spectrum/>
     </AppCollapsible>
     <AppSectionHeading>
       Oblika impulza
@@ -34,7 +34,7 @@
     </ButtonContainer>
     <FullSignalGraph
       :canvas-id="'spectrum-original-signal'"
-      :data="baseSignal"
+      :data="shapedSignal"
       :title="'Impulz'"
       :vertical-pool="[1, 0.5, -0.5, -1]"
       :horizontal-pool="pulse.horizontalPool"
@@ -73,20 +73,17 @@ import ButtonContainer from "@components/common/buttons/AppButtonContainer.vue";
 import AppButton from "@components/common/buttons/AppButton.vue";
 import AppMainHeading from "@components/common/AppMainHeading.vue";
 import AppCollapsible from "@components/common/AppCollapsible.vue";
-import FFT from "fft.js";
 import {computed, ref} from "vue";
 import AppSectionHeading from "@components/common/AppSectionHeading.vue";
 import AppMainContainer from "@components/common/AppMainContainer.vue";
-import {unitBox} from "@helpers/math";
+import {PulseLength, PulseShape} from "@interfaces/spectrum";
+import {useShapedSignal} from "@composables/use-shaped-signal";
+import {useFft} from "@composables/use-fft";
 
 export interface Pulse {
   key: PulseShape;
   // Button label
   label: string;
-  // Original pulse values (displayed on upper chart)
-  drawingValues: (frequency: number) => number[];
-  // Transformed values (displayed on lower chart)
-  spectrumValues: (frequency: number) => number[];
   // Pool of numbers to use on the chart
   horizontalPool?: number[],
   // Custom pool lengths, since some charts look clunky with defaults
@@ -107,17 +104,6 @@ interface PulseLengthOption {
   key: PulseLength;
 }
 
-type PulseShape = 'cos' | 'sinc' | 'gauss' | 'square';
-type PulseLength = 0.25 | 0.5 | 1 | 2 | 3 | 4;
-
-// Amount of values used for FFT
-const fftSize: number = 2 ** 11;
-
-const fft: FFT = new FFT(fftSize);
-
-// We create an array of time values from [-2**11 / 2, 2**11 / 2] on which we'll apply our fft
-const baseValues: number[] = [...[...Array(fftSize / 2).keys()].map(el => el * -1 - 1).reverse(), ...Array(fftSize / 2).keys()];
-
 // Default pulse length options we give to the users
 const defaultPulseLengthOptions: PulseLengthOption[] = [
   {label: '1/4', key: 0.25},
@@ -131,12 +117,6 @@ const pulses: Pulse[] = [
   {
     label: 'Kosinusni',
     key: 'cos',
-    drawingValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return (-Math.cos(Math.PI * t * frequency * 0.01) - 1) * unitBox(t * frequency * 0.01 / 2, [-0.5, 0.5]);
-    }),
-    spectrumValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return (-Math.cos(Math.PI * t * frequency * 0.05) - 1) * unitBox(t * frequency * 0.05 / 2, [-0.5, 0.5]);
-    }),
     horizontalPool: [-3, -2.5, -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5, 3],
     // Remove length of 4, add length of 3
     pulseLengths: defaultPulseLengthOptions
@@ -150,12 +130,6 @@ const pulses: Pulse[] = [
   {
     label: 'Kvadratni',
     key: 'square',
-    drawingValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return -unitBox(t * frequency * 0.01, [-0.5, 0.5]);
-    }),
-    spectrumValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return -unitBox(t * frequency * 0.05, [-0.5, 0.5]);
-    }),
     pulseLengths: defaultPulseLengthOptions,
     logarithmGraphTexts: {
       note: `Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar,
@@ -165,12 +139,6 @@ const pulses: Pulse[] = [
   {
     label: 'Gauss',
     key: 'gauss',
-    drawingValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return Math.E ** (-2 * (t * 0.0165 * frequency) ** 2) * -unitBox(t * frequency * 0.0005, [-0.5, 0.5]);
-    }),
-    spectrumValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return Math.E ** (-2 * (t * 0.028 * frequency) ** 2) * -unitBox(t * frequency * 0.0005, [-0.5, 0.5]);
-    }),
     // Remove length of 4, add length of 3
     pulseLengths: defaultPulseLengthOptions
       .filter((pulseLength: PulseLengthOption) => pulseLength.key !== 4)
@@ -183,12 +151,6 @@ const pulses: Pulse[] = [
   {
     label: 'Sinc',
     key: 'sinc',
-    drawingValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return t === 0 ? -1 : -Math.sin(t * frequency * 0.062) / (t * frequency * 0.062) * unitBox(t * frequency * 0.0033, [-0.5, 0.5]);
-    }),
-    spectrumValues: (frequency: number): number[] => baseValues.map((t: number) => {
-      return t === 0 ? -1 : -Math.sin(t * frequency * 0.152) / (t * frequency * 0.152) * unitBox(t * frequency * 0.008, [-0.5, 0.5]);
-    }),
     pulseLengths: defaultPulseLengthOptions,
     logarithmGraphTexts: {
       note: `Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar,
@@ -199,35 +161,27 @@ const pulses: Pulse[] = [
 
 // User selected pulse length
 const pulseLength = ref<PulseLength>(1);
+
 const setPulseLength = (length: PulseLength): void => {
   pulseLength.value = length;
 }
-const frequency = computed<number>(() => pulseLength.value ** -1);
 
 // User selected pulse shape
 const pulseShape = ref<PulseShape>('cos');
+
 const setPulseShape = (shape: PulseShape): void => {
   // Reset length to 1, since some lengths might be missing on certain shapes
   setPulseLength(1);
   pulseShape.value = shape;
 }
 
+const frequency = computed<number>(() => pulseLength.value ** -1);
+
 // Pulse object determined by user selection
 const pulse = computed<Pulse>(() => pulses.find((pulse: Pulse) => pulse.key === pulseShape.value)!);
 
-const baseSignal = computed<number[]>(() => takeMiddleValues(pulse.value.drawingValues(frequency.value)));
-
-const transformedSignal = computed<number[]>(() => {
-  const out: number[] = fft.createComplexArray();
-  fft.realTransform(out, pulse.value.spectrumValues(frequency.value));
-  return out.filter((el: number, index: number) => index % 2 === 0).map((el: number) => Math.abs(el));
-});
-
-// Returns an array with only $size values around the middle
-const takeMiddleValues = (values: number[]): number[] =>  {
-  const size = 600;
-  return values.filter((el: number, index: number) => (index >= (values.length / 2 - size / 2) && index <= (values.length / 2 + size / 2)));
-}
+const {shapedSignal, shapedSpectrumSignal} = useShapedSignal(pulseShape, frequency);
+const {transformedSignal} = useFft(shapedSpectrumSignal)
 </script>
 
 

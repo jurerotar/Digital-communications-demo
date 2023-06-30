@@ -253,13 +253,13 @@ const selectedModulation = computed<Modulation>(
   () => modulations.find((modulation: Modulation) => modulation.key === selectedModulationKey.value)!
 );
 
-const timeValues: number[] = [...Array(600).fill(0)].map((t: number, i: number) => i * timeDifference);
+const timeValues: number[] = [...Array(600).fill(0)].map((_, i: number) => i * timeDifference);
 const carrierSignalValues = ref<number[]>(timeValues.map((t: number) => carrierValueGenerator(t)));
 const sineModulationSignalValues = ref<number[]>(timeValues.map((t: number) => sineModulationValueGenerator(t)));
 
 // Bipolar signal
 const binaryLevel2SignalValues = ref<number[]>(Array(5).fill(0)
-  .map((el: number, i: number) => Array(binarySignalWidth).fill((i % 2 === 1) ? 1 : -1))
+  .map((_, i: number) => Array(binarySignalWidth).fill((i % 2 === 1) ? 1 : -1))
   .flat()
 );
 
@@ -328,7 +328,7 @@ const dataSignalCanvasData = computed<DataSignalCanvas>(() => {
 });
 
 // Create an array of fixed width and populate it with default modulation
-const modulatedSignalValues = ref<number[]>([...Array(600)].map((el: number, index: number) => {
+const modulatedSignalValues = ref<number[]>([...Array(600)].map((_, index: number) => {
   return nextModulatedValue(index);
 }));
 

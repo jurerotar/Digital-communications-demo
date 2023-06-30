@@ -27,7 +27,7 @@ export default defineConfig({
       {find: '@routes', replacement: path.resolve('./src/routes')},
       {find: '@stores', replacement: path.resolve('./src/stores')},
       {find: '@interfaces', replacement: path.resolve('./src/interfaces')},
-      {find: '@prototypes', replacement: path.resolve('./src/prototypes')},
+      {find: '@composables', replacement: path.resolve('./src/composables')},
     ]
   },
   plugins: [
