@@ -29,19 +29,15 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {routes} from '@routes/routes';
 import {useStore} from "vuex";
 import {State} from "@stores/store";
-import {computed, onUpdated} from "vue";
+import {computed} from "vue";
 import {useRoute} from "vue-router";
 import {useWindowSize} from "@composables/use-window-size";
 import SchemeSwitcher from "./SchemeSwitcher.vue";
 import AppGithubIcon from "./GithubIcon.vue";
 
 const store = useStore<State>();
-const {isLgUp, width} = useWindowSize();
+const {isLgUp} = useWindowSize();
 const routeObject = useRoute();
-
-onUpdated(() => {
-  console.log(width);
-});
 
 const currentRoute = computed<string>(() => routeObject.path);
 

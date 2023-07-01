@@ -8,7 +8,7 @@
     </AppCollapsible>
     <AppSlider
       id="harmonic-components"
-      v-model="components"
+      v-model.number="components"
       :label="`Število komponent: ${components}`"
       :min="1"
       :max="10"

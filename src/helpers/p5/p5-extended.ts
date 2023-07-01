@@ -1,10 +1,11 @@
 import p5 from 'p5';
-import {Coordinates, Scheme} from "@interfaces/common";
+import {Mark, Scheme, Size} from "@interfaces/common";
+import {shortenVector} from "@helpers/math";
 
 type P5ExtendedOptions = {
   containerId: string;
   animationFrameRate?: number;
-  canvasDimensions?: Coordinates;
+  canvasSize?: Size;
 };
 
 type DrawWithOptions = {
@@ -16,15 +17,15 @@ type DrawWithOptions = {
 const DEFAULT_OPTIONS: P5ExtendedOptions = {
   containerId: 'canvas',
   animationFrameRate: 30,
-  canvasDimensions: {
-    x: 700,
-    y: 300,
+  canvasSize: {
+    width: 700,
+    height: 300,
   }
 }
 
 export class p5Extended extends p5 {
   public canvasPadding: number = 50;
-  public dimensions: Coordinates;
+  public canvasSize: Size;
   public darkModeBackgroundColor: string = '#1F2937';
   public lightModeBackgroundColor: string = '#ffffff';
   public darkModeShapeColor: string = '#ffffff';
@@ -42,14 +43,14 @@ export class p5Extended extends p5 {
   ];
 
   constructor(sketch: (p: p5Extended) => void, options: P5ExtendedOptions = DEFAULT_OPTIONS) {
-    const mergedOptions = {
+    const mergedOptions: P5ExtendedOptions = {
       ...DEFAULT_OPTIONS,
       ...options,
     }
 
     const sketchWithSetup = (p: p5Extended) => {
       p.setup = () => {
-        p.createCanvas(mergedOptions.canvasDimensions!.x, mergedOptions.canvasDimensions!.y);
+        p.createCanvas(mergedOptions.canvasSize!.width, mergedOptions.canvasSize!.height);
         p.frameRate(mergedOptions.animationFrameRate!);
         p.textFont('Montserrat');
         p.disableFriendlyErrors = true;
@@ -58,7 +59,7 @@ export class p5Extended extends p5 {
     }
 
     super(sketchWithSetup, mergedOptions.containerId as unknown as HTMLElement);
-    this.dimensions = mergedOptions.canvasDimensions!;
+    this.canvasSize = mergedOptions.canvasSize!;
   }
 
   /**
@@ -91,13 +92,13 @@ export class p5Extended extends p5 {
       //     (this as p5Extended)[option] = options[option];
       //   }
       // })
-      if(stroke) {
+      if (stroke) {
         this.stroke(stroke);
       }
-      if(strokeWeight) {
+      if (strokeWeight) {
         this.strokeWeight(strokeWeight);
       }
-      if(textSize) {
+      if (textSize) {
         this.textSize(textSize);
       }
       callback();
@@ -110,14 +111,30 @@ export class p5Extended extends p5 {
   public arrowLine = (startVector: p5.Vector, endVector: p5.Vector) => {
     const ARROW_SIZE = 7;
     const {x: startX, y: startY} = startVector;
-    const {x: endX, y: endY} = endVector;
+
+    // We need to shorten the line by percentage represented by arrow size, because arrow is added at the end
+    const lineLength = endVector.dist(startVector);
+    const percentageRepresentedByArrow = ARROW_SIZE / lineLength;
+
+    const shortenedEndVector = shortenVector(endVector, percentageRepresentedByArrow);
+    const {x: shortenedEndX, y: shortenedEndY} = shortenedEndVector;
 
     this.temporaryState(() => {
-      this.line(startX, startY, endX, endY);
-      this.translate(endX, endY);
-      this.rotate(endVector.heading());
+      this.line(startX, startY, shortenedEndX, shortenedEndY);
+      this.translate(shortenedEndX, shortenedEndY);
+      this.rotate(shortenedEndVector.sub(startVector).heading());
       this.triangle(0, ARROW_SIZE / 2, 0, -ARROW_SIZE / 2, ARROW_SIZE, 0);
     });
+  }
+
+  /**
+   * Loops through the array of marks and fills them
+   */
+  public drawMarks = (marks: Mark[], shapeColor: string) => {
+    this.drawWith({textSize: 14, strokeWeight: 0.5}, () => {
+      this.fill(shapeColor);
+      marks.forEach((mark: Mark) => this.text(mark.text, mark.x, mark.y));
+    })
   }
 
   /**
