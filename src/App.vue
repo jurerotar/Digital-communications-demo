@@ -8,10 +8,9 @@
   setup
   lang="ts"
 >
-import SidebarLayout from "@layouts/SidebarLayout.vue";
-import {attachResizeHandlers, scheme} from "@helpers/functions";
+import SidebarLayout from "@layouts/sidebar-layout/SidebarLayout.vue";
+import {scheme} from "@helpers/functions";
 
 scheme();
-attachResizeHandlers();
 </script>
 

@@ -1,12 +1,10 @@
-import {_RouteLocationBase, RouteMeta} from "vue-router";
+import {RouteMeta, RouteRecordRaw} from "vue-router";
+import {IconDefinition} from "@fortawesome/free-brands-svg-icons";
 
-export type Route = Partial<_RouteLocationBase> & {
-  path: string;
+export type Route = RouteRecordRaw &  {
   name: string;
   label: string;
-  // TODO: Type this
-  component: () => any;
-  icon: string[];
+  icon: IconDefinition;
   meta: CustomRouteMeta
 }
 

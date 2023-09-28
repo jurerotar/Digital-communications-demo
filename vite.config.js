@@ -20,14 +20,14 @@ export default defineConfig({
   resolve: {
     alias: [
       {find: '@styles', replacement: path.resolve('./src/styles')},
-      {find: '@views', replacement: path.resolve('./src/views')},
+      {find: '@app', replacement: path.resolve('./src/app')},
       {find: '@components', replacement: path.resolve('./src/components')},
       {find: '@helpers', replacement: path.resolve('./src/helpers')},
       {find: '@layouts', replacement: path.resolve('./src/layouts')},
       {find: '@routes', replacement: path.resolve('./src/routes')},
       {find: '@stores', replacement: path.resolve('./src/stores')},
       {find: '@interfaces', replacement: path.resolve('./src/interfaces')},
-      {find: '@prototypes', replacement: path.resolve('./src/prototypes')},
+      {find: '@composables', replacement: path.resolve('./src/composables')},
     ]
   },
   plugins: [

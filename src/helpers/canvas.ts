@@ -55,6 +55,9 @@ export interface Canvas {
   widerLine: (p5: p5, x1: number, y1: number, x2: number, y2: number, weight: number) => void;
 }
 
+/**
+ * @deprecated - use p5-extended instead
+ */
 const canvas: Canvas = {
   frameRate: 30,
   canvasPadding: 50,

@@ -15,7 +15,7 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "isolatedModules": false,
+    "isolatedModules": true,
     "useDefineForClassFields": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
@@ -29,8 +29,8 @@
       "@styles/*": [
         "styles/*"
       ],
-      "@views/*": [
-        "views/*"
+      "@app/*": [
+        "app/*"
       ],
       "@components/*": [
         "components/*"
@@ -50,14 +50,17 @@
       "@interfaces/*": [
         "interfaces/*"
       ],
-      "@prototypes/*": [
-        "prototypes/*"
+      "@composables/*": [
+        "composables/*"
       ]
     },
     "types": [
       "vite/client"
     ]
   },
+  "include": [
+    "src"
+  ],
   "exclude": [
     "node_modules",
   ]
