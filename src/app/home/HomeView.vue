@@ -36,7 +36,7 @@
         href="http://www.fe.uni-lj.si/mma/Tomazic-DigitalneKomunikacije/2017112514040761/"
         rel="noopener"
         target="_blank"
-        class="w-fit-content"
+        class="w-fit"
       >
         <AppButton>
           Učbenik

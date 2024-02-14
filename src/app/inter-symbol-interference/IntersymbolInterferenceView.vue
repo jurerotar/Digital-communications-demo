@@ -90,7 +90,7 @@
       :ticks="isiTicks"
     >
       <AppButton
-        class="w-fit-content gap-2"
+        class="w-fit gap-2"
         variant="danger"
         @click="clearOscilloscope()"
       >

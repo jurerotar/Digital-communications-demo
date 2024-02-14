@@ -45,7 +45,9 @@ export default defineConfig({
       '@fortawesome/free-solid-svg-icons',
       '@fortawesome/free-regular-svg-icons',
       '@fortawesome/vue-fontawesome',
-      'katex'
+      'katex',
+      "Complex",
+      'window-function'
     ],
   }
 });

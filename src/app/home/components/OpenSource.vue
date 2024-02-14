@@ -24,7 +24,7 @@
           href="https://github.com/jurerotar/digital-communications-demo"
           target="_blank"
           tabindex="0"
-          class="inline-flex text-white w-fit-content font-semibold px-6 py-4 rounded outline-none focus:outline-none bg-gray-800
+          class="inline-flex text-white w-fit font-semibold px-6 py-4 rounded outline-none focus:outline-none bg-gray-800
           active:bg-gray-700 uppercase text-sm shadow hover:shadow-lg ease-linear transition-all duration-150"
         >
           GITHUB

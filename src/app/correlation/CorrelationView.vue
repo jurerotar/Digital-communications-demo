@@ -48,7 +48,7 @@
         </AppButton>
       </AppButtonContainer>
       <!-- Slider -->
-      <div class="inline-flex flex-col w-fit-content gap-4">
+      <div class="inline-flex flex-col w-fit gap-4">
         <label
           :for="'tau'"
           class="font-semibold text-xl transition-colors duration-300 dark:text-white"
@@ -135,7 +135,7 @@
         </AppButton>
       </AppButtonContainer>
       <!-- Slider -->
-      <div class="inline-flex flex-col w-fit-content gap-4">
+      <div class="inline-flex flex-col w-fit gap-4">
         <label
           :for="'tau-slider'"
           class="font-semibold text-xl transition-colors duration-300 dark:text-white"
