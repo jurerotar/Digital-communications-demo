@@ -23,7 +23,7 @@ import {State} from "@stores/store";
 import {Mark, Scheme} from "@interfaces/common";
 import {useStore} from "vuex";
 import PointersTheory from "./components/PointersTheory.vue";
-import {useCircularFunctionsValues} from "./composables/use-circular-functions-values";
+import {linearSpace} from "@helpers/math";
 
 const canvasContainerId = 'canvas-pointers';
 
@@ -47,7 +47,9 @@ const marks: Mark[] = [
   {text: 'Φ', x: 160, y: 800,},
 ];
 
-const {sineValues, cosineValues} = useCircularFunctionsValues();
+const degrees = linearSpace(0, 2 * Math.PI, 360);
+const sineValues: number[] = degrees.map(Math.sin);
+const cosineValues: number[] = degrees.map(Math.cos);
 
 onMounted(() => {
   // Will loop between 0-360
