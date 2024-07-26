@@ -7,7 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "lint": "eslint --ext .vue,ts --fix src"
+    "lint:check": "npx @biomejs/biome lint",
+    "lint": "npx @biomejs/biome lint --fix",
+    "format:check": "npx @biomejs/biome format",
+    "format": "npx @biomejs/biome format --write",
+    "type-check": "tsc --noEmit",
+    "test": "vitest",
+    "prepare": "husky",
+    "analyze-bundle": "npx vite-bundle-visualizer"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "6.6.0",
@@ -23,26 +30,40 @@
     "window-function": "2.1.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.8.3",
     "@types/katex": "0.16.7",
     "@types/node": "20.14.12",
     "@types/p5": "1.7.6",
     "@vitejs/plugin-vue": "5.1.0",
     "@vue/compiler-sfc": "3.4.34",
     "@vue/eslint-config-typescript": "13.0.0",
-    "eslint": "8.57.0",
-    "eslint-plugin-vue": "9.27.0",
-    "eslint-plugin-vuejs-accessibility": "2.4.1",
+    "husky": "9.1.2",
+    "lint-staged": "15.2.7",
     "postcss-import": "16.1.0",
     "rollup-plugin-visualizer": "5.12.0",
     "tailwindcss": "3.4.7",
     "typescript": "5.5.4",
     "vite": "5.3.5",
     "vue": "3.4.34",
-    "vue-router": "4.4.0"
+    "vue-router": "4.4.0",
+    "vite-bundle-visualizer": "1.2.1"
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ]
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,json}": [
+      "npm run lint",
+      "npm run format"
+    ]
+  }
 }
