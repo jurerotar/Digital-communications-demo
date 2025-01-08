@@ -16,13 +16,14 @@
   lang="ts"
 >
 import {ref, useSlots, computed} from "vue";
-import katex from "katex";
+import { renderToString } from "katex";
+import 'katex/dist/katex.css';
 
 export interface KatexProps {
   inline?: boolean;
 }
 
-const props = withDefaults(defineProps<KatexProps>(), {
+withDefaults(defineProps<KatexProps>(), {
   inline: false
 });
 
@@ -31,5 +32,5 @@ const slots = useSlots();
 const katexParentElement = ref<HTMLSpanElement>();
 
 const contents = computed(() => slots.default?.()[0]?.children as string);
-const renderedKatex = computed(() => katex.renderToString(contents.value));
+const renderedKatex = computed(() => renderToString(contents.value));
 </script>

@@ -4,7 +4,8 @@
     :variant="state === 'playing' ? 'danger' : 'confirm'"
   >
     <span class="flex justify-center gap-2 items-center">
-      <FontAwesomeIcon :icon="['fas', state === 'playing' ? 'pause' : 'play']" />
+      <FontAwesomeIcon v-if="state === 'playing'" :icon="faPlay" />
+      <FontAwesomeIcon v-if="state === 'paused'" :icon="faPause" />
       <span class="hidden lg:flex">
         {{ state === 'playing' ? 'Ustavi animacijo' : 'Nadaljuj animacijo' }}
       </span>
@@ -16,16 +17,12 @@
 import AppButton from "@components/common/buttons/AppButton.vue";
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {faPlay, faPause} from '@fortawesome/free-solid-svg-icons';
-import {library} from '@fortawesome/fontawesome-svg-core'
-
-library.add(faPlay, faPause);
 
 export interface AppAnimationPauseButtonProps {
   state?: 'playing' | 'paused';
 }
 
-const props = withDefaults(defineProps<AppAnimationPauseButtonProps>(), {
+withDefaults(defineProps<AppAnimationPauseButtonProps>(), {
   state: 'playing'
 });
-
 </script>

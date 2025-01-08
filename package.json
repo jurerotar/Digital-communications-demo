@@ -46,8 +46,8 @@
     "vue-router": "4.5.0"
   },
   "browserslist": [
+    "last 1 version",
     "> 1%",
-    "last 2 versions",
     "not dead"
   ]
 }
