@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "esModuleInterop": true,
     "strict": true,
     "noImplicitAny": true,
@@ -20,38 +20,39 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "lib": [
-      "esnext",
-      "dom"
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
     ],
     "paths": {
       "@styles/*": [
-        "styles/*"
+        "src/styles/*"
       ],
       "@app/*": [
-        "app/*"
+        "src/app/*"
       ],
       "@components/*": [
-        "components/*"
+        "src/components/*"
       ],
       "@helpers/*": [
-        "helpers/*"
+        "src/helpers/*"
       ],
       "@layouts/*": [
-        "layouts/*"
+        "src/layouts/*"
       ],
       "@routes/*": [
-        "routes/*"
+        "src/routes/*"
       ],
       "@stores/*": [
-        "stores/*"
+        "src/stores/*"
       ],
       "@interfaces/*": [
-        "interfaces/*"
+        "src/interfaces/*"
       ],
       "@composables/*": [
-        "composables/*"
+        "src/composables/*"
       ]
     },
     "types": [
