@@ -31,6 +31,9 @@
     "vite",
     "vitejs"
   ],
+  "engines": {
+    "node": ">=22.13.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -38,9 +41,10 @@
     "type-check": "tsc",
     "lint": "eslint --fix",
     "lint:check": "eslint",
-    "format": "prettier --write",
-    "format:check": "prettier",
-    "analyze-bundle": "npx vite-bundle-visualizer"
+    "format": "node --experimental-strip-types node_modules/prettier/bin/prettier.cjs . --write -u",
+    "format:check": "node --experimental-strip-types node_modules/prettier/bin/prettier.cjs . --check -u",
+    "analyze-bundle": "npx vite-bundle-visualizer",
+    "prepare": "husky"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "6.7.2",
@@ -56,6 +60,8 @@
     "window-function": "2.1.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "19.8.0",
+    "@commitlint/config-conventional": "19.8.0",
     "@types/katex": "0.16.7",
     "@types/node": "22.13.10",
     "@types/p5": "1.7.6",
@@ -63,13 +69,12 @@
     "@vue/compiler-sfc": "3.5.13",
     "@vue/eslint-config-typescript": "14.5.0",
     "eslint": "9.22.0",
-    "eslint-config-prettier": "^10.1.1",
+    "eslint-config-prettier": "10.1.1",
     "eslint-plugin-vue": "10.0.0",
     "globals": "16.0.0",
-    "husky": "^9.1.7",
-    "lint-staged": "^15.4.3",
+    "husky": "9.1.7",
     "postcss-import": "16.1.0",
-    "prettier": "^3.5.3",
+    "prettier": "3.5.3",
     "tailwindcss": "3.4.17",
     "typescript": "5.8.2",
     "vite": "6.2.1",
@@ -77,9 +82,21 @@
     "vue": "3.5.13",
     "vue-router": "4.5.0"
   },
-  "browserslist": [
-    "last 1 version",
-    "> 1%",
-    "not dead"
-  ]
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  }
 }

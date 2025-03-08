@@ -16,14 +16,11 @@
       type="range"
       :disabled="disabled"
       @input="emit('update:modelValue', $event.target.value)"
-    >
+    />
   </div>
 </template>
 
-<script
-  setup
-  lang="ts"
->
+<script setup lang="ts">
 export interface AppSliderProps {
   label: string;
   id: string;
@@ -34,14 +31,12 @@ export interface AppSliderProps {
   disabled?: boolean;
 }
 
-const emit = defineEmits([
-  'update:modelValue'
-]);
+const emit = defineEmits(['update:modelValue']);
 
 const props = withDefaults(defineProps<AppSliderProps>(), {
   min: 1,
   max: 100,
   step: 1,
-  disabled: false
+  disabled: false,
 });
 </script>

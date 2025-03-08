@@ -24,22 +24,22 @@ digital signal modulations and transformations.
 
 ### Available topics
 
-* Signal spectrum
-* Signal modulations
-* Harmonics
-* Pointers
-* Signal correlation
-* Inter-symbol interference
-* Digital filters
+- Signal spectrum
+- Signal modulations
+- Harmonics
+- Pointers
+- Signal correlation
+- Inter-symbol interference
+- Digital filters
 
 ## Built with
 
-* [Vue 3](https://v3.vuejs.org) - Vue is a progressive framework for building user interfaces.
-* [Tailwind CSS](https://tailwindcss.com) - A utility-first CSS framework packed with classes that can be composed to build any design,
+- [Vue 3](https://v3.vuejs.org) - Vue is a progressive framework for building user interfaces.
+- [Tailwind CSS](https://tailwindcss.com) - A utility-first CSS framework packed with classes that can be composed to build any design,
   directly in your markup.
-* [Vuex](https://vuex.vuejs.org) - Vuex is a state management pattern + library for Vue.js applications.
-* [p5](https://p5js.org/) - p5 is a JavaScript library for creative coding.
-* [katex](https://katex.org) - The fastest math typesetting library for the web.
+- [Vuex](https://vuex.vuejs.org) - Vuex is a state management pattern + library for Vue.js applications.
+- [p5](https://p5js.org/) - p5 is a JavaScript library for creative coding.
+- [katex](https://katex.org) - The fastest math typesetting library for the web.
 
 ## Installation guide
 

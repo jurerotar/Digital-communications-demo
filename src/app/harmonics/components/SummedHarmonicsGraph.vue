@@ -1,26 +1,24 @@
 <template>
-  <AppSectionHeading>
-    Prikaz seštetega signala
-  </AppSectionHeading>
+  <AppSectionHeading>Prikaz seštetega signala</AppSectionHeading>
   <CanvasContainer>
     <div :id="canvasId" />
   </CanvasContainer>
 </template>
 
 <script>
-import AppSectionHeading from "@components/common/AppSectionHeading.vue";
+import AppSectionHeading from '@components/common/AppSectionHeading.vue';
 import P5 from 'p5';
-import CanvasContainer from "@components/common/AppCanvasContainer.vue";
+import CanvasContainer from '@components/common/AppCanvasContainer.vue';
 import '@interfaces/common.ts';
 
 export default {
-  name: "SummedHarmonicsGraph",
-  components: {AppSectionHeading, CanvasContainer},
+  name: 'SummedHarmonicsGraph',
+  components: { AppSectionHeading, CanvasContainer },
   props: {
     components: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -30,7 +28,7 @@ export default {
       /** @type {Coordinates} */
       offset: {
         x: 175,
-        y: 125
+        y: 125,
       },
       /** @type {Text[]} */
       texts: [
@@ -49,8 +47,8 @@ export default {
           x: 40,
           y: 10,
         },
-      ]
-    }
+      ],
+    };
   },
   mounted() {
     // Initiate new P5 instance and create canvas
@@ -67,14 +65,21 @@ export default {
           p5.stroke(color);
           p5.strokeWeight(2);
           p5.line(canvasPadding, canvasPadding - 30, canvasPadding, canvasDimensions.y - canvasPadding + 20);
-          this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - 30, canvasDimensions.y / 2), color, 7, 0);
+          this.$c.drawArrow(
+            p5,
+            p5.createVector(canvasPadding, canvasDimensions.y / 2),
+            p5.createVector(canvasDimensions.x - 30, canvasDimensions.y / 2),
+            color,
+            7,
+            0
+          );
           //adds arrow on y-axis
           p5.fill(color);
           p5.triangle(50, 20, 46, 27, 54, 27);
           //adds texts on axis
           p5.strokeWeight(1);
           p5.text('t', canvasDimensions.x - 15, canvasDimensions.y / 2 + 3);
-          this.texts.forEach(el => p5.text(el.text, el.x, el.y));
+          this.texts.forEach((el) => p5.text(el.text, el.x, el.y));
           // Dashed lines to show values
           this.$c.drawDashed(this.context, () => {
             p5.line(canvasPadding, canvasPadding + 28, canvasDimensions.x, canvasPadding + 28);
@@ -94,10 +99,9 @@ export default {
          */
         for (let i = 1; i <= this.components; i++) {
           const frequency = (2 * i - 1) * time;
-          const radius = (140 * (-2 / (2 * i - 1) / Math.PI * (-1) ** i));
+          const radius = 140 * ((-2 / (2 * i - 1) / Math.PI) * (-1) ** i);
           y += radius * Math.cos(frequency);
         }
-
 
         // Add y to the start of waveValues array
         waveValues.unshift(y);
@@ -114,12 +118,12 @@ export default {
         }
         this.$c.temporaryState(p5, () => {
           p5.translate(50, 0);
-          p5.fill('red')
+          p5.fill('red');
           p5.strokeWeight(0);
           p5.ellipse(0, y, 8);
-        })
+        });
         time += 0.03;
-      }
+      };
 
       p5.removeCanvas = () => p5.remove();
     }, `${this.canvasId}`);
@@ -128,7 +132,6 @@ export default {
     // Remove canvas, otherwise P5 object stays in memory
     this.p5.removeCanvas();
   },
-  methods: {}
-
-}
+  methods: {},
+};
 </script>

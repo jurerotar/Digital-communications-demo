@@ -22,48 +22,20 @@
     "skipLibCheck": true,
     "noEmit": true,
     "baseUrl": "./",
-    "lib": [
-      "ESNext",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "paths": {
-      "@styles/*": [
-        "src/styles/*"
-      ],
-      "@app/*": [
-        "src/app/*"
-      ],
-      "@components/*": [
-        "src/components/*"
-      ],
-      "@helpers/*": [
-        "src/helpers/*"
-      ],
-      "@layouts/*": [
-        "src/layouts/*"
-      ],
-      "@routes/*": [
-        "src/routes/*"
-      ],
-      "@stores/*": [
-        "src/stores/*"
-      ],
-      "@interfaces/*": [
-        "src/interfaces/*"
-      ],
-      "@composables/*": [
-        "src/composables/*"
-      ]
+      "@styles/*": ["src/styles/*"],
+      "@app/*": ["src/app/*"],
+      "@components/*": ["src/components/*"],
+      "@helpers/*": ["src/helpers/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@routes/*": ["src/routes/*"],
+      "@stores/*": ["src/stores/*"],
+      "@interfaces/*": ["src/interfaces/*"],
+      "@composables/*": ["src/composables/*"]
     },
-    "types": [
-      "vite/client"
-    ]
+    "types": ["vite/client"]
   },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }

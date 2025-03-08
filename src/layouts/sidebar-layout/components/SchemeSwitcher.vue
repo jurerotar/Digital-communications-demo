@@ -1,7 +1,6 @@
 <template>
   <button
-    class="switcher__tab w-20 cursor-pointer flex flex-row relative bg-gray-200 dark:bg-gray-700 p-1 rounded-3xl items-center
-    justify-center h-8 transition-all duration-300"
+    class="switcher__tab w-20 cursor-pointer flex flex-row relative bg-gray-200 dark:bg-gray-700 p-1 rounded-3xl items-center justify-center h-8 transition-all duration-300"
     tabindex="0"
     @click="toggleScheme()"
   >
@@ -23,13 +22,13 @@
 </template>
 
 <script setup lang="ts">
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {useStore} from "vuex";
-import {State} from "@stores/store";
-import {computed} from "vue";
-import {faMoon, faSun} from "@fortawesome/free-regular-svg-icons";
-import {IconDefinition} from "@fortawesome/free-brands-svg-icons";
-import {Scheme as ColorScheme} from "@interfaces/common";
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { useStore } from 'vuex';
+import { State } from '@stores/store';
+import { computed } from 'vue';
+import { faMoon, faSun } from '@fortawesome/free-regular-svg-icons';
+import { IconDefinition } from '@fortawesome/free-brands-svg-icons';
+import { Scheme as ColorScheme } from '@interfaces/common';
 
 export interface Scheme {
   key: ColorScheme;
@@ -44,12 +43,12 @@ const schemes: Scheme[] = [
   {
     key: 'light',
     label: 'Light',
-    icon: faSun
+    icon: faSun,
   },
   {
     key: 'dark',
     label: 'Dark',
-    icon: faMoon
+    icon: faMoon,
   },
 ];
 
@@ -62,22 +61,22 @@ const toggleScheme = (): void => {
   const now: Date = new Date();
   now.setTime(now.getTime() + 86400000 * 365);
   document.cookie = `color-scheme=${nextScheme}; expires=${now.toUTCString()}; path=/`;
-}
+};
 </script>
 
 <style>
 .switcher__tab {
-    -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .switcher__front {
-    transform: rotateX(0);
-    opacity: 1;
+  transform: rotateX(0);
+  opacity: 1;
 }
 
 .switcher__back {
-    opacity: 0;
-    transform: rotateX(-180deg);
-    backface-visibility: hidden;
+  opacity: 0;
+  transform: rotateX(-180deg);
+  backface-visibility: hidden;
 }
 </style>

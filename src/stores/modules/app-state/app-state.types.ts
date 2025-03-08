@@ -1,4 +1,4 @@
-import {Scheme} from "@interfaces/common";
+import { Scheme } from '@interfaces/common';
 
 export interface AppState {
   mobileSidebarExtended: boolean;

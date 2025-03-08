@@ -7,13 +7,10 @@
   </div>
 </template>
 
-<script
-  setup
-  lang="ts"
->
-import SchemeSwitcher from "./SchemeSwitcher.vue";
-import GithubIcon from "./GithubIcon.vue";
-import {useWindowSize} from "@composables/use-window-size";
+<script setup lang="ts">
+import SchemeSwitcher from './SchemeSwitcher.vue';
+import GithubIcon from './GithubIcon.vue';
+import { useWindowSize } from '@composables/use-window-size';
 
-const {isLgUp} = useWindowSize();
+const { isLgUp } = useWindowSize();
 </script>

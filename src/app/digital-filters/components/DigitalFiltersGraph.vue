@@ -6,42 +6,42 @@
 
 <script>
 import P5 from 'p5';
-import CanvasContainer from "@components/common/AppCanvasContainer.vue";
+import CanvasContainer from '@components/common/AppCanvasContainer.vue';
 import '@interfaces/common.ts';
 
 export default {
-  name: "DigitalFiltersGraph",
-  components: {CanvasContainer},
+  name: 'DigitalFiltersGraph',
+  components: { CanvasContainer },
   props: {
     data: {
       type: Array,
-      required: true
+      required: true,
     },
     canvasId: {
       type: String,
-      required: true
+      required: true,
     },
     mirror: {
       type: Boolean,
       required: false,
       default() {
         return true;
-      }
+      },
     },
     yAxisLabel: {
       type: String,
       required: false,
       default() {
-        return 'x(t)'
-      }
+        return 'x(t)';
+      },
     },
     xAxisLabel: {
       type: String,
       required: false,
       default() {
-        return 't'
-      }
-    }
+        return 't';
+      },
+    },
   },
 
   data() {
@@ -54,27 +54,16 @@ export default {
       },
       mathDimension: {
         x: 10,
-        y: 5
+        y: 5,
       },
-      unitLengthSet: [
-        0.1,
-        0.5,
-        1,
-        5,
-        10,
-        20,
-        50,
-        100
-      ],
-      canvasData: []
-
-    }
+      unitLengthSet: [0.1, 0.5, 1, 5, 10, 20, 50, 100],
+      canvasData: [],
+    };
   },
 
   mounted() {
-
     this.p5 = new P5((p5) => {
-      this.$c.setup(p5, {frameRate: 5});
+      this.$c.setup(p5, { frameRate: 5 });
       p5.draw = () => {
         p5.background(this.$c.background());
         p5.stroke(0);
@@ -87,7 +76,6 @@ export default {
           this.drawAxis();
           p5.strokeWeight(1);
           this.drawGuideLines();
-
         });
         this.transformSignalToCanvas();
 
@@ -106,12 +94,11 @@ export default {
           p5.strokeWeight(2);
           p5.beginShape();
           for (let i = this.canvasData.length - 1; i > this.canvasData.length - this.canvasData.length / 2; i--) {
-            const pointMirror = this.mathToCanvasTransform({x: 2 - this.data[i].x, y: this.data[i].y});
+            const pointMirror = this.mathToCanvasTransform({ x: 2 - this.data[i].x, y: this.data[i].y });
             p5.vertex(pointMirror.x, pointMirror.y);
           }
           p5.endShape();
         }
-
       };
       p5.removeCanvas = () => p5.remove();
     }, this.canvasId);
@@ -130,9 +117,9 @@ export default {
       const oy = this.offset.y;
       const cx = this.$c.dimensions.x;
       const cy = this.$c.dimensions.y;
-      const x = ((point.x) / (mx)) * cx + ox;
-      const y = ((-point.y) / (my)) * cy + oy;
-      return {x: x, y: y};
+      const x = (point.x / mx) * cx + ox;
+      const y = (-point.y / my) * cy + oy;
+      return { x: x, y: y };
     },
     getSignalRange() {
       let x_max = this.data[0].x;
@@ -154,7 +141,7 @@ export default {
         }
       }
 
-      return {x1: x_min, x2: x_max, y1: y_min, y2: y_max};
+      return { x1: x_min, x2: x_max, y1: y_min, y2: y_max };
     },
     getMathDimensions() {
       const signalRange = this.getSignalRange();
@@ -169,8 +156,7 @@ export default {
         dy = 1;
       }
 
-
-      this.mathDimension = {x: dx * 1.3, y: dy * 1.3};
+      this.mathDimension = { x: dx * 1.3, y: dy * 1.3 };
     },
     getSignalOffset() {
       const signalRange = this.getSignalRange();
@@ -178,10 +164,9 @@ export default {
       const canvasDimension = this.$c.dimensions;
 
       const newOffsetX = 10;
-      const newOffsetY = signalRange.y2 * canvasDimension.y / mathDimension.y + 40;
+      const newOffsetY = (signalRange.y2 * canvasDimension.y) / mathDimension.y + 40;
 
-      this.offset = {x: newOffsetX, y: newOffsetY};
-
+      this.offset = { x: newOffsetX, y: newOffsetY };
     },
     drawAxis() {
       this.$c.drawAxis(this.p5, this.offset);
@@ -190,16 +175,16 @@ export default {
       const horizontalPool = this.getHorizontalPool();
       const verticalPool = this.getVerticalPool();
       for (let i = 0; i < horizontalPool.length; i++) {
-        const p = this.mathToCanvasTransform({x: horizontalPool[i], y: 0});
+        const p = this.mathToCanvasTransform({ x: horizontalPool[i], y: 0 });
         this.$c.widerLine(this.p5, p.x, p.y - 5, p.x, p.y + 5, 3);
         this.p5.textSize(15);
-        this.p5.text(horizontalPool[i].toFixed((Math.abs(horizontalPool[i]) < 5) ? 1 : 0), p.x + 8, p.y - 4);
+        this.p5.text(horizontalPool[i].toFixed(Math.abs(horizontalPool[i]) < 5 ? 1 : 0), p.x + 8, p.y - 4);
       }
       for (let i = 0; i < verticalPool.length; i++) {
-        const p = this.mathToCanvasTransform({x: 0, y: verticalPool[i]});
+        const p = this.mathToCanvasTransform({ x: 0, y: verticalPool[i] });
         this.$c.widerLine(this.p5, p.x - 5, p.y, p.x + 5, p.y, 3);
         this.p5.textSize(15);
-        this.p5.text(verticalPool[i].toFixed(1), p.x + 8, p.y + 4)
+        this.p5.text(verticalPool[i].toFixed(1), p.x + 8, p.y + 4);
       }
 
       this.drawLabelX();
@@ -207,11 +192,11 @@ export default {
     },
     drawLabelX() {
       this.p5.textSize(15);
-      this.p5.text(this.xAxisLabel, this.$c.dimensions.x - this.xAxisLabel.length * 9, this.offset.y + 16)
+      this.p5.text(this.xAxisLabel, this.$c.dimensions.x - this.xAxisLabel.length * 9, this.offset.y + 16);
     },
     drawLabelY() {
       this.p5.textSize(15);
-      this.p5.text(this.yAxisLabel, this.offset.x + 30, 13)
+      this.p5.text(this.yAxisLabel, this.offset.x + 30, 13);
     },
     getHorizontalPool() {
       const unitLengthDesired = 100;
@@ -232,7 +217,7 @@ export default {
 
       const horizontalPool = [];
       const positiveNumUnits = Math.round((canvasDimension.x - this.offset.x) / (unitX * unitLengthStep));
-      const negativeNumUnits = Math.round((this.offset.x) / (unitX * unitLengthStep));
+      const negativeNumUnits = Math.round(this.offset.x / (unitX * unitLengthStep));
 
       for (let i = -negativeNumUnits; i < positiveNumUnits + 1; i++) {
         if (i !== 0) {
@@ -263,7 +248,7 @@ export default {
 
       const verticalPool = [];
       const negativeNumUnits = Math.round((canvasDimension.y - this.offset.y) / (unitY * unitLengthStep));
-      const positiveNumUnits = Math.round((this.offset.y) / (unitY * unitLengthStep));
+      const positiveNumUnits = Math.round(this.offset.y / (unitY * unitLengthStep));
 
       for (let i = -negativeNumUnits; i < positiveNumUnits + 1; i++) {
         if (i !== 0) {
@@ -276,10 +261,10 @@ export default {
     transformSignalToCanvas() {
       const canvasData = [];
       for (let i = 0; i < this.data.length; i++) {
-        canvasData.push(this.mathToCanvasTransform({x: this.data[i].x, y: this.data[i].y}));
+        canvasData.push(this.mathToCanvasTransform({ x: this.data[i].x, y: this.data[i].y }));
       }
       this.canvasData = canvasData;
-    }
-  }
-}
+    },
+  },
+};
 </script>

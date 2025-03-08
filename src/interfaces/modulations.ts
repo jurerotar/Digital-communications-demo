@@ -2,17 +2,17 @@ export type ModulationKey = 'am-lc' | 'am-sc' | 'fm' | '2ask' | '4ask' | '2psk' 
 
 export type ModulationAmplitudeModifier = {
   [value: string]: number;
-}
+};
 
 export type DisplayedCanvases = 'sine' | 'binaryLevel1' | 'binaryLevel2' | 'binaryLevel4';
 
 export type DataSignalCanvas = {
   type: DisplayedCanvases;
-  data: DataSignalCanvasData
-}
+  data: DataSignalCanvasData;
+};
 
 export type DataSignalCanvasOptions = {
-  [key in DisplayedCanvases]: DataSignalCanvasData
+  [key in DisplayedCanvases]: DataSignalCanvasData;
 };
 
 export type DataSignalCanvasData = {
@@ -20,7 +20,7 @@ export type DataSignalCanvasData = {
   description: string;
   isBinary: boolean;
   data: number[];
-}
+};
 
 export type Modulation = {
   key: ModulationKey;
@@ -29,7 +29,7 @@ export type Modulation = {
   generator: (...signalValues: number[]) => number;
   description: string;
   canvas: DisplayedCanvases[];
-}
+};
 
 export type ModulationToDataArrayMap = {
   [key in ModulationKey]: number;

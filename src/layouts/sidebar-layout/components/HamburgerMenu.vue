@@ -1,7 +1,7 @@
 <template>
   <button
     class="p-0 flex bg-transparent cursor-pointer border-none"
-    :class="{'opened': isMobileSidebarExtended}"
+    :class="{ opened: isMobileSidebarExtended }"
     aria-label="Main Menu"
     tabindex="0"
     @click="toggle()"
@@ -29,60 +29,61 @@
 </template>
 
 <script setup lang="ts">
-import {useStore} from "vuex";
-import {computed} from "vue";
-import {State} from "@stores/store";
+import { useStore } from 'vuex';
+import { computed } from 'vue';
+import { State } from '@stores/store';
 
 const store = useStore<State>();
 const isMobileSidebarExtended = computed<boolean>(() => store.state.appState.mobileSidebarExtended);
-const toggle = ():void => {
+const toggle = (): void => {
   store.commit('appState/setMobileSidebarExtended', !isMobileSidebarExtended.value);
-}
+};
 </script>
 
 <style>
 .line {
-    fill: none;
-    stroke: black;
-    stroke-width: 4;
-    transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
+  fill: none;
+  stroke: black;
+  stroke-width: 4;
+  transition:
+    stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
     stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dark .line {
-    stroke: white;
+  stroke: white;
 }
 
 .line1 {
-    stroke-dasharray: 60 207;
-    stroke-width: 4;
+  stroke-dasharray: 60 207;
+  stroke-width: 4;
 }
 
 .line2 {
-    stroke-dasharray: 60 60;
-    stroke-width: 4;
+  stroke-dasharray: 60 60;
+  stroke-width: 4;
 }
 
 .line3 {
-    stroke-dasharray: 60 207;
-    stroke-width: 4;
+  stroke-dasharray: 60 207;
+  stroke-width: 4;
 }
 
 .opened .line1 {
-    stroke-dasharray: 90 207;
-    stroke-dashoffset: -134;
-    stroke-width: 6;
+  stroke-dasharray: 90 207;
+  stroke-dashoffset: -134;
+  stroke-width: 6;
 }
 
 .opened .line2 {
-    stroke-dasharray: 1 60;
-    stroke-dashoffset: -30;
-    stroke-width: 4;
+  stroke-dasharray: 1 60;
+  stroke-dashoffset: -30;
+  stroke-width: 4;
 }
 
 .opened .line3 {
-    stroke-dasharray: 90 207;
-    stroke-dashoffset: -134;
-    stroke-width: 4;
+  stroke-dasharray: 90 207;
+  stroke-dashoffset: -134;
+  stroke-width: 4;
 }
 </style>

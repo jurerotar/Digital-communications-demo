@@ -1,8 +1,7 @@
 <template>
   <details :open="opened">
     <summary
-      class="flex whitespace-nowrap justify-start flex-row items-center dark:text-white cursor-pointer transition-colors bg-zinc-200
-      dark:bg-gray-700 rounded-md py-2 px-4 font-semibold gap-4 w-fit"
+      class="flex whitespace-nowrap justify-start flex-row items-center dark:text-white cursor-pointer transition-colors bg-zinc-200 dark:bg-gray-700 rounded-md py-2 px-4 font-semibold gap-4 w-fit"
       tabindex="0"
     >
       <FontAwesomeIcon
@@ -18,12 +17,9 @@
   </details>
 </template>
 
-<script
-  setup
-  lang="ts"
->
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
+<script setup lang="ts">
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons/faChevronRight';
 
 export interface AppCollapsibleProps {
   opened?: boolean;
@@ -32,7 +28,7 @@ export interface AppCollapsibleProps {
 
 withDefaults(defineProps<AppCollapsibleProps>(), {
   opened: false,
-  summary: 'Razlaga dogajanja'
+  summary: 'Razlaga dogajanja',
 });
 </script>
 
@@ -46,6 +42,6 @@ details[open] > summary .details-icon {
 }
 
 summary::-webkit-details-marker {
-  display: none
+  display: none;
 }
 </style>

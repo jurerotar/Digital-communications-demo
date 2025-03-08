@@ -1,11 +1,9 @@
 <template>
   <AppMainContainer>
-    <AppMainHeading>
-      Modulacije
-    </AppMainHeading>
+    <AppMainHeading>Modulacije</AppMainHeading>
 
     <AppCollapsible>
-      <ModulationsTheory/>
+      <ModulationsTheory />
     </AppCollapsible>
 
     <AppAnimationPauseButton
@@ -13,9 +11,7 @@
       @click="toggleIsAnimationPlaying()"
     />
 
-    <AppSectionHeading>
-      Analogne modulacije
-    </AppSectionHeading>
+    <AppSectionHeading>Analogne modulacije</AppSectionHeading>
     <!-- Analog modulations buttons -->
     <AppButtonContainer>
       <AppButton
@@ -27,9 +23,7 @@
         {{ modulation.label }}
       </AppButton>
     </AppButtonContainer>
-    <AppSectionHeading>
-      Digitalne modulacije
-    </AppSectionHeading>
+    <AppSectionHeading>Digitalne modulacije</AppSectionHeading>
     <!-- Digital modulations buttons -->
     <AppButtonContainer>
       <AppButton
@@ -80,38 +74,35 @@
   </AppMainContainer>
 </template>
 
-<script
-  setup
-  lang="ts"
->
-import {computed, onBeforeUnmount, onMounted, ref} from 'vue';
-import AppCollapsible from "@components/common/AppCollapsible.vue";
-import AppMainHeading from "@components/common/AppMainHeading.vue";
-import AppButton from "@components/common/buttons/AppButton.vue";
-import AppButtonContainer from "@components/common/buttons/AppButtonContainer.vue";
-import Level4SignalGraph from "@components/canvas/Level4SignalGraph.vue";
-import PositiveOnlySignalGraph from "@components/canvas/PositiveOnlySignalGraph.vue";
-import {binaryValues} from "@helpers/math";
-import AppSectionHeading from "@components/common/AppSectionHeading.vue";
+<script setup lang="ts">
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import AppCollapsible from '@components/common/AppCollapsible.vue';
+import AppMainHeading from '@components/common/AppMainHeading.vue';
+import AppButton from '@components/common/buttons/AppButton.vue';
+import AppButtonContainer from '@components/common/buttons/AppButtonContainer.vue';
+import Level4SignalGraph from '@components/canvas/Level4SignalGraph.vue';
+import PositiveOnlySignalGraph from '@components/canvas/PositiveOnlySignalGraph.vue';
+import { binaryValues } from '@helpers/math';
+import AppSectionHeading from '@components/common/AppSectionHeading.vue';
 import {
   DataSignalCanvas,
   DataSignalCanvasOptions,
   Modulation,
   ModulationAmplitudeModifier,
   ModulationKey,
-  ModulationToDataArrayMap
-} from "@interfaces/modulations";
-import AppMainContainer from "@components/common/AppMainContainer.vue";
-import AppAnimationPauseButton from "@components/common/buttons/AppAnimationPauseButton.vue";
-import {useAnimationToggle} from "@composables/use-animation-toggle";
-import ModulationsTheory from "./components/ModulationsTheory.vue";
+  ModulationToDataArrayMap,
+} from '@interfaces/modulations';
+import AppMainContainer from '@components/common/AppMainContainer.vue';
+import AppAnimationPauseButton from '@components/common/buttons/AppAnimationPauseButton.vue';
+import { useAnimationToggle } from '@composables/use-animation-toggle';
+import ModulationsTheory from './components/ModulationsTheory.vue';
 
 // We'll be increasing the time by this amount
 const timeDifference = 0.005;
 // Amount in pixels
 const binarySignalWidth = 150;
 
-const {isAnimationPlaying, toggleIsAnimationPlaying} = useAnimationToggle();
+const { isAnimationPlaying, toggleIsAnimationPlaying } = useAnimationToggle();
 
 const carrierValueGenerator = (time: number): number => Math.sin(time * 15 * Math.PI);
 const sineModulationValueGenerator = (time: number): number => Math.sin(time * Math.PI);
@@ -129,7 +120,7 @@ const modulations: Modulation[] = [
     },
     description: `Pri AM-DSB-LC modulaciji se modulacijskemu signalu dodaja enosmerna komponenta, kar zagotovi konstantno
     polariteto signala pred množenjem z nosilcem. Modulacijski indeks m = 0.66.`,
-    canvas: ['sine']
+    canvas: ['sine'],
   },
   {
     key: 'am-sc',
@@ -139,18 +130,18 @@ const modulations: Modulation[] = [
       return carrier * sine;
     },
     description: `AM-DSB-SC je dvobočno amplitudno modulirani signal brez nosilca v spektru.`,
-    canvas: ['sine']
+    canvas: ['sine'],
   },
   {
     key: 'fm',
     label: 'FM',
     type: 'analog',
     generator: (time: number): number => {
-      return Math.cos(15 * Math.PI * time + (10 * (Math.cos(Math.PI * time) + 150)));
+      return Math.cos(15 * Math.PI * time + 10 * (Math.cos(Math.PI * time) + 150));
     },
     description: `Frekvenčna modulacija je postopek spreminjanja frekvence nosilnega signala v ritmu modulacijskega signala-informacije.
     Frekvenčna deviacija: Δf = +-10.`,
-    canvas: ['sine']
+    canvas: ['sine'],
   },
   {
     key: '2ask',
@@ -159,12 +150,12 @@ const modulations: Modulation[] = [
     generator: (carrier: number, level2BinaryValue: number): number => {
       const ASK2Amplitudes: ModulationAmplitudeModifier = {
         '-1': -1,
-        '1': 0
-      }
+        '1': 0,
+      };
       return carrier * ASK2Amplitudes[level2BinaryValue];
     },
     description: `2ASK modulacijo pridobimo z množenjem unipolarnega binarnega podatkovnega signala in harmoničnega nosilca.`,
-    canvas: ['binaryLevel1']
+    canvas: ['binaryLevel1'],
   },
   {
     key: '4ask',
@@ -176,7 +167,7 @@ const modulations: Modulation[] = [
     description: `4ASK modulacijo pridobimo z množenjem digitalnega niza {-3,-1,1,3} in harmoničnega nosilca. 4ASK modulacija sicer
     predpostavlja 4 različne amplitude nivoje. Izkaže pa se, da je to neekonomično, ker porabi več energije. Zato v praksi 4ASK izvedemo
     z dvema amplitudnima nivojema in dvema fazama.`,
-    canvas: ['binaryLevel4']
+    canvas: ['binaryLevel4'],
   },
   {
     key: '2psk',
@@ -186,8 +177,7 @@ const modulations: Modulation[] = [
       return carrier * level2BinaryValue;
     },
     description: `2PSK modulacijo pridobimo z množenjem bipolarnega binarnega podatkovnega signala in harmoničnega nosilca.`,
-    canvas: ['binaryLevel2']
-
+    canvas: ['binaryLevel2'],
   },
   {
     key: '4psk',
@@ -197,13 +187,13 @@ const modulations: Modulation[] = [
       const PSK4Amplitudes: ModulationAmplitudeModifier = {
         '3': Math.PI / 2,
         '1': Math.PI,
-        '-1': 3 * Math.PI / 2,
-        '-3': 2 * Math.PI
+        '-1': (3 * Math.PI) / 2,
+        '-3': 2 * Math.PI,
       };
       return Math.sin(15 * Math.PI * time + PSK4Amplitudes[level4BinaryValue]);
     },
     description: `4PSK modulacijo pridobimo z množenjem bipolarnega binarnega podatkovnega signala in harmoničnega nosilca.`,
-    canvas: ['binaryLevel4']
+    canvas: ['binaryLevel4'],
   },
   {
     key: '2fsk',
@@ -212,14 +202,14 @@ const modulations: Modulation[] = [
     generator: (time: number, level2BinaryValue: number): number => {
       const FSK2Multipliers: ModulationAmplitudeModifier = {
         '1': 12,
-        '-1': 30
+        '-1': 30,
       };
       // We change frequency multiplier discretely based on current value of bipolar signal
       return Math.sin(Math.PI * time * FSK2Multipliers[level2BinaryValue]);
     },
     description: `2FSK je postopek, pri katerem so binarni podatki posredovani preko spremembe frekvence nosilnega signala. Pri 2FSK
     uporabljamo 2 različni frekvenci.`,
-    canvas: ['binaryLevel2']
+    canvas: ['binaryLevel2'],
   },
   {
     key: '4fsk',
@@ -230,14 +220,14 @@ const modulations: Modulation[] = [
         '3': 5,
         '1': 15,
         '-1': 30,
-        '-3': 60
+        '-3': 60,
       };
       // We change frequency multiplier discretely based on current value of 4-level binary signal
       return Math.sin(Math.PI * time * FSK4Multipliers[level4BinaryValue]);
     },
     description: `4FSK je postopek, pri katerem so binarni podatki posredovani preko spremembe frekvence nosilnega signala.
     Pri 4FSK uporabljamo 4 različne frekvence.`,
-    canvas: ['binaryLevel4']
+    canvas: ['binaryLevel4'],
   },
 ];
 
@@ -255,18 +245,22 @@ const carrierSignalValues = ref<number[]>(timeValues.map((t: number) => carrierV
 const sineModulationSignalValues = ref<number[]>(timeValues.map((t: number) => sineModulationValueGenerator(t)));
 
 // Bipolar signal
-const binaryLevel2SignalValues = ref<number[]>(Array(5).fill(0)
-  .map((_, i: number) => Array(binarySignalWidth).fill((i % 2 === 1) ? 1 : -1))
-  .flat()
+const binaryLevel2SignalValues = ref<number[]>(
+  Array(5)
+    .fill(0)
+    .map((_, i: number) => Array(binarySignalWidth).fill(i % 2 === 1 ? 1 : -1))
+    .flat()
 );
 
 // 4 level signal
-const binaryLevel4SignalValues = ref<number[]>([
-  Array(binarySignalWidth).fill(3),
-  Array(binarySignalWidth).fill(1),
-  Array(binarySignalWidth).fill(-1),
-  Array(binarySignalWidth).fill(-3),
-].flat());
+const binaryLevel4SignalValues = ref<number[]>(
+  [
+    Array(binarySignalWidth).fill(3),
+    Array(binarySignalWidth).fill(1),
+    Array(binarySignalWidth).fill(-1),
+    Array(binarySignalWidth).fill(-3),
+  ].flat()
+);
 
 // Calculates next modulated value based on currently selected key
 const nextModulatedValue = (index: number): number => {
@@ -276,57 +270,59 @@ const nextModulatedValue = (index: number): number => {
   const modulationToDataArraysMap: ModulationToDataArrayMap = {
     'am-lc': modulation.generator(carrierSignalValues.value[index], sineModulationSignalValues.value[index]),
     'am-sc': modulation.generator(carrierSignalValues.value[index], sineModulationSignalValues.value[index]),
-    'fm': modulation.generator(timeValues[index]),
+    fm: modulation.generator(timeValues[index]),
     '2ask': modulation.generator(carrierSignalValues.value[index], binaryLevel2SignalValues.value[index]),
     '4ask': modulation.generator(carrierSignalValues.value[index], binaryLevel4SignalValues.value[index]),
     '2psk': modulation.generator(carrierSignalValues.value[index], binaryLevel2SignalValues.value[index]),
     '4psk': modulation.generator(timeValues[index], binaryLevel4SignalValues.value[index]),
     '2fsk': modulation.generator(timeValues[index], binaryLevel2SignalValues.value[index]),
     '4fsk': modulation.generator(timeValues[index], binaryLevel4SignalValues.value[index]),
-  }
+  };
 
   return modulationToDataArraysMap[key];
-}
+};
 
 // Used for populating props in data-signal canvas
 const dataSignalCanvasData = computed<DataSignalCanvas>(() => {
   const [canvasType] = selectedModulation.value.canvas;
   const canvasData: DataSignalCanvasOptions = {
-    'sine': {
+    sine: {
       title: 'Sinusni modulacijski signal',
       description: 'Sinusni podatkovni signal.',
       isBinary: false,
-      data: sineModulationSignalValues.value
+      data: sineModulationSignalValues.value,
     },
-    'binaryLevel1': {
+    binaryLevel1: {
       title: 'Unipolarni signal',
       description: 'Unipolarni signal je sestavljen iz vrednosti 0 in 1.',
       isBinary: false,
-      data: binaryLevel2SignalValues.value
+      data: binaryLevel2SignalValues.value,
     },
-    'binaryLevel2': {
+    binaryLevel2: {
       title: 'Binarni signal',
       description: 'Bipolarni signal je sestavljen iz vrednosti 1 in -1.',
       isBinary: true,
-      data: binaryLevel2SignalValues.value
+      data: binaryLevel2SignalValues.value,
     },
-    'binaryLevel4': {
+    binaryLevel4: {
       title: '4-nivojski bipolarni signal',
       description: '4-nivojski bipolarni signal je sestavljen iz vrednosti 3, 1, -1, -3.',
       isBinary: true,
-      data: binaryLevel4SignalValues.value
-    }
-  }
+      data: binaryLevel4SignalValues.value,
+    },
+  };
   return {
     type: canvasType,
-    data: canvasData[canvasType]
-  }
+    data: canvasData[canvasType],
+  };
 });
 
 // Create an array of fixed width and populate it with default modulation
-const modulatedSignalValues = ref<number[]>([...Array(600)].map((_, index: number) => {
-  return nextModulatedValue(index);
-}));
+const modulatedSignalValues = ref<number[]>(
+  [...Array(600)].map((_, index: number) => {
+    return nextModulatedValue(index);
+  })
+);
 
 // Recalculate modulated values and update modulation key on change
 const changeSelectedModulationKey = (key: ModulationKey): void => {
@@ -335,7 +331,7 @@ const changeSelectedModulationKey = (key: ModulationKey): void => {
   for (let i = 0; i < length; i++) {
     modulatedSignalValues.value[i] = nextModulatedValue(i);
   }
-}
+};
 
 let intervalId: number;
 onMounted(() => {
@@ -355,7 +351,7 @@ onMounted(() => {
       sineModulationSignalValues.value,
       binaryLevel2SignalValues.value,
       binaryLevel4SignalValues.value,
-      modulatedSignalValues.value
+      modulatedSignalValues.value,
     ].forEach((array: number[]) => {
       if (array.length >= 599) {
         array.pop();
