@@ -9,7 +9,6 @@
   <img src="https://img.shields.io/github/repo-size/jurerotar/Digital-communications-demo" alt="GitHub repo size">
   <img src="https://img.shields.io/github/contributors/jurerotar/Digital-communications-demo" alt="GitHub contributors">
   <img src="https://img.shields.io/badge/contributions-welcome-brightgreen" alt="Contributions">
-  <img src="https://img.shields.io/endpoint?color=brightgreen&amp;label=views&amp;url=https%3A%2F%2Fhits.dwyl.com%2Fjurerotar%2Fdigital-communication-demo.json" alt="Repository views">
 </p>
 
 Digital communications app is an open source tool designed to help electrical engineering and computer science students better understand
@@ -33,11 +32,6 @@ digital signal modulations and transformations.
 * Inter-symbol interference
 * Digital filters
 
-## Table of contents
-
-* [Built with](#Built-with)
-* [Installation guide](#Installation-guide)
-
 ## Built with
 
 * [Vue 3](https://v3.vuejs.org) - Vue is a progressive framework for building user interfaces.
@@ -58,10 +52,4 @@ npm install
 
 # Starts a development server with hot-reloading
 npm run serve
-
-# Compiles and minifies for production
-npm run build
-
-# Lints and fixes files
-npm run lint
 ```
