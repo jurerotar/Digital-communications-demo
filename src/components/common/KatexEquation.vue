@@ -11,12 +11,9 @@
   />
 </template>
 
-<script
-  setup
-  lang="ts"
->
-import {ref, useSlots, computed} from "vue";
-import { renderToString } from "katex";
+<script setup lang="ts">
+import { ref, useSlots, computed } from 'vue';
+import { renderToString } from 'katex';
 import 'katex/dist/katex.css';
 
 export interface KatexProps {
@@ -24,7 +21,7 @@ export interface KatexProps {
 }
 
 withDefaults(defineProps<KatexProps>(), {
-  inline: false
+  inline: false,
 });
 
 const slots = useSlots();

@@ -1,8 +1,6 @@
 <template>
   <AppMainContainer>
-    <AppMainHeading>
-      Intersimbolna interferenca
-    </AppMainHeading>
+    <AppMainHeading>Intersimbolna interferenca</AppMainHeading>
     <AppCollapsible>
       <IntersymbolInterferenceTheory />
     </AppCollapsible>
@@ -12,9 +10,7 @@
       @click="togglePlay()"
     />
 
-    <AppSectionHeading>
-      Hitrost animacije
-    </AppSectionHeading>
+    <AppSectionHeading>Hitrost animacije</AppSectionHeading>
     <AppButtonContainer>
       <AppButton
         v-for="sp in possibleSpeeds"
@@ -33,8 +29,8 @@
       :vertical-pool="[1, 0.5, -0.5, -1]"
       :is-binary="false"
       :x-ticks="{
-        'text':transferFunctionParams.tickNames,
-        'pos':transferFunctionParams.ticks
+        text: transferFunctionParams.tickNames,
+        pos: transferFunctionParams.ticks,
       }"
       :is-inverted="true"
       :speed="speed"
@@ -44,9 +40,17 @@
           :for="'fCut-multiplier'"
           class="text-xl transition-colors duration-300 dark:text-white"
         >
-          Mejna frekvenca kanala (NP filter):<span class="font-semibold"> f<sub>m</sub></span>=
+          Mejna frekvenca kanala (NP filter):
+          <span class="font-semibold">
+            f
+            <sub>m</sub>
+          </span>
+          =
           <span class="font-medium">{{ Number(transferFunctionParams.fCutMulti).toFixed(2) }}</span>
-          <span class="font-semibold"> f<sub>s</sub></span>
+          <span class="font-semibold">
+            f
+            <sub>s</sub>
+          </span>
         </label>
         <input
           :id="'fCut-multiplier'"
@@ -56,7 +60,7 @@
           min="0.1"
           max="2"
           step="0.05"
-        >
+        />
       </div>
     </PositiveOnlySignalGraph>
     <Level4SignalGraph
@@ -74,8 +78,8 @@
       :description="'Signal na izhodu je konvolucija med vhodnim signalom in prenosno funkcijo kanala'"
       :is-binary="false"
       :x-ticks="{
-        text: ['ts','ts','ts','ts','ts'],
-        pos: tsTicks
+        text: ['ts', 'ts', 'ts', 'ts', 'ts'],
+        pos: tsTicks,
       }"
       :is-inverted="false"
       :abs-max="transferFunctionParams.maxConvValue"
@@ -95,32 +99,30 @@
         @click="clearOscilloscope()"
       >
         <FontAwesomeIcon :icon="faTrashAlt" />
-        <span>
-          Počisti
-        </span>
+        <span>Počisti</span>
       </AppButton>
     </OscilloscopeGraph>
   </AppMainContainer>
 </template>
 
 <script>
-import AppMainContainer from "@components/common/AppMainContainer.vue";
-import AppButtonContainer from "@components/common/buttons/AppButtonContainer.vue";
-import AppButton from "@components/common/buttons/AppButton.vue";
-import AppCollapsible from "@components/common/AppCollapsible.vue";
-import AppMainHeading from "@components/common/AppMainHeading.vue";
-import AppSectionHeading from "@components/common/AppSectionHeading.vue";
-import Level4SignalGraph from "@components/canvas/Level4SignalGraph.vue";
-import PositiveOnlySignalGraph from "@components/canvas/PositiveOnlySignalGraph.vue";
+import AppMainContainer from '@components/common/AppMainContainer.vue';
+import AppButtonContainer from '@components/common/buttons/AppButtonContainer.vue';
+import AppButton from '@components/common/buttons/AppButton.vue';
+import AppCollapsible from '@components/common/AppCollapsible.vue';
+import AppMainHeading from '@components/common/AppMainHeading.vue';
+import AppSectionHeading from '@components/common/AppSectionHeading.vue';
+import Level4SignalGraph from '@components/canvas/Level4SignalGraph.vue';
+import PositiveOnlySignalGraph from '@components/canvas/PositiveOnlySignalGraph.vue';
 import '@interfaces/common.ts';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {faTrashAlt} from '@fortawesome/free-solid-svg-icons'
-import AppAnimationPauseButton from "@components/common/buttons/AppAnimationPauseButton.vue";
-import IntersymbolInterferenceTheory from "./components/IntersymbolInterferenceTheory.vue";
-import OscilloscopeGraph from "./components/OscilloscopeGraph.vue";
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import AppAnimationPauseButton from '@components/common/buttons/AppAnimationPauseButton.vue';
+import IntersymbolInterferenceTheory from './components/IntersymbolInterferenceTheory.vue';
+import OscilloscopeGraph from './components/OscilloscopeGraph.vue';
 
 export default {
-  name: "IntersymbolInterferenceView",
+  name: 'IntersymbolInterferenceView',
   components: {
     AppAnimationPauseButton,
     AppMainContainer,
@@ -133,7 +135,7 @@ export default {
     AppButtonContainer,
     AppButton,
     AppCollapsible,
-    AppSectionHeading
+    AppSectionHeading,
   },
   data() {
     return {
@@ -164,7 +166,7 @@ export default {
        * @type {number[]} */
       combinationsSequence: {
         values: [-1, -3, 3, 3, 1, -1, 3, -3, -3, 1, 3, -1, 1, 1, -3, -1, -3, 1, 1, -1, 3, 1, -3, -3, 3, -1, 1, 3, 3, -3, -1],
-        idx: 0
+        idx: 0,
       },
 
       /** received signal, f*g convolution
@@ -212,12 +214,12 @@ export default {
         {
           key: false,
           label: 'Play',
-          icon: ['fas', 'play']
+          icon: ['fas', 'play'],
         },
         {
           key: true,
           label: 'Stop',
-          icon: ['fas', 'stop']
+          icon: ['fas', 'stop'],
         },
       ],
       /**
@@ -225,19 +227,19 @@ export default {
        * @type {Boolean}
        */
       isPlaying: true,
-    }
+    };
   },
   mounted() {
     // Start time at 600 * 0.005, because we initiate arrays with 600 values already in
     let time = this.signalLength * 0.005;
     this.changeSpeed(2);
-    this.recalculateTicks(true)
+    this.recalculateTicks(true);
     // Create interval to push new signal values to arrays
     this.intervalId = window.setInterval(() => {
       if (this.isPlaying) {
         if (this.transferFunctionParams.fCutMulti_old !== this.transferFunctionParams.fCutMulti) {
           this.transferFunctionParams.fCutMulti_old = this.transferFunctionParams.fCutMulti;
-          this.updateTransferFunctionParams()
+          this.updateTransferFunctionParams();
         }
         // CONVOLUTE
         // use map to multiply, use reduce to sum
@@ -258,35 +260,31 @@ export default {
         // Push new values to arrays
         this.binaryLevel4Signal.values.unshift(this.nextBinaryValue());
         this.timeValues.unshift(time);
-        this.tsTicks = this.tsTicks.map(i => i < (this.signalLength - 1) ? i + 1 : 0);
+        this.tsTicks = this.tsTicks.map((i) => (i < this.signalLength - 1 ? i + 1 : 0));
 
         // Loop through arrays and remove last values if lengths are too big
-        [
-          this.binaryLevel4Signal.values,
-          this.timeValues,
-          this.convolution
-        ].forEach(array => {
+        [this.binaryLevel4Signal.values, this.timeValues, this.convolution].forEach((array) => {
           if (array.length > this.signalLength) {
             array.pop();
           }
         });
         time += 0.005;
-        this.binaryCounter = (this.binaryCounter === (this.binarySymbolLength - 1)) ? 0 : this.binaryCounter + 1;
+        this.binaryCounter = this.binaryCounter === this.binarySymbolLength - 1 ? 0 : this.binaryCounter + 1;
       }
     }, 30);
   },
   methods: {
     faTrashAlt() {
-      return faTrashAlt
+      return faTrashAlt;
     },
     /**
      * Returns binary values periodically from
      * @returns {number}
      */
     nextBinaryValue() {
-      if (this.binaryCounter === (this.binarySymbolLength - 1)) {
+      if (this.binaryCounter === this.binarySymbolLength - 1) {
         this.combinationsSequence.idx =
-          this.combinationsSequence.idx === (this.combinationsSequence.values.length - 1) ? 0 : this.combinationsSequence.idx + 1;
+          this.combinationsSequence.idx === this.combinationsSequence.values.length - 1 ? 0 : this.combinationsSequence.idx + 1;
         this.currentlyReturns = this.combinationsSequence.values[this.combinationsSequence.idx];
       } else {
         this.currentlyReturns = 0;
@@ -302,7 +300,7 @@ export default {
       this.binarySymbolLength = this.binarySymbolLengthInit / this.speed;
       this.signalLength = 600 / this.speed;
       this.updateTransferFunctionParams();
-      this.recalculateTicks(true)
+      this.recalculateTicks(true);
       this.binaryLevel4Signal.values = [];
       this.binaryCounter = 0;
       this.convolution = [];
@@ -330,7 +328,7 @@ export default {
           const dtOffset = this.transferFunctionParams.tOffset - this.transferFunctionParams.tOffset_old;
           this.tsTicks[i] = this.tsTicks[i] - dtOffset;
         }
-        this.tsTicks.map(i => i >= (this.signalLength - 1) ? i - this.signalLength : i); // cut ticks that are out of range
+        this.tsTicks.map((i) => (i >= this.signalLength - 1 ? i - this.signalLength : i)); // cut ticks that are out of range
         this.transferFunctionParams.tOffset_old = this.transferFunctionParams.tOffset;
       }
       // eye diagram ticks
@@ -343,7 +341,7 @@ export default {
       }
 
       // transfer function ticks
-      this.transferFunctionParams.ticks = []
+      this.transferFunctionParams.ticks = [];
       this.transferFunctionParams.ticksNames = [];
       //  ticks for past symbols (left from t0 on transfer function plot)
       const min = -Math.floor(this.transferFunctionParams.tOffset / this.binarySymbolLength);
@@ -351,7 +349,7 @@ export default {
       const max = Math.floor((this.signalLength - this.transferFunctionParams.tOffset) / this.binarySymbolLength);
       for (let i = min; i <= max; i++) {
         this.transferFunctionParams.ticks.unshift(this.transferFunctionParams.tOffset + i * this.binarySymbolLength);
-        this.transferFunctionParams.tickNames.unshift("ts".concat(i.toString()));
+        this.transferFunctionParams.tickNames.unshift('ts'.concat(i.toString()));
       }
     },
     /**
@@ -359,9 +357,9 @@ export default {
      * is called by changeSpeed()
      */
     updateTransferFunctionParams() {
-      this.transferFunctionParams.fCut = 1 / this.binarySymbolLength;  //
+      this.transferFunctionParams.fCut = 1 / this.binarySymbolLength; //
       this.transferFunctionParams.tOffset = 1.5 / (this.transferFunctionParams.fCut * this.transferFunctionParams.fCutMulti);
-      this.recalculateTicks(false)
+      this.recalculateTicks(false);
       this.updateTransferFunction();
     },
     /**
@@ -375,18 +373,18 @@ export default {
       this.transferFunction = this.transferFunction.map((i, t) => {
         return Math.sin(2 * Math.PI * fCut * multi * (t - tOffset)) / (2 * Math.PI * fCut * multi * (t - tOffset));
       });
-      this.transferFunction = this.transferFunction.map(i => isNaN(i) ? 1 : i); // 1/(t-tOffset); t=tOffset => NaN
+      this.transferFunction = this.transferFunction.map((i) => (isNaN(i) ? 1 : i)); // 1/(t-tOffset); t=tOffset => NaN
 
       // think of a better way to calculate maximum possible value, this method is heavy
       // worst case signal consists of pulses with maximum amplitude (3)
       const worstCaseSignal = [...Array(this.signalLength).fill(0)].map((tf, t) => {
-        return t % this.binarySymbolLength === (this.binarySymbolLength - 1) ? 3 : 0;
+        return t % this.binarySymbolLength === this.binarySymbolLength - 1 ? 3 : 0;
       });
       const worstCaseConv = [];
       // calculate convolution of such signal
       for (let n = 0; n < this.signalLength; n++) {
         const conv = [];
-        for (let m = 0; m <= (this.signalLength - n - 1); m++) {
+        for (let m = 0; m <= this.signalLength - n - 1; m++) {
           conv.push(this.transferFunction[m] * worstCaseSignal[m + n]);
         }
         worstCaseConv.push(conv.reduce((a, b) => a + b));
@@ -401,5 +399,5 @@ export default {
       this.dataISI = Array.from(Array(1), () => new Array(600));
     },
   },
-}
+};
 </script>

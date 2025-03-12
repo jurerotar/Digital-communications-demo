@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col gap-4">
     <AppParagraph>
-      Izvorni signal se pri prenosu skozi prenosni kanal popači - raztegne se po časovni osi.
-      V primeru ilustriranem na tej strani je ekvivalentni prenosni kanal modeliran kot idealni nizko pasovni filter z mejno frekvenco
+      Izvorni signal se pri prenosu skozi prenosni kanal popači - raztegne se po časovni osi. V primeru ilustriranem na tej strani je
+      ekvivalentni prenosni kanal modeliran kot idealni nizko pasovni filter z mejno frekvenco
       <KatexEquation inline>
         {{ 'f_m' }}
       </KatexEquation>
@@ -11,7 +11,7 @@
         {{ 'f_m=f_s' }}
       </KatexEquation>
       Sestavljen je iz sita za preoblikovanje enotskih impulzov, oddajnega sita, sistemske funkcije kanala ter sprejemnega sita.
-      <br>
+      <br />
       Ekvivalentna sistemska funkcija kanala je tako:
       <KatexEquation>
         {{ 'h(t)=sinc(2πf_mm(t-t_0))' }}
@@ -28,7 +28,8 @@
       <KatexEquation inline>
         {{ 'h(t)' }}
       </KatexEquation>
-      največjo vrednost.<br>
+      največjo vrednost.
+      <br />
       Izvorni signal je vsota časovno zamaknjenih impulzov
       <KatexEquation inline>
         {{ 'g(t)' }}
@@ -57,12 +58,10 @@
       <KatexEquation inline>
         {{ 'h(t)' }}
       </KatexEquation>
-      razteza čez več period, to pomeni, da se tudi posamezni simbol razteza v čas, ko vzorčimo naslednji simbol.
-      Vrednost se prišteje naslednjemu vzorcu in spremeni njegovo vrednost. Nastane intersimbolna interferenca.
+      razteza čez več period, to pomeni, da se tudi posamezni simbol razteza v čas, ko vzorčimo naslednji simbol. Vrednost se prišteje
+      naslednjemu vzorcu in spremeni njegovo vrednost. Nastane intersimbolna interferenca.
     </AppParagraph>
-    <AppSectionHeading>
-      Nyquistov kriterij v časovnem prostoru
-    </AppSectionHeading>
+    <AppSectionHeading>Nyquistov kriterij v časovnem prostoru</AppSectionHeading>
     <AppParagraph>
       Kljub temu, da
       <KatexEquation inline>
@@ -89,14 +88,13 @@
         {{ 'h(t)' }}
       </KatexEquation>
       izpolnjuje to zahtevo, pravimo, da izpoljuje
-      <span class="font-semibold">Nyquistov kriterij za prenos brez intersimbolne interference v časovnem prostoru</span>.
+      <span class="font-semibold">Nyquistov kriterij za prenos brez intersimbolne interference v časovnem prostoru</span>
+      .
       <KatexEquation>
         {{ 'h(nT_s)=\\begin{cases}A & n=0 \\newline 0 & n \\neq 0\\end{cases}' }}
       </KatexEquation>
     </AppParagraph>
-    <AppSectionHeading>
-      Nyquistov kriterij v frekvenčnem prostoru
-    </AppSectionHeading>
+    <AppSectionHeading>Nyquistov kriterij v frekvenčnem prostoru</AppSectionHeading>
     <AppParagraph>
       Zanima nas še, kako mora izgledati prenosna funkcija ekvivalentnega prenosnega kanala
       <KatexEquation inline>
@@ -118,8 +116,7 @@
       <KatexEquation>
         {{ 'h(t)*v_δ(t)=Aδ(t)' }}
       </KatexEquation>
-      ,
-      kjer je
+      , kjer je
       <KatexEquation inline>
         {{ 'v_δ(t)' }}
       </KatexEquation>
@@ -133,17 +130,14 @@
       </KatexEquation>
       Če je pogoj izpolnjen, pravimo, da velja Nyquistov kriterij za prenos brez ISI v frekvenčnem prostoru:
       <span class="font-semibold">
-        Če je prekrita prenosna funkcija ekvivalentnega prenosnega kanala konstantna, potem pri digitalnem prenosu ne bo
-        prišlo do intersimbolne interference.
+        Če je prekrita prenosna funkcija ekvivalentnega prenosnega kanala konstantna, potem pri digitalnem prenosu ne bo prišlo do
+        intersimbolne interference.
       </span>
     </AppParagraph>
-    <AppSectionHeading>
-      Očesni diagram
-    </AppSectionHeading>
+    <AppSectionHeading>Očesni diagram</AppSectionHeading>
     <AppParagraph>
-      Na očesnem diagramu vidimo 2 periodi prejetega signala pri čemer za proženje uporabimo frekvenco vzorčenja.
-      Na spodnjem zaslonu osciloskopa je proženje nastavljeno na vzorčno frekvenco izvornega signala,
-      zato se ob spreminjanju zakasnitve na kanalu
+      Na očesnem diagramu vidimo 2 periodi prejetega signala pri čemer za proženje uporabimo frekvenco vzorčenja. Na spodnjem zaslonu
+      osciloskopa je proženje nastavljeno na vzorčno frekvenco izvornega signala, zato se ob spreminjanju zakasnitve na kanalu
       <KatexEquation inline>
         {{ 't_0' }}
       </KatexEquation>
@@ -152,11 +146,8 @@
   </div>
 </template>
 
-<script
-  setup
-  lang="ts"
->
-import AppParagraph from "@components/common/AppParagraph.vue";
-import AppSectionHeading from "@components/common/AppSectionHeading.vue";
-import KatexEquation from "@components/common/KatexEquation.vue";
+<script setup lang="ts">
+import AppParagraph from '@components/common/AppParagraph.vue';
+import AppSectionHeading from '@components/common/AppSectionHeading.vue';
+import KatexEquation from '@components/common/KatexEquation.vue';
 </script>

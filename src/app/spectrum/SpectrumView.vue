@@ -1,14 +1,10 @@
 <template>
   <AppMainContainer>
-    <AppMainHeading>
-      Spekter
-    </AppMainHeading>
+    <AppMainHeading>Spekter</AppMainHeading>
     <AppCollapsible>
-      <SpectrumTheory/>
+      <SpectrumTheory />
     </AppCollapsible>
-    <AppSectionHeading>
-      Oblika impulza
-    </AppSectionHeading>
+    <AppSectionHeading>Oblika impulza</AppSectionHeading>
     <ButtonContainer>
       <AppButton
         v-for="shape in pulses"
@@ -19,9 +15,7 @@
         {{ shape.label }}
       </AppButton>
     </ButtonContainer>
-    <AppSectionHeading>
-      Dolžina impulza
-    </AppSectionHeading>
+    <AppSectionHeading>Dolžina impulza</AppSectionHeading>
     <ButtonContainer>
       <AppButton
         v-for="length in pulse.pulseLengths"
@@ -61,31 +55,28 @@
   </AppMainContainer>
 </template>
 
-<script
-  setup
-  lang="ts"
->
-import FullSignalGraph from "@components/canvas/FullSignalGraph.vue";
-import LogarithmicGraph from "@components/canvas/LogarithmicGraph.vue";
-import ButtonContainer from "@components/common/buttons/AppButtonContainer.vue";
-import AppButton from "@components/common/buttons/AppButton.vue";
-import AppMainHeading from "@components/common/AppMainHeading.vue";
-import AppCollapsible from "@components/common/AppCollapsible.vue";
-import {computed, ref} from "vue";
-import AppSectionHeading from "@components/common/AppSectionHeading.vue";
-import AppMainContainer from "@components/common/AppMainContainer.vue";
-import {PulseLength, PulseShape} from "@interfaces/spectrum";
-import {useShapedSignal} from "@composables/use-shaped-signal";
-import {useFft} from "@composables/use-fft";
-import SpectrumTheory from "./components/SpectrumTheory.vue";
-import SpectrumGraph from "./components/SpectrumGraph.vue";
+<script setup lang="ts">
+import FullSignalGraph from '@components/canvas/FullSignalGraph.vue';
+import LogarithmicGraph from '@components/canvas/LogarithmicGraph.vue';
+import ButtonContainer from '@components/common/buttons/AppButtonContainer.vue';
+import AppButton from '@components/common/buttons/AppButton.vue';
+import AppMainHeading from '@components/common/AppMainHeading.vue';
+import AppCollapsible from '@components/common/AppCollapsible.vue';
+import { computed, ref } from 'vue';
+import AppSectionHeading from '@components/common/AppSectionHeading.vue';
+import AppMainContainer from '@components/common/AppMainContainer.vue';
+import { PulseLength, PulseShape } from '@interfaces/spectrum';
+import { useShapedSignal } from '@composables/use-shaped-signal';
+import { useFft } from '@composables/use-fft';
+import SpectrumTheory from './components/SpectrumTheory.vue';
+import SpectrumGraph from './components/SpectrumGraph.vue';
 
 export interface Pulse {
   key: PulseShape;
   // Button label
   label: string;
   // Pool of numbers to use on the chart
-  horizontalPool?: number[],
+  horizontalPool?: number[];
   // Custom pool lengths, since some charts look clunky with defaults
   pulseLengths: PulseLengthOption[];
   // Additional texts displayed along spectrum chart
@@ -106,11 +97,11 @@ interface PulseLengthOption {
 
 // Default pulse length options we give to the users
 const defaultPulseLengthOptions: PulseLengthOption[] = [
-  {label: '1/4', key: 0.25},
-  {label: '1/2', key: 0.5},
-  {label: '1', key: 1},
-  {label: '2', key: 2},
-  {label: '4', key: 4},
+  { label: '1/4', key: 0.25 },
+  { label: '1/2', key: 0.5 },
+  { label: '1', key: 1 },
+  { label: '2', key: 2 },
+  { label: '4', key: 4 },
 ];
 
 const pulses: Pulse[] = [
@@ -121,11 +112,11 @@ const pulses: Pulse[] = [
     // Remove length of 4, add length of 3
     pulseLengths: defaultPulseLengthOptions
       .filter((pulseLength: PulseLengthOption) => pulseLength.key !== 4)
-      .concat([{label: '3', key: 3}]),
+      .concat([{ label: '3', key: 3 }]),
     logarithmGraphTexts: {
       note: `Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar,
       ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.`,
-    }
+    },
   },
   {
     label: 'Kvadratni',
@@ -134,7 +125,7 @@ const pulses: Pulse[] = [
     logarithmGraphTexts: {
       note: `Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar,
       ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.`,
-    }
+    },
   },
   {
     label: 'Gauss',
@@ -142,11 +133,11 @@ const pulses: Pulse[] = [
     // Remove length of 4, add length of 3
     pulseLengths: defaultPulseLengthOptions
       .filter((pulseLength: PulseLengthOption) => pulseLength.key !== 4)
-      .concat([{label: '3', key: 3}]),
+      .concat([{ label: '3', key: 3 }]),
     logarithmGraphTexts: {
       note: `Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar,
       ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.`,
-    }
+    },
   },
   {
     label: 'Sinc',
@@ -155,7 +146,7 @@ const pulses: Pulse[] = [
     logarithmGraphTexts: {
       note: `Vrednosti grafa v točkah, kjer je vrednost spektra enaka 0 (glej zgornji graf), bi morale biti -∞, vendar,
       ker za izračun FFT uporabljamo zgolj 2048 vrednosti, je prikaz nekoliko netočen.`,
-    }
+    },
   },
 ];
 
@@ -164,7 +155,7 @@ const pulseLength = ref<PulseLength>(1);
 
 const setPulseLength = (length: PulseLength): void => {
   pulseLength.value = length;
-}
+};
 
 // User selected pulse shape
 const pulseShape = ref<PulseShape>('cos');
@@ -173,16 +164,13 @@ const setPulseShape = (shape: PulseShape): void => {
   // Reset length to 1, since some lengths might be missing on certain shapes
   setPulseLength(1);
   pulseShape.value = shape;
-}
+};
 
 const frequency = computed<number>(() => pulseLength.value ** -1);
 
 // Pulse object determined by user selection
 const pulse = computed<Pulse>(() => pulses.find((pulse: Pulse) => pulse.key === pulseShape.value)!);
 
-const {shapedSignal, shapedSpectrumSignal} = useShapedSignal(pulseShape, frequency);
-const {transformedSignal} = useFft(shapedSpectrumSignal)
+const { shapedSignal, shapedSpectrumSignal } = useShapedSignal(pulseShape, frequency);
+const { transformedSignal } = useFft(shapedSpectrumSignal);
 </script>
-
-
-

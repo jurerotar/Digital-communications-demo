@@ -1,5 +1,5 @@
-import {AppState} from "@stores/modules/app-state/app-state.types";
-import {Scheme} from "@interfaces/common";
+import { AppState } from '@stores/modules/app-state/app-state.types';
+import { Scheme } from '@interfaces/common';
 
 const state = (): AppState => ({
   mobileSidebarExtended: false,
@@ -12,17 +12,17 @@ const mutations = {
   },
   setScheme(state: AppState, scheme: Scheme) {
     state.scheme = scheme;
-  }
-}
+  },
+};
 
-const getters = {}
+const getters = {};
 
-const actions = {}
+const actions = {};
 
 export default {
   namespaced: true,
   state,
   mutations,
   getters,
-  actions
-}
+  actions,
+};

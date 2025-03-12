@@ -1,26 +1,24 @@
 <template>
-  <AppSectionHeading>
-    Prikaz posameznik komponent
-  </AppSectionHeading>
+  <AppSectionHeading>Prikaz posameznik komponent</AppSectionHeading>
   <CanvasContainer>
     <div :id="canvasId" />
   </CanvasContainer>
 </template>
 
 <script>
-import AppSectionHeading from "@components/common/AppSectionHeading.vue";
+import AppSectionHeading from '@components/common/AppSectionHeading.vue';
 import P5 from 'p5';
-import CanvasContainer from "@components/common/AppCanvasContainer.vue";
+import CanvasContainer from '@components/common/AppCanvasContainer.vue';
 import '@interfaces/common.ts';
 
 export default {
-  name: "IndividualHarmonicsGraph",
-  components: {AppSectionHeading, CanvasContainer},
+  name: 'IndividualHarmonicsGraph',
+  components: { AppSectionHeading, CanvasContainer },
   props: {
     components: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -30,7 +28,7 @@ export default {
       /** @type {Coordinates} */
       offset: {
         x: 175,
-        y: 150
+        y: 150,
       },
       /** @type {Text[]} */
       texts: [
@@ -49,8 +47,8 @@ export default {
           x: -23,
           y: -140,
         },
-      ]
-    }
+      ],
+    };
   },
   mounted() {
     let time = 0;
@@ -60,7 +58,7 @@ export default {
         p5.createCanvas(700, 400);
         p5.frameRate(30);
         p5.textFont('Montserrat');
-      }
+      };
       p5.draw = () => {
         const color = this.$c.scale();
         const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
@@ -94,7 +92,11 @@ export default {
           p5.text('Re', canvasDimensions.x - 25, canvasDimensions.y / 2 + 15);
           //adds arrow on x-axis
           p5.strokeWeight(2);
-          this.$c.drawArrow1(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - canvasPadding, 0));
+          this.$c.drawArrow1(
+            p5,
+            p5.createVector(canvasPadding, canvasDimensions.y / 2),
+            p5.createVector(canvasDimensions.x - canvasPadding, 0)
+          );
           //adds arrow on y-axis
           p5.fill(color);
           p5.triangle(350, -30, 346, -20, 354, -20);
@@ -108,7 +110,7 @@ export default {
 
         for (let i = 1; i <= this.components; i++) {
           const frequency = (2 * i - 1) * time;
-          const radius = 210 * (-2 / (2 * i - 1) / Math.PI * (-1) ** i);
+          const radius = 210 * ((-2 / (2 * i - 1) / Math.PI) * (-1) ** i);
           const x = -radius * Math.cos(frequency);
           const y = radius * Math.sin(frequency);
 
@@ -131,13 +133,13 @@ export default {
           p5.ellipse(2 * previousX, 0, 8);
         });
         time += 0.03;
-      }
+      };
       p5.removeCanvas = () => p5.remove();
     }, `${this.canvasId}`);
   },
   unmounted() {
     // Remove canvas, otherwise P5 object stays in memory
     this.p5.removeCanvas();
-  }
-}
+  },
+};
 </script>

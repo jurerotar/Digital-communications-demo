@@ -11,12 +11,13 @@
     je pravzaprav korelacija tega signala s kompleksnim harmoničnim signalom
     <KatexEquation inline>
       {{ 'e^{-j \\pi f t}' }}
-    </KatexEquation>.
-    Spekter
+    </KatexEquation>
+    . Spekter
     <KatexEquation inline>
       {{ 'X(f)' }}
-    </KatexEquation> nam torej pove, koliko sta si ta dva signala podobna.
-    <br>
+    </KatexEquation>
+    nam torej pove, koliko sta si ta dva signala podobna.
+    <br />
     Amplitudni spekter
     <KatexEquation inline>
       {{ 'A(f)' }}
@@ -28,7 +29,8 @@
     enak absolutni vrednosti njegovega kompleksnega spektra
     <KatexEquation inline>
       {{ 'X(f)' }}
-    </KatexEquation>:
+    </KatexEquation>
+    :
     <KatexEquation>
       {{ 'A_{x}(f) = |X(f)|' }}
     </KatexEquation>
@@ -43,7 +45,8 @@
     . Če je
     <KatexEquation inline>
       {{ 'a &lt; 1' }}
-    </KatexEquation> se signal raztegne, če pa je
+    </KatexEquation>
+    se signal raztegne, če pa je
     <KatexEquation inline>
       {{ 'a > 1' }}
     </KatexEquation>
@@ -59,15 +62,12 @@
     <KatexEquation inline>
       {{ 'a' }}
     </KatexEquation>
-    , pomeni skrčenje v časovnem prostoru, razteg v frekvenčnem prostoru in obratno.
-    Iz tega sledi, da imajo dolgi impulzi ozek spekter, kratki impulzi pa širok spekter.
+    , pomeni skrčenje v časovnem prostoru, razteg v frekvenčnem prostoru in obratno. Iz tega sledi, da imajo dolgi impulzi ozek spekter,
+    kratki impulzi pa širok spekter.
   </AppParagraph>
 </template>
 
-<script
-  setup
-  lang="ts"
->
-import AppParagraph from "@components/common/AppParagraph.vue";
-import KatexEquation from "@components/common/KatexEquation.vue";
+<script setup lang="ts">
+import AppParagraph from '@components/common/AppParagraph.vue';
+import KatexEquation from '@components/common/KatexEquation.vue';
 </script>

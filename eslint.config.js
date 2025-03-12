@@ -3,7 +3,6 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 import eslintPluginVue from 'eslint-plugin-vue';
 import globals from 'globals';
 import typescriptEslint from 'typescript-eslint';
-import eslintPluginVueAccessibility from 'eslint-plugin-vuejs-accessibility';
 
 export default typescriptEslint.config(
   { ignores: ['*.d.ts', '**/coverage', '**/dist'] },
@@ -12,7 +11,8 @@ export default typescriptEslint.config(
       eslint.configs.recommended,
       ...typescriptEslint.configs.recommended,
       ...eslintPluginVue.configs['flat/recommended'],
-      ...eslintPluginVueAccessibility.configs['flat/recommended'],
+      // Package broken apparently, check periodically for new releases
+      // ...eslintPluginVueAccessibility.configs['flat/recommended'],
     ],
     files: ['**/*.{ts,vue}'],
     languageOptions: {

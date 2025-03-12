@@ -1,5 +1,5 @@
-import {MaybeRef, ref, toValue, watchEffect} from "vue";
-import FFT from "fft.js";
+import { MaybeRef, ref, toValue, watchEffect } from 'vue';
+import FFT from 'fft.js';
 
 export const useFft = (signalRef: MaybeRef<number[]>) => {
   const transformedSignal = ref<number[]>([]);
@@ -14,6 +14,6 @@ export const useFft = (signalRef: MaybeRef<number[]>) => {
   });
 
   return {
-    transformedSignal
-  }
-}
+    transformedSignal,
+  };
+};

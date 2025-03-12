@@ -7,13 +7,15 @@
     v-if="description !== ''"
     class="my-1 transition-colors duration-300 dark:text-white"
   >
-    <span class="font-semibold">Opis:</span>{{ description }}
+    <span class="font-semibold">Opis:</span>
+    {{ description }}
   </p>
   <p
     v-if="note !== ''"
     class="my-1 transition-colors duration-300 dark:text-white"
   >
-    <span class="font-semibold">Opomba:</span>{{ note }}
+    <span class="font-semibold">Opomba:</span>
+    {{ note }}
   </p>
   <CanvasContainer>
     <div id="4-level-binary" />
@@ -21,42 +23,42 @@
 </template>
 
 <script>
-import AppSectionHeading from "@components/common/AppSectionHeading.vue";
+import AppSectionHeading from '@components/common/AppSectionHeading.vue';
 import P5 from 'p5';
-import CanvasContainer from "@components/common/AppCanvasContainer.vue";
+import CanvasContainer from '@components/common/AppCanvasContainer.vue';
 import '@interfaces/common.ts';
 
 export default {
-  name: "Level4SignalGraph",
-  components: {AppSectionHeading, CanvasContainer},
+  name: 'Level4SignalGraph',
+  components: { AppSectionHeading, CanvasContainer },
   props: {
     data: {
       type: Array,
-      required: true
+      required: true,
     },
     title: {
       type: String,
-      required: true
+      required: true,
     },
     description: {
       type: String,
       required: false,
-      default: ''
+      default: '',
     },
     note: {
       type: String,
       required: false,
-      default: ''
+      default: '',
     },
     isBinary: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     speed: {
       type: Number,
       required: false,
-      default: 1
+      default: 1,
     },
   },
   data() {
@@ -66,18 +68,18 @@ export default {
       offset: {
         x: 0,
         y: 125,
-      }
-    }
+      },
+    };
   },
   computed: {
     normalizedData() {
-      const max = Math.max(...this.data.map(el => Math.abs(el)));
+      const max = Math.max(...this.data.map((el) => Math.abs(el)));
       const data = [...this.data];
       data.length = 600;
       if (this.isBinary) {
         return data;
       }
-      return data.map(el => el / max);
+      return data.map((el) => el / max);
     },
   },
   mounted() {
@@ -115,7 +117,14 @@ export default {
         // X axis label
         p5.text('t', canvasDimensions.x - 30, canvasDimensions.y / 2 + 30);
         p5.strokeWeight(2);
-        this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2 + 20), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y / 2 + 20), color, 7, 0);
+        this.$c.drawArrow(
+          p5,
+          p5.createVector(canvasPadding, canvasDimensions.y / 2 + 20),
+          p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y / 2 + 20),
+          color,
+          7,
+          0
+        );
 
         p5.fill(1);
         p5.triangle(50, 42, 46, 50, 54, 50);
@@ -128,30 +137,33 @@ export default {
         p5.beginShape();
         if (this.isBinary) {
           const binaryOffsets = {
-            '3': 15,
-            '1': 18,
+            3: 15,
+            1: 18,
             '-1': 21,
             '-3': 25,
-            '0': 19
+            0: 19,
           };
           let previousY = 1;
           this.normalizedData.forEach((y, x) => {
-            p5.vertex((previousY !== y) ? this.speed*x - 1 + canvasPadding : this.speed*x + canvasPadding, y * this.offset.y / 3 + this.offset.y + canvasPadding / 2 + binaryOffsets[`${y}`]);
+            p5.vertex(
+              previousY !== y ? this.speed * x - 1 + canvasPadding : this.speed * x + canvasPadding,
+              (y * this.offset.y) / 3 + this.offset.y + canvasPadding / 2 + binaryOffsets[`${y}`]
+            );
             previousY = y;
           });
         } else {
           this.normalizedData.forEach((y, x) => {
-            p5.vertex(this.speed*x + canvasPadding, y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2);
+            p5.vertex(this.speed * x + canvasPadding, y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2);
           });
         }
         p5.endShape();
-      }
+      };
       p5.removeCanvas = () => p5.remove();
     }, '4-level-binary');
   },
   unmounted() {
     // Remove canvas, otherwise P5 object stays in memory
     this.p5.removeCanvas();
-  }
-}
+  },
+};
 </script>

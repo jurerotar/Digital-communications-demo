@@ -7,13 +7,15 @@
     v-if="description !== ''"
     class="my-1 transition-colors duration-300 dark:text-white"
   >
-    <span class="font-semibold">Opis: </span>{{ description }}
+    <span class="font-semibold">Opis:</span>
+    {{ description }}
   </p>
   <p
     v-if="note !== ''"
     class="my-1 transition-colors duration-300 dark:text-white"
   >
-    <span class="font-semibold">Opomba: </span>{{ note }}
+    <span class="font-semibold">Opomba:</span>
+    {{ note }}
   </p>
   <CanvasContainer>
     <div :id="canvasId" />
@@ -21,71 +23,71 @@
 </template>
 
 <script>
-import AppSectionHeading from "@components/common/AppSectionHeading.vue";
+import AppSectionHeading from '@components/common/AppSectionHeading.vue';
 import P5 from 'p5';
-import CanvasContainer from "@components/common/AppCanvasContainer.vue";
+import CanvasContainer from '@components/common/AppCanvasContainer.vue';
 import '@interfaces/common.ts';
 
 export default {
-  name: "PositiveOnlySignalGraph",
-  components: {AppSectionHeading, CanvasContainer},
+  name: 'PositiveOnlySignalGraph',
+  components: { AppSectionHeading, CanvasContainer },
   props: {
     data: {
       type: Array,
-      required: true
+      required: true,
     },
     title: {
       type: String,
-      required: true
+      required: true,
     },
     canvasId: {
       type: String,
-      required: true
+      required: true,
     },
     isModulated: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     verticalPool: {
       type: Array,
       required: false,
-      default: null
+      default: null,
     },
     description: {
       type: String,
       required: false,
-      default: ''
+      default: '',
     },
     note: {
       type: String,
       required: false,
-      default: ''
+      default: '',
     },
     isBinary: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     xTicks: {
       type: Object,
       required: false,
-      default: null
+      default: null,
     },
     isInverted: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     absMax: {
       type: Number,
       required: false,
-      default: null
+      default: null,
     },
     speed: {
       type: Number,
       required: false,
-      default: 1
+      default: 1,
     },
   },
   data() {
@@ -95,21 +97,21 @@ export default {
       offset: {
         x: 0,
         y: 125,
-      }
-    }
+      },
+    };
   },
   computed: {
     normalizedData() {
-      const max = this.absMax !== null ? this.absMax : Math.max(...this.data.map(el => Math.abs(el)));
+      const max = this.absMax !== null ? this.absMax : Math.max(...this.data.map((el) => Math.abs(el)));
       const data = [...this.data];
       data.length = 600;
 
       const isInvertedModifier = this.isInverted ? -1 : 1;
 
-      return data.map(el => isInvertedModifier * el / max);
+      return data.map((el) => (isInvertedModifier * el) / max);
     },
     isModulatedText() {
-      return (this.isModulated) ? 'y(t)' : 'x(t)';
+      return this.isModulated ? 'y(t)' : 'x(t)';
     },
   },
   mounted() {
@@ -142,9 +144,20 @@ export default {
           // Draw x ticks if supplied
           if (this.xTicks !== null) {
             for (let i = 0; i < this.xTicks.pos.length; i++) {
-              this.$c.widerLine(p5, this.speed * this.xTicks.pos[i] + canvasPadding, this.offset.y - 5 + canvasPadding / 2, this.speed * this.xTicks.pos[i] + canvasPadding, this.offset.y + 5 + canvasPadding / 2);
+              this.$c.widerLine(
+                p5,
+                this.speed * this.xTicks.pos[i] + canvasPadding,
+                this.offset.y - 5 + canvasPadding / 2,
+                this.speed * this.xTicks.pos[i] + canvasPadding,
+                this.offset.y + 5 + canvasPadding / 2
+              );
               p5.strokeWeight(0.5);
-              p5.line(this.speed * this.xTicks.pos[i] + canvasPadding, this.offset.y - canvasPadding * 2, this.speed * this.xTicks.pos[i] + canvasPadding, this.offset.y + canvasPadding * 3);
+              p5.line(
+                this.speed * this.xTicks.pos[i] + canvasPadding,
+                this.offset.y - canvasPadding * 2,
+                this.speed * this.xTicks.pos[i] + canvasPadding,
+                this.offset.y + canvasPadding * 3
+              );
               p5.textAlign(p5.RIGHT, p5.TOP);
               p5.strokeWeight(0.25);
               p5.text(this.xTicks.text[i], this.speed * this.xTicks.pos[i] + canvasPadding, this.offset.y + 7 + canvasPadding / 2);
@@ -156,7 +169,14 @@ export default {
           // X axis label
           p5.text('t', canvasDimensions.x - 30, canvasDimensions.y / 2 + 3);
           p5.strokeWeight(2);
-          this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasDimensions.y / 2), p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y / 2), color, 7, 0);
+          this.$c.drawArrow(
+            p5,
+            p5.createVector(canvasPadding, canvasDimensions.y / 2),
+            p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y / 2),
+            color,
+            7,
+            0
+          );
 
           p5.fill(color);
           p5.triangle(50, 42, 46, 50, 54, 50);
@@ -171,7 +191,10 @@ export default {
         if (this.isBinary) {
           let previousY = 1;
           this.normalizedData.forEach((y, x) => {
-            p5.vertex((previousY !== y) ? this.speed * x - 1 + canvasPadding : this.speed * x + canvasPadding, y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2);
+            p5.vertex(
+              previousY !== y ? this.speed * x - 1 + canvasPadding : this.speed * x + canvasPadding,
+              y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2
+            );
             previousY = y;
           });
         } else {
@@ -180,14 +203,13 @@ export default {
           });
         }
         p5.endShape();
-      }
+      };
       p5.removeCanvas = () => p5.remove();
     }, this.canvasId);
   },
   unmounted() {
     // Remove canvas, otherwise P5 object stays in memory
     this.p5.removeCanvas();
-  }
-}
-
+  },
+};
 </script>

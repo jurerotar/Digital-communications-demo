@@ -12,6 +12,6 @@
 </template>
 
 <script setup lang="ts">
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {faGithub} from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 </script>

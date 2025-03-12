@@ -9,7 +9,6 @@
   <img src="https://img.shields.io/github/repo-size/jurerotar/Digital-communications-demo" alt="GitHub repo size">
   <img src="https://img.shields.io/github/contributors/jurerotar/Digital-communications-demo" alt="GitHub contributors">
   <img src="https://img.shields.io/badge/contributions-welcome-brightgreen" alt="Contributions">
-  <img src="https://img.shields.io/endpoint?color=brightgreen&amp;label=views&amp;url=https%3A%2F%2Fhits.dwyl.com%2Fjurerotar%2Fdigital-communication-demo.json" alt="Repository views">
 </p>
 
 Digital communications app is an open source tool designed to help electrical engineering and computer science students better understand
@@ -25,27 +24,22 @@ digital signal modulations and transformations.
 
 ### Available topics
 
-* Signal spectrum
-* Signal modulations
-* Harmonics
-* Pointers
-* Signal correlation
-* Inter-symbol interference
-* Digital filters
-
-## Table of contents
-
-* [Built with](#Built-with)
-* [Installation guide](#Installation-guide)
+- Signal spectrum
+- Signal modulations
+- Harmonics
+- Pointers
+- Signal correlation
+- Inter-symbol interference
+- Digital filters
 
 ## Built with
 
-* [Vue 3](https://v3.vuejs.org) - Vue is a progressive framework for building user interfaces.
-* [Tailwind CSS](https://tailwindcss.com) - A utility-first CSS framework packed with classes that can be composed to build any design,
+- [Vue 3](https://v3.vuejs.org) - Vue is a progressive framework for building user interfaces.
+- [Tailwind CSS](https://tailwindcss.com) - A utility-first CSS framework packed with classes that can be composed to build any design,
   directly in your markup.
-* [Vuex](https://vuex.vuejs.org) - Vuex is a state management pattern + library for Vue.js applications.
-* [p5](https://p5js.org/) - p5 is a JavaScript library for creative coding.
-* [katex](https://katex.org) - The fastest math typesetting library for the web.
+- [Vuex](https://vuex.vuejs.org) - Vuex is a state management pattern + library for Vue.js applications.
+- [p5](https://p5js.org/) - p5 is a JavaScript library for creative coding.
+- [katex](https://katex.org) - The fastest math typesetting library for the web.
 
 ## Installation guide
 
@@ -58,10 +52,4 @@ npm install
 
 # Starts a development server with hot-reloading
 npm run serve
-
-# Compiles and minifies for production
-npm run build
-
-# Lints and fixes files
-npm run lint
 ```

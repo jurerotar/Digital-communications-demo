@@ -1,11 +1,11 @@
-import {computed, onBeforeMount, onUnmounted, ref} from "vue";
+import { computed, onBeforeMount, onUnmounted, ref } from 'vue';
 
 const breakpoints = {
-  "sm": 640,
-  "md": 768,
-  "lg": 1024,
-  "xl": 1280,
-  "2xl": 1920,
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  '2xl': 1920,
 };
 
 export const useWindowSize = () => {
@@ -15,7 +15,7 @@ export const useWindowSize = () => {
   const onResize = (): void => {
     width.value = window.innerWidth;
     height.value = window.innerHeight;
-  }
+  };
 
   onResize();
 
@@ -39,6 +39,6 @@ export const useWindowSize = () => {
     isXlUp,
     isLgUp,
     isMdUp,
-    isSmUp
-  }
-}
+    isSmUp,
+  };
+};

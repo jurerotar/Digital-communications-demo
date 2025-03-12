@@ -1,11 +1,15 @@
 <template>
   <AppParagraph>
-    V spodnji animaciji prikazujemo enotsko krožnico z središčem v izhodišču koordinatnega sistema in polmerom 1.
-    Koordinatni sistem sestavljata <span class="font-semibold">imaginarna</span> (vertikalna) in <span class="font-semibold">realna</span>
+    V spodnji animaciji prikazujemo enotsko krožnico z središčem v izhodišču koordinatnega sistema in polmerom 1. Koordinatni sistem
+    sestavljata
+    <span class="font-semibold">imaginarna</span>
+    (vertikalna) in
+    <span class="font-semibold">realna</span>
     (horizontalna) os.
-    <br><br>
-    Sinus in kosinus sta matematični funkciji, ki opisujeta gladko ponavljajočo oscilacijo po krožnici.
-    V spodnjem primeru se ti ponavljata na intervalu
+    <br />
+    <br />
+    Sinus in kosinus sta matematični funkciji, ki opisujeta gladko ponavljajočo oscilacijo po krožnici. V spodnjem primeru se ti ponavljata
+    na intervalu
     <KatexEquation inline>
       {{ '2π' }}
     </KatexEquation>
@@ -14,16 +18,14 @@
       {{ '2π' }}
     </KatexEquation>
     radianov.
-    <br><br>
+    <br />
+    <br />
     V animaciji prikazujemo eno periodo sinusnega signala, eno periodo kosinusnega signala in kazalec, ki predstavlja vsoto kvadratov teh
     dveh signalov.
-    <br>
+    <br />
   </AppParagraph>
 </template>
-<script
-  setup
-  lang="ts"
->
-import AppParagraph from "@components/common/AppParagraph.vue";
-import KatexEquation from "@components/common/KatexEquation.vue";
+<script setup lang="ts">
+import AppParagraph from '@components/common/AppParagraph.vue';
+import KatexEquation from '@components/common/KatexEquation.vue';
 </script>

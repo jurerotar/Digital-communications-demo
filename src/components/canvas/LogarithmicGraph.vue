@@ -6,13 +6,15 @@
     v-if="description !== ''"
     class="my-1 transition-colors duration-300 dark:text-white"
   >
-    <span class="font-semibold">Opis: </span>{{ description }}
+    <span class="font-semibold">Opis:</span>
+    {{ description }}
   </p>
   <p
     v-if="note !== ''"
     class="my-1 transition-colors duration-300 dark:text-white"
   >
-    <span class="font-semibold">Opomba: </span>{{ note }}
+    <span class="font-semibold">Opomba:</span>
+    {{ note }}
   </p>
   <CanvasContainer>
     <div :id="canvasId" />
@@ -20,44 +22,44 @@
 </template>
 
 <script>
-import AppSectionHeading from "@components/common/AppSectionHeading.vue";
+import AppSectionHeading from '@components/common/AppSectionHeading.vue';
 import P5 from 'p5';
-import CanvasContainer from "@components/common/AppCanvasContainer.vue";
+import CanvasContainer from '@components/common/AppCanvasContainer.vue';
 import '@interfaces/common.ts';
 
 export default {
-  name: "LogarithmicGraph",
-  components: {AppSectionHeading, CanvasContainer},
+  name: 'LogarithmicGraph',
+  components: { AppSectionHeading, CanvasContainer },
   props: {
     data: {
       type: Array,
-      required: true
+      required: true,
     },
     title: {
       type: String,
-      required: true
+      required: true,
     },
     canvasId: {
       type: String,
-      required: true
+      required: true,
     },
     type: {
       type: String,
-      required: true
+      required: true,
     },
     pulseLength: {
       type: Number,
-      required: true
+      required: true,
     },
     description: {
       type: String,
       required: false,
-      default: ''
+      default: '',
     },
     note: {
       type: String,
       required: false,
-      default: ''
+      default: '',
     },
   },
   data() {
@@ -66,21 +68,21 @@ export default {
       /** @type {Coordinates} */
       offset: {
         x: 0,
-        y: 250
+        y: 250,
       },
-    }
+    };
   },
   computed: {
     normalizedData() {
       const data = [...this.data];
       data.length = 600;
-      return data.map(el => -20 * Math.log(el / data[0]) + 50);
+      return data.map((el) => -20 * Math.log(el / data[0]) + 50);
     },
   },
   mounted() {
     // Initiate new P5 instance and create canvas
     this.p5 = new P5((p5) => {
-      this.$c.setup(p5, {frameRate: 1});
+      this.$c.setup(p5, { frameRate: 1 });
       p5.draw = () => {
         const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
         p5.background(this.$c.background());
@@ -117,11 +119,18 @@ export default {
           p5.text('f', canvasDimensions.x - 30, canvasPadding);
 
           p5.strokeWeight(2);
-          this.$c.drawArrow(p5, p5.createVector(canvasPadding, canvasPadding), p5.createVector(canvasDimensions.x - canvasPadding, canvasPadding), color, 7, 0);
+          this.$c.drawArrow(
+            p5,
+            p5.createVector(canvasPadding, canvasPadding),
+            p5.createVector(canvasDimensions.x - canvasPadding, canvasPadding),
+            color,
+            7,
+            0
+          );
           //y-axis arrow
           p5.fill(color);
           p5.triangle(50, 260, 46, 250, 54, 250);
-        })
+        });
 
         p5.noFill();
         p5.stroke(this.$c.colors[0]);
@@ -130,13 +139,13 @@ export default {
         p5.beginShape();
         this.normalizedData.forEach((y, x) => p5.vertex(x + canvasPadding, y));
         p5.endShape();
-      }
+      };
       p5.removeCanvas = () => p5.remove();
     }, this.canvasId);
   },
   unmounted() {
     // Remove canvas, otherwise P5 object stays in memory
     this.p5.removeCanvas();
-  }
-}
+  },
+};
 </script>
