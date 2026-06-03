@@ -37,11 +37,11 @@
 </template>
 
 <script setup lang="ts">
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import AppParagraph from '@components/common/AppParagraph.vue';
+import AppSectionHeading from '@components/common/AppSectionHeading.vue';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faCodeBranch } from '@fortawesome/free-solid-svg-icons';
-import AppSectionHeading from '@components/common/AppSectionHeading.vue';
-import AppParagraph from '@components/common/AppParagraph.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import CircleIcon from './CircleIcon.vue';
 </script>
 

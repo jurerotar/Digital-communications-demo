@@ -19,10 +19,10 @@
 
 <script setup lang="ts">
 import AppCollapsible from '@components/common/AppCollapsible.vue';
-import AppMainHeading from '@components/common/AppMainHeading.vue';
-import { ref } from 'vue';
 import AppMainContainer from '@components/common/AppMainContainer.vue';
+import AppMainHeading from '@components/common/AppMainHeading.vue';
 import AppSlider from '@components/common/AppSlider.vue';
+import { ref } from 'vue';
 import HarmonicsTheory from './components/HarmonicsTheory.vue';
 import IndividualHarmonicsGraph from './components/IndividualHarmonicsGraph.vue';
 import SummedHarmonicsGraph from './components/SummedHarmonicsGraph.vue';

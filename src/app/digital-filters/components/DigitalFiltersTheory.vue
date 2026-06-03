@@ -181,5 +181,6 @@ import AppSectionHeading from '@components/common/AppSectionHeading.vue';
 import KatexEquation from '@components/common/KatexEquation.vue';
 
 const digitalFiltersTransferFunction =
-  'H(z) = \\frac{Y(z)}{X(z)} = \\frac{\\sum_{k=0}^{M}a_k ' + '\\cdot z^{-k}}{1+\\sum_{k=1}^{N}b_k \\cdot z^{-k}} = \\frac{N(z)}{1+D(z)}';
+  'H(z) = \\frac{Y(z)}{X(z)} = \\frac{\\sum_{k=0}^{M}a_k ' +
+  '\\cdot z^{-k}}{1+\\sum_{k=1}^{N}b_k \\cdot z^{-k}} = \\frac{N(z)}{1+D(z)}';
 </script>

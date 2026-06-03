@@ -1,5 +1,5 @@
-import { AppState } from '@stores/modules/app-state/app-state.types';
-import { Scheme } from '@interfaces/common';
+import type { Scheme } from '@interfaces/common';
+import type { AppState } from '@stores/modules/app-state/app-state.types';
 
 const state = (): AppState => ({
   mobileSidebarExtended: false,

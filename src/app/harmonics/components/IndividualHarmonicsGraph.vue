@@ -6,10 +6,10 @@
 </template>
 
 <script>
+import CanvasContainer from '@components/common/AppCanvasContainer.vue';
 import AppSectionHeading from '@components/common/AppSectionHeading.vue';
 import P5 from 'p5';
-import CanvasContainer from '@components/common/AppCanvasContainer.vue';
-import '@interfaces/common.ts';
+import '@interfaces/common';
 
 export default {
   name: 'IndividualHarmonicsGraph',
@@ -61,31 +61,83 @@ export default {
       };
       p5.draw = () => {
         const color = this.$c.scale();
-        const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
+        const [canvasDimensions, canvasPadding] = [
+          this.$c.dimensions,
+          this.$c.canvasPadding,
+        ];
         p5.translate(0, canvasPadding);
         p5.background(this.$c.background());
         p5.strokeWeight(2);
 
         this.$c.temporaryState(p5, () => {
           p5.stroke(color);
-          p5.line(canvasDimensions.x / 2, -30, canvasDimensions.x / 2, canvasDimensions.y);
+          p5.line(
+            canvasDimensions.x / 2,
+            -30,
+            canvasDimensions.x / 2,
+            canvasDimensions.y,
+          );
           p5.strokeWeight(1);
           const yAxisLabels = [0.75, 0.5, 0.25, 0, -0.25, -0.5, -0.75];
-          const xAxisLabels = [-1.5, -1.25, '  -1', -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, '   1', 1.25, 1.5];
+          const xAxisLabels = [
+            -1.5,
+            -1.25,
+            '  -1',
+            -0.75,
+            -0.5,
+            -0.25,
+            0,
+            0.25,
+            0.5,
+            0.75,
+            '   1',
+            1.25,
+            1.5,
+          ];
           for (let i = 0; i <= 30; i++) {
             if (i % 5 === 0 && i !== 15) {
-              p5.text(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 5), canvasDimensions.x / 2 - 40, i * 10 + 3);
-              this.$c.widerLine(p5, canvasDimensions.x / 2 - 5, i * 10, canvasDimensions.x / 2 + 5, i * 10);
+              p5.text(
+                `${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 5),
+                canvasDimensions.x / 2 - 40,
+                i * 10 + 3,
+              );
+              this.$c.widerLine(
+                p5,
+                canvasDimensions.x / 2 - 5,
+                i * 10,
+                canvasDimensions.x / 2 + 5,
+                i * 10,
+              );
             } else {
-              p5.line(canvasDimensions.x / 2 - 5, i * 10, canvasDimensions.x / 2 + 5, i * 10);
+              p5.line(
+                canvasDimensions.x / 2 - 5,
+                i * 10,
+                canvasDimensions.x / 2 + 5,
+                i * 10,
+              );
             }
           }
           for (let i = 0; i <= 60; i++) {
             if (i % 5 === 0 && i !== 30) {
-              p5.text(`${xAxisLabels[Math.trunc(i / 5)]}`.substring(0, 5), i * 10 + canvasPadding - 15, canvasPadding + 125);
-              this.$c.widerLine(p5, canvasPadding + i * 10, canvasDimensions.y / 2 + 5, canvasPadding + i * 10, canvasDimensions.y / 2 - 5);
+              p5.text(
+                `${xAxisLabels[Math.trunc(i / 5)]}`.substring(0, 5),
+                i * 10 + canvasPadding - 15,
+                canvasPadding + 125,
+              );
+              this.$c.widerLine(
+                p5,
+                canvasPadding + i * 10,
+                canvasDimensions.y / 2 + 5,
+                canvasPadding + i * 10,
+                canvasDimensions.y / 2 - 5,
+              );
             } else {
-              p5.line(canvasPadding + i * 10, canvasDimensions.y / 2 + 5, canvasPadding + i * 10, canvasDimensions.y / 2 - 5);
+              p5.line(
+                canvasPadding + i * 10,
+                canvasDimensions.y / 2 + 5,
+                canvasPadding + i * 10,
+                canvasDimensions.y / 2 - 5,
+              );
             }
           }
           p5.text('Im', canvasDimensions.x / 2 - 6, -38);
@@ -95,7 +147,7 @@ export default {
           this.$c.drawArrow1(
             p5,
             p5.createVector(canvasPadding, canvasDimensions.y / 2),
-            p5.createVector(canvasDimensions.x - canvasPadding, 0)
+            p5.createVector(canvasDimensions.x - canvasPadding, 0),
           );
           //adds arrow on y-axis
           p5.fill(color);
@@ -119,10 +171,18 @@ export default {
             p5.strokeWeight(2);
             p5.stroke('#1974D2');
             // Sum previous offsets
-            this.$c.drawArrow1(p5, p5.createVector(2 * previousX, 0), p5.createVector(x, y));
+            this.$c.drawArrow1(
+              p5,
+              p5.createVector(2 * previousX, 0),
+              p5.createVector(x, y),
+            );
             // Modri imajo končno koordinato y na 0 vedno
             p5.stroke('#29A829');
-            this.$c.drawArrow1(p5, p5.createVector(2 * previousX + x, y), p5.createVector(x, -y));
+            this.$c.drawArrow1(
+              p5,
+              p5.createVector(2 * previousX + x, y),
+              p5.createVector(x, -y),
+            );
           });
           previousX = x + previousX;
         }

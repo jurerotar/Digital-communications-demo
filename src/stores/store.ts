@@ -1,6 +1,6 @@
-import { createStore, Store } from 'vuex';
 import appState from '@stores/modules/app-state/app-state';
-import { AppState } from '@stores/modules/app-state/app-state.types';
+import type { AppState } from '@stores/modules/app-state/app-state.types';
+import { createStore, type Store } from 'vuex';
 
 export interface State {
   appState: AppState;

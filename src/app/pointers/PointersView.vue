@@ -11,17 +11,17 @@
 </template>
 
 <script setup lang="ts">
-import AppMainContainer from '@components/common/AppMainContainer.vue';
 import CanvasContainer from '@components/common/AppCanvasContainer.vue';
-import AppMainHeading from '@components/common/AppMainHeading.vue';
 import AppCollapsible from '@components/common/AppCollapsible.vue';
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import AppMainContainer from '@components/common/AppMainContainer.vue';
+import AppMainHeading from '@components/common/AppMainHeading.vue';
+import { linearSpace } from '@helpers/math';
 import { p5Extended } from '@helpers/p5/p5-extended';
-import { State } from '@stores/store';
-import { Mark, Scheme } from '@interfaces/common';
+import type { Mark, Scheme } from '@interfaces/common';
+import type { State } from '@stores/store';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import PointersTheory from './components/PointersTheory.vue';
-import { linearSpace } from '@helpers/math';
 
 const canvasContainerId = 'canvas-pointers';
 
@@ -81,8 +81,18 @@ onMounted(() => {
 
         // Hide part of the axis
         p5.drawWith({ strokeWeight: 5, stroke: backgroundColor }, () => {
-          p5.line(centerOffset * 2 + 31, centerOffset, centerOffset * 2 + 70, centerOffset);
-          p5.line(centerOffset, centerOffset * 2 + 31, centerOffset, centerOffset * 2 + 70);
+          p5.line(
+            centerOffset * 2 + 31,
+            centerOffset,
+            centerOffset * 2 + 70,
+            centerOffset,
+          );
+          p5.line(
+            centerOffset,
+            centerOffset * 2 + 31,
+            centerOffset,
+            centerOffset * 2 + 70,
+          );
         });
 
         // Axis arrows
@@ -114,7 +124,9 @@ onMounted(() => {
           p5.drawWith({ stroke: p5.colors[0] }, () => {
             p5.translate(centerOffset + 150, centerOffset);
             p5.beginShape();
-            sineValues.forEach((el, index) => p5.vertex(index + 2 * canvasPadding, -el * radius));
+            sineValues.forEach((el, index) => {
+              p5.vertex(index + 2 * canvasPadding, -el * radius);
+            });
             p5.endShape();
             p5.ellipse(degree + canvasPadding * 2, y, 15, 15);
             p5.drawDashed(() => {
@@ -127,7 +139,9 @@ onMounted(() => {
           p5.drawWith({ stroke: p5.colors[2] }, () => {
             p5.translate(centerOffset, centerOffset + 150);
             p5.beginShape();
-            cosineValues.forEach((el, index) => p5.vertex(el * radius, index + 2 * canvasPadding));
+            cosineValues.forEach((el, index) => {
+              p5.vertex(el * radius, index + 2 * canvasPadding);
+            });
             p5.endShape();
             p5.ellipse(x, degree + 2 * canvasPadding, 15, 15);
             // Connect current x,y coordinates to cosine graph
@@ -150,7 +164,7 @@ onMounted(() => {
         height: 800,
       },
       animationFrameRate: 60,
-    }
+    },
   );
 });
 

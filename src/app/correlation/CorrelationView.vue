@@ -187,6 +187,7 @@
 </template>
 
 <script>
+import FullSignalGraph from '@components/canvas/FullSignalGraph.vue';
 import AppCollapsible from '@components/common/AppCollapsible.vue';
 import AppMainContainer from '@components/common/AppMainContainer.vue';
 import AppMainHeading from '@components/common/AppMainHeading.vue';
@@ -194,7 +195,6 @@ import AppParagraph from '@components/common/AppParagraph.vue';
 import AppSectionHeading from '@components/common/AppSectionHeading.vue';
 import AppButton from '@components/common/buttons/AppButton.vue';
 import AppButtonContainer from '@components/common/buttons/AppButtonContainer.vue';
-import FullSignalGraph from '@components/canvas/FullSignalGraph.vue';
 import CorrelationTheory from './components/CorrelationTheory.vue';
 
 export default {
@@ -213,14 +213,19 @@ export default {
   data() {
     return {
       signalType: 'Harmonični',
-      xAxisArray: [...[...Array(2 ** 10).keys()].map((el) => el * -1 - 1).reverse(), ...Array(2 ** 10).keys()],
+      xAxisArray: [
+        ...[...Array(2 ** 10).keys()].map((el) => el * -1 - 1).reverse(),
+        ...Array(2 ** 10).keys(),
+      ],
       firstSignalArray: [...Array(601)],
       secondSignalArray: [...Array(601)],
       correlationSignalArray: [...Array(601)],
       correlationFunctionArray: [...Array(600)],
       choosedFirstSignal: 'baseCos',
       choosedSecondSignal: 'sin',
-      horizontal_pool: [-1.5, -1.25, -1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5],
+      horizontal_pool: [
+        -1.5, -1.25, -1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5,
+      ],
       typeLabel: 0, //0 for "Harmonični", 1 for "Impulzni"
       tau: 0,
       correlation: {
@@ -244,7 +249,8 @@ export default {
           frequency: 1,
           baseHarmonicSignal: {
             key: 'baseCos',
-            drawingValues: () => this.xAxisArray.map((t) => Math.cos(Math.PI * t * 0.01 + 0.75)), //0.75 is pi/2
+            drawingValues: () =>
+              this.xAxisArray.map((t) => Math.cos(Math.PI * t * 0.01 + 0.75)), //0.75 is pi/2
           },
           signal: [
             {
@@ -253,9 +259,12 @@ export default {
               drawingValues: (tau) =>
                 this.xAxisArray.map((t) =>
                   Math.sin(
-                    Math.PI * (t + (200 * tau) / this.signals[0].frequency) * this.signals[0].frequency * 0.01 +
-                      (0.75 - (this.signals[0].frequency - 1) * 2.4)
-                  )
+                    Math.PI *
+                      (t + (200 * tau) / this.signals[0].frequency) *
+                      this.signals[0].frequency *
+                      0.01 +
+                      (0.75 - (this.signals[0].frequency - 1) * 2.4),
+                  ),
                 ), //start with 0.75 and continue with step -2.4
             },
             {
@@ -264,9 +273,12 @@ export default {
               drawingValues: (tau) =>
                 this.xAxisArray.map((t) =>
                   Math.cos(
-                    Math.PI * (t + (200 * tau) / this.signals[0].frequency) * this.signals[0].frequency * 0.01 +
-                      (0.75 - (this.signals[0].frequency - 1) * 2.4)
-                  )
+                    Math.PI *
+                      (t + (200 * tau) / this.signals[0].frequency) *
+                      this.signals[0].frequency *
+                      0.01 +
+                      (0.75 - (this.signals[0].frequency - 1) * 2.4),
+                  ),
                 ),
             },
           ],
@@ -277,22 +289,41 @@ export default {
             {
               key: 'square',
               label: 'Pravokotni Impulz',
-              drawingValues: () => this.xAxisArray.map((t) => -this.unitBox(t - 0.75)),
-              drawingValuesSecondSignal: (tau) => this.xAxisArray.map((t) => -this.unitBox(t + 200 * tau - 0.75)),
+              drawingValues: () =>
+                this.xAxisArray.map((t) => -this.unitBox(t - 0.75)),
+              drawingValuesSecondSignal: (tau) =>
+                this.xAxisArray.map((t) => -this.unitBox(t + 200 * tau - 0.75)),
             },
             {
               key: 'cos',
               label: 'Dvignjeni Kosinusni Impulz',
-              drawingValues: () => this.xAxisArray.map((t) => Math.cos(((Math.PI * t) / 2) * 0.01 + 1.95) * this.unitBox(t)),
+              drawingValues: () =>
+                this.xAxisArray.map(
+                  (t) =>
+                    Math.cos(((Math.PI * t) / 2) * 0.01 + 1.95) *
+                    this.unitBox(t),
+                ),
               drawingValuesSecondSignal: (tau) =>
-                this.xAxisArray.map((t) => Math.cos(((Math.PI * (t + 200 * tau)) / 2) * 0.01 + 1.95) * this.unitBox(t + 200 * tau)),
+                this.xAxisArray.map(
+                  (t) =>
+                    Math.cos(((Math.PI * (t + 200 * tau)) / 2) * 0.01 + 1.95) *
+                    this.unitBox(t + 200 * tau),
+                ),
             },
             {
               key: 'sin',
               label: 'Sinusni Impulz',
-              drawingValues: () => this.xAxisArray.map((t) => Math.sin(Math.PI * t * 2 * 0.01 - 1.65) * this.unitBox(t)),
+              drawingValues: () =>
+                this.xAxisArray.map(
+                  (t) =>
+                    Math.sin(Math.PI * t * 2 * 0.01 - 1.65) * this.unitBox(t),
+                ),
               drawingValuesSecondSignal: (tau) =>
-                this.xAxisArray.map((t) => Math.sin(Math.PI * (t + 200 * tau) * 2 * 0.01 - 1.65) * this.unitBox(t + 200 * tau)),
+                this.xAxisArray.map(
+                  (t) =>
+                    Math.sin(Math.PI * (t + 200 * tau) * 2 * 0.01 - 1.65) *
+                    this.unitBox(t + 200 * tau),
+                ),
             },
           ],
         },
@@ -303,12 +334,24 @@ export default {
     canvasInputFirst() {
       return this.signalType === 'Harmonični'
         ? this.cutArray(this.signals[0].baseHarmonicSignal.drawingValues())
-        : this.cutArray(this.signals[1].signal.find((el) => el.key === this.choosedFirstSignal).drawingValues());
+        : this.cutArray(
+            this.signals[1].signal
+              .find((el) => el.key === this.choosedFirstSignal)
+              .drawingValues(),
+          );
     },
     canvasInputSecond() {
       return this.signalType === 'Harmonični'
-        ? this.cutArray(this.signals[0].signal.find((el) => el.key === this.choosedSecondSignal).drawingValues(this.tau))
-        : this.cutArray(this.signals[1].signal.find((el) => el.key === this.choosedSecondSignal).drawingValuesSecondSignal(this.tau));
+        ? this.cutArray(
+            this.signals[0].signal
+              .find((el) => el.key === this.choosedSecondSignal)
+              .drawingValues(this.tau),
+          )
+        : this.cutArray(
+            this.signals[1].signal
+              .find((el) => el.key === this.choosedSecondSignal)
+              .drawingValuesSecondSignal(this.tau),
+          );
     },
     canvasInputCorrelation() {
       return this.cutArray(this.correlation.drawingValues());
@@ -317,9 +360,17 @@ export default {
       return this.cutArray(this.correlationFunction.drawingValues());
     },
     correlationResult() {
-      const numberOfSamples = this.signalType === 'Harmonični' ? this.correlationSignalArray.length : 200;
-      const correlation = -this.correlationSignalArray.reduce((prevVal, currVal) => prevVal + currVal) / numberOfSamples;
-      return Math.abs(correlation) < 0.011 ? 0 : Math.trunc(correlation * 100) / 100;
+      const numberOfSamples =
+        this.signalType === 'Harmonični'
+          ? this.correlationSignalArray.length
+          : 200;
+      const correlation =
+        -this.correlationSignalArray.reduce(
+          (prevVal, currVal) => prevVal + currVal,
+        ) / numberOfSamples;
+      return Math.abs(correlation) < 0.011
+        ? 0
+        : Math.trunc(correlation * 100) / 100;
     },
   },
   methods: {
@@ -370,18 +421,24 @@ export default {
     calculateArrays() {
       this.firstSignalArray = this.canvasInputFirst;
       this.secondSignalArray = this.canvasInputSecond;
-      this.correlationSignalArray = this.multiplyArrays(this.firstSignalArray, this.secondSignalArray, this.firstSignalArray.length);
+      this.correlationSignalArray = this.multiplyArrays(
+        this.firstSignalArray,
+        this.secondSignalArray,
+        this.firstSignalArray.length,
+      );
     },
     calculateCorrelationFunction() {
       if (this.signalType === 'Harmonični') {
         if (this.signals[0].frequency === 1) {
           if (this.choosedSecondSignal === 'sin') {
             for (let i = 0; i < 600; i++) {
-              this.correlationFunctionArray[i] = 0.5 * Math.sin(Math.PI * i * 0.01);
+              this.correlationFunctionArray[i] =
+                0.5 * Math.sin(Math.PI * i * 0.01);
             }
           } else {
             for (let i = 0; i < 600; i++) {
-              this.correlationFunctionArray[i] = 0.5 * Math.cos(Math.PI * i * 0.01);
+              this.correlationFunctionArray[i] =
+                0.5 * Math.cos(Math.PI * i * 0.01);
             }
           }
         } else {
@@ -390,7 +447,10 @@ export default {
           }
         }
       } else {
-        if (this.choosedFirstSignal === 'square' && this.choosedSecondSignal === 'square') {
+        if (
+          this.choosedFirstSignal === 'square' &&
+          this.choosedSecondSignal === 'square'
+        ) {
           for (let i = 0; i < 600; i++) {
             const x = (i - 300) / 200;
             if (i <= 100 || i >= 500) {
@@ -401,43 +461,65 @@ export default {
               this.correlationFunctionArray[i] = x - 1;
             }
           }
-        } else if (this.choosedFirstSignal === 'square' && this.choosedSecondSignal === 'sin') {
+        } else if (
+          this.choosedFirstSignal === 'square' &&
+          this.choosedSecondSignal === 'sin'
+        ) {
           for (let i = 0; i < 600; i++) {
             if (i <= 100 || i >= 500) {
               this.correlationFunctionArray[i] = 0;
             } else if (i > 100 && i <= 300) {
-              this.correlationFunctionArray[i] = 0.08 * Math.cos(Math.PI * i * 2 * 0.01) - 0.08;
+              this.correlationFunctionArray[i] =
+                0.08 * Math.cos(Math.PI * i * 2 * 0.01) - 0.08;
             } else {
-              this.correlationFunctionArray[i] = -0.08 * Math.cos(Math.PI * i * 2 * 0.01) + 0.08;
-            }
-          }
-        } else if (this.choosedFirstSignal === 'sin' && this.choosedSecondSignal === 'square') {
-          for (let i = 0; i < 600; i++) {
-            if (i <= 100 || i >= 500) {
-              this.correlationFunctionArray[i] = 0;
-            } else if (i > 100 && i <= 300) {
-              this.correlationFunctionArray[i] = -0.08 * Math.cos(Math.PI * i * 2 * 0.01) + 0.08;
-            } else {
-              this.correlationFunctionArray[i] = 0.08 * Math.cos(Math.PI * i * 2 * 0.01) - 0.08;
+              this.correlationFunctionArray[i] =
+                -0.08 * Math.cos(Math.PI * i * 2 * 0.01) + 0.08;
             }
           }
         } else if (
-          (this.choosedFirstSignal === 'square' && this.choosedSecondSignal === 'cos') ||
-          (this.choosedFirstSignal === 'cos' && this.choosedSecondSignal === 'square')
+          this.choosedFirstSignal === 'sin' &&
+          this.choosedSecondSignal === 'square'
+        ) {
+          for (let i = 0; i < 600; i++) {
+            if (i <= 100 || i >= 500) {
+              this.correlationFunctionArray[i] = 0;
+            } else if (i > 100 && i <= 300) {
+              this.correlationFunctionArray[i] =
+                -0.08 * Math.cos(Math.PI * i * 2 * 0.01) + 0.08;
+            } else {
+              this.correlationFunctionArray[i] =
+                0.08 * Math.cos(Math.PI * i * 2 * 0.01) - 0.08;
+            }
+          }
+        } else if (
+          (this.choosedFirstSignal === 'square' &&
+            this.choosedSecondSignal === 'cos') ||
+          (this.choosedFirstSignal === 'cos' &&
+            this.choosedSecondSignal === 'square')
         ) {
           for (let i = 0; i < 600; i++) {
             if (i <= 100 || i >= 500) {
               this.correlationFunctionArray[i] = 0;
             } else {
-              this.correlationFunctionArray[i] = 0.32 * Math.sin(Math.PI * i * 0.5 * 0.01) - 0.32;
+              this.correlationFunctionArray[i] =
+                0.32 * Math.sin(Math.PI * i * 0.5 * 0.01) - 0.32;
             }
           }
         } else {
-          const numberOfSamples = this.signalType === 'Harmonični' ? this.correlationSignalArray.length : 200;
+          const numberOfSamples =
+            this.signalType === 'Harmonični'
+              ? this.correlationSignalArray.length
+              : 200;
           const firstSignal =
             this.signalType === 'Harmonični'
-              ? this.cutArray(this.signals[0].baseHarmonicSignal.drawingValues())
-              : this.cutArray(this.signals[1].signal.find((el) => el.key === this.choosedFirstSignal).drawingValues());
+              ? this.cutArray(
+                  this.signals[0].baseHarmonicSignal.drawingValues(),
+                )
+              : this.cutArray(
+                  this.signals[1].signal
+                    .find((el) => el.key === this.choosedFirstSignal)
+                    .drawingValues(),
+                );
           let correlation;
           let secondSignal;
           let multipliedSignals;
@@ -445,10 +527,25 @@ export default {
           for (let tau = -1.5; tau <= 1.5; tau = tau + 1.5 / 300) {
             secondSignal =
               this.signalType === 'Harmonični'
-                ? this.cutArray(this.signals[0].signal.find((el) => el.key === this.choosedSecondSignal).drawingValues(tau))
-                : this.cutArray(this.signals[1].signal.find((el) => el.key === this.choosedSecondSignal).drawingValuesSecondSignal(tau));
-            multipliedSignals = this.multiplyArrays(firstSignal, secondSignal, 600);
-            correlation = multipliedSignals.reduce((prevVal, currVal) => prevVal + currVal) / numberOfSamples;
+                ? this.cutArray(
+                    this.signals[0].signal
+                      .find((el) => el.key === this.choosedSecondSignal)
+                      .drawingValues(tau),
+                  )
+                : this.cutArray(
+                    this.signals[1].signal
+                      .find((el) => el.key === this.choosedSecondSignal)
+                      .drawingValuesSecondSignal(tau),
+                  );
+            multipliedSignals = this.multiplyArrays(
+              firstSignal,
+              secondSignal,
+              600,
+            );
+            correlation =
+              multipliedSignals.reduce(
+                (prevVal, currVal) => prevVal + currVal,
+              ) / numberOfSamples;
             this.correlationFunctionArray[j] = correlation;
             j++;
           }

@@ -18,8 +18,8 @@
 </template>
 
 <script setup lang="ts">
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons/faChevronRight';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 export interface AppCollapsibleProps {
   opened?: boolean;

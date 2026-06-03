@@ -158,19 +158,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-import AppSectionHeading from '@components/common/AppSectionHeading.vue';
-import AppMainContainer from '@components/common/AppMainContainer.vue';
-import AppParagraph from '@components/common/AppParagraph.vue';
 import AppCanvasContainer from '@components/common/AppCanvasContainer.vue';
-import ButtonContainer from '@components/common/buttons/AppButtonContainer.vue';
-import AppButton from '@components/common/buttons/AppButton.vue';
-import AppMainHeading from '@components/common/AppMainHeading.vue';
 import AppCollapsible from '@components/common/AppCollapsible.vue';
-import KatexEquation from '@components/common/KatexEquation.vue';
+import AppMainContainer from '@components/common/AppMainContainer.vue';
+import AppMainHeading from '@components/common/AppMainHeading.vue';
+import AppParagraph from '@components/common/AppParagraph.vue';
+import AppSectionHeading from '@components/common/AppSectionHeading.vue';
 import AppSlider from '@components/common/AppSlider.vue';
-import { FIRFilter, IIRFilter } from '@interfaces//digital-filters';
-import Complex from 'Complex';
+import AppButton from '@components/common/buttons/AppButton.vue';
+import ButtonContainer from '@components/common/buttons/AppButtonContainer.vue';
+import KatexEquation from '@components/common/KatexEquation.vue';
+import type { FIRFilter, IIRFilter } from '@interfaces//digital-filters';
+import type { Coordinates } from '@interfaces/common';
+import { computed, ref, watch } from 'vue';
 import {
   bartlett,
   bartlettHann,
@@ -188,9 +188,9 @@ import {
   triangular,
   welch,
 } from 'window-function';
-import { Coordinates } from '@interfaces/common';
-import DigitalFiltersTheory from './components/DigitalFiltersTheory.vue';
 import DigitalFiltersGraph from './components/DigitalFiltersGraph.vue';
+import DigitalFiltersTheory from './components/DigitalFiltersTheory.vue';
+import Complex from 'Complex';
 
 type AvailableFilter<T> = {
   key: T;
@@ -209,10 +209,13 @@ const gainToDecibels = (value: number): number => {
   if (value == null) {
     return 0;
   }
-  return 20 * (0.43429 * Math.log(value));
+  return 20 * (Math.LOG10E * Math.log(value));
 };
 
-const calculateWindowWeights = (selectedFIRFilterType: FIRFilter, FIRFilterOrder: number): WindowWeightCalculationReturn => {
+const calculateWindowWeights = (
+  selectedFIRFilterType: FIRFilter,
+  FIRFilterOrder: number,
+): WindowWeightCalculationReturn => {
   const windowWeightCoefficients = new Array(FIRFilterOrder);
   for (let idx = 0; idx < FIRFilterOrder; idx++) {
     switch (selectedFIRFilterType) {
@@ -264,9 +267,12 @@ const calculateWindowWeights = (selectedFIRFilterType: FIRFilter, FIRFilterOrder
     }
   }
 
-  const sumOfWindowWeightCoefficients = windowWeightCoefficients.reduce((currentElement: number, accumulator: number) => {
-    return currentElement + accumulator;
-  }, 0);
+  const sumOfWindowWeightCoefficients = windowWeightCoefficients.reduce(
+    (currentElement: number, accumulator: number) => {
+      return currentElement + accumulator;
+    },
+    0,
+  );
 
   return {
     windowWeightCoefficients,
@@ -301,7 +307,10 @@ const selectFIRFilterType = (key: FIRFilter): void => {
 const FIRFilterOrder = ref<number>(4);
 
 const FIRFilterWindowFunctionSignalValues = computed<Coordinates[]>(() => {
-  const { windowWeightCoefficients } = calculateWindowWeights(selectedFIRFilterType.value, FIRFilterOrder.value);
+  const { windowWeightCoefficients } = calculateWindowWeights(
+    selectedFIRFilterType.value,
+    FIRFilterOrder.value,
+  );
 
   const xValues = [...new Array(FIRFilterOrder.value).keys()];
 
@@ -312,19 +321,23 @@ const FIRFilterWindowFunctionSignalValues = computed<Coordinates[]>(() => {
 
   // Push values to start and end if selected type is rectangular
   if (selectedFIRFilterType.value === 'rectangular') {
-    return [{ x: 0, y: 0 }, ...chartValues, { x: FIRFilterOrder.value - 1, y: 0 }];
+    return [
+      { x: 0, y: 0 },
+      ...chartValues,
+      { x: FIRFilterOrder.value - 1, y: 0 },
+    ];
   }
 
   return chartValues;
 });
 
 const FIRFilterTransferFunctionSignalValues = computed<Coordinates[]>(() => {
-  const { windowWeightCoefficients, sumOfWindowWeightCoefficients } = calculateWindowWeights(
-    selectedFIRFilterType.value,
-    FIRFilterOrder.value
-  );
+  const { windowWeightCoefficients, sumOfWindowWeightCoefficients } =
+    calculateWindowWeights(selectedFIRFilterType.value, FIRFilterOrder.value);
 
-  const dividedWindowWeightCoefficients = windowWeightCoefficients.map((el: number) => el / sumOfWindowWeightCoefficients);
+  const dividedWindowWeightCoefficients = windowWeightCoefficients.map(
+    (el: number) => el / sumOfWindowWeightCoefficients,
+  );
 
   // x-axis values
   const frequencies: number[] = new Array(RESOLUTION);
@@ -340,7 +353,12 @@ const FIRFilterTransferFunctionSignalValues = computed<Coordinates[]>(() => {
 
     /* dividedWindowWeightCoefficients[0] + dividedWindowWeightCoefficients[1]*exp(-jw) + dividedWindowWeightCoefficients[2]*exp(-2jw) + ... + b[N]*exp(-Njw) */
     for (let idxb = 1; idxb < FIRFilterOrder.value; idxb++) {
-      temp = temp.add(ejw.fromPolar(dividedWindowWeightCoefficients[idxb], -idxb * 2 * Math.PI * frequencies[idxa]));
+      temp = temp.add(
+        ejw.fromPolar(
+          dividedWindowWeightCoefficients[idxb],
+          -idxb * 2 * Math.PI * frequencies[idxa],
+        ),
+      );
     }
 
     // H(jw) = Y(jw) / X(jw)
@@ -392,20 +410,35 @@ watch(selectedIIRFilterType, () => {
 });
 
 const isFilterGainSliderEnabled = computed<boolean>(() => {
-  const IIRFilterTypesWhereSliderIsEnabled: IIRFilter[] = ['peak', 'low-shelf', 'high-shelf'];
-  return IIRFilterTypesWhereSliderIsEnabled.includes(selectedIIRFilterType.value);
+  const IIRFilterTypesWhereSliderIsEnabled: IIRFilter[] = [
+    'peak',
+    'low-shelf',
+    'high-shelf',
+  ];
+  return IIRFilterTypesWhereSliderIsEnabled.includes(
+    selectedIIRFilterType.value,
+  );
 });
 
 const isFilterQualitySliderEnabled = computed<boolean>(() => {
   const IIRFilterTypesWhereSliderIsEnabled: IIRFilter[] = ['peak', 'notch'];
-  return IIRFilterTypesWhereSliderIsEnabled.includes(selectedIIRFilterType.value);
+  return IIRFilterTypesWhereSliderIsEnabled.includes(
+    selectedIIRFilterType.value,
+  );
 });
 
-const calculateIIRCoefficients = (selectedIIRFilterType: IIRFilter): number[] => {
+const calculateIIRCoefficients = (
+  selectedIIRFilterType: IIRFilter,
+): number[] => {
   // Denumerator coefficients are coefficients of transfer function's denumerator
   // Numerator coefficients are coefficients of transfer function's numerator
-  let denumCoeff_0, denumCoeff_1, denumCoeff_2, numCoeff_1, numCoeff_2, norm;
-  const magGain = Math.pow(10, Math.abs(IIRFilterGain.value) / 20); // gain in linear units
+  let denumCoeff_0: number;
+  let denumCoeff_1: number;
+  let denumCoeff_2: number;
+  let numCoeff_1: number;
+  let numCoeff_2: number;
+  let norm: number;
+  const magGain = 10 ** (Math.abs(IIRFilterGain.value) / 20); // gain in linear units
   const normFreq = Math.tan(Math.PI * (IIRFilterCutoff.value / 2)); // f_cutoff as normalized frequency
 
   switch (selectedIIRFilterType) {
@@ -416,7 +449,9 @@ const calculateIIRCoefficients = (selectedIIRFilterType: IIRFilter): number[] =>
       denumCoeff_1 = denumCoeff_2 = numCoeff_2 = 0;
       break;
     case 'one-pole-hp':
-      numCoeff_1 = -Math.exp(-2.0 * Math.PI * (0.5 - IIRFilterCutoff.value / 2));
+      numCoeff_1 = -Math.exp(
+        -2.0 * Math.PI * (0.5 - IIRFilterCutoff.value / 2),
+      );
       denumCoeff_0 = 1.0 + numCoeff_1;
       numCoeff_1 = -numCoeff_1;
       denumCoeff_1 = denumCoeff_2 = numCoeff_2 = 0;
@@ -428,7 +463,8 @@ const calculateIIRCoefficients = (selectedIIRFilterType: IIRFilter): number[] =>
       denumCoeff_1 = 2 * denumCoeff_0;
       denumCoeff_2 = denumCoeff_0;
       numCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
-      numCoeff_2 = (1 - normFreq / IIRFilterQuality.value + normFreq * normFreq) * norm;
+      numCoeff_2 =
+        (1 - normFreq / IIRFilterQuality.value + normFreq * normFreq) * norm;
       break;
     case 'highpass':
       IIRFilterQuality.value = 1; // Default setting - values above 1 cause undesired resonance
@@ -437,7 +473,8 @@ const calculateIIRCoefficients = (selectedIIRFilterType: IIRFilter): number[] =>
       denumCoeff_1 = -2 * denumCoeff_0;
       denumCoeff_2 = denumCoeff_0;
       numCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
-      numCoeff_2 = (1 - normFreq / IIRFilterQuality.value + normFreq * normFreq) * norm;
+      numCoeff_2 =
+        (1 - normFreq / IIRFilterQuality.value + normFreq * normFreq) * norm;
       break;
     case 'bandpass':
       IIRFilterQuality.value = 1; // Default setting - values above 1 cause undesired resonance
@@ -446,7 +483,8 @@ const calculateIIRCoefficients = (selectedIIRFilterType: IIRFilter): number[] =>
       denumCoeff_1 = 0;
       denumCoeff_2 = -denumCoeff_0;
       numCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
-      numCoeff_2 = (1 - normFreq / IIRFilterQuality.value + normFreq * normFreq) * norm;
+      numCoeff_2 =
+        (1 - normFreq / IIRFilterQuality.value + normFreq * normFreq) * norm;
       break;
     case 'notch':
       norm = 1 / (1 + normFreq / IIRFilterQuality.value + normFreq * normFreq);
@@ -454,60 +492,109 @@ const calculateIIRCoefficients = (selectedIIRFilterType: IIRFilter): number[] =>
       denumCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
       denumCoeff_2 = denumCoeff_0;
       numCoeff_1 = denumCoeff_1;
-      numCoeff_2 = (1 - normFreq / IIRFilterQuality.value + normFreq * normFreq) * norm;
+      numCoeff_2 =
+        (1 - normFreq / IIRFilterQuality.value + normFreq * normFreq) * norm;
       break;
     case 'peak':
       /* Simplify for positive/negative gains */
       if (IIRFilterGain.value >= 0) {
-        norm = 1 / (1 + (1 / IIRFilterQuality.value) * normFreq + normFreq * normFreq);
-        denumCoeff_0 = (1 + (magGain / IIRFilterQuality.value) * normFreq + normFreq * normFreq) * norm;
+        norm =
+          1 /
+          (1 + (1 / IIRFilterQuality.value) * normFreq + normFreq * normFreq);
+        denumCoeff_0 =
+          (1 +
+            (magGain / IIRFilterQuality.value) * normFreq +
+            normFreq * normFreq) *
+          norm;
         denumCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
-        denumCoeff_2 = (1 - (magGain / IIRFilterQuality.value) * normFreq + normFreq * normFreq) * norm;
+        denumCoeff_2 =
+          (1 -
+            (magGain / IIRFilterQuality.value) * normFreq +
+            normFreq * normFreq) *
+          norm;
         numCoeff_1 = denumCoeff_1;
-        numCoeff_2 = (1 - (1 / IIRFilterQuality.value) * normFreq + normFreq * normFreq) * norm;
+        numCoeff_2 =
+          (1 - (1 / IIRFilterQuality.value) * normFreq + normFreq * normFreq) *
+          norm;
       } else {
-        norm = 1 / (1 + (magGain / IIRFilterQuality.value) * normFreq + normFreq * normFreq);
-        denumCoeff_0 = (1 + (1 / IIRFilterQuality.value) * normFreq + normFreq * normFreq) * norm;
+        norm =
+          1 /
+          (1 +
+            (magGain / IIRFilterQuality.value) * normFreq +
+            normFreq * normFreq);
+        denumCoeff_0 =
+          (1 + (1 / IIRFilterQuality.value) * normFreq + normFreq * normFreq) *
+          norm;
         denumCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
-        denumCoeff_2 = (1 - (1 / IIRFilterQuality.value) * normFreq + normFreq * normFreq) * norm;
+        denumCoeff_2 =
+          (1 - (1 / IIRFilterQuality.value) * normFreq + normFreq * normFreq) *
+          norm;
         numCoeff_1 = denumCoeff_1;
-        numCoeff_2 = (1 - (magGain / IIRFilterQuality.value) * normFreq + normFreq * normFreq) * norm;
+        numCoeff_2 =
+          (1 -
+            (magGain / IIRFilterQuality.value) * normFreq +
+            normFreq * normFreq) *
+          norm;
       }
       break;
     case 'low-shelf':
       /* Simplify for positive/negative gains */
       if (IIRFilterGain.value >= 0) {
         norm = 1 / (1 + Math.SQRT2 * normFreq + normFreq * normFreq);
-        denumCoeff_0 = (1 + Math.sqrt(2 * magGain) * normFreq + magGain * normFreq * normFreq) * norm;
+        denumCoeff_0 =
+          (1 +
+            Math.sqrt(2 * magGain) * normFreq +
+            magGain * normFreq * normFreq) *
+          norm;
         denumCoeff_1 = 2 * (magGain * normFreq * normFreq - 1) * norm;
-        denumCoeff_2 = (1 - Math.sqrt(2 * magGain) * normFreq + magGain * normFreq * normFreq) * norm;
+        denumCoeff_2 =
+          (1 -
+            Math.sqrt(2 * magGain) * normFreq +
+            magGain * normFreq * normFreq) *
+          norm;
         numCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
         numCoeff_2 = (1 - Math.SQRT2 * normFreq + normFreq * normFreq) * norm;
       } else {
-        norm = 1 / (1 + Math.sqrt(2 * magGain) * normFreq + magGain * normFreq * normFreq);
+        norm =
+          1 /
+          (1 +
+            Math.sqrt(2 * magGain) * normFreq +
+            magGain * normFreq * normFreq);
         denumCoeff_0 = (1 + Math.SQRT2 * normFreq + normFreq * normFreq) * norm;
         denumCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
         denumCoeff_2 = (1 - Math.SQRT2 * normFreq + normFreq * normFreq) * norm;
         numCoeff_1 = 2 * (magGain * normFreq * normFreq - 1) * norm;
-        numCoeff_2 = (1 - Math.sqrt(2 * magGain) * normFreq + magGain * normFreq * normFreq) * norm;
+        numCoeff_2 =
+          (1 -
+            Math.sqrt(2 * magGain) * normFreq +
+            magGain * normFreq * normFreq) *
+          norm;
       }
       break;
     case 'high-shelf':
       /* Simplify for positive/negative gains */
       if (IIRFilterGain.value >= 0) {
         norm = 1 / (1 + Math.SQRT2 * normFreq + normFreq * normFreq);
-        denumCoeff_0 = (magGain + Math.sqrt(2 * magGain) * normFreq + normFreq * normFreq) * norm;
+        denumCoeff_0 =
+          (magGain + Math.sqrt(2 * magGain) * normFreq + normFreq * normFreq) *
+          norm;
         denumCoeff_1 = 2 * (normFreq * normFreq - magGain) * norm;
-        denumCoeff_2 = (magGain - Math.sqrt(2 * magGain) * normFreq + normFreq * normFreq) * norm;
+        denumCoeff_2 =
+          (magGain - Math.sqrt(2 * magGain) * normFreq + normFreq * normFreq) *
+          norm;
         numCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
         numCoeff_2 = (1 - Math.SQRT2 * normFreq + normFreq * normFreq) * norm;
       } else {
-        norm = 1 / (magGain + Math.sqrt(2 * magGain) * normFreq + normFreq * normFreq);
+        norm =
+          1 /
+          (magGain + Math.sqrt(2 * magGain) * normFreq + normFreq * normFreq);
         denumCoeff_0 = (1 + Math.SQRT2 * normFreq + normFreq * normFreq) * norm;
         denumCoeff_1 = 2 * (normFreq * normFreq - 1) * norm;
         denumCoeff_2 = (1 - Math.SQRT2 * normFreq + normFreq * normFreq) * norm;
         numCoeff_1 = 2 * (normFreq * normFreq - magGain) * norm;
-        numCoeff_2 = (magGain - Math.sqrt(2 * magGain) * normFreq + normFreq * normFreq) * norm;
+        numCoeff_2 =
+          (magGain - Math.sqrt(2 * magGain) * normFreq + normFreq * normFreq) *
+          norm;
       }
       break;
   }
@@ -516,7 +603,8 @@ const calculateIIRCoefficients = (selectedIIRFilterType: IIRFilter): number[] =>
 
 // IIR filter - generates transfer function based on biquad type, cutoff, quality, and gain
 const IIRFilterTransferFunctionSignalValues = computed<Coordinates[]>(() => {
-  const [denumCoeff_0, denumCoeff_1, denumCoeff_2, numCoeff_1, numCoeff_2] = calculateIIRCoefficients(selectedIIRFilterType.value);
+  const [denumCoeff_0, denumCoeff_1, denumCoeff_2, numCoeff_1, numCoeff_2] =
+    calculateIIRCoefficients(selectedIIRFilterType.value);
   const freq: number[] = new Array(RESOLUTION);
   const mag: number[] = new Array(RESOLUTION);
 
@@ -525,23 +613,27 @@ const IIRFilterTransferFunctionSignalValues = computed<Coordinates[]>(() => {
     freq[idx] = (idx / (RESOLUTION - 1)) * Math.PI;
 
     /* BiQuad filer transfer function of 2nd order */
-    const phi = Math.pow(Math.sin(freq[idx] / 2), 2);
+    const phi = Math.sin(freq[idx] / 2) ** 2;
     mag[idx] =
       Math.log(
-        Math.pow(denumCoeff_0 + denumCoeff_1 + denumCoeff_2, 2) -
-          4 * (denumCoeff_0 * denumCoeff_1 + 4 * denumCoeff_0 * denumCoeff_2 + denumCoeff_1 * denumCoeff_2) * phi +
-          16 * denumCoeff_0 * denumCoeff_2 * phi * phi
+        (denumCoeff_0 + denumCoeff_1 + denumCoeff_2) ** 2 -
+          4 *
+            (denumCoeff_0 * denumCoeff_1 +
+              4 * denumCoeff_0 * denumCoeff_2 +
+              denumCoeff_1 * denumCoeff_2) *
+            phi +
+          16 * denumCoeff_0 * denumCoeff_2 * phi * phi,
       ) -
       Math.log(
-        Math.pow(1 + numCoeff_1 + numCoeff_2, 2) -
+        (1 + numCoeff_1 + numCoeff_2) ** 2 -
           4 * (numCoeff_1 + 4 * numCoeff_2 + numCoeff_1 * numCoeff_2) * phi +
-          16 * numCoeff_2 * phi * phi
+          16 * numCoeff_2 * phi * phi,
       );
 
     mag[idx] = (mag[idx] * 10) / Math.LN10;
 
     /* Due to notches, some values go towards -Ininity */
-    if (mag[idx] == -Infinity || mag[idx] <= -200) {
+    if (mag[idx] === Number.NEGATIVE_INFINITY || mag[idx] <= -200) {
       mag[idx] = -200;
     }
 
