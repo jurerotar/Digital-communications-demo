@@ -40,11 +40,11 @@
 
 <script setup lang="ts">
 import AppMainHeading from '@components/common/AppMainHeading.vue';
-import AppSectionHeading from '@components/common/AppSectionHeading.vue';
-import { routes } from '@routes/routes';
-import { Route } from '@routes/routes.types';
-import AppButton from '@components/common/buttons/AppButton.vue';
 import AppParagraph from '@components/common/AppParagraph.vue';
+import AppSectionHeading from '@components/common/AppSectionHeading.vue';
+import AppButton from '@components/common/buttons/AppButton.vue';
+import { routes } from '@routes/routes';
+import type { Route } from '@routes/routes.types';
 import OpenSource from './components/OpenSource.vue';
 
 // Display links to all pages except 'home'

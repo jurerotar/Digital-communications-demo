@@ -8,9 +8,9 @@
 </template>
 
 <script setup lang="ts">
-import SchemeSwitcher from './SchemeSwitcher.vue';
-import GithubIcon from './GithubIcon.vue';
 import { useWindowSize } from '@composables/use-window-size';
+import GithubIcon from './GithubIcon.vue';
+import SchemeSwitcher from './SchemeSwitcher.vue';
 
 const { isLgUp } = useWindowSize();
 </script>

@@ -21,8 +21,8 @@
 
 <script setup lang="ts">
 import AppButton from '@components/common/buttons/AppButton.vue';
+import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
 
 export interface AppAnimationPauseButtonProps {
   state?: 'playing' | 'paused';

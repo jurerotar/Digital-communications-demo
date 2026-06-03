@@ -1,5 +1,5 @@
-import { MaybeRef, ref, toValue, watchEffect } from 'vue';
 import FFT from 'fft.js';
+import { type MaybeRef, ref, toValue, watchEffect } from 'vue';
 
 export const useFft = (signalRef: MaybeRef<number[]>) => {
   const transformedSignal = ref<number[]>([]);
@@ -10,7 +10,9 @@ export const useFft = (signalRef: MaybeRef<number[]>) => {
     const fft: FFT = new FFT(signalSize);
     const out: number[] = fft.createComplexArray();
     fft.realTransform(out, signal);
-    transformedSignal.value = out.filter((_, index: number) => index % 2 === 0).map((el: number) => Math.abs(el));
+    transformedSignal.value = out
+      .filter((_, index: number) => index % 2 === 0)
+      .map((el: number) => Math.abs(el));
   });
 
   return {

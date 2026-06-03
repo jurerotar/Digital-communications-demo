@@ -22,13 +22,13 @@
 </template>
 
 <script setup lang="ts">
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { useStore } from 'vuex';
-import { State } from '@stores/store';
-import { computed } from 'vue';
+import type { IconDefinition } from '@fortawesome/free-brands-svg-icons';
 import { faMoon, faSun } from '@fortawesome/free-regular-svg-icons';
-import { IconDefinition } from '@fortawesome/free-brands-svg-icons';
-import { Scheme as ColorScheme } from '@interfaces/common';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import type { Scheme as ColorScheme } from '@interfaces/common';
+import type { State } from '@stores/store';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 
 export interface Scheme {
   key: ColorScheme;

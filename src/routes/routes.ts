@@ -1,6 +1,15 @@
-import { createRouter, createWebHistory, Router } from 'vue-router';
-import { MetaObject, Route } from '@routes/routes.types';
-import { faWaveSquare, faWater, faLongArrowAltUp, faHome, faSignal, faEquals, faEye, faFilter } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEquals,
+  faEye,
+  faFilter,
+  faHome,
+  faLongArrowAltUp,
+  faSignal,
+  faWater,
+  faWaveSquare,
+} from '@fortawesome/free-solid-svg-icons';
+import type { CustomRouteMeta, MetaObject, Route } from '@routes/routes.types';
+import { createRouter, createWebHistory, type Router } from 'vue-router';
 
 export const appFullTitle = (title: string): string => {
   const appName = 'Digitalne komunikacije';
@@ -17,8 +26,16 @@ const routes: Route[] = [
     meta: {
       title: 'Domov',
       properties: [
-        { propertyName: 'twitter:title', propertyType: 'name', content: 'Domov' },
-        { propertyName: 'og:title', propertyType: 'property', content: 'Domov' },
+        {
+          propertyName: 'twitter:title',
+          propertyType: 'name',
+          content: 'Domov',
+        },
+        {
+          propertyName: 'og:title',
+          propertyType: 'property',
+          content: 'Domov',
+        },
       ],
     },
   },
@@ -31,8 +48,16 @@ const routes: Route[] = [
     meta: {
       title: 'Spekter',
       properties: [
-        { propertyName: 'twitter:title', propertyType: 'name', content: 'Spekter' },
-        { propertyName: 'og:title', propertyType: 'property', content: 'Spekter' },
+        {
+          propertyName: 'twitter:title',
+          propertyType: 'name',
+          content: 'Spekter',
+        },
+        {
+          propertyName: 'og:title',
+          propertyType: 'property',
+          content: 'Spekter',
+        },
       ],
     },
   },
@@ -45,8 +70,16 @@ const routes: Route[] = [
     meta: {
       title: 'Modulacije',
       properties: [
-        { propertyName: 'twitter:title', propertyType: 'name', content: 'Modulacije' },
-        { propertyName: 'og:title', propertyType: 'property', content: 'Modulacije' },
+        {
+          propertyName: 'twitter:title',
+          propertyType: 'name',
+          content: 'Modulacije',
+        },
+        {
+          propertyName: 'og:title',
+          propertyType: 'property',
+          content: 'Modulacije',
+        },
       ],
     },
   },
@@ -59,8 +92,16 @@ const routes: Route[] = [
     meta: {
       title: 'Harmoniki',
       properties: [
-        { propertyName: 'twitter:title', propertyType: 'name', content: 'Harmoniki' },
-        { propertyName: 'og:title', propertyType: 'property', content: 'Harmoniki' },
+        {
+          propertyName: 'twitter:title',
+          propertyType: 'name',
+          content: 'Harmoniki',
+        },
+        {
+          propertyName: 'og:title',
+          propertyType: 'property',
+          content: 'Harmoniki',
+        },
       ],
     },
   },
@@ -73,8 +114,16 @@ const routes: Route[] = [
     meta: {
       title: 'Kazalci',
       properties: [
-        { propertyName: 'twitter:title', propertyType: 'name', content: 'Kazalci' },
-        { propertyName: 'og:title', propertyType: 'property', content: 'Kazalci' },
+        {
+          propertyName: 'twitter:title',
+          propertyType: 'name',
+          content: 'Kazalci',
+        },
+        {
+          propertyName: 'og:title',
+          propertyType: 'property',
+          content: 'Kazalci',
+        },
       ],
     },
   },
@@ -87,8 +136,16 @@ const routes: Route[] = [
     meta: {
       title: 'Korelacija',
       properties: [
-        { propertyName: 'twitter:title', propertyType: 'name', content: 'Korelacija' },
-        { propertyName: 'og:title', propertyType: 'property', content: 'Korelacija' },
+        {
+          propertyName: 'twitter:title',
+          propertyType: 'name',
+          content: 'Korelacija',
+        },
+        {
+          propertyName: 'og:title',
+          propertyType: 'property',
+          content: 'Korelacija',
+        },
       ],
     },
   },
@@ -96,13 +153,22 @@ const routes: Route[] = [
     path: '/intersymbol-interference',
     name: 'Intersymbol interference',
     label: 'Intersimbolna interferenca',
-    component: () => import('@app/inter-symbol-interference/IntersymbolInterferenceView.vue'),
+    component: () =>
+      import('@app/inter-symbol-interference/IntersymbolInterferenceView.vue'),
     icon: faEye,
     meta: {
       title: 'Intersimbolna interferenca',
       properties: [
-        { propertyName: 'twitter:title', propertyType: 'name', content: 'Intersimbolna interferenca' },
-        { propertyName: 'og:title', propertyType: 'property', content: 'Intersimbolna interferenca' },
+        {
+          propertyName: 'twitter:title',
+          propertyType: 'name',
+          content: 'Intersimbolna interferenca',
+        },
+        {
+          propertyName: 'og:title',
+          propertyType: 'property',
+          content: 'Intersimbolna interferenca',
+        },
       ],
     },
   },
@@ -115,8 +181,16 @@ const routes: Route[] = [
     meta: {
       title: 'Digitalni filtri',
       properties: [
-        { propertyName: 'twitter:title', propertyType: 'name', content: 'Digitalni filtri' },
-        { propertyName: 'og:title', propertyType: 'property', content: 'Digitalni filtri' },
+        {
+          propertyName: 'twitter:title',
+          propertyType: 'name',
+          content: 'Digitalni filtri',
+        },
+        {
+          propertyName: 'og:title',
+          propertyType: 'property',
+          content: 'Digitalni filtri',
+        },
       ],
     },
   },
@@ -127,15 +201,19 @@ const router: Router = createRouter({
   routes,
 });
 
-// Argument is not actually typeof Route, but it's a pain in the ass to join our routes and router routes
-router.beforeEach((to: Route | any) => {
-  const { title, properties } = to.meta;
+router.beforeEach((to) => {
+  const { title, properties } = to.meta as CustomRouteMeta;
   document.title = appFullTitle(title);
   properties.forEach((property: MetaObject) => {
     const { propertyName, propertyType, content } = property;
-    const element: HTMLMetaElement = document.querySelector(`meta[${propertyType}='${propertyName}']`)!;
-    element.setAttribute('content', propertyName.includes('title') ? appFullTitle(content) : content);
+    const element: HTMLMetaElement = document.querySelector(
+      `meta[${propertyType}='${propertyName}']`,
+    )!;
+    element.setAttribute(
+      'content',
+      propertyName.includes('title') ? appFullTitle(content) : content,
+    );
   });
 });
 
-export { routes, router };
+export { router, routes };

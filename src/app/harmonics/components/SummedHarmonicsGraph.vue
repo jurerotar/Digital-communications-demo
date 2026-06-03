@@ -6,10 +6,10 @@
 </template>
 
 <script>
+import CanvasContainer from '@components/common/AppCanvasContainer.vue';
 import AppSectionHeading from '@components/common/AppSectionHeading.vue';
 import P5 from 'p5';
-import CanvasContainer from '@components/common/AppCanvasContainer.vue';
-import '@interfaces/common.ts';
+import '@interfaces/common';
 
 export default {
   name: 'SummedHarmonicsGraph',
@@ -58,20 +58,30 @@ export default {
       this.$c.setup(p5);
       p5.draw = () => {
         const color = this.$c.scale();
-        this.context = document.querySelector(`#${this.canvasId} canvas`).getContext('2d');
+        this.context = document
+          .querySelector(`#${this.canvasId} canvas`)
+          .getContext('2d');
         p5.background(this.$c.background());
-        const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
+        const [canvasDimensions, canvasPadding] = [
+          this.$c.dimensions,
+          this.$c.canvasPadding,
+        ];
         this.$c.temporaryState(p5, () => {
           p5.stroke(color);
           p5.strokeWeight(2);
-          p5.line(canvasPadding, canvasPadding - 30, canvasPadding, canvasDimensions.y - canvasPadding + 20);
+          p5.line(
+            canvasPadding,
+            canvasPadding - 30,
+            canvasPadding,
+            canvasDimensions.y - canvasPadding + 20,
+          );
           this.$c.drawArrow(
             p5,
             p5.createVector(canvasPadding, canvasDimensions.y / 2),
             p5.createVector(canvasDimensions.x - 30, canvasDimensions.y / 2),
             color,
             7,
-            0
+            0,
           );
           //adds arrow on y-axis
           p5.fill(color);
@@ -79,11 +89,23 @@ export default {
           //adds texts on axis
           p5.strokeWeight(1);
           p5.text('t', canvasDimensions.x - 15, canvasDimensions.y / 2 + 3);
-          this.texts.forEach((el) => p5.text(el.text, el.x, el.y));
+          this.texts.forEach((el) => {
+            p5.text(el.text, el.x, el.y);
+          });
           // Dashed lines to show values
           this.$c.drawDashed(this.context, () => {
-            p5.line(canvasPadding, canvasPadding + 28, canvasDimensions.x, canvasPadding + 28);
-            p5.line(canvasPadding, canvasDimensions.y - canvasPadding - 28, canvasDimensions.x, canvasDimensions.y - canvasPadding - 28);
+            p5.line(
+              canvasPadding,
+              canvasPadding + 28,
+              canvasDimensions.x,
+              canvasPadding + 28,
+            );
+            p5.line(
+              canvasPadding,
+              canvasDimensions.y - canvasPadding - 28,
+              canvasDimensions.x,
+              canvasDimensions.y - canvasPadding - 28,
+            );
           });
         });
 

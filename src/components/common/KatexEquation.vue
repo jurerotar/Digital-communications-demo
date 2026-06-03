@@ -12,8 +12,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, useSlots, computed } from 'vue';
 import { renderToString } from 'katex';
+import { computed, ref, useSlots } from 'vue';
 import 'katex/dist/katex.css';
 
 export interface KatexProps {

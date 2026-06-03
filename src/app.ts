@@ -1,7 +1,7 @@
-import { createApp } from 'vue';
+import canvas from '@helpers/canvas.js';
 import { router } from '@routes/routes';
 import { store } from '@stores/store';
-import canvas from '@helpers/canvas.js';
+import { createApp } from 'vue';
 import '@styles/index.css';
 import App from './App.vue';
 

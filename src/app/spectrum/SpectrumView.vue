@@ -58,18 +58,18 @@
 <script setup lang="ts">
 import FullSignalGraph from '@components/canvas/FullSignalGraph.vue';
 import LogarithmicGraph from '@components/canvas/LogarithmicGraph.vue';
-import ButtonContainer from '@components/common/buttons/AppButtonContainer.vue';
-import AppButton from '@components/common/buttons/AppButton.vue';
-import AppMainHeading from '@components/common/AppMainHeading.vue';
 import AppCollapsible from '@components/common/AppCollapsible.vue';
-import { computed, ref } from 'vue';
-import AppSectionHeading from '@components/common/AppSectionHeading.vue';
 import AppMainContainer from '@components/common/AppMainContainer.vue';
-import { PulseLength, PulseShape } from '@interfaces/spectrum';
-import { useShapedSignal } from '@composables/use-shaped-signal';
+import AppMainHeading from '@components/common/AppMainHeading.vue';
+import AppSectionHeading from '@components/common/AppSectionHeading.vue';
+import AppButton from '@components/common/buttons/AppButton.vue';
+import ButtonContainer from '@components/common/buttons/AppButtonContainer.vue';
 import { useFft } from '@composables/use-fft';
-import SpectrumTheory from './components/SpectrumTheory.vue';
+import { useShapedSignal } from '@composables/use-shaped-signal';
+import type { PulseLength, PulseShape } from '@interfaces/spectrum';
+import { computed, ref } from 'vue';
 import SpectrumGraph from './components/SpectrumGraph.vue';
+import SpectrumTheory from './components/SpectrumTheory.vue';
 
 export interface Pulse {
   key: PulseShape;
@@ -169,8 +169,13 @@ const setPulseShape = (shape: PulseShape): void => {
 const frequency = computed<number>(() => pulseLength.value ** -1);
 
 // Pulse object determined by user selection
-const pulse = computed<Pulse>(() => pulses.find((pulse: Pulse) => pulse.key === pulseShape.value)!);
+const pulse = computed<Pulse>(
+  () => pulses.find((pulse: Pulse) => pulse.key === pulseShape.value)!,
+);
 
-const { shapedSignal, shapedSpectrumSignal } = useShapedSignal(pulseShape, frequency);
+const { shapedSignal, shapedSpectrumSignal } = useShapedSignal(
+  pulseShape,
+  frequency,
+);
 const { transformedSignal } = useFft(shapedSpectrumSignal);
 </script>

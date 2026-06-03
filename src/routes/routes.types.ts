@@ -1,5 +1,5 @@
-import { RouteMeta, RouteRecordRaw } from 'vue-router';
-import { IconDefinition } from '@fortawesome/free-brands-svg-icons';
+import type { IconDefinition } from '@fortawesome/free-brands-svg-icons';
+import type { RouteMeta, RouteRecordRaw } from 'vue-router';
 
 export type Route = RouteRecordRaw & {
   name: string;
@@ -19,4 +19,10 @@ export interface MetaObject {
   content: string;
 }
 
-export type MetaProperties = 'description' | 'og:title' | 'og:description' | 'og:url' | 'twitter:title' | 'twitter:description';
+export type MetaProperties =
+  | 'description'
+  | 'og:title'
+  | 'og:description'
+  | 'og:url'
+  | 'twitter:title'
+  | 'twitter:description';

@@ -1,6 +1,6 @@
-import p5 from 'p5';
-import { Mark, Scheme, Size } from '@interfaces/common';
 import { shortenVector } from '@helpers/math';
+import type { Mark, Scheme, Size } from '@interfaces/common';
+import p5 from 'p5';
 
 type P5ExtendedOptions = {
   containerId: string;
@@ -24,15 +24,28 @@ const DEFAULT_OPTIONS: P5ExtendedOptions = {
 };
 
 export class p5Extended extends p5 {
-  public canvasPadding: number = 50;
+  public canvasPadding = 50;
   public canvasSize: Size;
-  public darkModeBackgroundColor: string = '#1F2937';
-  public lightModeBackgroundColor: string = '#ffffff';
-  public darkModeShapeColor: string = '#ffffff';
-  public lightModeShapeColor: string = '#000000';
-  public colors = ['#01FF70', '#0074D9', '#FF4136', '#FF851B', '#B10DC9', '#7FDBFF', '#2ECC40', '#001f3f', '#F012BE'];
+  public darkModeBackgroundColor = '#1F2937';
+  public lightModeBackgroundColor = '#ffffff';
+  public darkModeShapeColor = '#ffffff';
+  public lightModeShapeColor = '#000000';
+  public colors = [
+    '#01FF70',
+    '#0074D9',
+    '#FF4136',
+    '#FF851B',
+    '#B10DC9',
+    '#7FDBFF',
+    '#2ECC40',
+    '#001f3f',
+    '#F012BE',
+  ];
 
-  constructor(sketch: (p: p5Extended) => void, options: P5ExtendedOptions = DEFAULT_OPTIONS) {
+  constructor(
+    sketch: (p: p5Extended) => void,
+    options: P5ExtendedOptions = DEFAULT_OPTIONS,
+  ) {
     const mergedOptions: P5ExtendedOptions = {
       ...DEFAULT_OPTIONS,
       ...options,
@@ -40,7 +53,10 @@ export class p5Extended extends p5 {
 
     const sketchWithSetup = (p: p5Extended) => {
       p.setup = () => {
-        p.createCanvas(mergedOptions.canvasSize!.width, mergedOptions.canvasSize!.height);
+        p.createCanvas(
+          mergedOptions.canvasSize!.width,
+          mergedOptions.canvasSize!.height,
+        );
         p.frameRate(mergedOptions.animationFrameRate!);
         p.textFont('Montserrat');
         p.disableFriendlyErrors = true;
@@ -106,7 +122,10 @@ export class p5Extended extends p5 {
     const lineLength = endVector.dist(startVector);
     const percentageRepresentedByArrow = ARROW_SIZE / lineLength;
 
-    const shortenedEndVector = shortenVector(endVector, percentageRepresentedByArrow);
+    const shortenedEndVector = shortenVector(
+      endVector,
+      percentageRepresentedByArrow,
+    );
     const { x: shortenedEndX, y: shortenedEndY } = shortenedEndVector;
 
     this.temporaryState(() => {
@@ -123,7 +142,9 @@ export class p5Extended extends p5 {
   public drawMarks = (marks: Mark[], shapeColor: string) => {
     this.drawWith({ textSize: 14, strokeWeight: 0.5 }, () => {
       this.fill(shapeColor);
-      marks.forEach((mark: Mark) => this.text(mark.text, mark.x, mark.y));
+      marks.forEach((mark: Mark) => {
+        this.text(mark.text, mark.x, mark.y);
+      });
     });
   };
 
@@ -131,13 +152,17 @@ export class p5Extended extends p5 {
    * Returns expected shape color based on current app color scheme
    */
   public getShapeColor = (scheme: Scheme) => {
-    return scheme === 'dark' ? this.darkModeShapeColor : this.lightModeShapeColor;
+    return scheme === 'dark'
+      ? this.darkModeShapeColor
+      : this.lightModeShapeColor;
   };
 
   /**
    * Returns expected canvas background color based on current app color scheme
    */
   public getBackgroundColor = (scheme: Scheme) => {
-    return scheme === 'dark' ? this.darkModeBackgroundColor : this.lightModeBackgroundColor;
+    return scheme === 'dark'
+      ? this.darkModeBackgroundColor
+      : this.lightModeBackgroundColor;
   };
 }

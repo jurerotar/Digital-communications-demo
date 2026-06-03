@@ -23,10 +23,10 @@
 </template>
 
 <script>
+import CanvasContainer from '@components/common/AppCanvasContainer.vue';
 import AppSectionHeading from '@components/common/AppSectionHeading.vue';
 import P5 from 'p5';
-import CanvasContainer from '@components/common/AppCanvasContainer.vue';
-import '@interfaces/common.ts';
+import '@interfaces/common';
 
 export default {
   name: 'Level4SignalGraph',
@@ -90,12 +90,20 @@ export default {
         const color = this.$c.scale();
         p5.stroke(color);
         p5.background(this.$c.background());
-        const [canvasDimensions, canvasPadding] = [this.$c.dimensions, this.$c.canvasPadding];
+        const [canvasDimensions, canvasPadding] = [
+          this.$c.dimensions,
+          this.$c.canvasPadding,
+        ];
 
         p5.strokeWeight(2);
 
         // Top-bottom line
-        p5.line(canvasPadding, canvasPadding, canvasPadding, canvasDimensions.y - 10);
+        p5.line(
+          canvasPadding,
+          canvasPadding,
+          canvasPadding,
+          canvasDimensions.y - 10,
+        );
 
         p5.strokeWeight(1);
         // y-axis labels are passed through vertical_pool array, but they are missing zero, so we need to push it in
@@ -104,13 +112,27 @@ export default {
         for (let i = 0; i <= 30; i++) {
           // Make each fifth line labeled and wider
           if (i % 5 === 0) {
-            p5.text(`${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4), canvasPadding - 40, canvasPadding + i * 8 + 3);
+            p5.text(
+              `${yAxisLabels[Math.trunc(i / 5)]}`.substring(0, 4),
+              canvasPadding - 40,
+              canvasPadding + i * 8 + 3,
+            );
             p5.strokeWeight(2);
-            p5.line(canvasPadding - 5, canvasPadding + i * 8, canvasPadding + 5, canvasPadding + i * 8);
+            p5.line(
+              canvasPadding - 5,
+              canvasPadding + i * 8,
+              canvasPadding + 5,
+              canvasPadding + i * 8,
+            );
             p5.strokeWeight(1);
             continue;
           }
-          p5.line(canvasPadding - 5, canvasPadding + i * 8, canvasPadding + 5, canvasPadding + i * 8);
+          p5.line(
+            canvasPadding - 5,
+            canvasPadding + i * 8,
+            canvasPadding + 5,
+            canvasPadding + i * 8,
+          );
         }
         // Y axis label
         p5.text('x(t)', canvasPadding - 5, canvasPadding / 2);
@@ -120,10 +142,13 @@ export default {
         this.$c.drawArrow(
           p5,
           p5.createVector(canvasPadding, canvasDimensions.y / 2 + 20),
-          p5.createVector(canvasDimensions.x - canvasPadding, canvasDimensions.y / 2 + 20),
+          p5.createVector(
+            canvasDimensions.x - canvasPadding,
+            canvasDimensions.y / 2 + 20,
+          ),
           color,
           7,
-          0
+          0,
         );
 
         p5.fill(1);
@@ -146,14 +171,24 @@ export default {
           let previousY = 1;
           this.normalizedData.forEach((y, x) => {
             p5.vertex(
-              previousY !== y ? this.speed * x - 1 + canvasPadding : this.speed * x + canvasPadding,
-              (y * this.offset.y) / 3 + this.offset.y + canvasPadding / 2 + binaryOffsets[`${y}`]
+              previousY !== y
+                ? this.speed * x - 1 + canvasPadding
+                : this.speed * x + canvasPadding,
+              (y * this.offset.y) / 3 +
+                this.offset.y +
+                canvasPadding / 2 +
+                binaryOffsets[`${y}`],
             );
             previousY = y;
           });
         } else {
           this.normalizedData.forEach((y, x) => {
-            p5.vertex(this.speed * x + canvasPadding, y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2);
+            p5.vertex(
+              this.speed * x + canvasPadding,
+              y * (this.offset.y - canvasPadding / 2) +
+                this.offset.y +
+                canvasPadding / 2,
+            );
           });
         }
         p5.endShape();

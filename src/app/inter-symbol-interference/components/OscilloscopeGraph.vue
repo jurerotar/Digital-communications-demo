@@ -9,10 +9,10 @@
 </template>
 
 <script>
+import CanvasContainer from '@components/common/AppCanvasContainer.vue';
 import AppSectionHeading from '@components/common/AppSectionHeading.vue';
 import P5 from 'p5';
-import CanvasContainer from '@components/common/AppCanvasContainer.vue';
-import '@interfaces/common.ts';
+import '@interfaces/common';
 
 export default {
   name: 'OscilloscopeGraph',
@@ -64,7 +64,10 @@ export default {
         p5.background(this.$c.background());
 
         const canvasPadding = this.$c.canvasPadding;
-        const canvasDimensions = { x: 2 * 2 * this.symbolLength * this.speed + 2 * canvasPadding, y: this.$c.dimensions.y };
+        const canvasDimensions = {
+          x: 2 * 2 * this.symbolLength * this.speed + 2 * canvasPadding,
+          y: this.$c.dimensions.y,
+        };
         // adjust canvas dimensions: 2 * because signal is stretched, 2*because we display 1/2+1+1/2= 2 symbols
 
         this.$c.temporaryState(p5, () => {
@@ -74,21 +77,46 @@ export default {
           // Left vertical line
           this.$c.widerLine(p5, 0, 0, 0, canvasDimensions.y);
           // Right vertical line
-          this.$c.widerLine(p5, canvasDimensions.x - 2 * canvasPadding, 0, canvasDimensions.x - 2 * canvasPadding, canvasDimensions.y);
+          this.$c.widerLine(
+            p5,
+            canvasDimensions.x - 2 * canvasPadding,
+            0,
+            canvasDimensions.x - 2 * canvasPadding,
+            canvasDimensions.y,
+          );
           // Top horizontal wide line
-          this.$c.widerLine(p5, 0, 0, canvasDimensions.x - 2 * canvasPadding, 0);
+          this.$c.widerLine(
+            p5,
+            0,
+            0,
+            canvasDimensions.x - 2 * canvasPadding,
+            0,
+          );
           // Bottom horizontal wide line
-          this.$c.widerLine(p5, 0, canvasDimensions.y, canvasDimensions.x - 2 * canvasPadding, canvasDimensions.y);
+          this.$c.widerLine(
+            p5,
+            0,
+            canvasDimensions.y,
+            canvasDimensions.x - 2 * canvasPadding,
+            canvasDimensions.y,
+          );
 
           // Middle horizontal thin lines
-          this.$c.widerLine(p5, 0, canvasPadding, canvasDimensions.x - 2 * canvasPadding, canvasPadding, 0.25);
+          this.$c.widerLine(
+            p5,
+            0,
+            canvasPadding,
+            canvasDimensions.x - 2 * canvasPadding,
+            canvasPadding,
+            0.25,
+          );
           this.$c.widerLine(
             p5,
             0,
             canvasDimensions.y - canvasPadding,
             canvasDimensions.x - 2 * canvasPadding,
             canvasDimensions.y - canvasPadding,
-            0.25
+            0.25,
           );
           this.$c.widerLine(
             p5,
@@ -96,7 +124,7 @@ export default {
             canvasPadding + 0.33 * (canvasDimensions.y - 2 * canvasPadding),
             canvasDimensions.x - 2 * canvasPadding,
             canvasPadding + 0.33 * (canvasDimensions.y - 2 * canvasPadding),
-            0.25
+            0.25,
           );
           this.$c.widerLine(
             p5,
@@ -104,13 +132,20 @@ export default {
             canvasPadding + 0.66 * (canvasDimensions.y - 2 * canvasPadding),
             canvasDimensions.x - 2 * canvasPadding,
             canvasPadding + 0.66 * (canvasDimensions.y - 2 * canvasPadding),
-            0.25
+            0.25,
           );
 
           p5.textAlign(p5.LEFT, p5.TOP);
           p5.stroke('#00ff00');
           this.ticks.forEach((x) => {
-            this.$c.widerLine(p5, this.speed * 2 * x, 0, this.speed * 2 * x, canvasDimensions.y, 0.5);
+            this.$c.widerLine(
+              p5,
+              this.speed * 2 * x,
+              0,
+              this.speed * 2 * x,
+              canvasDimensions.y,
+              0.5,
+            );
             p5.strokeWeight(1);
             p5.text('ts', this.speed * 2 * x + 2, canvasDimensions.y * 0.95);
           });
@@ -131,12 +166,26 @@ export default {
             let p = this.data[i].length / (2 * this.symbolLength);
             p = 0.0078 * (Math.exp(4.86 * p) - 1);
 
-            color = p5.lerpColor(p5.color(this.$c.scale()), p5.color(this.$c.colors[1]), p);
+            color = p5.lerpColor(
+              p5.color(this.$c.scale()),
+              p5.color(this.$c.colors[1]),
+              p,
+            );
           }
-          p5.stroke(color.levels[1], color.levels[2], color.levels[3], alpha * 255);
+          p5.stroke(
+            color.levels[1],
+            color.levels[2],
+            color.levels[3],
+            alpha * 255,
+          );
 
           this.data[i].forEach((y, x) => {
-            p5.vertex(this.speed * 2 * x, y * (this.offset.y - canvasPadding / 2) + this.offset.y + canvasPadding / 2);
+            p5.vertex(
+              this.speed * 2 * x,
+              y * (this.offset.y - canvasPadding / 2) +
+                this.offset.y +
+                canvasPadding / 2,
+            );
           });
           p5.endShape();
         }

@@ -20,16 +20,18 @@
 </template>
 
 <script setup lang="ts">
+import { useWindowSize } from '@composables/use-window-size';
+import type { State } from '@stores/store';
 import { computed } from 'vue';
 import { useStore } from 'vuex';
-import { State } from '@stores/store';
-import { useWindowSize } from '@composables/use-window-size';
 import HamburgerMenu from './components/HamburgerMenu.vue';
 import Logo from './components/Logo.vue';
 import NavigationLinks from './components/NavigationLinks.vue';
 import TopNavigationLinks from './components/TopNavigationLinks.vue';
 
 const store = useStore<State>();
-const mobileSidebarExtended = computed<boolean>(() => store.state.appState.mobileSidebarExtended);
+const mobileSidebarExtended = computed<boolean>(
+  () => store.state.appState.mobileSidebarExtended,
+);
 const { isLgUp } = useWindowSize();
 </script>

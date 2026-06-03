@@ -1,6 +1,6 @@
+import type { CanvasOptions, Color, Coordinates } from '@interfaces/common';
 import { store } from '@stores/store';
-import { CanvasOptions, Color, Coordinates } from '@interfaces/common';
-import p5 from 'p5';
+import type p5 from 'p5';
 
 export interface Canvas {
   //
@@ -31,7 +31,7 @@ export interface Canvas {
   setup: (p5: p5, options: CanvasOptions) => void;
 
   // Draws both axis on canvas with defined offset, must be used before any translates
-  drawAxis: (p5: p5, offset: Coordinates, dimensions: Coordinates) => void;
+  drawAxis: (p5: p5, offset: Coordinates, dimensions?: Coordinates) => void;
 
   // Draws the lines in provided callback with dashed lines
   drawDashed: (context: CanvasRenderingContext2D, callback: () => void) => void;
@@ -40,7 +40,14 @@ export interface Canvas {
   temporaryState: (p5: p5, callback: () => void) => void;
 
   //
-  drawArrow: (p5: p5, vectorStart: p5.Vector, vectorEnd: p5.Vector, color: Color, size: number, rotate: number) => void;
+  drawArrow: (
+    p5: p5,
+    vectorStart: p5.Vector,
+    vectorEnd: p5.Vector,
+    color: Color,
+    size: number,
+    rotate: number,
+  ) => void;
 
   //
   drawArrow1: (p5: p5, vectorStart: p5.Vector, vectorEnd: p5.Vector) => void;
@@ -52,7 +59,14 @@ export interface Canvas {
   scale: (scheme?: string) => string;
 
   //
-  widerLine: (p5: p5, x1: number, y1: number, x2: number, y2: number, weight: number) => void;
+  widerLine: (
+    p5: p5,
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    weight: number,
+  ) => void;
 }
 
 /**
@@ -65,14 +79,24 @@ const canvas: Canvas = {
     x: 700,
     y: 300,
   },
-  colors: ['#01FF70', '#0074D9', '#FF4136', '#FF851B', '#B10DC9', '#7FDBFF', '#2ECC40', '#001f3f', '#F012BE'],
+  colors: [
+    '#01FF70',
+    '#0074D9',
+    '#FF4136',
+    '#FF851B',
+    '#B10DC9',
+    '#7FDBFF',
+    '#2ECC40',
+    '#001f3f',
+    '#F012BE',
+  ],
   darkModeBackgroundColor: '#1F2937',
   lightModeBackgroundColor: '#ffffff',
   darkModeScaleColor: '#ffffff',
   lightModeScaleColor: '#000000',
   setup(p5, options = {}) {
     p5.disableFriendlyErrors = true;
-    const { x: x, y: y } = this.dimensions;
+    const { x, y } = this.dimensions;
     const frameRate: number = options.frameRate ?? this.frameRate;
     p5.setup = () => {
       p5.createCanvas(x, y);
@@ -80,14 +104,15 @@ const canvas: Canvas = {
       p5.textFont('Montserrat');
     };
   },
-  drawAxis(p5, offset, dimensions = this.dimensions) {
+  drawAxis(p5, offset, dimensions) {
+    const axisDimensions = dimensions ?? this.dimensions;
     this.temporaryState(p5, () => {
       p5.stroke(this.scale());
       p5.strokeWeight(2);
       // Horizontal line from start of canvas to the end
-      p5.line(0, offset.y, dimensions.x, offset.y);
+      p5.line(0, offset.y, axisDimensions.x, offset.y);
       // Vertical line from top to bottom
-      p5.line(offset.x, 0, offset.x, dimensions.y);
+      p5.line(offset.x, 0, offset.x, axisDimensions.y);
     });
   },
 
@@ -140,10 +165,14 @@ const canvas: Canvas = {
     });
   },
   background(scheme = store.state.appState.scheme) {
-    return scheme === 'dark' ? this.darkModeBackgroundColor : this.lightModeBackgroundColor;
+    return scheme === 'dark'
+      ? this.darkModeBackgroundColor
+      : this.lightModeBackgroundColor;
   },
   scale(scheme = store.state.appState.scheme) {
-    return scheme === 'dark' ? this.darkModeScaleColor : this.lightModeScaleColor;
+    return scheme === 'dark'
+      ? this.darkModeScaleColor
+      : this.lightModeScaleColor;
   },
   widerLine(p5, x1, y1, x2, y2, weight = 2) {
     this.temporaryState(p5, () => {

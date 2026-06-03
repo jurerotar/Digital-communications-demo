@@ -17,4 +17,13 @@ export type FIRFilter =
   | 'gaussian'
   | 'tukey';
 
-export type IIRFilter = 'lowpass' | 'highpass' | 'bandpass' | 'notch' | 'one-pole-lp' | 'one-pole-hp' | 'peak' | 'low-shelf' | 'high-shelf';
+export type IIRFilter =
+  | 'lowpass'
+  | 'highpass'
+  | 'bandpass'
+  | 'notch'
+  | 'one-pole-lp'
+  | 'one-pole-hp'
+  | 'peak'
+  | 'low-shelf'
+  | 'high-shelf';
