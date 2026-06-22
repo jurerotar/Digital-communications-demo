@@ -26,9 +26,8 @@ import type { IconDefinition } from '@fortawesome/free-brands-svg-icons';
 import { faMoon, faSun } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import type { Scheme as ColorScheme } from '@interfaces/common';
-import type { State } from '@stores/store';
+import { useAppStateStore } from '@stores/modules/app-state/app-state';
 import { computed } from 'vue';
-import { useStore } from 'vuex';
 
 export interface Scheme {
   key: ColorScheme;
@@ -36,8 +35,8 @@ export interface Scheme {
   icon: IconDefinition;
 }
 
-const store = useStore<State>();
-const scheme = computed<Scheme>(() => store.state.appState.scheme);
+const appStateStore = useAppStateStore();
+const scheme = computed<ColorScheme>(() => appStateStore.scheme);
 
 const schemes: Scheme[] = [
   {
@@ -53,11 +52,11 @@ const schemes: Scheme[] = [
 ];
 
 const toggleScheme = (): void => {
-  const nextScheme: string = scheme.value === 'light' ? 'dark' : 'light';
+  const nextScheme: ColorScheme = scheme.value === 'light' ? 'dark' : 'light';
   const classList: DOMTokenList = document.querySelector('html')!.classList;
   classList.remove(scheme.value);
   classList.add(nextScheme);
-  store.commit('appState/setScheme', nextScheme);
+  appStateStore.setScheme(nextScheme);
   const now: Date = new Date();
   now.setTime(now.getTime() + 86400000 * 365);
   document.cookie = `color-scheme=${nextScheme}; expires=${now.toUTCString()}; path=/`;

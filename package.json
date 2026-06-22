@@ -20,7 +20,7 @@
     "vuejs",
     "typescript",
     "vue",
-    "vuex",
+    "pinia",
     "p5",
     "katex",
     "p5js",
@@ -56,7 +56,7 @@
     "fft.js": "4.0.4",
     "katex": "0.17.0",
     "p5": "2.3.0",
-    "vuex": "4.1.0",
+    "pinia": "3.0.4",
     "window-function": "3.0.1"
   },
   "devDependencies": {

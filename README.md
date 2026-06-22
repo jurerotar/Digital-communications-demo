@@ -37,7 +37,7 @@ digital signal modulations and transformations.
 - [Vue 3](https://v3.vuejs.org) - Vue is a progressive framework for building user interfaces.
 - [Tailwind CSS](https://tailwindcss.com) - A utility-first CSS framework packed with classes that can be composed to build any design,
   directly in your markup.
-- [Vuex](https://vuex.vuejs.org) - Vuex is a state management pattern + library for Vue.js applications.
+- [Pinia](https://pinia.vuejs.org) - Pinia is the recommended state management library for Vue applications.
 - [p5](https://p5js.org/) - p5 is a JavaScript library for creative coding.
 - [katex](https://katex.org) - The fastest math typesetting library for the web.
 

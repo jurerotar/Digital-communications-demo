@@ -18,17 +18,16 @@ import AppMainHeading from '@components/common/AppMainHeading.vue';
 import { linearSpace } from '@helpers/math';
 import { p5Extended } from '@helpers/p5/p5-extended';
 import type { Mark, Scheme } from '@interfaces/common';
-import type { State } from '@stores/store';
+import { useAppStateStore } from '@stores/modules/app-state/app-state';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
-import { useStore } from 'vuex';
 import PointersTheory from './components/PointersTheory.vue';
 
 const canvasContainerId = 'canvas-pointers';
 
 const p5 = ref<p5Extended | null>(null);
 
-const store = useStore<State>();
-const scheme = computed<Scheme>(() => store.state.appState.scheme);
+const appStateStore = useAppStateStore();
+const scheme = computed<Scheme>(() => appStateStore.scheme);
 
 const marks: Mark[] = [
   { text: 'Im', x: 115, y: 15 },

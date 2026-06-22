@@ -1,5 +1,5 @@
 import type { CanvasOptions, Color, Coordinates } from '@interfaces/common';
-import { store } from '@stores/store';
+import { useAppStateStore } from '@stores/modules/app-state/app-state';
 import type p5 from 'p5';
 
 export interface Canvas {
@@ -164,12 +164,12 @@ const canvas: Canvas = {
       p5.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
     });
   },
-  background(scheme = store.state.appState.scheme) {
+  background(scheme = useAppStateStore().scheme) {
     return scheme === 'dark'
       ? this.darkModeBackgroundColor
       : this.lightModeBackgroundColor;
   },
-  scale(scheme = store.state.appState.scheme) {
+  scale(scheme = useAppStateStore().scheme) {
     return scheme === 'dark'
       ? this.darkModeScaleColor
       : this.lightModeScaleColor;

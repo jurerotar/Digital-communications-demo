@@ -29,19 +29,15 @@
 </template>
 
 <script setup lang="ts">
-import type { State } from '@stores/store';
+import { useAppStateStore } from '@stores/modules/app-state/app-state';
 import { computed } from 'vue';
-import { useStore } from 'vuex';
 
-const store = useStore<State>();
+const appStateStore = useAppStateStore();
 const isMobileSidebarExtended = computed<boolean>(
-  () => store.state.appState.mobileSidebarExtended,
+  () => appStateStore.mobileSidebarExtended,
 );
 const toggle = (): void => {
-  store.commit(
-    'appState/setMobileSidebarExtended',
-    !isMobileSidebarExtended.value,
-  );
+  appStateStore.setMobileSidebarExtended(!isMobileSidebarExtended.value);
 };
 </script>
 

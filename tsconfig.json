@@ -31,8 +31,7 @@
       "@routes/*": ["./src/routes/*"],
       "@stores/*": ["./src/stores/*"],
       "@interfaces/*": ["./src/interfaces/*"],
-      "@composables/*": ["./src/composables/*"],
-      "vuex": ["./node_modules/vuex/types/index.d.ts"]
+      "@composables/*": ["./src/composables/*"]
     },
     "types": ["vite/client"]
   },

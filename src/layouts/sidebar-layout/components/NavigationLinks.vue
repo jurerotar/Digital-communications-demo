@@ -24,20 +24,19 @@
 import { useWindowSize } from '@composables/use-window-size';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { routes } from '@routes/routes';
-import type { State } from '@stores/store';
+import { useAppStateStore } from '@stores/modules/app-state/app-state';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { useStore } from 'vuex';
 import AppGithubIcon from './GithubIcon.vue';
 import SchemeSwitcher from './SchemeSwitcher.vue';
 
-const store = useStore<State>();
+const appStateStore = useAppStateStore();
 const { isLgUp } = useWindowSize();
 const routeObject = useRoute();
 
 const currentRoute = computed<string>(() => routeObject.path);
 
 const linkClick = (): void => {
-  store.commit('appState/setMobileSidebarExtended', false);
+  appStateStore.setMobileSidebarExtended(false);
 };
 </script>

@@ -1,5 +1,5 @@
-import type { State } from '@stores/store';
-import { useStore } from 'vuex';
+import type { Scheme } from '@interfaces/common';
+import { useAppStateStore } from '@stores/modules/app-state/app-state';
 
 export const getCookie = (name: string): string | null => {
   return (
@@ -8,8 +8,10 @@ export const getCookie = (name: string): string | null => {
 };
 
 export const scheme = () => {
-  const store = useStore<State>();
-  const cookie: string = getCookie('color-scheme') ?? 'dark';
-  store.commit('appState/setScheme', cookie);
-  document.querySelector('html')!.classList.add(cookie);
+  const appStateStore = useAppStateStore();
+  const cookie = getCookie('color-scheme');
+  const colorScheme: Scheme =
+    cookie === 'light' || cookie === 'dark' ? cookie : 'dark';
+  appStateStore.setScheme(colorScheme);
+  document.querySelector('html')!.classList.add(colorScheme);
 };
