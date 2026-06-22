@@ -1,0 +1,16 @@
+pre-commit:
+  commands:
+    format:
+      run: npm run format
+
+pre-push:
+  commands:
+    format-check:
+      run: npm run format:check
+    lint-check:
+      run: npm run lint:check
+
+commit-msg:
+  commands:
+    commitlint:
+      run: npx commitlint --edit {1}
