@@ -51,7 +51,9 @@ export class p5Extended extends p5 {
       ...options,
     };
 
-    const sketchWithSetup = (p: p5Extended) => {
+    const sketchWithSetup = (p: p5) => {
+      const extendedP = p as p5Extended;
+
       p.setup = () => {
         p.createCanvas(
           mergedOptions.canvasSize!.width,
@@ -61,10 +63,16 @@ export class p5Extended extends p5 {
         p.textFont('Montserrat');
         p.disableFriendlyErrors = true;
       };
-      sketch(p);
+      sketch(extendedP);
     };
 
-    super(sketchWithSetup, mergedOptions.containerId as unknown as HTMLElement);
+    const container = document.getElementById(mergedOptions.containerId);
+
+    if (!container) {
+      throw new Error(`Missing p5 container: ${mergedOptions.containerId}`);
+    }
+
+    super(sketchWithSetup, container);
     this.canvasSize = mergedOptions.canvasSize!;
   }
 
@@ -82,7 +90,10 @@ export class p5Extended extends p5 {
    */
   public drawDashed = (callback: () => void) => {
     this.temporaryState(() => {
-      this.drawingContext.setLineDash([5, 15]);
+      if ('setLineDash' in this.drawingContext) {
+        this.drawingContext.setLineDash([5, 15]);
+      }
+
       callback();
     });
   };
