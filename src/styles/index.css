@@ -1,6 +1,34 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Montserrat", sans-serif;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@utility container {
+  width: 100%;
+
+  @media (width >= 40rem) {
+    max-width: none;
+  }
+
+  @media (width >= 640px) {
+    max-width: 640px;
+  }
+
+  @media (width >= 768px) {
+    max-width: 768px;
+  }
+
+  @media (width >= 1024px) {
+    max-width: 1024px;
+  }
+
+  @media (width >= 1280px) {
+    max-width: 1280px;
+  }
+}
 
 @font-face {
   font-family: "Montserrat";

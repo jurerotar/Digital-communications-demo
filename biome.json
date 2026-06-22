@@ -39,6 +39,11 @@
     "formatWithErrors": true,
     "attributePosition": "multiline"
   },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
   "linter": {
     "rules": {
       "recommended": true,

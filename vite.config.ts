@@ -1,3 +1,5 @@
+import { fileURLToPath, URL } from 'node:url';
+import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
 
@@ -9,9 +11,14 @@ export default defineConfig({
     sourcemap: true,
   },
   resolve: {
+    alias: {
+      vuex: fileURLToPath(
+        new URL('./node_modules/vuex/dist/vuex.mjs', import.meta.url),
+      ),
+    },
     tsconfigPaths: true,
   },
-  plugins: [vue()],
+  plugins: [tailwindcss(), vue()],
   optimizeDeps: {
     entries: ['src/**/*.{ts,vue}'],
   },
